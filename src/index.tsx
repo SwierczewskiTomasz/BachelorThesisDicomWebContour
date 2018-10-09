@@ -1,3 +1,4 @@
+// source: https://github.com/vikpe/react-webpack-typescript-starter
 import * as React from "react";
 import {render} from "react-dom";
 import {AppContainer} from "react-hot-loader";

@@ -1,3 +1,4 @@
+// source: https://github.com/vikpe/react-webpack-typescript-starter
 import * as React from "react";
 import "./../assets/scss/App.scss";
 
