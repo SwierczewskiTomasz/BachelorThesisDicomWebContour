@@ -38,17 +38,16 @@ interface CornerstoneElementProps {
 }
 
 interface CornerstoneElementState {
-    element: HTMLDivElement;
     stack: any;
     viewport: any;
     imageId: any;
 }
 
 export default class CornerstoneElement extends React.Component<CornerstoneElementProps, CornerstoneElementState> {
+    element: HTMLDivElement;
     constructor(props) {
         super(props);
         this.state = {
-            element: undefined,
             stack: props.stack,
             viewport: cornerstone.getDefaultViewport(null, undefined),
             imageId: props.stack.imageIds[0]
@@ -66,7 +65,7 @@ export default class CornerstoneElement extends React.Component<CornerstoneEleme
                     className="viewportElement"
                     style={divStyle}
                     ref={input => {
-                        this.setState({element: input});
+                        this.element = input;
                     }}
                 >
                     <canvas className="cornerstone-canvas" />
@@ -84,11 +83,11 @@ export default class CornerstoneElement extends React.Component<CornerstoneEleme
 
     onWindowResize() {
         console.log("onWindowResize");
-        cornerstone.resize(this.state.element);
+        cornerstone.resize(this.element);
     }
 
     onImageRendered() {
-        const viewport = cornerstone.getViewport(this.state.element);
+        const viewport = cornerstone.getViewport(this.element);
         console.log(viewport);
 
         this.setState({
@@ -99,7 +98,7 @@ export default class CornerstoneElement extends React.Component<CornerstoneEleme
     }
 
     onNewImage() {
-        const enabledElement = cornerstone.getEnabledElement(this.state.element);
+        const enabledElement = cornerstone.getEnabledElement(this.element);
 
         this.setState({
             imageId: enabledElement.image.imageId
@@ -107,7 +106,7 @@ export default class CornerstoneElement extends React.Component<CornerstoneEleme
     }
 
     componentDidMount() {
-        const element = this.state.element;
+        const element = this.element;
 
         // Enable the DOM Element for use with Cornerstone
         cornerstone.enable(element);
@@ -143,7 +142,7 @@ export default class CornerstoneElement extends React.Component<CornerstoneEleme
     }
 
     componentWillUnmount() {
-        const element = this.state.element;
+        const element = this.element;
         element.removeEventListener(
             "cornerstoneimagerendered",
             this.onImageRendered
@@ -157,11 +156,11 @@ export default class CornerstoneElement extends React.Component<CornerstoneEleme
     }
 
     componentDidUpdate(prevProps, prevState) {
-        const stackData = cornerstoneTools.getToolState(this.state.element, "stack");
+        const stackData = cornerstoneTools.getToolState(this.element, "stack");
         const stack = stackData.data[0];
         stack.currentImageIdIndex = this.state.stack.currentImageIdIndex;
         stack.imageIds = this.state.stack.imageIds;
-        cornerstoneTools.addToolState(this.state.element, "stack", stack);
+        cornerstoneTools.addToolState(this.element, "stack", stack);
 
         // const imageId = stack.imageIds[stack.currentImageIdIndex];
         // cornerstoneTools.scrollToIndex(this.element, stack.currentImageIdIndex);
