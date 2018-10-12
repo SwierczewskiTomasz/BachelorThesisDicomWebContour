@@ -1,3 +1,4 @@
+// source: https://github.com/vikpe/react-webpack-typescript-starter
 const tsc       = require('typescript');
 const tsConfig  = require('./../tsconfig.json');
 

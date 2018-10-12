@@ -1,3 +1,4 @@
+// source: https://github.com/vikpe/react-webpack-typescript-starter
 {
     "compilerOptions": {
         "outDir": "./dist/",

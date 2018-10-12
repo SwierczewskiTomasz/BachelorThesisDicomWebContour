@@ -1,3 +1,4 @@
+// source: https://github.com/vikpe/react-webpack-typescript-starter
 // development config
 const merge = require('webpack-merge');
 const webpack = require('webpack');

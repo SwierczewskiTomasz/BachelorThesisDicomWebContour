@@ -12,16 +12,8 @@
     "starter",
     "boilerplate"
   ],
-  "author": "Viktor Persson",
+  "author": "Łukasz Garstecki, Tomasz Świerczewski",
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/vikpe/react-webpack-typescript-starter.git"
-  },
-  "bugs": {
-    "url": "https://github.com/vikpe/react-webpack-typescript-starter/issues"
-  },
-  "homepage": "https://github.com/vikpe/react-webpack-typescript-starter",
   "scripts": {
     "build": "yarn run clean-dist && webpack -p --config=configs/webpack/prod.js",
     "clean-dist": "rm -f -r -d dist",

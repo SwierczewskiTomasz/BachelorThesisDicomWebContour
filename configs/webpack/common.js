@@ -1,3 +1,4 @@
+// source: https://github.com/vikpe/react-webpack-typescript-starter
 // shared config (dev and prod)
 const {resolve} = require('path');
 const {CheckerPlugin} = require('awesome-typescript-loader');
