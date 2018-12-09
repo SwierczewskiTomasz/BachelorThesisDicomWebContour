@@ -1,5 +1,4 @@
 import * as React from "react";
-import { render } from "react-dom";
 import * as cornerstone from "cornerstone-core";
 import * as cornerstoneTools from "cornerstone-tools";
 import * as cornerstoneMath from "cornerstone-math";
@@ -8,9 +7,6 @@ import * as cornerstoneWebImageLoader from "cornerstone-web-image-loader";
 cornerstoneTools.external.cornerstone = cornerstone;
 cornerstoneTools.external.cornerstoneMath = cornerstoneMath;
 cornerstoneWebImageLoader.external.cornerstone = cornerstone;
-
-const imageId =
-    "https://rawgit.com/cornerstonejs/cornerstoneWebImageLoader/master/examples/Renal_Cell_Carcinoma.jpg";
 
 const divStyle: React.CSSProperties = {
     width: "512px",
@@ -121,12 +117,12 @@ export default class CornerstoneElement extends React.Component<CornerstoneEleme
             cornerstoneTools.addStackStateManager(element, ["stack"]);
             cornerstoneTools.addToolState(element, "stack", stack);
 
-            cornerstoneTools.mouseInput.enable(element);
-            cornerstoneTools.mouseWheelInput.enable(element);
-            cornerstoneTools.wwwc.activate(element, 1); // ww/wc is the default tool for left mouse button
-            cornerstoneTools.pan.activate(element, 2); // pan is the default tool for middle mouse button
-            cornerstoneTools.zoom.activate(element, 4); // zoom is the default tool for right mouse button
-            cornerstoneTools.zoomWheel.activate(element); // zoom is the default tool for middle mouse wheel
+            // cornerstoneTools.mouseInput.enable(element);
+            // cornerstoneTools.mouseWheelInput.enable(element);
+            // cornerstoneTools.wwwc.activate(element, 1); // ww/wc is the default tool for left mouse button
+            // cornerstoneTools.pan.activate(element, 2); // pan is the default tool for middle mouse button
+            // cornerstoneTools.zoom.activate(element, 4); // zoom is the default tool for right mouse button
+            // cornerstoneTools.zoomWheel.activate(element); // zoom is the default tool for middle mouse wheel
 
             cornerstoneTools.touchInput.enable(element);
             cornerstoneTools.panTouchDrag.activate(element);

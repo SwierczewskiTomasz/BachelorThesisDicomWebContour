@@ -2510,6 +2510,13 @@ cornerstone-tools@^2.3.9:
   dependencies:
     cornerstone-math "^0.1.6"
 
+cornerstone-wado-image-loader@2.2.3:
+  version "2.2.3"
+  resolved "https://registry.yarnpkg.com/cornerstone-wado-image-loader/-/cornerstone-wado-image-loader-2.2.3.tgz#2d4c06b5c87cd9198b52906c48e2d9dd145de986"
+  integrity sha512-0N5ykSEVoUx3zzfGn5Oaa7OJL/EHOthPUI2Kv8gSnMgf6ipcz5TcK8xGMOfu6grMkKlNb0SFJ/cEqsHR7bddKQ==
+  dependencies:
+    dicom-parser "^1.8.1"
+
 cornerstone-web-image-loader@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/cornerstone-web-image-loader/-/cornerstone-web-image-loader-2.1.0.tgz#3ab6a2f87bdf2ffb8457753e9139459b87a90f82"
@@ -3099,6 +3106,11 @@ detect-node@^2.0.3:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/detect-node/-/detect-node-2.0.4.tgz#014ee8f8f669c5c58023da64b8179c083a28c46c"
   integrity sha512-ZIzRpLJrOj7jjP2miAtgqIfmzbxa4ZOr5jJc601zklsfEx9oTzmmj2nVpIPRpNlRTIh8lc1kyViIY7BWSGNmKw==
+
+dicom-parser@^1.8.1:
+  version "1.8.3"
+  resolved "https://registry.yarnpkg.com/dicom-parser/-/dicom-parser-1.8.3.tgz#6e4b862898112304db30143147562011c1ce6a4d"
+  integrity sha512-CMeUr+jea7Ml70N+/Z5Pd2MYtvLp6IU+TnvdLe6VRVKzZuTeYLYyuAQa9R+sFK4v4N39hig+hKHN+Wfi9sQ6GA==
 
 diff@^3.2.0:
   version "3.5.0"
