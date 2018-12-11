@@ -32,16 +32,6 @@ export default class App extends React.Component<AppProps, AppState> {
         };
     }
 
-    handleFiles(files: FileList) {
-        for (let i = 0; i < files.length; i++) {
-            const file = files[i];
-            console.warn(file.name);
-        }
-        let stack2 = {imageIds: [files.item(0).name], currentImageIdIndex: 0};
-        console.log(stack2);
-        this.setState({stack: stack2});
-    }
-
     render() {
         return (
             <>
@@ -58,9 +48,6 @@ export default class App extends React.Component<AppProps, AppState> {
                     </Typography>
                 </AppBar>
                 <SideMenu />
-                <FileInputButton onFilesSelect={(files: FileList) => this.handleFiles(files)} fileType="" style={{ margin: "1rem" }}>
-                    INPUT
-                </FileInputButton>
                 <div style={{ overflow: "auto", height: "100%" }}>
                     <CornerstoneElement stack={{ ...this.state.stack }} />
                 </div>
