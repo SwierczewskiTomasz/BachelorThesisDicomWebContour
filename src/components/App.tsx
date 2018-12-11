@@ -5,6 +5,7 @@ import CornerstoneElement from "./DicomViewer";
 import { AppBar, Typography } from "@material-ui/core";
 import FileInputButton from "./FileInput";
 import { number } from "prop-types";
+import SideMenu from "./SideMenu";
 
 
 export interface AppProps {
@@ -56,6 +57,7 @@ export default class App extends React.Component<AppProps, AppState> {
                         DICOM contour
                     </Typography>
                 </AppBar>
+                <SideMenu />
                 <FileInputButton onFilesSelect={(files: FileList) => this.handleFiles(files)} fileType="" style={{ margin: "1rem" }}>
                     INPUT
                 </FileInputButton>
