@@ -63,6 +63,7 @@
   },
   "dependencies": {
     "@material-ui/core": "3.5.1",
+    "@material-ui/icons": "3.0.1",
     "cornerstone-core": "^2.2.6",
     "cornerstone-math": "^0.1.6",
     "cornerstone-tools": "^2.3.9",

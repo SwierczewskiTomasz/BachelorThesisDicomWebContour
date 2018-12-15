@@ -12,7 +12,8 @@ const divStyle: React.CSSProperties = {
     width: "512px",
     height: "512px",
     position: "relative",
-    color: "white"
+    color: "white",
+    overflow: "hidden"
 };
 
 const bottomLeftStyle: React.CSSProperties = {
