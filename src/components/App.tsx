@@ -63,15 +63,15 @@ export default class AppView extends React.Component<AppViewProps, AppViewState>
                         DICOM contour
                     </Typography>
                 </AppBar>
-                <div style={{ display: "inline-block" }}>
+                <div style={{ width: "100%", textAlign: "center" }}>
                     <Drawer open={this.state.drawerOpen}
                         onClose={() => this.setState({ drawerOpen: false })}>
                         <SideMenu />
                     </Drawer>
                     <DisplayImage />
-                    <div style={{ overflow: "auto", height: "100%", float: "left" }}>
-                        {/* <CornerstoneElement stack={{ ...this.state.stack }} /> */}
-                    </div>
+                    {/* <div style={{ overflow: "auto", height: "100%", float: "left" }}>
+                        <CornerstoneElement stack={{ ...this.state.stack }} />
+                    </div> */}
                 </div>
             </>
         );
