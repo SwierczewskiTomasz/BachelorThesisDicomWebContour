@@ -4,3 +4,12 @@ node_modules/
 src/**/*.jsx
 tests/__coverage__/
 tests/**/*.jsx
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+[b|B]in/
+[o|o]bj
+.vs/
+public/
