@@ -6,28 +6,99 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
+    public class Contour
+    {
+        public Guid guid;
+        public Guid DICOMguid;
+        (int, int, int) color;
+        string tag;
+
+        List<(int,int)> pixels;
+
+        public Contour(Guid _DICOMguid, List<(int, int)> _pixels, (int, int, int) _color, string _tag)
+        {
+            guid = Guid.NewGuid();
+            DICOMguid = _DICOMguid;
+            pixels = new List<(int, int)>(_pixels);
+            tag = _tag;
+        }
+    }
+
+    public interface IRepository<TEntity> where TEntity : class
+    {
+        List<TEntity> FetchAll();
+        IQueryable<TEntity> Query { get; }
+        void Add(TEntity entity);
+        void Delete(TEntity entity);
+        void Save();
+    }
+
+    public class ContourRepository : IRepository<Contour>
+    {
+        public IQueryable<Contour> Query => throw new NotImplementedException();
+
+        public void Add(Contour entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Delete(Contour entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<Contour> FetchAll()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Save()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     [Route("api/[controller]")]
     [ApiController]
-    public class ValuesController : ControllerBase
+    public class ContourController : ControllerBase
     {
+        private readonly ContourRepository repository;
+
+        public ContourController(ContourRepository _repository)
+        {
+            repository = _repository;
+        }
+
         // GET api/values
         [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        public ActionResult<IEnumerable<Contour>> Get()
         {
-            return new string[] { "value1", "value2" };
+            return repository.FetchAll();
         }
 
         // GET api/values/5
         [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
+        [ProducesResponseType(404)]
+        public ActionResult<Contour> Get(Guid guid)
         {
-            return "value";
+            Contour contour = (Contour)(repository.Query.Where(c => c.guid == guid));
+
+            if(contour == null)
+                return NotFound();
+
+            return contour;
         }
 
         // POST api/values
         [HttpPost]
-        public void Post([FromBody] string value)
+        [ProducesResponseType(400)]
+        public ActionResult<Contour> Post([FromBody] Contour contour)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            repository.Add(contour);
+            repository.Save();
+            return CreatedAtAction(nameof(Get), new { guid = contour.guid }, contour);
         }
 
         // PUT api/values/5
