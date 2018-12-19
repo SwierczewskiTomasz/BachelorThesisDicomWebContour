@@ -5,27 +5,39 @@ using System.Threading.Tasks;
 
 namespace DTOs
 {
+    public class LinePointsAndPixels
+    {
+        public List<Point> points;
+        public List<Point> pixels;
+        public string brushColor;
+    }
     public class SemiAutomaticContourDTO
     {
         public Guid guid;
-        public Guid DICOMguid;
-        uint pointColor;
-        uint pixelColor;
-        string tag;
+        public string dicomid;
+        public string tag;
+        public List<LinePointsAndPixels> lines;
+        public int width;
+        public int height;
 
-        List<(int, int)> points;
-        List<(int, int)> pixels;
+        public SemiAutomaticContourDTO(Guid _guid, string _DICOMid, string _tag, List<LinePointsAndPixels> _lines, int _width, int _height)
+        {
+            guid = _guid;
+            dicomid = _DICOMid;
+            tag = _tag;
+            lines = new List<LinePointsAndPixels>(_lines);
+            width = _width;
+            height = _height;
+        }
 
-        public SemiAutomaticContourDTO(Guid _DICOMguid, List<(int, int)> _points, 
-        List<(int, int)> _pixels, uint _pointColor, uint _pixelColor, string _tag)
+        public SemiAutomaticContourDTO(string _DICOMid, string _tag, List<LinePointsAndPixels> _lines, int _width, int _height)
         {
             guid = Guid.NewGuid();
-            DICOMguid = _DICOMguid;
-            points = new List<(int, int)>(_points);
-            pixels = new List<(int, int)>(_pixels);
-            pointColor = _pointColor;
-            pixelColor = _pixelColor;
+            dicomid = _DICOMid;
             tag = _tag;
+            lines = new List<LinePointsAndPixels>(_lines);
+            width = _width;
+            height = _height;
         }
     }
 }

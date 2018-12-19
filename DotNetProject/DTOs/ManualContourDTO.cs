@@ -5,29 +5,50 @@ using System.Threading.Tasks;
 
 namespace DTOs
 {
+    public class Point
+    {
+        public int x;
+        public int y;
+
+        public Point(int _x, int _y) 
+        {
+            x = _x; 
+            y = _y;
+        }
+    }
+    public class Line
+    {
+        public List<Point> pixels;
+        public string brushColor;
+    }
+
     public class ManualContourDTO
     {
         public Guid guid;
-        public string DICOMid;
-        public uint color;
+        public string dicomid;
         public string tag;
+        public List<Line> lines;
+        public int width;
+        public int height;
 
-        public List<(int, int)> pixels;
-
-        public ManualContourDTO(Guid _guid, string _DICOMid, List<(int, int)> _pixels, uint _color, string _tag)
+        public ManualContourDTO(Guid _guid, string _DICOMid, string _tag, List<Line> _lines, int _width, int _height)
         {
             guid = _guid;
-            DICOMid = _DICOMid;
-            pixels = new List<(int, int)>(_pixels);
+            dicomid = _DICOMid;
             tag = _tag;
+            lines = new List<Line>(_lines);
+            width = _width;
+            height = _height;
         }
 
-        public ManualContourDTO(string _DICOMguid, List<(int, int)> _pixels, uint _color, string _tag)
+        public ManualContourDTO(string _DICOMid, string _tag, List<Line> _lines, int _width, int _height)
         {
             guid = Guid.NewGuid();
-            DICOMid = _DICOMguid;
-            pixels = new List<(int, int)>(_pixels);
+            dicomid = _DICOMid;
             tag = _tag;
+            lines = new List<Line>(_lines);
+            width = _width;
+            height = _height;
         }
     }
 }

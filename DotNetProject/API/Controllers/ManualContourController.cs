@@ -7,7 +7,7 @@ using DTOs;
 using Logic;
 
 namespace API.Controllers
-{   
+{
     [Route("api/[controller]")]
     [ApiController]
     public class ManualContourController : ControllerBase
@@ -39,7 +39,7 @@ namespace API.Controllers
         {
             ManualContourDTO contour = logic.Get(guid);
 
-            if(contour == null)
+            if (contour == null)
                 return NotFound();
 
             return contour;
@@ -64,18 +64,21 @@ namespace API.Controllers
         [HttpPost("{DICOMid}")]
         public ActionResult<Guid> Post(string DICOMid)
         {
-            List<(int, int)> pixels = new List<(int, int)>();
-            pixels.Add((0, 0));
-            pixels.Add((1, 0));
-            pixels.Add((2, 0));
-            pixels.Add((2, 1));
-            pixels.Add((2, 2));
-            pixels.Add((1, 2));
-            pixels.Add((0, 2));
-            pixels.Add((0, 1));
-            
+            List<Line> lines = new List<Line>();
+            Line line = new Line();
+            line.pixels = new List<Point>();
+            line.pixels.Add(new Point(0, 0));
+            line.pixels.Add(new Point(1, 0));
+            line.pixels.Add(new Point(2, 0));
+            line.pixels.Add(new Point(2, 1));
+            line.pixels.Add(new Point(2, 2));
+            line.pixels.Add(new Point(1, 2));
+            line.pixels.Add(new Point(0, 2));
+            line.pixels.Add(new Point(0, 1));
+            line.brushColor = "#f00";
+            lines.Add(line);
 
-            ManualContourDTO contour = new ManualContourDTO(DICOMid, pixels, 0, "Test");
+            ManualContourDTO contour = new ManualContourDTO(DICOMid, "Test", lines, 500, 500);
             logic.Add(contour);
             return Ok(contour.guid);
         }

@@ -5,21 +5,39 @@ using System.Threading.Tasks;
 
 namespace DTOs
 {
+    public class LinePoints
+    {
+        public List<Point> points;
+        public string brushColor;
+    }
+
     public class SemiAutomaticPointsDTO
     {
         public Guid guid;
-        public Guid DICOMguid;
-        uint color;
-        string tag;
+        public string dicomid;
+        public string tag;
+        public List<LinePoints> lines;
+        public int width;
+        public int height;
 
-        List<(int, int)> points;
+        public SemiAutomaticPointsDTO(Guid _guid, string _DICOMid, string _tag, List<LinePoints> _lines, int _width, int _height)
+        {
+            guid = _guid;
+            dicomid = _DICOMid;
+            tag = _tag;
+            lines = new List<LinePoints>(_lines);
+            width = _width;
+            height = _height;
+        }
 
-        public SemiAutomaticPointsDTO(Guid _DICOMguid, List<(int, int)> _points, uint _color, string _tag)
+        public SemiAutomaticPointsDTO(string _DICOMid, string _tag, List<LinePoints> _lines, int _width, int _height)
         {
             guid = Guid.NewGuid();
-            DICOMguid = _DICOMguid;
-            points = new List<(int, int)>(_points);
+            dicomid = _DICOMid;
             tag = _tag;
+            lines = new List<LinePoints>(_lines);
+            width = _width;
+            height = _height;
         }
     }
 }
