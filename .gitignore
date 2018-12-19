@@ -10,6 +10,7 @@ tests/**/*.jsx
 !.vscode/launch.json
 !.vscode/extensions.json
 [b|B]in/
-[o|o]bj
+[o|O]bj/
 .vs/
 public/
+[d|D]ata/

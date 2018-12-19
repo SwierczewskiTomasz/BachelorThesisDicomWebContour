@@ -3,6 +3,7 @@ using DTOs;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DataAccess;
 
 namespace Logic
 {
@@ -15,28 +16,48 @@ namespace Logic
         void Save();
     }
 
-    public class ManualContourLogic : ILogic<ManualContourDTO>
+    public class ManualContourLogic
     {
+        private readonly ManualContourRepository repository = new ManualContourRepository();
+
         public List<ManualContourDTO> FetchAll()
         {
-            throw new NotImplementedException();
+            List<ManualContourDTO> contours = new List<ManualContourDTO>();
+            foreach(Guid guid in repository.FetchAll())
+            {
+                contours.Add(repository.Load(guid));
+            }
+            return contours;
         }
 
-        public IQueryable<ManualContourDTO> Query => throw new NotImplementedException();
+        public ManualContourDTO Get(Guid guid)
+        {
+            ManualContourDTO result = null;
+            try
+            {
+                result = repository.Load(guid);
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine("Catched exception: ");
+                Console.WriteLine(e.ToString());
+            }
+            return result;
+        }
 
         public void Add(ManualContourDTO contour)
         {
-            throw new NotImplementedException();
+            repository.Save(contour);
         }
 
-        public void Delete(ManualContourDTO contour)
+        public void Delete(Guid guid)
         {
-            throw new NotImplementedException();
+            repository.Delete(guid);
         }
 
-        public void Save()
+        public void Edit(ManualContourDTO contour)
         {
-            throw new NotImplementedException();
+            repository.Edit(contour);
         }
     }
 }

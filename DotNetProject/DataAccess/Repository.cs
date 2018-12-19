@@ -17,9 +17,16 @@ namespace DataAccess
 
     public class ManualContourRepository : IFilesRepository<ManualContourDTO>
     {
+        List<Guid> contours = new List<Guid>();
+
+        public List<Guid> FetchAll()
+        {
+            return contours;
+        }
+
         public ManualContourDTO Load(Guid guid)
         {
-            Guid DICOMguid;
+            string DICOMid;
             uint color;
             string tag;
             List<(int, int)> pixels = new List<(int, int)>();
@@ -36,8 +43,7 @@ namespace DataAccess
             if (sr.EndOfStream)
                 throw new Exception($"Unexpected end of file {filename}");
 
-            buffor = sr.ReadLine();
-            DICOMguid = Guid.Parse(buffor);
+            DICOMid  = sr.ReadLine();
             if (sr.EndOfStream)
                 throw new Exception($"Unexpected end of file {filename}");
 
@@ -67,7 +73,7 @@ namespace DataAccess
 
             sr.Close();
 
-            ManualContourDTO contour = new ManualContourDTO(guid, DICOMguid, pixels, color, tag);
+            ManualContourDTO contour = new ManualContourDTO(guid, DICOMid, pixels, color, tag);
 
             return contour;
         }
@@ -78,18 +84,23 @@ namespace DataAccess
             StreamWriter sw = new StreamWriter(filename);
 
             sw.WriteLine(contour.guid.ToString());
-            sw.WriteLine(contour.DICOMguid.ToString());
+            sw.WriteLine(contour.DICOMid.ToString());
             sw.WriteLine(contour.color.ToString());
             sw.WriteLine(contour.tag);
-            sw.WriteLine(string.Join(',',contour.pixels.Select(s => s.ToString())));
+            sw.WriteLine(string.Join(',',contour.pixels.Select(s => s.Item1.ToString() + 
+            "," + s.Item2.ToString())));
 
             sw.Close();
+
+            contours.Add(contour.guid);
         }
 
         public void Delete(Guid guid)
         {
             string filename = "../data/" + guid.ToString() + ".csv";
             File.Delete(filename);
+
+            contours.Remove(guid);
         }
 
         public void Edit(ManualContourDTO contour)

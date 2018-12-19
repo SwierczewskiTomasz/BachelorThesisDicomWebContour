@@ -15,10 +15,10 @@ namespace API.Controllers
         //readonly private ManualContourRepository repository;
         readonly private ManualContourLogic logic;
 
-        public ManualContourController(ManualContourLogic _logic)
-        {
-            logic = _logic;
-        }
+        // public ManualContourController(ManualContourLogic _logic)
+        // {
+        //     logic = _logic;
+        // }
 
         public ManualContourController()
         {
@@ -37,7 +37,7 @@ namespace API.Controllers
         [ProducesResponseType(404)]
         public ActionResult<ManualContourDTO> Get(Guid guid)
         {
-            ManualContourDTO contour = logic.Query.Where(c => c.guid == guid).First();
+            ManualContourDTO contour = logic.Get(guid);
 
             if(contour == null)
                 return NotFound();
@@ -61,16 +61,37 @@ namespace API.Controllers
                 new { guid = contour.guid }, contour);
         }
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPost("{DICOMid}")]
+        public ActionResult<Guid> Post(string DICOMid)
         {
+            List<(int, int)> pixels = new List<(int, int)>();
+            pixels.Add((0, 0));
+            pixels.Add((1, 0));
+            pixels.Add((2, 0));
+            pixels.Add((2, 1));
+            pixels.Add((2, 2));
+            pixels.Add((1, 2));
+            pixels.Add((0, 2));
+            pixels.Add((0, 1));
+            
+
+            ManualContourDTO contour = new ManualContourDTO(DICOMid, pixels, 0, "Test");
+            logic.Add(contour);
+            return Ok(contour.guid);
+        }
+
+        // PUT api/values/5
+        [HttpPut]
+        public void Put([FromBody] ManualContourDTO contour)
+        {
+            logic.Edit(contour);
         }
 
         // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpDelete("{guid}")]
+        public void Delete(Guid guid)
         {
+            logic.Delete(guid);
         }
     }
 }
