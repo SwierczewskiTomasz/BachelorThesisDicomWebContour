@@ -13,12 +13,17 @@ namespace DTOs
     }
     public class SemiAutomaticContourDTO
     {
-        public Guid guid;
-        public string dicomid;
-        public string tag;
-        public List<LinePointsAndPixels> lines;
-        public int width;
-        public int height;
+        public Guid guid {get; set;}
+        public string dicomid {get; set;}
+        public string tag {get; set;}
+        public List<LinePointsAndPixels> lines {get; set;}
+        public int width {get; set;}
+        public int height {get; set;}
+
+        public SemiAutomaticContourDTO()
+        {
+            guid = Guid.NewGuid();
+        }
 
         public SemiAutomaticContourDTO(Guid _guid, string _DICOMid, string _tag, List<LinePointsAndPixels> _lines, int _width, int _height)
         {

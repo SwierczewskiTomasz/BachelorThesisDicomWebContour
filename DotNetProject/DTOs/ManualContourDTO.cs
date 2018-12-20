@@ -7,8 +7,13 @@ namespace DTOs
 {
     public class Point
     {
-        public int x;
-        public int y;
+        public int x {get; set;}
+        public int y {get; set;}
+
+        public Point()
+        {
+
+        }
 
         public Point(int _x, int _y) 
         {
@@ -24,12 +29,17 @@ namespace DTOs
 
     public class ManualContourDTO
     {
-        public Guid guid;
-        public string dicomid;
-        public string tag;
-        public List<Line> lines;
-        public int width;
-        public int height;
+        public Guid guid {get; set;}
+        public string dicomid {get; set;}
+        public string tag {get; set;}
+        public List<Line> lines {get; set;}
+        public int width {get; set;}
+        public int height {get; set;}
+
+        public ManualContourDTO()
+        {
+            guid = Guid.NewGuid();
+        }
 
         public ManualContourDTO(Guid _guid, string _DICOMid, string _tag, List<Line> _lines, int _width, int _height)
         {

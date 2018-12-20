@@ -167,6 +167,7 @@ namespace DataAccess
 
             LinePointsAndPixels line = new LinePointsAndPixels();
             line.pixels = new List<Point>();
+            line.points = new List<Point>();
 
             buffor = sr.ReadLine();
             List<int> points = buffor.Split(',').Select(s => int.Parse(s)).ToList();
