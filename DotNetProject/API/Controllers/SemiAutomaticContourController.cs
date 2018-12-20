@@ -54,10 +54,10 @@ namespace API.Controllers
                 return BadRequest(ModelState);
             }
 
-            logic.Add(points);
+            SemiAutomaticContourDTO result = logic.Add(points);
 
             return CreatedAtAction(nameof(Get),
-                new { guid = points.guid }, points);
+                new { guid = result.guid }, result);
         }
 
         // PUT api/values/5

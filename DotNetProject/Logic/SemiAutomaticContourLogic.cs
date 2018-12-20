@@ -36,10 +36,11 @@ namespace Logic
             return result;
         }
 
-        public void Add(SemiAutomaticPointsDTO contour)
+        public SemiAutomaticContourDTO Add(SemiAutomaticPointsDTO contour)
         {
             SemiAutomaticContourDTO result = SemiAutomatic.Default(contour);
             repository.Save(result);
+            return result;
         }
 
         public void Delete(Guid guid)

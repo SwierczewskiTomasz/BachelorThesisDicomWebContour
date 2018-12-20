@@ -9,12 +9,10 @@ namespace Logic
 {
     public static class BresenhamClass
     {
-        static int radius = 1;
+        static int radius = 0;
 
-        public static List<Point> Bresenham(int x1, int y1, int x2, int y2)
+        public static List<Point> Bresenham(List<Point> pixels, int x1, int y1, int x2, int y2)
         {
-            List<Point> pixels = new List<Point>();
-
             if (x1 > x2)
             {
                 int c = x2;
@@ -29,17 +27,18 @@ namespace Logic
             if (y1 > y2)
             {
                 if (x2 - x1 > y1 - y2)
-                    return BresenhamNE(pixels, x1, x2, y1, y2);
+                    pixels.Concat(BresenhamNE(pixels, x1, x2, y1, y2));
                 else
-                    return BresenhamNNE(pixels, x1, x2, y1, y2);
+                    pixels.Concat(BresenhamNNE(pixels, x1, x2, y1, y2));
             }
             else
             {
                 if (x2 - x1 > y2 - y1)
-                    return BresenhamSE(pixels, x1, x2, y1, y2);
+                    pixels.Concat(BresenhamSE(pixels, x1, x2, y1, y2));
                 else
-                    return BresenhamSSE(pixels, x1, x2, y1, y2);
+                    pixels.Concat(BresenhamSSE(pixels, x1, x2, y1, y2));
             }
+            return pixels;
         }
 
         public static List<Point> BresenhamNNE(List<Point> pixels, int x1, int x2, int y1, int y2)
@@ -183,7 +182,7 @@ namespace Logic
             int incrNE = 2 * (dy - dx); //increment used for move to NE
             int x = x1;
             int y = y1;
-
+         
             for (int i = 0; i < radius; i++)
             {
                 if (d < 0) //choose E

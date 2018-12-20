@@ -15,13 +15,16 @@ namespace Logic
         public static SemiAutomaticContourDTO TrivialContour(SemiAutomaticPointsDTO points)
         {
             List<Point> pixels = new List<Point>();
-            for (int i = 0; i < points.lines.First().points.Count - 1; i++)
+            int count = points.lines.First().points.Count;
+            for (int i = 0; i < points.lines.First().points.Count; i++)
             {
                 int x1 = points.lines.First().points[i].x;
                 int y1 = points.lines.First().points[i].y;
-                int x2 = points.lines.First().points[i + 1].x;
-                int y2 = points.lines.First().points[i + 1].y;
-                pixels.Concat(BresenhamClass.Bresenham(x1, y1, x2, y2));
+                int x2 = points.lines.First().points[(i + 1)%count].x;
+                int y2 = points.lines.First().points[(i + 1)%count].y;
+                List<Point> pixelsBresenham = new List<Point>(); 
+                BresenhamClass.Bresenham(pixelsBresenham, x1, y1, x2, y2);
+                pixels = pixels.Concat(pixelsBresenham).ToList();
             }
 
             List<LinePointsAndPixels> lines = new List<LinePointsAndPixels>();
