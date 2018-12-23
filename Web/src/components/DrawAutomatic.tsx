@@ -83,8 +83,8 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
         const f = (x, y) => this.setState(prev => { return { points: [...prev.points, { x, y }] }; });
 
         canvas.addEventListener("click", function (e) {
-            const x = Math.floor(e.layerX);
-            const y = Math.floor(e.layerY);
+            const x = Math.floor(e.offsetX);
+            const y = Math.floor(e.offsetY);
 
             f(x, y);
 
