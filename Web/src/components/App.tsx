@@ -2,13 +2,14 @@
 import * as React from "react";
 // import "./../assets/scss/App.scss";
 import CornerstoneElement from "./DicomViewer";
-import { AppBar, Typography, IconButton, Drawer } from "@material-ui/core";
+import { AppBar, Typography, IconButton, Drawer, Tabs, Tab } from "@material-ui/core";
 import FileInputButton from "./FileInput";
 import { number } from "prop-types";
 import SideMenu from "./SideMenu";
 import MenuIcon from "@material-ui/icons/MenuOutlined";
 import { connect } from "react-redux";
 import { orthancURL } from "../helpers/requestHelper";
+import DrawManually from "./DrawManually";
 import DisplayImage from "./DisplayImage";
 
 
@@ -69,6 +70,7 @@ export default class AppView extends React.Component<AppViewProps, AppViewState>
                         <SideMenu />
                     </Drawer>
                     <DisplayImage />
+                    {/* <DrawManually /> */}
                     {/* <div style={{ overflow: "auto", height: "100%", float: "left" }}>
                         <CornerstoneElement stack={{ ...this.state.stack }} />
                     </div> */}
