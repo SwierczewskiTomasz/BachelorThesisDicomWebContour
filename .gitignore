@@ -5,3 +5,13 @@ src/**/*.jsx
 tests/__coverage__/
 tests/**/*.jsx
 yarn-error.log
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+[b|B]in/
+[o|O]bj/
+.vs/
+public/
+[d|D]ata/
