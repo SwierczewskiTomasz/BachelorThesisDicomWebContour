@@ -7,19 +7,34 @@ using DataAccess;
 
 namespace Logic
 {
-    public class SemiAutomaticContourLogic 
+    public class SemiAutomaticContourLogic
     {
         private readonly SemiAutomaticContourRepository repository = new SemiAutomaticContourRepository();
 
-        public List<SemiAutomaticContourDTO> FetchAll()
+        public List<SemiAutomaticContourDTO> FetchAllToDTOs()
         {
             List<SemiAutomaticContourDTO> contours = new List<SemiAutomaticContourDTO>();
-            foreach(Guid guid in repository.FetchAll())
+            foreach (Guid guid in repository.FetchAll())
             {
                 contours.Add(repository.Load(guid));
             }
             return contours;
         }
+
+        public List<SemiAutomaticContourDTO> FetchByDicomIdToDTOs(string dicomid)
+        {
+            List<SemiAutomaticContourDTO> contours = new List<SemiAutomaticContourDTO>();
+            foreach (Guid guid in repository.FetchByDicomId(dicomid))
+            {
+                contours.Add(repository.Load(guid));
+            }
+            return contours;
+        }
+
+        public List<Guid> FetchAll() => repository.FetchAll();
+
+        public List<Guid> FetchByDicomId(string dicomid) => repository.FetchByDicomId(dicomid);
+
 
         public SemiAutomaticContourDTO Get(Guid guid)
         {
@@ -28,7 +43,7 @@ namespace Logic
             {
                 result = repository.Load(guid);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine("Catched exception: ");
                 Console.WriteLine(e.ToString());
@@ -43,9 +58,9 @@ namespace Logic
             return result;
         }
 
-        public void Delete(Guid guid)
+        public bool Delete(Guid guid)
         {
-            repository.Delete(guid);
+            return repository.Delete(guid);
         }
 
         public void Edit(SemiAutomaticContourDTO contour)

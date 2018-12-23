@@ -7,28 +7,33 @@ using DataAccess;
 
 namespace Logic
 {
-        public interface ILogic<TEntity> where TEntity : class
-    {
-        List<TEntity> FetchAll();
-        IQueryable<TEntity> Query { get; }
-        void Add(TEntity entity);
-        void Delete(TEntity entity);
-        void Save();
-    }
-
     public class ManualContourLogic
     {
         private readonly ManualContourRepository repository = new ManualContourRepository();
 
-        public List<ManualContourDTO> FetchAll()
+        public List<ManualContourDTO> FetchAllToDTOs()
         {
             List<ManualContourDTO> contours = new List<ManualContourDTO>();
-            foreach(Guid guid in repository.FetchAll())
+            foreach (Guid guid in repository.FetchAll())
             {
                 contours.Add(repository.Load(guid));
             }
             return contours;
         }
+
+        public List<ManualContourDTO> FetchByDicomIdToDTOs(string dicomid)
+        {
+            List<ManualContourDTO> contours = new List<ManualContourDTO>();
+            foreach (Guid guid in repository.FetchByDicomId(dicomid))
+            {
+                contours.Add(repository.Load(guid));
+            }
+            return contours;
+        }
+
+        public List<Guid> FetchAll() => repository.FetchAll();
+
+        public List<Guid> FetchByDicomId(string dicomid) => repository.FetchByDicomId(dicomid);
 
         public ManualContourDTO Get(Guid guid)
         {
@@ -37,7 +42,7 @@ namespace Logic
             {
                 result = repository.Load(guid);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine("Catched exception: ");
                 Console.WriteLine(e.ToString());
@@ -50,9 +55,9 @@ namespace Logic
             repository.Save(contour);
         }
 
-        public void Delete(Guid guid)
+        public bool Delete(Guid guid)
         {
-            repository.Delete(guid);
+            return repository.Delete(guid);
         }
 
         public void Edit(ManualContourDTO contour)

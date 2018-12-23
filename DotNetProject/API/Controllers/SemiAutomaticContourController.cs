@@ -14,21 +14,37 @@ namespace API.Controllers
     {
         readonly private SemiAutomaticContourLogic logic;
 
-        // public ManualContourController(ManualContourLogic _logic)
-        // {
-        //     logic = _logic;
-        // }
-
         public SemiAutomaticContourController()
         {
             logic = new SemiAutomaticContourLogic();
         }
 
-        // GET api/values
+        [Route("api/[controller]/fetchall")]
         [HttpGet]
-        public ActionResult<IEnumerable<SemiAutomaticContourDTO>> Get()
+        public ActionResult<IEnumerable<Guid>> FetchAll()
         {
             return logic.FetchAll();
+        }
+
+        [Route("api/[controller]/fetchall/todtos")]
+        [HttpGet]
+        public ActionResult<IEnumerable<SemiAutomaticContourDTO>> FetchAllToDTOs()
+        {
+            return logic.FetchAllToDTOs();
+        }
+
+        [Route("api/[controller]/fetchall/{id}")]
+        [HttpGet]
+        public ActionResult<IEnumerable<Guid>> FetchByDicomId(string id)
+        {
+            return logic.FetchByDicomId(id);
+        }
+
+        [Route("api/[controller]/fetchall/todtos/{id}")]
+        [HttpGet]
+        public ActionResult<IEnumerable<SemiAutomaticContourDTO>> FetchByDicomIdToDTOs(string id)
+        {
+            return logic.FetchByDicomIdToDTOs(id);
         }
 
         // GET api/values/5
@@ -71,6 +87,9 @@ namespace API.Controllers
         [HttpDelete("{guid}")]
         public void Delete(Guid guid)
         {
+            // if(logic.Delete(guid))
+            //     return OK();
+            // return NotFound();
             logic.Delete(guid);
         }
     }
