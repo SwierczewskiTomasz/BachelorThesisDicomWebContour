@@ -202,10 +202,14 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                         return response.json();
                     }).then(data => {
                         console.log(data);
-                        this.setState(prev => {
-                            guid: data.guid;
-                            pixels: data.lines[0].pixels;
-                        });
+                        this.setState(prev => ({
+                            guid: data.guid,
+                            pixels: data.lines[0].pixels,
+                            reload: !prev.reload
+                        }));
+                    }).then(prev => {
+                        console.log(this.state.guid);
+                        console.log(this.state.pixels);
                     });
 
                     // Draw pixels
@@ -215,7 +219,7 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                     context.fillStyle = "#F00";
 
                     this.state.pixels.forEach((pixel) => {
-                        context.fillRect(pixel.x, pixel.y, 1, 1);
+                        context.fillRect(pixel.x, pixel.y, 2, 2);
                     });
                 }}
             >

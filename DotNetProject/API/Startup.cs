@@ -26,12 +26,22 @@ namespace API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
+
+            services.AddCors(options =>
             {
-                builder.AllowAnyOrigin()
-                       .AllowAnyMethod()
-                       .AllowAnyHeader();
-            }));
+                options.AddPolicy("AllowSpecificOrigin",
+                    builder => builder.WithOrigins("http://localhost:8080")
+                                      .AllowAnyHeader()
+                                      .AllowAnyMethod()
+                                      .AllowCredentials());
+            });
+            // services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
+            // {
+            //     builder.AllowAnyOrigin()
+            //            .AllowAnyMethod()
+            //            .AllowAnyHeader();
+            // }));
+            // services.AddCors();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,6 +58,16 @@ namespace API
 
             app.UseHttpsRedirection();
             app.UseMvc();
+
+            // app.UseCors(builder =>
+            //     builder.WithOrigins("http://localhost:8080/")
+            //            .AllowAnyHeader()
+            // );
+            // app.UseCors(builder =>
+            //     builder.AllowAnyOrigin()
+            //            .AllowAnyHeader()
+            // );
+            app.UseCors("AllowSpecificOrigin");
         }
     }
 }

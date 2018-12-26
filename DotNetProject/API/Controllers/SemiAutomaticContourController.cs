@@ -5,10 +5,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using DTOs;
 using Logic;
+using Microsoft.AspNetCore.Cors;
 
 namespace API.Controllers
 {
     [Route("api/[controller]")]
+    [EnableCors("AllowSpecificOrigin")]
     [ApiController]
     public class SemiAutomaticContourController : ControllerBase
     {
