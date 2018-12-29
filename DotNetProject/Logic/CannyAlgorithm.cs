@@ -23,9 +23,9 @@ namespace Logic
             double[,] edges = NonMaximumSuppression(gradient, width, height);
             int[] distribution = DistributionFunction(edges, width, height);
             distribution = CumulativeDistributionFunction(distribution);
-            
+
             int min, max;
-            double lowerThreshold = 0.25, higherThreshold = 0.75;
+            double lowerThreshold = 0.70, higherThreshold = 0.95;
 
             (min, max) = ChooseThreshold(distribution, lowerThreshold, higherThreshold);
             int[,] foundedEdges = HysteresisThreshold(edges, width, height, min, max);
@@ -84,49 +84,35 @@ namespace Logic
         {
             double[,] result = new double[width, height];
 
-            for (int x = 1; x < width - 2; x++)
+            for (int x = 2; x < width - 2; x++)
             {
-                for (int y = 1; y < height - 2; y++)
+                for (int y = 2; y < height - 2; y++)
                 {
                     result[x, y] = gradient[x, y][0];
 
                     if (Math.Abs(gradient[x, y][1]) < Math.PI / 8)
                     {
                         if (gradient[x, y][0] < gradient[x + 1, y][0] || gradient[x, y][0] < gradient[x - 1, y][0])
-                        {
                             result[x, y] = 0;
-                        }
-                        continue;
                     }
-
-                    if (Math.Abs(gradient[x, y][1]) > Math.PI * 3 / 8)
+                    else if (Math.Abs(gradient[x, y][1]) > Math.PI * 3 / 8)
                     {
                         if (gradient[x, y][0] < gradient[x, y + 1][0] || gradient[x, y][0] < gradient[x, y - 1][0])
-                        {
                             result[x, y] = 0;
-                        }
-                        continue;
                     }
-
-                    if (gradient[x, y][1] > 0)
+                    else if (gradient[x, y][1] > 0)
                     {
                         if (gradient[x, y][0] < gradient[x + 1, y + 1][0] || gradient[x, y][0] < gradient[x - 1, y - 1][0])
-                        {
                             result[x, y] = 0;
-                        }
                         continue;
                     }
-
-                    if (Math.Abs(gradient[x, y][1]) < 0)
+                    else if (gradient[x, y][1] < 0)
                     {
                         if (gradient[x, y][0] < gradient[x + 1, y - 1][0] || gradient[x, y][0] < gradient[x - 1, y + 1][0])
-                        {
                             result[x, y] = 0;
-                        }
-                        continue;
                     }
-
-                    throw new Exception("Program shouldn't reach this piece of code");
+                    else
+                        throw new Exception("Program shouldn't reach this piece of code");
                 }
             }
 
@@ -138,7 +124,7 @@ namespace Logic
             int[] result = new int[numberOfColors];
             for (int x = 0; x < width; x++)
                 for (int y = 0; y < height; y++)
-                    result[(int)edges[x, y]]++;
+                    result[(int)edges[x, y] < 256 ? (int)edges[x, y] : 255]++;
             return result;
         }
 
@@ -172,7 +158,8 @@ namespace Logic
 
             for (int x = 0; x < width; x++)
                 for (int y = 0; y < height; y++)
-                    list.Add((x, y));
+                    if (edges[x, y] > max)
+                        list.Add((x, y));
 
             while (list.Count != 0)
             {
@@ -206,7 +193,7 @@ namespace Logic
                             }
                 }
                 else
-                    result[x,y] = 0;
+                    result[x, y] = 0;
             }
 
             return result;
@@ -216,11 +203,11 @@ namespace Logic
         {
             List<Point> result = new List<Point>();
 
-            for(int x = 0; x < width; x++)
-                for(int y = 0; y < height; y++)
-                    if(edges[x,y] == 1)
+            for (int x = 0; x < width; x++)
+                for (int y = 0; y < height; y++)
+                    if (edges[x, y] == 1)
                         result.Add(new Point(x, y));
-            
+
             return result;
         }
     }

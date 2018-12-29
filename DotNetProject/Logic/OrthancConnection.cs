@@ -23,7 +23,7 @@ namespace Logic
             Stream stream = client.OpenRead(url);
             Bitmap bitmap = (Bitmap)Image.FromStream(stream);
 
-            return null;
+            return bitmap;
         }
     }
 }
