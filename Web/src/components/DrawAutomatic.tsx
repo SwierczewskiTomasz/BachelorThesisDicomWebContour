@@ -3,6 +3,7 @@ import { orthancURL } from "../helpers/requestHelper";
 import { connect } from "react-redux";
 import CanvasDraw from "react-canvas-draw";
 import { Button } from "@material-ui/core";
+import { defaultCipherList } from "constants";
 
 export interface DrawAutimaticProps {
     readonly instancesIds: string[];
@@ -12,7 +13,9 @@ export interface DrawAutimaticState {
     readonly currentInstanceId: number;
     readonly size: Size;
     readonly points: Point[];
+    readonly pixels: Point[];
     readonly reload: boolean;
+    readonly guid: string;
 }
 
 interface Size {
@@ -36,7 +39,9 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                 height: -1
             },
             reload: true,
-            points: []
+            points: [],
+            pixels: [],
+            guid: null
         };
         console.warn(this.state);
         const url = props.instancesIds.length > 0 ?
@@ -159,6 +164,63 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                     console.warn(
                         JSON.stringify(this.state.points)
                     );
+                    console.log(JSON.stringify({
+                        dicomid: this.props.instancesIds[this.state.currentInstanceId],
+                        tag: "SemiAutomatic Test",
+                        lines: [
+                            {
+                                points: this.state.points,
+                                brushColor: "#f00"
+                            }
+                        ],
+                        width: this.state.size.width,
+                        height: this.state.size.height
+                    }));
+
+                    // Send to API
+                    fetch("https://localhost:5001/api/semiautomaticcontour/post/", {
+                        mode: "cors",
+                        method: "post",
+                        headers: {
+                            "Accept": "application/json",
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            dicomid: this.props.instancesIds[this.state.currentInstanceId],
+                            tag: "SemiAutomatic Test",
+                            lines: [
+                                {
+                                    points: this.state.points,
+                                    brushColor: "#f00"
+                                }
+                            ],
+                            width: this.state.size.width,
+                            height: this.state.size.height
+                        })
+                    }).then(response => {
+                        console.log(response);
+                        return response.json();
+                    }).then(data => {
+                        console.log(data);
+                        this.setState(prev => ({
+                            guid: data.guid,
+                            pixels: data.lines[0].pixels,
+                            reload: !prev.reload
+                        }));
+                    }).then(prev => {
+                        console.log(this.state.guid);
+                        console.log(this.state.pixels);
+                    });
+
+                    // Draw pixels
+                    const canvas: any = document.getElementById("canvas");
+
+                    const context = canvas.getContext("2d");
+                    context.fillStyle = "#F00";
+
+                    this.state.pixels.forEach((pixel) => {
+                        context.fillRect(pixel.x, pixel.y, 2, 2);
+                    });
                 }}
             >
                 GetSavedData

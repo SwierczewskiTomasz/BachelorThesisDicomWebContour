@@ -19,36 +19,36 @@ namespace API.Controllers
             logic = new ManualContourLogic();
         }
 
-        [Route("api/[controller]/fetchall")]
+        [Route("[action]")]
         [HttpGet]
         public ActionResult<IEnumerable<Guid>> FetchAll()
         {
             return logic.FetchAll();
         }
 
-        [Route("api/[controller]/fetchall/todtos")]
+        [Route("[action]")]
         [HttpGet]
         public ActionResult<IEnumerable<ManualContourDTO>> FetchAllToDTOs()
         {
             return logic.FetchAllToDTOs();
         }
 
-        [Route("api/[controller]/fetchall/{id}")]
+        [Route("[action]/{id}")]
         [HttpGet]
         public ActionResult<IEnumerable<Guid>> FetchByDicomId(string id)
         {
             return logic.FetchByDicomId(id);
         }
 
-        [Route("api/[controller]/fetchall/todtos/{id}")]
+        [Route("[action]/{id}")]
         [HttpGet]
         public ActionResult<IEnumerable<ManualContourDTO>> FetchByDicomIdToDTOs(string id)
         {
             return logic.FetchByDicomIdToDTOs(id);
         }
 
-        // GET api/values/5
-        [HttpGet("{guid}")]
+        [Route("[action]/{guid}")]
+        [HttpGet]
         [ProducesResponseType(404)]
         public ActionResult<ManualContourDTO> Get(Guid guid)
         {
@@ -60,7 +60,7 @@ namespace API.Controllers
             return contour;
         }
 
-        // POST api/values
+        [Route("[action]/")]
         [HttpPost]
         [ProducesResponseType(400)]
         public ActionResult<ManualContourDTO> Post([FromBody] ManualContourDTO contour)
@@ -76,7 +76,8 @@ namespace API.Controllers
                 new { guid = contour.guid }, contour);
         }
 
-        [HttpPost("{DICOMid}")]
+        [Route("[action]/{DICOMid}")]
+        [HttpPost]
         public ActionResult<Guid> Post(string DICOMid)
         {
             List<Line> lines = new List<Line>();
@@ -98,15 +99,15 @@ namespace API.Controllers
             return Ok(contour.guid);
         }
 
-        // PUT api/values/5
+        [Route("[action]/")]
         [HttpPut]
         public void Put([FromBody] ManualContourDTO contour)
         {
             logic.Edit(contour);
         }
 
-        // DELETE api/values/5
-        [HttpDelete("{guid}")]
+        [Route("[action]/{guid}")]
+        [HttpDelete]
         public void Delete(Guid guid)
         {
             // if(logic.Delete(guid))

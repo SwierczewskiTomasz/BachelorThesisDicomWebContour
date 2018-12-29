@@ -5,10 +5,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using DTOs;
 using Logic;
+using Microsoft.AspNetCore.Cors;
 
 namespace API.Controllers
 {
     [Route("api/[controller]")]
+    [EnableCors("AllowSpecificOrigin")]
     [ApiController]
     public class SemiAutomaticContourController : ControllerBase
     {
@@ -19,36 +21,36 @@ namespace API.Controllers
             logic = new SemiAutomaticContourLogic();
         }
 
-        [Route("api/[controller]/fetchall")]
+        [Route("[action]")]
         [HttpGet]
         public ActionResult<IEnumerable<Guid>> FetchAll()
         {
             return logic.FetchAll();
         }
 
-        [Route("api/[controller]/fetchall/todtos")]
+        [Route("[action]")]
         [HttpGet]
         public ActionResult<IEnumerable<SemiAutomaticContourDTO>> FetchAllToDTOs()
         {
             return logic.FetchAllToDTOs();
         }
 
-        [Route("api/[controller]/fetchall/{id}")]
+        [Route("[action]/{id}")]
         [HttpGet]
         public ActionResult<IEnumerable<Guid>> FetchByDicomId(string id)
         {
             return logic.FetchByDicomId(id);
         }
 
-        [Route("api/[controller]/fetchall/todtos/{id}")]
+        [Route("[action]/{id}")]
         [HttpGet]
         public ActionResult<IEnumerable<SemiAutomaticContourDTO>> FetchByDicomIdToDTOs(string id)
         {
             return logic.FetchByDicomIdToDTOs(id);
         }
 
-        // GET api/values/5
-        [HttpGet("{guid}")]
+        [Route("[action]/{guid}")]
+        [HttpGet]
         [ProducesResponseType(404)]
         public ActionResult<SemiAutomaticContourDTO> Get(Guid guid)
         {
@@ -60,7 +62,7 @@ namespace API.Controllers
             return contour;
         }
 
-        // POST api/values
+        [Route("[action]/")]
         [HttpPost]
         [ProducesResponseType(400)]
         public ActionResult<SemiAutomaticContourDTO> Post([FromBody] SemiAutomaticPointsDTO points)
@@ -76,15 +78,15 @@ namespace API.Controllers
                 new { guid = result.guid }, result);
         }
 
-        // PUT api/values/5
+        [Route("[action]/")]
         [HttpPut]
         public void Put([FromBody] SemiAutomaticContourDTO contour)
         {
             logic.Edit(contour);
         }
 
-        // DELETE api/values/5
-        [HttpDelete("{guid}")]
+        [Route("[action]/{guid}")]
+        [HttpDelete]
         public void Delete(Guid guid)
         {
             // if(logic.Delete(guid))

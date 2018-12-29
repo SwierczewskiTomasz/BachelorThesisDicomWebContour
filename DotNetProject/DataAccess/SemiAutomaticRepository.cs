@@ -15,7 +15,7 @@ namespace DataAccess
             using (var db = new ContourContext())
             {
                 foreach (var c in db.Contours.Where(c => !c.IsManual))
-                    contours.Add(c.ContourId);
+                    contours.Add(c.ContourEntityId);
             }
             return contours;
         }
@@ -26,7 +26,7 @@ namespace DataAccess
             using (var db = new ContourContext())
             {
                 foreach (var c in db.Contours.Where(c => c.IsManual && c.DicomId == DicomId))
-                    contours.Add(c.ContourId);
+                    contours.Add(c.ContourEntityId);
             }
             return contours;
         }
@@ -35,7 +35,7 @@ namespace DataAccess
         {
             using (var db = new ContourContext())
             {
-                if (db.Contours.Where(c => c.ContourId == guid).ToList().Count == 0)
+                if (db.Contours.Where(c => c.ContourEntityId == guid).ToList().Count == 0)
                     return null;
             }
 
@@ -118,13 +118,13 @@ namespace DataAccess
             using (var db = new ContourContext())
             {
                 ContourEntity ce = new ContourEntity();
-                ce.ContourId = contour.guid;
+                ce.ContourEntityId = contour.guid;
                 ce.DicomId = contour.dicomid;
                 ce.Tag = contour.tag;
                 ce.IsManual = false;
 #warning "Tak tego nie powinno się robić! Do poprawy"
-                ce.UserId = Guid.Empty;
-                ce.User = null;
+                // ce.UserId = Guid.Empty;
+                // ce.User = null;
 
                 db.Contours.Add(ce);
                 db.SaveChanges();
@@ -151,7 +151,7 @@ namespace DataAccess
         {
             using (var db = new ContourContext())
             {
-                ContourEntity ce = db.Contours.Single(c => c.ContourId == guid);
+                ContourEntity ce = db.Contours.Single(c => c.ContourEntityId == guid);
                 if (ce.IsManual)
                     return false;
                 db.Contours.Remove(ce);
