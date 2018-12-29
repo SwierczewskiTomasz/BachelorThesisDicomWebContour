@@ -179,15 +179,25 @@ class DrawManually extends React.Component<DrawManuallyProps, DrawManuallyState>
                 color="primary"
                 onClick={() => {
                     console.log("click");
-                    localStorage.setItem(
-                        "savedDrawing",
-                        this.state.reload ? this.saveableCanvas1.getSaveData() : this.saveableCanvas2.getSaveData()
-                    );
-                    console.warn(
-                        this.state.reload ? this.saveableCanvas1.getSaveData() : this.saveableCanvas2.getSaveData());
+                    const data = this.state.reload ? this.saveableCanvas1.getSaveData() : this.saveableCanvas2.getSaveData();
+                    // localStorage.setItem("savedDrawing", data);
+                    console.warn(data);
+                    // Send to API
+                    fetch("https://localhost:5001/api/manualcontour/post/", {
+                        mode: "cors",
+                        method: "post",
+                        headers: {
+                            "Accept": "application/json",
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            dicomid: this.props.instancesIds[this.state.currentInstanceId],
+                            ...data
+                        })
+                    });
                 }}
             >
-                GetSavedData
+                Save Contour
             </Button>
         </>;
     }
