@@ -6,7 +6,12 @@ import { startTask, endTask } from "../../helpers/asyncActions";
 import { getBuilder, orthancURL } from "../../helpers/requestHelper";
 import { Thunk } from "../../helpers/Thunk";
 
-export const updateStudies = createAction("STUDIES/UPDATE", (studiesIds: string[]) => ({ studiesIds }));
+export interface Study {
+    readonly id: string;
+    readonly name: string;
+}
+
+export const updateStudies = createAction("STUDIES/UPDATE", (studies: Study[]) => ({ studies }));
 
 export const fetchStudies = (getOpts: string): Thunk =>
     async (dispatch, getState) => {
@@ -14,10 +19,12 @@ export const fetchStudies = (getOpts: string): Thunk =>
             dispatch(startTask());
             let response = await getBuilder<any>(orthancURL, getOpts);
             console.warn(response);
-            const studiesIds: string[] = response.map(r => r.ID);
-            console.log(studiesIds);
-            if (studiesIds !== undefined) {
-                dispatch(updateStudies(studiesIds));
+            const studies: Study[] = response.map(r => {
+                return { id: r.ID, name: r.MainDicomTags.StudyDescription };
+            });
+            console.log(studies);
+            if (studies !== undefined) {
+                dispatch(updateStudies(studies));
                 console.warn("update");
             }
             else {
@@ -30,7 +37,7 @@ export const fetchStudies = (getOpts: string): Thunk =>
 function updateStudiesReducer(state: AppState, action) {
     switch (action.type) {
         case "STUDIES/UPDATE":
-            return Object.assign({}, state, { studiesIds: action.payload.studiesIds });
+            return Object.assign({}, state, { studies: action.payload.studies });
         default:
             return state;
     }

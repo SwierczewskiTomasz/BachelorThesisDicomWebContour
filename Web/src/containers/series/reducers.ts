@@ -6,8 +6,12 @@ import { startTask, endTask } from "../../helpers/asyncActions";
 import { getBuilder, orthancURL } from "../../helpers/requestHelper";
 import { Thunk } from "../../helpers/Thunk";
 
+export interface Serie {
+    readonly id: string;
+    readonly name: string;
+}
 
-export const updateSeries = createAction("SERIES/UPDATE", (seriesIds: string[]) => ({ seriesIds }));
+export const updateSeries = createAction("SERIES/UPDATE", (series: Serie[]) => ({ series }));
 
 export const fetchSeries = (getOpts: string): Thunk =>
     async (dispatch, getState) => {
@@ -15,9 +19,9 @@ export const fetchSeries = (getOpts: string): Thunk =>
             dispatch(startTask());
             const response = await getBuilder<any>(orthancURL, getOpts);
             console.log(response);
-            const seriesIds: string[] = response.map(r => r.ID);
-            if (seriesIds !== undefined) {
-                dispatch(updateSeries(seriesIds));
+            const series: Serie[] = response.map(r => { return { id: r.ID, name: r.MainDicomTags.SeriesDescription }; });
+            if (series !== undefined) {
+                dispatch(updateSeries(series));
                 console.warn("update");
             }
             else {
@@ -30,7 +34,7 @@ export const fetchSeries = (getOpts: string): Thunk =>
 function updateSeriesReducer(state: AppState, action) {
     switch (action.type) {
         case "SERIES/UPDATE":
-            return Object.assign({}, state, { seriesIds: action.payload.seriesIds });
+            return Object.assign({}, state, { series: action.payload.series });
         default:
             return state;
     }

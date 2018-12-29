@@ -6,17 +6,22 @@ import { startTask, endTask } from "../../helpers/asyncActions";
 import { getBuilder, orthancURL } from "../../helpers/requestHelper";
 import { Thunk } from "../../helpers/Thunk";
 
+export interface Patient {
+    readonly id: string;
+    readonly name: string;
+}
 
-export const updatePatients = createAction("PATIENTS/UPDATE", (patientsIds: string[]) => ({ patientsIds }));
+export const updatePatients = createAction("PATIENTS/UPDATE", (patients: Patient[]) => ({ patients }));
 
 export const fetchPatients = (): Thunk =>
     async (dispatch, getState) => {
         {
             dispatch(startTask());
-            let patientsIds = await getBuilder<string[]>(orthancURL, "patients");
-            console.log(patientsIds);
-            if (patientsIds !== undefined) {
-                dispatch(updatePatients(patientsIds));
+            const response = await getBuilder<any[]>(orthancURL, "patients?expand");
+            const patients = response.map(r => { return { id: r.ID, name: r.MainDicomTags.PatientName }; });
+            console.log(patients);
+            if (patients !== undefined) {
+                dispatch(updatePatients(patients));
                 console.warn("update");
             }
             else {
@@ -29,7 +34,7 @@ export const fetchPatients = (): Thunk =>
 function updatePatientsReducer(state: AppState, action) {
     switch (action.type) {
         case "PATIENTS/UPDATE":
-            return Object.assign({}, state, { patientsIds: action.payload.patientsIds });
+            return Object.assign({}, state, { patients: action.payload.patients });
         default:
             return state;
     }

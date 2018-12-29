@@ -1,5 +1,8 @@
 declare interface StudiesState {
-    readonly studiesIds: string[];
+    readonly studies: {
+        readonly id: string;
+        readonly name: string;
+    }[];
 }
 
 declare interface AppState extends StudiesState { }

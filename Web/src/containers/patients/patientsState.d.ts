@@ -1,5 +1,8 @@
 declare interface PatientsState {
-    readonly patientsIds: string[];
+    readonly patients: {
+        readonly id: string;
+        readonly name: string;
+    }[];
 }
 
 declare interface AppState extends PatientsState { }
