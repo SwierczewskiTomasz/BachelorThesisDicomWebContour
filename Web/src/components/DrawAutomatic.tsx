@@ -120,6 +120,7 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
             "https://http.cat/404";
         const bgimg = "url(" + url + ")";
         return <>
+            <br />
             {<canvas id="canvas"
                 width={this.state.size.width + "px"}
                 height={this.state.size.height + "px"}
@@ -143,6 +144,7 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                     }
                 }}
             />}
+            <br />
             {/* <img style={{ margin: "0 auto" }}
                 src={
                     this.props.instancesIds.length > 0 ?
@@ -223,7 +225,7 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                     });
                 }}
             >
-                GetSavedData
+                Save contour
             </Button>
         </>;
     }
