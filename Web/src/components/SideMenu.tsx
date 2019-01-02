@@ -55,11 +55,13 @@ class SideMenuView extends React.Component<SideMenuProps, SideMenuState> {
                         key={s.id}
                         onClick={() => this.setState({ listType: "series", studyId: s.id }, () => this.props.fetchSeries(s.id))}
                     >
-                        {s.name}
+                        {(s.name !== undefined && s.name.length > 0) ? s.name : "No name"}
                     </ListItem>)}
                 {this.state.listType === "series" && this.props.series.map(s => <ListItem
                     onClick={() => this.props.fetchInstancesIds(s.id)}
-                    button key={s.id}>{s.name}</ListItem>)}
+                    button key={s.id}>
+                    {(s.name !== undefined && s.name.length > 0) ? s.name : "No name"}
+                </ListItem>)}
             </List >
         );
     }

@@ -20,9 +20,9 @@ export const fetchInstances = (getOpts: string): Thunk =>
         {
             dispatch(startTask());
             let response = await getBuilder<FrameInstance[]>(orthancURL, getOpts);
-            console.warn(response);
+            console.warn(response.map(f => f.IndexInSeries));
             response = response.sort((f1, f2) => f1.IndexInSeries - f2.IndexInSeries);
-            console.error(response);
+            console.error(response.map(f => f.IndexInSeries));
             const instancesIds: string[] = response.map(r => r.ID);
             console.log(instancesIds);
             if (instancesIds !== undefined) {
