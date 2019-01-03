@@ -12,10 +12,14 @@ declare var window: { __REDUX_DEVTOOLS_EXTENSION__: any };
 
 const initialState: AppState = {
     tasksCount: 0,
-    seriesIds: [],
-    patientsIds: [],
-    studiesIds: [],
-    instancesIds: []
+    series: [],
+    patients: [],
+    studies: [],
+    instancesIds: [],
+    name: undefined,
+    birthdate: undefined,
+    sex: undefined,
+    patientId: undefined
 };
 
 let store: Store<any>;
