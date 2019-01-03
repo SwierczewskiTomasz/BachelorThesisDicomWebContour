@@ -18,3 +18,46 @@ export async function getBuilder<TResult>(
     let response = await makeRequest();
     return response.json();
 }
+
+export async function postBuilder<TResult>(
+    baseUrl: string,
+    resourceUrl: string,
+    requestBody: any
+): Promise<TResult> {
+    const makeRequest = async () => {
+        const url = `${baseUrl}${resourceUrl}`;
+
+        const requestInit: RequestInit = {
+            method: "POST",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(requestBody)
+        };
+
+        return await fetch(url, requestInit);
+    };
+
+    let response = await makeRequest();
+    return response.json();
+}
+
+export async function deleteBuilder<TResult>(
+    baseUrl: string,
+    resourceUrl: string
+): Promise<TResult> {
+    const makeRequest = async () => {
+        const url = `${baseUrl}${resourceUrl}`;
+
+        const requestInit: RequestInit = {
+            method: "DELETE",
+            headers: new Headers({})
+        };
+
+        return await fetch(url, requestInit);
+    };
+
+    let response = await makeRequest();
+    return response.json();
+}

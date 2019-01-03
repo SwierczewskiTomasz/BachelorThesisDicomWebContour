@@ -2,19 +2,19 @@ import * as React from "react";
 import { Drawer, List, ListItem } from "@material-ui/core";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
-import { fetchSeries } from "../containers/series/reducers";
-import { fetchPatients } from "../containers/patients/reducers";
-import { fetchStudies } from "../containers/studies/reducers";
+import { fetchSeries, Serie } from "../containers/series/reducers";
+import { fetchPatients, Patient } from "../containers/patients/reducers";
+import { fetchStudies, Study } from "../containers/studies/reducers";
 import { fetchInstances } from "../containers/instances/reducers";
 
 
 export interface SideMenuProps {
-    readonly patientsIds: string[];
-    readonly seriesIds: string[];
-    readonly studiesIds: string[];
-    readonly fetchSeriesIds: (id: string) => void;
-    readonly fetchPatientsIds: () => void;
-    readonly fetchStudiesIds: (id: string) => void;
+    readonly patients: Patient[];
+    readonly series: Serie[];
+    readonly studies: Study[];
+    readonly fetchSeries: (id: string) => void;
+    readonly fetchPatients: () => void;
+    readonly fetchStudies: (id: string) => void;
     readonly fetchInstancesIds: (id: string) => void;
 }
 
@@ -33,7 +33,7 @@ class SideMenuView extends React.Component<SideMenuProps, SideMenuState> {
         };
     }
     componentDidMount() {
-        this.props.fetchPatientsIds();
+        this.props.fetchPatients();
     }
 
     render() {
@@ -41,25 +41,27 @@ class SideMenuView extends React.Component<SideMenuProps, SideMenuState> {
         return (
             <List>
                 <ListItem>{this.state.listType}</ListItem>
-                {this.state.listType === "patients" && this.props.patientsIds
-                    .map(id => <ListItem
+                {this.state.listType === "patients" && this.props.patients
+                    .map(p => <ListItem
                         button
-                        key={id}
-                        onClick={() => this.setState({ listType: "studies", patientId: id }, () => this.props.fetchStudiesIds(id))}
+                        key={p.id}
+                        onClick={() => this.setState({ listType: "studies", patientId: p.id }, () => this.props.fetchStudies(p.id))}
                     >
-                        {id}
+                        {p.name}
                     </ListItem>)}
-                {this.state.listType === "studies" && this.props.studiesIds
-                    .map(id => <ListItem
+                {this.state.listType === "studies" && this.props.studies
+                    .map(s => <ListItem
                         button
-                        key={id}
-                        onClick={() => this.setState({ listType: "series", studyId: id }, () => this.props.fetchSeriesIds(id))}
+                        key={s.id}
+                        onClick={() => this.setState({ listType: "series", studyId: s.id }, () => this.props.fetchSeries(s.id))}
                     >
-                        {id}
+                        {(s.name !== undefined && s.name.length > 0) ? s.name : "No name"}
                     </ListItem>)}
-                {this.state.listType === "series" && this.props.seriesIds.map(id => <ListItem
-                    onClick={() => this.props.fetchInstancesIds(id)}
-                    button key={id}>{id}</ListItem>)}
+                {this.state.listType === "series" && this.props.series.map(s => <ListItem
+                    onClick={() => this.props.fetchInstancesIds(s.id)}
+                    button key={s.id}>
+                    {(s.name !== undefined && s.name.length > 0) ? s.name : "No name"}
+                </ListItem>)}
             </List >
         );
     }
@@ -68,22 +70,22 @@ class SideMenuView extends React.Component<SideMenuProps, SideMenuState> {
 export default connect(
     (state: AppState) => {
         return {
-            seriesIds: state.seriesIds,
-            patientsIds: state.patientsIds,
-            studiesIds: state.studiesIds
+            series: state.series,
+            patients: state.patients,
+            studies: state.studies
         };
     },
     (dispatch: Dispatch<any>) => ({
-        fetchSeriesIds: (id: string) => {
+        fetchSeries: (id: string) => {
             dispatch(fetchSeries("studies/" + id + "/series"));
         },
-        fetchStudiesIds: (id: string) => {
+        fetchStudies: (id: string) => {
             dispatch(fetchStudies("patients/" + id + "/studies"));
         },
         fetchInstancesIds: (id: string) => {
             dispatch(fetchInstances("series/" + id + "/instances"));
         },
-        fetchPatientsIds: () => {
+        fetchPatients: () => {
             dispatch(fetchPatients());
         }
     })

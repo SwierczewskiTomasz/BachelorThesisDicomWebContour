@@ -5,15 +5,24 @@ import { Dispatch } from "redux";
 import { startTask, endTask } from "../../helpers/asyncActions";
 import { getBuilder, orthancURL } from "../../helpers/requestHelper";
 import { Thunk } from "../../helpers/Thunk";
+import { getPatientData } from "../patients/reducers";
+import { getStudyData } from "../studies/reducers";
 
 export const updateInstances = createAction("INSTANCES/UPDATE", (instancesIds: string[]) => ({ instancesIds }));
+
+interface FrameInstance {
+    readonly ID: string;
+    readonly IndexInSeries: number;
+}
 
 export const fetchInstances = (getOpts: string): Thunk =>
     async (dispatch, getState) => {
         {
             dispatch(startTask());
-            let response = await getBuilder<any>(orthancURL, getOpts);
-            console.warn(response);
+            let response = await getBuilder<FrameInstance[]>(orthancURL, getOpts);
+            console.warn(response.map(f => f.IndexInSeries));
+            response = response.sort((f1, f2) => f1.IndexInSeries - f2.IndexInSeries);
+            console.error(response.map(f => f.IndexInSeries));
             const instancesIds: string[] = response.map(r => r.ID);
             console.log(instancesIds);
             if (instancesIds !== undefined) {
@@ -23,6 +32,8 @@ export const fetchInstances = (getOpts: string): Thunk =>
             else {
                 console.log("fetchInstances() failed");
             }
+            dispatch(getPatientData());
+            dispatch(getStudyData());
             dispatch(endTask());
         }
     };
