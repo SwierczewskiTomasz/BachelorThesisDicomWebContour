@@ -199,6 +199,16 @@ namespace Logic
             return result;
         }
 
+        public static int[,] FindEndsOfEdges(int[,] edges, int width, int height)
+        {
+            //thinning
+            int[,] result = KMMAlgorithm.KMM(edges, width, height);
+
+            
+
+            return result;
+        }
+
         public static List<Point> FindPoints(int[,] edges, int width, int height)
         {
             List<Point> result = new List<Point>();

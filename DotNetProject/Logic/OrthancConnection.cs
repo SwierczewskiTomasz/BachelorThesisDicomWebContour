@@ -15,14 +15,17 @@ namespace Logic
     {
         public static string orthancURL = "http://localhost:1337/localhost:8042/instances/";
 
+        public static WebClient client = new WebClient();
+
         public static Bitmap GetBitmapByInstanceId(string instanceId)
         {
             string url = orthancURL + instanceId + "/preview";
 
-            var client = new WebClient();
+//            var client = new WebClient();
             Stream stream = client.OpenRead(url);
             Bitmap bitmap = (Bitmap)Image.FromStream(stream);
-
+            stream.Close();
+            
             return bitmap;
         }
     }
