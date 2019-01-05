@@ -129,7 +129,7 @@ class PatientInfo extends React.Component<PatientInfoProps, PatientInfoState> {
                             onClick={() => this.setState({ dialogOpen: false })}
                         >
                             Cancel
-                </Button>
+                        </Button>
                     </DialogActions>
                 </Dialog>
             </>
