@@ -2,8 +2,8 @@ import * as React from "react";
 import { orthancURL } from "../helpers/requestHelper";
 import { connect } from "react-redux";
 import CanvasDraw from "react-canvas-draw";
-import { Button, Dialog, DialogContent, DialogActions } from "@material-ui/core";
-import { ChromePicker } from "react-color";
+import { Button } from "@material-ui/core";
+import ChooseColorDialog from "./ChooseColorDialog";
 
 export interface DrawManuallyProps {
     readonly instancesIds: string[];
@@ -14,7 +14,6 @@ export interface DrawManuallyState {
     readonly size: Size;
     readonly reload: boolean;
     readonly color: string;
-    readonly pickedColor: string;
     readonly chooseColor: boolean;
 }
 
@@ -35,7 +34,6 @@ class DrawManually extends React.Component<DrawManuallyProps, DrawManuallyState>
                 height: -1
             },
             reload: true,
-            pickedColor: "#ff0000",
             color: "#ff0000",
             chooseColor: false
         };
@@ -94,39 +92,13 @@ class DrawManually extends React.Component<DrawManuallyProps, DrawManuallyState>
             >
                 +
             </Button> */}
-            <Dialog
-                open={this.state.chooseColor}
-            >
-                <DialogContent>
-                    <ChromePicker
-                        disableAlpha
-                        color={this.state.pickedColor}
-                        onChangeComplete={(c) => { this.setState({ pickedColor: c.hex }); }}
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button
-                        variant={"contained"}
-                        color={"primary"}
-                        onClick={() => {
-                            this.setState(prev => ({
-                                color: prev.pickedColor,
-                                chooseColor: false
-                            }));
-                        }}
-                    >
-                        Pick
-                        </Button>
-                    <Button
-                        variant={"contained"}
-                        color={"secondary"}
-                        onClick={() => this.setState({ chooseColor: false })}
-                    >
-                        Cancel
-                </Button>
-                </DialogActions>
-            </Dialog>
 
+            <ChooseColorDialog
+                open={this.state.chooseColor}
+                initialColor={this.state.color}
+                onClose={() => this.setState({ chooseColor: false })}
+                onConfirm={(color: string) => this.setState({ color })}
+            />
 
             {this.state.reload && <div
                 onWheel={(e) => {
