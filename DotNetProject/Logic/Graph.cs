@@ -39,24 +39,47 @@ namespace Logic
                 {
                     if (matrix[x, y] != 0)
                     {
-                        int count = CountNeighbors(matrix, width, height, x, y);
-                        if (count > 0)
+                        int count = CountNeighbours(matrix, width, height, x, y);
+
+                        if (!(count == 0 || count == 3))
                         {
-                            List<Point> Vertices = new List<Point>();
-                            Vertices.Add(new Point(x, y));
-                            while (Vertices.Count != 0)
+                            Vertex vertex = new Vertex();
+                            vertex.point = new Point(x, y);
+                            vertex.Vertexes = new List<(Vertex, int)>();
+
+                            List<Vertex> listVertices = new List<Vertex>();
+                            listVertices.Add(vertex);
+
+                            while (listVertices.Count != 0)
                             {
-                                Vertex vertex1 = new Vertex();
-                                vertex1.point = new Point(x, y);
-                                while(count > 0)
+                                Vertex currentVertex = listVertices.First();
+                                listVertices.RemoveAt(0);
+
+                                List<Edge> listEdges = new List<Edge>();
+
+                                foreach (var n in Neighbours(width, height, x, y))
+                                    if (matrix[n.Item1, n.Item2] != 0)
+                                    {
+                                        Edge e = new Edge();
+                                        e.vertex1 = currentVertex;
+                                        e.points = new List<Point>();
+                                        e.points.Add(new Point(n.Item1, n.Item2));
+                                        listEdges.Add(e);
+                                    }
+
+                                while (listEdges.Count != 0)
                                 {
+                                    Edge currentEdge = listEdges.First();
+                                    listEdges.RemoveAt(0);
+
+                                    List<Point> listPoints = new List<Point>();
+
+                                    Point currentPoint = currentEdge.points.First();
+                                    currentEdge.points.RemoveAt(0);
+                                    listPoints.Add(currentPoint);
                                     
                                 }
                             }
-                        }
-                        else
-                        {
-
                         }
                     }
                 }
@@ -65,17 +88,28 @@ namespace Logic
             return graph;
         }
 
-        public static int CountNeighbors(int[,] matrix, int width, int height, int x, int y)
+        public static int CountNeighbours(int[,] matrix, int width, int height, int x, int y)
         {
             int count = 0;
 
+            // Warunek if (i == x || j == y) daje nam łączność 4-krotną a nie 8-krotną
+
             for (int i = x - 1 < 0 ? 0 : x - 1; i < (x + 1 < width ? x + 1 : width); i++)
                 for (int j = y - 1 < 0 ? 0 : y - 1; j < (y + 1 < height ? y + 1 : height); j++)
-                    if (i != x || j != y)
+                    if (i == x || j == y)
+                        //if (i != x || j != y)
                         if (matrix[i, j] != 0)
                             count++;
 
             return count;
+        }
+
+        public static IEnumerable<(int, int)> Neighbours(int width, int height, int x, int y)
+        {
+            for (int i = x - 1 < 0 ? 0 : x - 1; i < (x + 1 < width ? x + 1 : width); i++)
+                for (int j = y - 1 < 0 ? 0 : y - 1; j < (y + 1 < height ? y + 1 : height); j++)
+                    if (i == x || j == y)
+                        yield return (i, j);
         }
     }
 }
