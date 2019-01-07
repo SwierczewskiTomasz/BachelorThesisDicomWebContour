@@ -3,6 +3,7 @@ import { orthancURL } from "../helpers/requestHelper";
 import { connect } from "react-redux";
 import CanvasDraw from "react-canvas-draw";
 import { Button } from "@material-ui/core";
+import ChooseColorDialog from "./ChooseColorDialog";
 
 export interface DrawManuallyProps {
     readonly instancesIds: string[];
@@ -12,6 +13,8 @@ export interface DrawManuallyState {
     readonly currentInstanceId: number;
     readonly size: Size;
     readonly reload: boolean;
+    readonly color: string;
+    readonly chooseColor: boolean;
 }
 
 interface Size {
@@ -30,7 +33,9 @@ class DrawManually extends React.Component<DrawManuallyProps, DrawManuallyState>
                 width: -1,
                 height: -1
             },
-            reload: true
+            reload: true,
+            color: "#ff0000",
+            chooseColor: false
         };
         console.warn(this.state);
         const url = props.instancesIds.length > 0 ?
@@ -67,7 +72,6 @@ class DrawManually extends React.Component<DrawManuallyProps, DrawManuallyState>
             loadTimeOffset: 5,
             lazyRadius: 0,
             brushRadius: 0,
-            brushColor: "#f00",
             catenaryColor: "transparent",
             gridColor: "rgba(150,150,150,0.17)",
             hideGrid: true,
@@ -88,6 +92,14 @@ class DrawManually extends React.Component<DrawManuallyProps, DrawManuallyState>
             >
                 +
             </Button> */}
+
+            <ChooseColorDialog
+                open={this.state.chooseColor}
+                initialColor={this.state.color}
+                onClose={() => this.setState({ chooseColor: false })}
+                onConfirm={(color: string) => this.setState({ color })}
+            />
+
             {this.state.reload && <div
                 onWheel={(e) => {
                     if (e.deltaY < 0) {
@@ -112,6 +124,7 @@ class DrawManually extends React.Component<DrawManuallyProps, DrawManuallyState>
                 <CanvasDraw
                     ref={canvasDraw => (this.saveableCanvas1 = canvasDraw)}
                     {...canvasProps}
+                    brushColor={this.state.color}
                     imgSrc={url}
                     canvasWidth={this.state.size.width}
                     canvasHeight={this.state.size.height}
@@ -140,6 +153,7 @@ class DrawManually extends React.Component<DrawManuallyProps, DrawManuallyState>
                 <CanvasDraw
                     ref={canvasDraw => (this.saveableCanvas2 = canvasDraw)}
                     {...canvasProps}
+                    brushColor={this.state.color}
                     imgSrc={url}
                     canvasWidth={this.state.size.width}
                     canvasHeight={this.state.size.height}
@@ -198,6 +212,13 @@ class DrawManually extends React.Component<DrawManuallyProps, DrawManuallyState>
                 }}
             >
                 Save Contour
+            </Button>
+            <Button
+                variant="flat"
+                color="primary"
+                onClick={() => this.setState({ chooseColor: true })}
+            >
+                Choose color
             </Button>
         </>;
     }

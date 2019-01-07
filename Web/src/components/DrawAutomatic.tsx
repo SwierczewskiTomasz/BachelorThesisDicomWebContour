@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import CanvasDraw from "react-canvas-draw";
 import { Button } from "@material-ui/core";
 import { defaultCipherList } from "constants";
+import ChooseColorDialog from "./ChooseColorDialog";
 
 export interface DrawAutimaticProps {
     readonly instancesIds: string[];
@@ -16,6 +17,8 @@ export interface DrawAutimaticState {
     readonly pixels: Point[];
     readonly reload: boolean;
     readonly guid: string;
+    readonly color: string;
+    readonly chooseColor: boolean;
 }
 
 interface Size {
@@ -41,7 +44,9 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
             reload: true,
             points: [],
             pixels: [],
-            guid: null
+            guid: null,
+            color: "#00ff00",
+            chooseColor: false
         };
         console.warn(this.state);
         const url = props.instancesIds.length > 0 ?
@@ -86,6 +91,7 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
         // context.fillRect(0, 0, canvas.width, canvas.height);
 
         const f = (x, y) => this.setState(prev => { return { points: [...prev.points, { x, y }] }; });
+        const getColor = () => this.state.color;
 
         canvas.addEventListener("click", function (e) {
             const x = Math.floor(e.offsetX);
@@ -93,26 +99,15 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
 
             f(x, y);
 
-            // Zoomed in red 'square'
-            context.fillStyle = "#F0F";
+            context.fillStyle = getColor();
             context.fillRect(x, y, 5, 5);
         }, true);
 
     }
 
+
+
     render() {
-        const canvasProps = {
-            loadTimeOffset: 5,
-            lazyRadius: 0,
-            brushRadius: 0,
-            brushColor: "#f00",
-            catenaryColor: "transparent",
-            gridColor: "rgba(150,150,150,0.17)",
-            hideGrid: true,
-            disabled: false,
-            saveData: null,
-            immediateLoading: false
-        };
         const url = this.props.instancesIds.length > 0 ?
             orthancURL + "instances/" +
             this.props.instancesIds[this.state.currentInstanceId]
@@ -120,6 +115,13 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
             "https://http.cat/404";
         const bgimg = "url(" + url + ")";
         return <>
+            <ChooseColorDialog
+                open={this.state.chooseColor}
+                initialColor={this.state.color}
+                onClose={() => this.setState({ chooseColor: false })}
+                onConfirm={(color: string) => this.setState({ color })}
+            />
+
             <br />
             {<canvas id="canvas"
                 width={this.state.size.width + "px"}
@@ -226,6 +228,13 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                 }}
             >
                 Save contour
+            </Button>
+            <Button
+                variant="flat"
+                color="primary"
+                onClick={() => this.setState({ chooseColor: true })}
+            >
+                Choose color
             </Button>
         </>;
     }
