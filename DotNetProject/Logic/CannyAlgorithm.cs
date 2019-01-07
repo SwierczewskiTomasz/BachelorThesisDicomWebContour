@@ -31,7 +31,10 @@ namespace Logic
             int[,] foundedEdges = HysteresisThreshold(edges, width, height, min, max);
 
             //All pixels, all edges, no connection from one point to other one!!!
-            List<Point> pixels = new List<Point>(FindPoints(foundedEdges, width, height));
+            //List<Point> pixels = new List<Point>(FindPoints(foundedEdges, width, height));
+
+            double weight = 3.0;
+            List<Point> pixels = new List<Point>(Graph.FindShortestPath(foundedEdges, width, height, weight, points));
 
             return pixels;
         }
