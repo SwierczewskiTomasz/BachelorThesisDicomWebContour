@@ -129,7 +129,15 @@ namespace Logic
                 {
                     ConnectedParts.Add(ConnectedPart);
                     ConnectedPart = new List<Vertex>();
-                    Vertex next = VertexWasInQueue.First(k => !k.Value).Key;
+                    Vertex next = null;
+                    try
+                    {
+                        next = VertexWasInQueue.First(k => !k.Value).Key;
+                    }
+                    catch(Exception e)
+                    {
+                        
+                    }
                     if (next != null)
                     {
                         ListUnreachedVertices.Enqueue(next);
@@ -170,6 +178,7 @@ namespace Logic
 
                     int weightedDistance = (int)(weight * distance);
                     Edge edge = new Edge();
+                    edge.Artificial = true;
                     edge.vertex1 = vertex1;
                     edge.vertex2 = vertex2;
 
@@ -289,6 +298,7 @@ namespace Logic
                             Vertex vertex = new Vertex();
                             vertex.point = new Point(x, y);
                             vertex.Vertices = new Dictionary<Vertex, int>();
+                            vertex.Edges = new List<Edge>();
 
                             List<Vertex> listVertices = new List<Vertex>();
                             listVertices.Add(vertex);
@@ -309,6 +319,7 @@ namespace Logic
                                     {
                                         Edge e = new Edge();
                                         e.vertex1 = currentVertex;
+                                        e.Artificial = false;
                                         e.points = new List<Point>();
                                         e.points.Add(new Point(n.x, n.y));
                                         listEdges.Add(e);
@@ -332,7 +343,7 @@ namespace Logic
                                         listOfPotentialPoints.RemoveAt(0);
 
                                         int countPointNeighbours = CountNeighbours(matrix, width, height, potentialPoint.x, potentialPoint.y);
-                                        if (countPointNeighbours == 1 || countPointNeighbours > 2)
+                                        if (countPointNeighbours == 0 || countPointNeighbours > 1)
                                         {
                                             //new Vertex!!!
                                             Vertex secondVertex = new Vertex();
@@ -343,16 +354,16 @@ namespace Logic
 
                                             currentEdge.vertex2 = secondVertex;
 
-                                            secondVertex.Vertices.Add(vertex, currentEdge.Lenght);
-                                            vertex.Vertices.Add(secondVertex, currentEdge.Lenght);
+                                            secondVertex.Vertices.Add(currentVertex, currentEdge.Lenght);
+                                            currentVertex.Vertices.Add(secondVertex, currentEdge.Lenght);
 
-                                            vertex.Edges.Add(currentEdge);
+                                            currentVertex.Edges.Add(currentEdge);
                                             listVertices.Add(secondVertex);
 
                                             if (listOfPotentialPoints.Count != 0)
                                                 throw new Exception("Unexpected situation - not all points in list of potential points for edge has been reviewed");
                                         }
-                                        else if (countPointNeighbours == 2)
+                                        else if (countPointNeighbours == 1)
                                         {
                                             currentEdge.points.Add(potentialPoint);
                                             foreach (Point p in Neighbours(width, height, x, y))
