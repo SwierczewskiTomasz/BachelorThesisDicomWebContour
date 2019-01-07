@@ -4,13 +4,16 @@ import { connect } from "react-redux";
 import CanvasDraw from "react-canvas-draw";
 import { Button } from "@material-ui/core";
 import ChooseColorDialog from "./ChooseColorDialog";
+import { Dispatch } from "redux";
+import { setCurrentInstanceInd } from "../containers/instances/reducers";
 
 export interface DrawManuallyProps {
     readonly instancesIds: string[];
+    readonly currentInstanceId: number;
+    readonly setCurrentInd: (ind: number) => void;
 }
 
 export interface DrawManuallyState {
-    readonly currentInstanceId: number;
     readonly size: Size;
     readonly reload: boolean;
     readonly color: string;
@@ -28,7 +31,6 @@ class DrawManually extends React.Component<DrawManuallyProps, DrawManuallyState>
     constructor(props: DrawManuallyProps) {
         super(props);
         this.state = {
-            currentInstanceId: 0,
             size: {
                 width: -1,
                 height: -1
@@ -40,7 +42,7 @@ class DrawManually extends React.Component<DrawManuallyProps, DrawManuallyState>
         console.warn(this.state);
         const url = props.instancesIds.length > 0 ?
             orthancURL + "instances/" +
-            this.props.instancesIds[this.state.currentInstanceId]
+            this.props.instancesIds[this.props.currentInstanceId]
             + "/preview" :
             "https://http.cat/404";
         let img = new Image();
@@ -55,7 +57,7 @@ class DrawManually extends React.Component<DrawManuallyProps, DrawManuallyState>
     componentWillReceiveProps(nextProps: DrawManuallyProps) {
         const url = nextProps.instancesIds.length > 0 ?
             orthancURL + "instances/" +
-            this.props.instancesIds[this.state.currentInstanceId]
+            this.props.instancesIds[this.props.currentInstanceId]
             + "/preview" :
             "https://http.cat/404";
         let img = new Image();
@@ -81,7 +83,7 @@ class DrawManually extends React.Component<DrawManuallyProps, DrawManuallyState>
         };
         const url = this.props.instancesIds.length > 0 ?
             orthancURL + "instances/" +
-            this.props.instancesIds[this.state.currentInstanceId]
+            this.props.instancesIds[this.props.currentInstanceId]
             + "/preview" :
             "https://http.cat/404";
         return <>
@@ -92,31 +94,33 @@ class DrawManually extends React.Component<DrawManuallyProps, DrawManuallyState>
             >
                 +
             </Button> */}
-
+            {this.props.instancesIds.length > 0 ? (this.props.currentInstanceId + 1) + "/" + this.props.instancesIds.length : null}
             <ChooseColorDialog
                 open={this.state.chooseColor}
                 initialColor={this.state.color}
                 onClose={() => this.setState({ chooseColor: false })}
                 onConfirm={(color: string) => this.setState({ color })}
             />
-
             {this.state.reload && <div
                 onWheel={(e) => {
+                    e.preventDefault();
                     if (e.deltaY < 0) {
                         console.log("div1 scrolling up");
                         this.setState(prev => ({
-                            currentInstanceId: prev.currentInstanceId + 1 >= this.props.instancesIds.length ?
-                                this.props.instancesIds.length - 1 :
-                                prev.currentInstanceId + 1,
                             reload: !prev.reload
-                        }));
+                        }), () => this.props.setCurrentInd(
+                            this.props.currentInstanceId + 1 >= this.props.instancesIds.length ?
+                                this.props.instancesIds.length - 1 :
+                                this.props.currentInstanceId + 1
+                        ));
                     }
                     if (e.deltaY > 0) {
                         console.log("div scrolling down");
                         this.setState(prev => ({
-                            currentInstanceId: prev.currentInstanceId - 1 < 0 ? 0 : prev.currentInstanceId - 1,
                             reload: !prev.reload
-                        }));
+                        }), () => this.props.setCurrentInd(
+                            this.props.currentInstanceId - 1 < 0 ? 0 : this.props.currentInstanceId - 1
+                        ));
                     }
                 }}
                 onClick={(e) => { console.warn(e); }}
@@ -133,21 +137,24 @@ class DrawManually extends React.Component<DrawManuallyProps, DrawManuallyState>
             </div>}
             {!this.state.reload && <div
                 onWheel={(e) => {
+                    e.preventDefault();
                     if (e.deltaY < 0) {
                         console.log("div scrolling up");
                         this.setState(prev => ({
-                            currentInstanceId: prev.currentInstanceId + 1 >= this.props.instancesIds.length ?
-                                this.props.instancesIds.length - 1 :
-                                prev.currentInstanceId + 1,
                             reload: !prev.reload
-                        }));
+                        }), () => this.props.setCurrentInd(
+                            this.props.currentInstanceId + 1 >= this.props.instancesIds.length ?
+                                this.props.instancesIds.length - 1 :
+                                this.props.currentInstanceId + 1
+                        ));
                     }
                     if (e.deltaY > 0) {
                         console.log("div scrolling down");
                         this.setState(prev => ({
-                            currentInstanceId: prev.currentInstanceId - 1 < 0 ? 0 : prev.currentInstanceId - 1,
                             reload: !prev.reload
-                        }));
+                        }), () => this.props.setCurrentInd(
+                            this.props.currentInstanceId - 1 < 0 ? 0 : this.props.currentInstanceId - 1
+                        ));
                     }
                 }}>
                 <CanvasDraw
@@ -205,7 +212,7 @@ class DrawManually extends React.Component<DrawManuallyProps, DrawManuallyState>
                             "Content-Type": "application/json"
                         },
                         body: JSON.stringify({
-                            dicomid: this.props.instancesIds[this.state.currentInstanceId],
+                            dicomid: this.props.instancesIds[this.props.currentInstanceId],
                             ...data
                         })
                     });
@@ -227,6 +234,12 @@ export default connect(
     (state: AppState) => {
         return {
             instancesIds: state.instancesIds,
+            currentInstanceId: state.currentInstanceId
         };
-    }
+    },
+    (dispatch: Dispatch<any>) => ({
+        setCurrentInd: (ind: number) => {
+            dispatch(setCurrentInstanceInd(ind));
+        },
+    })
 )(DrawManually);

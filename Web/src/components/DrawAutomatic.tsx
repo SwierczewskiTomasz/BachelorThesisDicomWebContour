@@ -5,13 +5,16 @@ import CanvasDraw from "react-canvas-draw";
 import { Button } from "@material-ui/core";
 import { defaultCipherList } from "constants";
 import ChooseColorDialog from "./ChooseColorDialog";
+import { Dispatch } from "redux";
+import { setCurrentInstanceInd } from "../containers/instances/reducers";
 
 export interface DrawAutimaticProps {
     readonly instancesIds: string[];
+    readonly currentInstanceId: number;
+    readonly setCurrentInd: (ind: number) => void;
 }
 
 export interface DrawAutimaticState {
-    readonly currentInstanceId: number;
     readonly size: Size;
     readonly points: Point[];
     readonly pixels: Point[];
@@ -36,7 +39,6 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
     constructor(props: DrawAutimaticProps) {
         super(props);
         this.state = {
-            currentInstanceId: 0,
             size: {
                 width: -1,
                 height: -1
@@ -51,7 +53,7 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
         console.warn(this.state);
         const url = props.instancesIds.length > 0 ?
             orthancURL + "instances/" +
-            this.props.instancesIds[this.state.currentInstanceId]
+            this.props.instancesIds[this.props.currentInstanceId]
             + "/preview" :
             "https://http.cat/404";
         let img = new Image();
@@ -66,7 +68,7 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
     componentWillReceiveProps(nextProps: DrawAutimaticProps) {
         const url = nextProps.instancesIds.length > 0 ?
             orthancURL + "instances/" +
-            this.props.instancesIds[this.state.currentInstanceId]
+            this.props.instancesIds[this.props.currentInstanceId]
             + "/preview" :
             "https://http.cat/404";
         let img = new Image();
@@ -110,7 +112,7 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
     render() {
         const url = this.props.instancesIds.length > 0 ?
             orthancURL + "instances/" +
-            this.props.instancesIds[this.state.currentInstanceId]
+            this.props.instancesIds[this.props.currentInstanceId]
             + "/preview" :
             "https://http.cat/404";
         const bgimg = "url(" + url + ")";
@@ -121,7 +123,7 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                 onClose={() => this.setState({ chooseColor: false })}
                 onConfirm={(color: string) => this.setState({ color })}
             />
-
+            {this.props.instancesIds.length > 0 ? (this.props.currentInstanceId + 1) + "/" + this.props.instancesIds.length : null}
             <br />
             {<canvas id="canvas"
                 width={this.state.size.width + "px"}
@@ -131,18 +133,20 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                     if (e.deltaY < 0) {
                         console.log("scrolling up");
                         this.setState(prev => ({
-                            currentInstanceId: prev.currentInstanceId + 1 >= this.props.instancesIds.length ?
-                                this.props.instancesIds.length - 1 :
-                                prev.currentInstanceId + 1,
                             reload: !prev.reload
-                        }));
+                        }), () => this.props.setCurrentInd(
+                            this.props.currentInstanceId + 1 >= this.props.instancesIds.length ?
+                                this.props.instancesIds.length - 1 :
+                                this.props.currentInstanceId + 1
+                        ));
                     }
                     if (e.deltaY > 0) {
                         console.log("scrolling down");
                         this.setState(prev => ({
-                            currentInstanceId: prev.currentInstanceId - 1 < 0 ? 0 : prev.currentInstanceId - 1,
                             reload: !prev.reload
-                        }));
+                        }), () => this.props.setCurrentInd(
+                            this.props.currentInstanceId - 1 < 0 ? 0 : this.props.currentInstanceId - 1
+                        ));
                     }
                 }}
             />}
@@ -169,7 +173,7 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                         JSON.stringify(this.state.points)
                     );
                     console.log(JSON.stringify({
-                        dicomid: this.props.instancesIds[this.state.currentInstanceId],
+                        dicomid: this.props.instancesIds[this.props.currentInstanceId],
                         tag: "SemiAutomatic Test",
                         lines: [
                             {
@@ -190,7 +194,7 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                             "Content-Type": "application/json"
                         },
                         body: JSON.stringify({
-                            dicomid: this.props.instancesIds[this.state.currentInstanceId],
+                            dicomid: this.props.instancesIds[this.props.currentInstanceId],
                             tag: "SemiAutomatic Test",
                             lines: [
                                 {
@@ -243,6 +247,12 @@ export default connect(
     (state: AppState) => {
         return {
             instancesIds: state.instancesIds,
+            currentInstanceId: state.currentInstanceId
         };
-    }
+    },
+    (dispatch: Dispatch<any>) => ({
+        setCurrentInd: (ind: number) => {
+            dispatch(setCurrentInstanceInd(ind));
+        },
+    })
 )(DrawAutimatic);

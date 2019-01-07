@@ -19,7 +19,8 @@ const initialState: AppState = {
     name: undefined,
     birthdate: undefined,
     sex: undefined,
-    patientId: undefined
+    patientId: undefined,
+    currentInstanceId: 0
 };
 
 let store: Store<any>;
