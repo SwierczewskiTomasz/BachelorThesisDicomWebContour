@@ -204,7 +204,7 @@ class DrawManually extends React.Component<DrawManuallyProps, DrawManuallyState>
                     // localStorage.setItem("savedDrawing", data);
                     console.warn(data);
                     // Send to API
-                    fetch("https://localhost:5001/api/manualcontour/post/", {
+                    fetch("https://localhost:1337/localhost:5001/api/manualcontour/post/", {
                         mode: "cors",
                         method: "post",
                         headers: {

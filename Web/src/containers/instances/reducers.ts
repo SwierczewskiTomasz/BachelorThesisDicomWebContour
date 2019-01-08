@@ -7,6 +7,7 @@ import { getBuilder, orthancURL } from "../../helpers/requestHelper";
 import { Thunk } from "../../helpers/Thunk";
 import { getPatientData } from "../patients/reducers";
 import { getStudyData } from "../studies/reducers";
+import { fetchContours } from "../contours/reducers";
 
 export const updateInstances = createAction("INSTANCES/UPDATE", (instancesIds: string[]) => ({ instancesIds }));
 export const updateCurrentInstance = createAction("CURRENT_INSTANCE/UPDATE", (currentInstanceId: number) => ({ currentInstanceId }));
@@ -46,6 +47,8 @@ export const setCurrentInstanceInd = (index: number): Thunk =>
         {
             dispatch(startTask());
             dispatch(updateCurrentInstance(index));
+
+            dispatch(fetchContours("api/manualcontour/FetchByDicomIdToDTOs/" + getState().instancesIds[index]));
             dispatch(endTask());
         }
     };

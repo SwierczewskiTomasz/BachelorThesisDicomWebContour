@@ -7,6 +7,7 @@ import { asyncActionsReducers } from "./helpers/asyncActions";
 import { patientsReducers } from "./containers/patients/reducers";
 import { studiesReducers } from "./containers/studies/reducers";
 import { instancesReducers } from "./containers/instances/reducers";
+import { contoursReducers } from "./containers/contours/reducers";
 
 declare var window: { __REDUX_DEVTOOLS_EXTENSION__: any };
 
@@ -20,7 +21,8 @@ const initialState: AppState = {
     birthdate: undefined,
     sex: undefined,
     patientId: undefined,
-    currentInstanceId: 0
+    currentInstanceId: 0,
+    contours: []
 };
 
 let store: Store<any>;
@@ -33,7 +35,8 @@ const reducers = handleActions({
     ...seriesReducers,
     ...patientsReducers,
     ...studiesReducers,
-    ...instancesReducers
+    ...instancesReducers,
+    ...contoursReducers
 }, initialState);
 
 if (process.env["NODE_ENV"] === "production") {

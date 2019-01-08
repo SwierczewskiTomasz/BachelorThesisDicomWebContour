@@ -1,4 +1,5 @@
 export const orthancURL = `http://localhost:1337/localhost:8042/`;
+export const apiURL = `https://localhost:1337/localhost:5001/`;
 
 export async function getBuilder<TResult>(
     baseUrl: string,

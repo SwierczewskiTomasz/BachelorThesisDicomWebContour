@@ -11,6 +11,7 @@ import { connect } from "react-redux";
 import { orthancURL } from "../helpers/requestHelper";
 import DrawManually from "./DrawManually";
 import DisplayImage from "./DisplayImage";
+import ContourList from "./ContourList";
 
 
 export interface AppViewProps {
@@ -64,6 +65,9 @@ export default class AppView extends React.Component<AppViewProps, AppViewState>
                     {/* <div style={{ overflow: "auto", height: "100%", float: "left" }}>
                         <CornerstoneElement stack={{ ...this.state.stack }} />
                     </div> */}
+                </div>
+                <div style={{ float: "left", width: "20%" }}>
+                    <ContourList />
                 </div>
             </>
         );
