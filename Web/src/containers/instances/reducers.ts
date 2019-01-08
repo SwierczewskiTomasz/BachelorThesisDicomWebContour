@@ -9,6 +9,7 @@ import { getPatientData } from "../patients/reducers";
 import { getStudyData } from "../studies/reducers";
 
 export const updateInstances = createAction("INSTANCES/UPDATE", (instancesIds: string[]) => ({ instancesIds }));
+export const updateCurrentInstance = createAction("CURRENT_INSTANCE/UPDATE", (currentInstanceId: number) => ({ currentInstanceId }));
 
 interface FrameInstance {
     readonly ID: string;
@@ -26,6 +27,7 @@ export const fetchInstances = (getOpts: string): Thunk =>
             const instancesIds: string[] = response.map(r => r.ID);
             console.log(instancesIds);
             if (instancesIds !== undefined) {
+                console.warn(instancesIds);
                 dispatch(updateInstances(instancesIds));
                 console.warn("update");
             }
@@ -34,6 +36,16 @@ export const fetchInstances = (getOpts: string): Thunk =>
             }
             dispatch(getPatientData());
             dispatch(getStudyData());
+            dispatch(setCurrentInstanceInd(0));
+            dispatch(endTask());
+        }
+    };
+
+export const setCurrentInstanceInd = (index: number): Thunk =>
+    async (dispatch, getState) => {
+        {
+            dispatch(startTask());
+            dispatch(updateCurrentInstance(index));
             dispatch(endTask());
         }
     };
@@ -47,6 +59,16 @@ function updateInstancesReducer(state: AppState, action) {
     }
 }
 
+function updateCurentInctanceReducer(state: AppState, action) {
+    switch (action.type) {
+        case "CURRENT_INSTANCE/UPDATE":
+            return Object.assign({}, state, { currentInstanceId: action.payload.currentInstanceId });
+        default:
+            return state;
+    }
+}
+
 export const instancesReducers = {
-    [updateInstances.toString()](state: AppState, action) { return { ...state, ...updateInstancesReducer(state, action) }; }
+    [updateInstances.toString()](state: AppState, action) { return { ...state, ...updateInstancesReducer(state, action) }; },
+    [updateCurrentInstance.toString()](state: AppState, action) { return { ...state, ...updateCurentInctanceReducer(state, action) }; }
 };

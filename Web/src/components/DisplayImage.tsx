@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Tabs, Tab, Grid } from "@material-ui/core";
+import { Tabs, Tab, Grid, Typography } from "@material-ui/core";
 import DrawManually from "./DrawManually";
 import DrawAutomatic from "./DrawAutomatic";
 import PatientInfo from "./PatientInfo";
@@ -30,6 +30,7 @@ export default class DisplayImage extends React.Component<DisplayImageProps, Dis
     render() {
         return <>
             <Tabs
+                fullWidth
                 value={this.state.tab}
                 textColor="primary"
                 onChange={this.handleChange}
@@ -38,7 +39,7 @@ export default class DisplayImage extends React.Component<DisplayImageProps, Dis
                 <Tab label={"semi-automatic"} />
             </Tabs>
             <Grid container>
-                <Grid item id="pictute" style={{ ...gridStyle, marginLeft: "5rem" }}>
+                <Grid item id="pictute" style={{ ...gridStyle }}>
                     {this.state.tab === 0 && <DrawManually />}
                     {this.state.tab === 1 && <DrawAutomatic />}
                 </Grid>
@@ -46,7 +47,6 @@ export default class DisplayImage extends React.Component<DisplayImageProps, Dis
                     <PatientInfo />
                 </Grid>
             </Grid>
-
         </>;
     }
 }
