@@ -6,10 +6,12 @@ import { Button } from "@material-ui/core";
 import ChooseColorDialog from "./ChooseColorDialog";
 import { Dispatch } from "redux";
 import { setCurrentInstanceInd } from "../containers/instances/reducers";
+import { Contour } from "../containers/contours/reducers";
 
 export interface DrawManuallyProps {
     readonly instancesIds: string[];
     readonly currentInstanceId: number;
+    readonly selectedContour: Contour;
     readonly setCurrentInd: (ind: number) => void;
 }
 
@@ -67,7 +69,13 @@ class DrawManually extends React.Component<DrawManuallyProps, DrawManuallyState>
             fun(img.naturalWidth, img.naturalHeight);
         };
         img.src = url;
-        this.setState(prev => { return { reload: !prev.reload }; });
+
+        this.setState(prev => { return { reload: !prev.reload }; }, () => {
+            if (this.props.selectedContour !== undefined && this.props.selectedContour !== nextProps.selectedContour) {
+                const { guid, dicomid, tag, ...data } = nextProps.selectedContour;
+                this.state.reload ? this.saveableCanvas1.loadSaveData(data, true) : this.saveableCanvas2.loadSaveData(data, true);
+            }
+        });
     }
     render() {
         const canvasProps = {
@@ -204,7 +212,7 @@ class DrawManually extends React.Component<DrawManuallyProps, DrawManuallyState>
                     // localStorage.setItem("savedDrawing", data);
                     console.warn(data);
                     // Send to API
-                    fetch("https://localhost:1337/localhost:5001/api/manualcontour/post/", {
+                    fetch("https://localhost:5001/api/manualcontour/post/", {
                         mode: "cors",
                         method: "post",
                         headers: {
@@ -234,7 +242,8 @@ export default connect(
     (state: AppState) => {
         return {
             instancesIds: state.instancesIds,
-            currentInstanceId: state.currentInstanceId
+            currentInstanceId: state.currentInstanceId,
+            selectedContour: state.selectedContour
         };
     },
     (dispatch: Dispatch<any>) => ({

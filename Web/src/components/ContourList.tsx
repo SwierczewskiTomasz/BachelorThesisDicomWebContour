@@ -10,10 +10,11 @@ import ArrowBackIcon from "@material-ui/icons/ArrowBackOutlined";
 import PersonIcon from "@material-ui/icons/PersonOutlined";
 import CollectionIcon from "@material-ui/icons/CollectionsOutlined";
 import PhotoIcon from "@material-ui/icons/PhotoOutlined";
-import { Contour } from "../containers/contours/reducers";
+import { Contour, setCurrentContur } from "../containers/contours/reducers";
 
 export interface ContourListProps {
     readonly contours: Contour[];
+    readonly setCurrentContur: (guid: string) => void;
 }
 
 interface ContourListState {
@@ -36,7 +37,9 @@ class ContourListView extends React.Component<ContourListProps, ContourListState
                 <Divider />
                 {this.props.contours
                     .map(c => <ListItem
+                        button
                         key={c.guid}
+                        onClick={() => this.props.setCurrentContur(c.guid)}
                     >
                         {c.tag}
                         <ListItemSecondaryAction>
@@ -57,8 +60,8 @@ export default connect(
         };
     },
     (dispatch: Dispatch<any>) => ({
-        fetchPatients: () => {
-            dispatch(fetchPatients());
+        setCurrentContur: (guid: string) => {
+            dispatch(setCurrentContur(guid));
         }
     })
 )(ContourListView);

@@ -13,7 +13,14 @@ export async function getBuilder<TResult>(
             headers: new Headers({})
         };
 
-        return await fetch(url, requestInit);
+        const result = await fetch(url, requestInit);
+
+        if (result.ok) {
+            return result;
+        }
+        else {
+            return undefined;
+        }
     };
 
     let response = await makeRequest();

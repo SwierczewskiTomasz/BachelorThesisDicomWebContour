@@ -13,14 +13,18 @@ export interface Contour {
     dicomid: string;
     tag: string;
     lines: {
-        x: number,
-        y: number
+        points: {
+            x: number;
+            y: number;
+        }[];
+        brushColor: string;
     }[];
     width: number;
     height: number;
 }
 
 export const updateContours = createAction("CONTOURS/UPDATE", (contours: Contour[]) => ({ contours: contours }));
+export const updateContour = createAction("CONTOUR/UPDATE", (contour: Contour) => ({ contour: contour }));
 
 export const fetchContours = (getOpts: string): Thunk =>
     async (dispatch, getState) => {
@@ -38,11 +42,26 @@ export const fetchContours = (getOpts: string): Thunk =>
         }
     };
 
+export const setCurrentContur = (guid: string): Thunk =>
+    async (dispatch, getState) => {
+        {
+            dispatch(updateContour(getState().contours.find(c => c.guid === guid)));
+        }
+    };
+
 
 function updateContoursReducer(state: AppState, action) {
     switch (action.type) {
-        case "INSTANCES/UPDATE":
+        case "CONTOURS/UPDATE":
             return Object.assign({}, state, { contours: action.payload.contours });
+        default:
+            return state;
+    }
+}
+function updateContourReducer(state: AppState, action) {
+    switch (action.type) {
+        case "CONTOUR/UPDATE":
+            return Object.assign({}, state, { contour: action.payload.contour });
         default:
             return state;
     }
@@ -51,5 +70,6 @@ function updateContoursReducer(state: AppState, action) {
 
 
 export const contoursReducers = {
-    [updateContours.toString()](state: AppState, action) { return { ...state, ...updateContoursReducer(state, action) }; }
+    [updateContours.toString()](state: AppState, action) { return { ...state, ...updateContoursReducer(state, action) }; },
+    [updateContour.toString()](state: AppState, action) { return { ...state, ...updateContoursReducer(state, action) }; }
 };
