@@ -20,14 +20,15 @@ namespace Logic
         public bool Artificial;
         public Vertex vertex1, vertex2;
         public List<Point> points;
+        public double weight;
         public int Lenght
         {
             get
             {
                 if (Artificial)
-                    return Graph.ManhattanDistance(vertex1.point, vertex2.point);
+                    return (int)(Graph.ManhattanDistance(vertex1.point, vertex2.point) * weight);
                 else
-                    return points.Count;
+                    return points.Count + 1;
             }
         }
     }
@@ -58,8 +59,8 @@ namespace Logic
                 int uValue;
                 (u, uValue) = OpenList.First();
                 OpenDictionary.Remove(u);
-
                 Close.Add(u);
+
                 if (u == endVertex)
                     break;
 
@@ -72,11 +73,12 @@ namespace Logic
                         {
                             MySortedListElement currentElement = OpenList.Add(w, weight + Distance[u]);
                             OpenDictionary.Add(w, currentElement);
+                            //Distance.Add(w, weight + Distance[u]);
                             Distance.Add(w, int.MaxValue);
                         }
-                        if (weight > Distance[u] + u.Vertices[w])
+                        if (Distance[w] > Distance[u] + weight)
                         {
-                            Distance[w] = Distance[u] + u.Vertices[w];
+                            Distance[w] = Distance[u] + weight;
 
                             MySortedListElement currentElement = OpenDictionary[w];
                             OpenList.Remove(currentElement);
@@ -128,9 +130,9 @@ namespace Logic
                 {
                     if (ConnectedPart.Count > 2)
                         ConnectedParts.Add(ConnectedPart);
-                    else 
+                    else
                     {
-                        foreach(var ve in pointsVertices)
+                        foreach (var ve in pointsVertices)
                         {
                             if (ConnectedPart.Contains(ve))
                                 ConnectedParts.Add(ConnectedPart);
@@ -187,6 +189,7 @@ namespace Logic
                     int weightedDistance = (int)(weight * distance);
                     Edge edge = new Edge();
                     edge.Artificial = true;
+                    edge.weight = weight;
                     edge.vertex1 = vertex1;
                     edge.vertex2 = vertex2;
 
@@ -231,6 +234,18 @@ namespace Logic
 
             PrepareGraph(pointsVertices, weight);
 
+            // foreach (var e in Edges)
+            // {
+            //     // if (e.Artificial)
+            //     //     result.AddRange(BresenhamClass.Bresenham(new List<Point>(), e.vertex1.point.x, e.vertex1.point.y, e.vertex2.point.x, e.vertex2.point.y));
+            //     // else
+            //     //     result.AddRange(e.points);
+            //     if(!e.Artificial)
+            //         result.AddRange(e.points);
+            //     //result.Add(e.vertex1.point);
+            //     //result.Add(e.vertex2.point);
+            // }
+
             for (int i = 0; i < points.Count; i++)
             {
                 Vertex startVertex = pointsVertices[i];
@@ -251,7 +266,7 @@ namespace Logic
                     if (e == null)
                         throw new Exception("Censored - don't searched edge after A* algorithm");
 
-                    if (e.Artificial)
+                    if (e.points == null)
                     {
                         result.AddRange(BresenhamClass.Bresenham(new List<Point>(), previousVertex.point.x, previousVertex.point.y, currentVertex.point.x, currentVertex.point.y));
                     }
@@ -307,7 +322,7 @@ namespace Logic
                     {
                         int count = CountNeighbours(matrix, width, height, x, y);
 
-                        if (!(count == 0 || count == 3))
+                        if (!(count == 1 || count == 3))
                         {
                             Vertex vertex = new Vertex();
                             vertex.point = new Point(x, y);
@@ -343,7 +358,7 @@ namespace Logic
                                 {
                                     Edge currentEdge = listEdges.First();
                                     listEdges.RemoveAt(0);
-                                    graph.Edges.Add(currentEdge);
+                                    //graph.Edges.Add(currentEdge);
 
                                     List<Point> listOfPotentialPoints = new List<Point>();
 
@@ -367,6 +382,7 @@ namespace Logic
                                             secondVertex.Vertices = new Dictionary<Vertex, int>();
 
                                             currentEdge.vertex2 = secondVertex;
+                                            graph.Edges.Add(currentEdge);
 
                                             secondVertex.Vertices.Add(currentVertex, currentEdge.Lenght);
                                             currentVertex.Vertices.Add(secondVertex, currentEdge.Lenght);
@@ -376,11 +392,12 @@ namespace Logic
 
                                             if (listOfPotentialPoints.Count != 0)
                                                 throw new Exception("Unexpected situation - not all points in list of potential points for edge has been reviewed");
+                                                // listOfPotentialPoints.Clear();
                                         }
                                         else if (countPointNeighbours == 1)
                                         {
                                             currentEdge.points.Add(potentialPoint);
-                                            foreach (Point p in Neighbours(width, height, x, y))
+                                            foreach (Point p in Neighbours(width, height, potentialPoint.x, potentialPoint.y))
                                             {
                                                 if (matrix[p.x, p.y] != 0)
                                                     listOfPotentialPoints.Add(p);
@@ -393,6 +410,9 @@ namespace Logic
 
                                         //Cleaning visited points
                                         matrix[potentialPoint.x, potentialPoint.y] = 0;
+
+                                        if(listOfPotentialPoints.Count == 2)
+                                            throw new Exception("");
                                     }
                                 }
                             }
@@ -410,8 +430,8 @@ namespace Logic
 
             // Warunek if (i == x || j == y) daje nam łączność 4-krotną a nie 8-krotną
 
-            for (int i = x - 1 < 0 ? 0 : x - 1; i < (x + 1 < width ? x + 1 : width); i++)
-                for (int j = y - 1 < 0 ? 0 : y - 1; j < (y + 1 < height ? y + 1 : height); j++)
+            for (int i = x - 1 < 0 ? 0 : x - 1; i < (x + 2 < width ? x + 2 : width); i++)
+                for (int j = y - 1 < 0 ? 0 : y - 1; j < (y + 2 < height ? y + 2 : height); j++)
                     if (i == x || j == y)
                         if (i != x || j != y)
                             if (matrix[i, j] != 0)
@@ -422,8 +442,8 @@ namespace Logic
 
         public static IEnumerable<Point> Neighbours(int width, int height, int x, int y)
         {
-            for (int i = x - 1 < 0 ? 0 : x - 1; i < (x + 1 < width ? x + 1 : width); i++)
-                for (int j = y - 1 < 0 ? 0 : y - 1; j < (y + 1 < height ? y + 1 : height); j++)
+            for (int i = x - 1 < 0 ? 0 : x - 1; i < (x + 2 < width ? x + 2 : width); i++)
+                for (int j = y - 1 < 0 ? 0 : y - 1; j < (y + 2 < height ? y + 2 : height); j++)
                     if (i == x || j == y)
                         if (i != x || j != y)
                             yield return new Point(i, j);

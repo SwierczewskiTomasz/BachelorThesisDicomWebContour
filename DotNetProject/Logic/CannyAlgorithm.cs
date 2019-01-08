@@ -33,8 +33,11 @@ namespace Logic
             //All pixels, all edges, no connection from one point to other one!!!
             //List<Point> pixels = new List<Point>(FindPoints(foundedEdges, width, height));
 
-            double weight = 3.0;
-            List<Point> pixels = new List<Point>(Graph.FindShortestPath(foundedEdges, width, height, weight, points));
+            int[,] foundedEdges2 = Make4ConnectedMatrix(foundedEdges, width, height, 0, width, 0, height);
+
+            double weight = 10.0;
+            List<Point> pixels = new List<Point>(Graph.FindShortestPath(foundedEdges2, width, height, weight, points));
+            //List<Point> pixels = FindPoints(foundedEdges, width, height);
 
             return pixels;
         }
@@ -157,18 +160,17 @@ namespace Logic
         public static int[,] HysteresisThreshold(double[,] edges, int width, int height, int min, int max)
         {
             int[,] result = new int[width, height];
-            List<(int, int)> list = new List<(int, int)>();
+            Queue<(int, int)> queue = new Queue<(int, int)>();
 
             for (int x = 0; x < width; x++)
                 for (int y = 0; y < height; y++)
                     if (edges[x, y] > max)
-                        list.Add((x, y));
+                        queue.Enqueue((x, y));
 
-            while (list.Count != 0)
+            while (queue.Count != 0)
             {
                 int x, y;
-                (x, y) = list.First();
-                list.Remove(list.First());
+                (x, y) = queue.Dequeue();
 
                 if (edges[x, y] > max)
                 {
@@ -178,7 +180,7 @@ namespace Logic
                         for (int j = y - 1 < 0 ? 0 : y - 1; y < (y + 1 < height ? y + 1 : height); y++)
                             if (i != x && j != y && result[i, j] != 1)
                             {
-                                list.Insert(0, (i, j));
+                                queue.Enqueue((i, j));
                                 result[i, j] = 2;
                             }
 
@@ -191,7 +193,7 @@ namespace Logic
                         for (int j = y - 1 < 0 ? 0 : y - 1; y < (y + 1 < height ? y + 1 : height); y++)
                             if (i != x && j != y && result[i, j] != 1)
                             {
-                                list.Insert(0, (i, j));
+                                queue.Enqueue((i, j));
                                 result[i, j] = 2;
                             }
                 }
@@ -202,12 +204,34 @@ namespace Logic
             return result;
         }
 
+        public static int[,] Make4ConnectedMatrix(int[,] matrix, int width, int height, int xmin, int xmax, int ymin, int ymax)
+        {
+            int added = 0;
+            for (int i = xmin; i < xmax - 1; i++)
+            {
+                for (int j = ymin; j < ymax - 1; j++)
+                {
+                    if (matrix[i, j] != 0 && matrix[i + 1, j + 1] != 0 && matrix[i + 1, j] == 0 && matrix[i, j + 1] == 0)
+                    {
+                        matrix[i + 1, j] = 1;
+                        added++;
+                    }
+                    if (matrix[i, j] == 0 && matrix[i + 1, j + 1] == 0 && matrix[i + 1, j] != 0 && matrix[i, j + 1] != 0)
+                    {
+                        matrix[i, j] = 1;
+                        added++;
+                    }
+                }
+            }
+            return matrix;
+        }
+
         public static int[,] FindEndsOfEdges(int[,] edges, int width, int height)
         {
             //thinning
             int[,] result = KMMAlgorithm.KMM(edges, width, height);
 
-            
+
 
             return result;
         }
