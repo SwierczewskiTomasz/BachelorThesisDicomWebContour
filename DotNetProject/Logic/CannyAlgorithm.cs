@@ -35,7 +35,7 @@ namespace Logic
 
             int[,] foundedEdges2 = Make4ConnectedMatrix(foundedEdges, width, height, 0, width, 0, height);
 
-            double weight = 10.0;
+            double weight = 2.5;
             List<Point> pixels = new List<Point>(Graph.FindShortestPath(foundedEdges2, width, height, weight, points));
             //List<Point> pixels = FindPoints(foundedEdges, width, height);
 
