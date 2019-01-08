@@ -39,25 +39,26 @@ namespace Logic
 
         public Dictionary<Vertex, Vertex> AStarAlgotihm(Vertex startVertex, Vertex endVertex, Func<Point, Point, int> heuristicFunction)
         {
-            //Dictionary<Vertex, int> Close = new Dictionary<Vertex, int>();
-            //SortedDictionary<Vertex, int> Open = new SortedDictionary<Vertex, int>();
-
             Dictionary<Vertex, int> Distance = new Dictionary<Vertex, int>();
             Dictionary<Vertex, Vertex> Previous = new Dictionary<Vertex, Vertex>();
 
             HashSet<Vertex> Close = new HashSet<Vertex>();
-            SortedSet<(Vertex, int)> Open = new SortedSet<(Vertex, int)>(Comparer<(Vertex, int)>.Create((v1, v2) =>
-            {
-                return (v1.Item2 + heuristicFunction(v1.Item1.point, endVertex.point)) - (v2.Item2 + heuristicFunction(v2.Item1.point, endVertex.point));
-            }));
+            Dictionary<Vertex, MySortedListElement> OpenDictionary = new Dictionary<Vertex, MySortedListElement>();
+            MySortedList OpenList = new MySortedList();
 
             Distance.Add(startVertex, 0);
             Previous.Add(startVertex, null);
 
-            while (Open.Count != 0)
+            MySortedListElement element = OpenList.Add(startVertex, heuristicFunction(startVertex.point, endVertex.point));
+            OpenDictionary.Add(startVertex, element);
+
+            while (OpenDictionary.Count != 0)
             {
-                Vertex u = Open.Min.Item1;
-                Open.Remove(Open.Min);
+                Vertex u;
+                int uValue;
+                (u, uValue) = OpenList.First();
+                OpenDictionary.Remove(u);
+
                 Close.Add(u);
                 if (u == endVertex)
                     break;
@@ -67,27 +68,25 @@ namespace Logic
                     int weight = u.Vertices[w];
                     if (!Close.Contains(w))
                     {
-                        if (Open.First(o =>
+                        if (!OpenDictionary.ContainsKey(w))
                         {
-                            if (o.Equals(null))
-                                return false;
-                            return o.Item1 == w;
-                        }).Equals(null))
-                        {
-                            Open.Add((w, weight + Distance[u]));
+                            MySortedListElement currentElement = OpenList.Add(w, weight + Distance[u]);
+                            OpenDictionary.Add(w, currentElement);
+                            Distance.Add(w, int.MaxValue);
                         }
-                    }
-                    if (weight > Distance[u] + u.Vertices[w])
-                    {
-                        Distance[w] = Distance[u] + u.Vertices[w];
-                        (Vertex, int) x = Open.First(o =>
+                        if (weight > Distance[u] + u.Vertices[w])
                         {
-                            if (o.Equals(null))
-                                return false;
-                            return o.Item1 == w;
-                        });
-                        x.Item2 = Distance[w];
-                        Previous[w] = u;
+                            Distance[w] = Distance[u] + u.Vertices[w];
+
+                            MySortedListElement currentElement = OpenDictionary[w];
+                            OpenList.Remove(currentElement);
+                            OpenList.Add(currentElement.Key, Distance[w] + heuristicFunction(w.point, endVertex.point));
+
+                            if (Previous.ContainsKey(w))
+                                Previous[w] = u;
+                            else
+                                Previous.Add(w, u);
+                        }
                     }
                 }
             }
@@ -95,7 +94,7 @@ namespace Logic
             return Previous;
         }
 
-        public List<List<Vertex>> FindUnconnectedGraph()
+        public List<List<Vertex>> FindUnconnectedGraph(List<Vertex> pointsVertices)
         {
             Queue<Vertex> ListUnreachedVertices = new Queue<Vertex>();
             List<List<Vertex>> ConnectedParts = new List<List<Vertex>>();
@@ -127,16 +126,25 @@ namespace Logic
 
                 if (ListUnreachedVertices.Count == 0)
                 {
-                    ConnectedParts.Add(ConnectedPart);
+                    if (ConnectedPart.Count > 2)
+                        ConnectedParts.Add(ConnectedPart);
+                    else 
+                    {
+                        foreach(var ve in pointsVertices)
+                        {
+                            if (ConnectedPart.Contains(ve))
+                                ConnectedParts.Add(ConnectedPart);
+                        }
+                    }
                     ConnectedPart = new List<Vertex>();
                     Vertex next = null;
                     try
                     {
                         next = VertexWasInQueue.First(k => !k.Value).Key;
                     }
-                    catch(Exception e)
+                    catch (Exception e)
                     {
-                        
+
                     }
                     if (next != null)
                     {
@@ -153,7 +161,7 @@ namespace Logic
         {
             for (int i = 0; i < ConnectedParts.Count; i++)
             {
-                for (int j = i; j < ConnectedParts.Count; j++)
+                for (int j = i + 1; j < ConnectedParts.Count; j++)
                 {
                     List<Vertex> list1 = ConnectedParts[i];
                     List<Vertex> list2 = ConnectedParts[j];
@@ -187,19 +195,21 @@ namespace Logic
 
                     vertex1.Vertices.Add(vertex2, weightedDistance);
                     vertex2.Vertices.Add(vertex1, weightedDistance);
+
+                    Edges.Add(edge);
                 }
             }
         }
 
-        public void PrepareGraph(double weight)
+        public void PrepareGraph(List<Vertex> pointsVertices, double weight)
         {
-            List<List<Vertex>> ConnectedParts = FindUnconnectedGraph();
+            List<List<Vertex>> ConnectedParts = FindUnconnectedGraph(pointsVertices);
             FillUnconnectedGraphs(ConnectedParts, weight);
         }
 
         public Dictionary<Vertex, Vertex> ModificatedAStarAlgotihm(Vertex startVertex, Vertex endVertex, Func<Point, Point, int> heuristicFunction, double weight)
         {
-            PrepareGraph(weight);
+            //PrepareGraph(startVertex, endVertex, weight);
             Dictionary<Vertex, Vertex> Previous = AStarAlgotihm(startVertex, endVertex, heuristicFunction);
             return Previous;
         }
@@ -219,19 +229,23 @@ namespace Logic
                 pointsVertices.Add(vertex);
             }
 
-            PrepareGraph(weight);
+            PrepareGraph(pointsVertices, weight);
 
             for (int i = 0; i < points.Count; i++)
             {
                 Vertex startVertex = pointsVertices[i];
-                Vertex endVertex = pointsVertices[i%points.Count];
+                Vertex endVertex = pointsVertices[(i + 1) % points.Count];
 
                 Dictionary<Vertex, Vertex> previous = AStarAlgotihm(startVertex, endVertex, ManhattanDistance);
 
                 Vertex currentVertex = endVertex;
 
+                Vertex exists = previous[currentVertex];
+                int count = 0;
+
                 while (currentVertex != startVertex)
                 {
+                    count++;
                     Vertex previousVertex = previous[currentVertex];
                     Edge e = previousVertex.Edges.First(f => ((f.vertex1 == currentVertex && f.vertex2 == previousVertex) || (f.vertex2 == currentVertex && f.vertex1 == previousVertex)));
                     if (e == null)
