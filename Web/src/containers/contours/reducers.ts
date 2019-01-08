@@ -71,5 +71,5 @@ function updateContourReducer(state: AppState, action) {
 
 export const contoursReducers = {
     [updateContours.toString()](state: AppState, action) { return { ...state, ...updateContoursReducer(state, action) }; },
-    [updateContour.toString()](state: AppState, action) { return { ...state, ...updateContoursReducer(state, action) }; }
+    [updateContour.toString()](state: AppState, action) { return { ...state, ...updateContourReducer(state, action) }; }
 };
