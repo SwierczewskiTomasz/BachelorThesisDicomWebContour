@@ -18,7 +18,6 @@ export interface DrawAutimaticState {
     readonly size: Size;
     readonly points: Point[];
     readonly pixels: Point[];
-    readonly reload: boolean;
     readonly guid: string;
     readonly color: string;
     readonly chooseColor: boolean;
@@ -43,7 +42,6 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                 width: -1,
                 height: -1
             },
-            reload: true,
             points: [],
             pixels: [],
             guid: null,
@@ -64,8 +62,8 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                 w = w * 600 / h;
                 h = 600;
             }
-            this.setState(prev => {
-                return { size: { width: w, height: h }, reload: !prev.reload };
+            this.setState({
+                size: { width: w, height: h }
             });
         };
         img.onload = function () {
@@ -89,8 +87,8 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                 w = w * 600 / h;
                 h = 600;
             }
-            this.setState(prev => {
-                return { size: { width: w, height: h }, reload: !prev.reload };
+            this.setState({
+                size: { width: w, height: h }
             });
         };
         img.onload = function () {
@@ -98,7 +96,6 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
             fun(img.naturalWidth, img.naturalHeight);
         };
         img.src = url;
-        this.setState(prev => { return { reload: !prev.reload }; });
 
     }
 
@@ -169,21 +166,17 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                 onWheel={(e) => {
                     if (e.deltaY < 0) {
                         console.log("scrolling up");
-                        this.setState(prev => ({
-                            reload: !prev.reload
-                        }), () => this.props.setCurrentInd(
+                        this.props.setCurrentInd(
                             this.props.currentInstanceId + 1 >= this.props.instancesIds.length ?
                                 this.props.instancesIds.length - 1 :
                                 this.props.currentInstanceId + 1
-                        ));
+                        );
                     }
                     if (e.deltaY > 0) {
                         console.log("scrolling down");
-                        this.setState(prev => ({
-                            reload: !prev.reload
-                        }), () => this.props.setCurrentInd(
+                        this.props.setCurrentInd(
                             this.props.currentInstanceId - 1 < 0 ? 0 : this.props.currentInstanceId - 1
-                        ));
+                        );
                     }
                 }}
             />}
@@ -249,8 +242,7 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                         console.log(data);
                         this.setState(prev => ({
                             guid: data.guid,
-                            pixels: data.lines[0].pixels,
-                            reload: !prev.reload
+                            pixels: data.lines[0].pixels
                         }));
                     }).then(prev => {
                         console.log(this.state.guid);
