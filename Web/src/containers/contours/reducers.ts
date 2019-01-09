@@ -3,7 +3,7 @@ import { Action, combineReducers } from "redux";
 import { Dispatch } from "redux";
 
 import { startTask, endTask } from "../../helpers/asyncActions";
-import { getBuilder, orthancURL } from "../../helpers/requestHelper";
+import { getBuilder, orthancURL, apiURL } from "../../helpers/requestHelper";
 import { Thunk } from "../../helpers/Thunk";
 import { getPatientData } from "../patients/reducers";
 import { getStudyData } from "../studies/reducers";
@@ -30,7 +30,7 @@ export const fetchContours = (getOpts: string): Thunk =>
     async (dispatch, getState) => {
         {
             dispatch(startTask());
-            let response = await getBuilder<Contour[]>(orthancURL, getOpts);
+            let response = await getBuilder<Contour[]>(apiURL, getOpts);
             if (response !== undefined) {
                 dispatch(updateContours(response));
                 console.warn("update contours");
