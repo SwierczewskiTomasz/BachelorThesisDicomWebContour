@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Button, Dialog, DialogContent, DialogActions } from "@material-ui/core";
-import { ChromePicker } from "react-color";
+import { CompactPicker } from "react-color";
 
 interface ChooseColorDialogProps {
     readonly open: boolean;
@@ -27,8 +27,8 @@ export default class ChooseColorDialog extends React.Component<ChooseColorDialog
             onClose={() => this.props.onClose()}
         >
             <DialogContent>
-                <ChromePicker
-                    disableAlpha
+                <CompactPicker
+                    // disableAlpha
                     color={this.state.color}
                     onChangeComplete={(c) => { this.setState({ color: c.hex }); }}
                 />
@@ -43,7 +43,7 @@ export default class ChooseColorDialog extends React.Component<ChooseColorDialog
                     }}
                 >
                     Pick
-                        </Button>
+                </Button>
                 <Button
                     variant={"contained"}
                     color={"secondary"}
