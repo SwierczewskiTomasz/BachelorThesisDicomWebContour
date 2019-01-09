@@ -92,22 +92,39 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
         // context.fillStyle = "#0f0";
         // context.fillRect(0, 0, canvas.width, canvas.height);
 
-        const f = (x, y) => this.setState(prev => { return { points: [...prev.points, { x, y }] }; });
+        const addPoint = (x, y) => this.setState(prev => { return { points: [...prev.points, { x, y }] }; });
+        const findOverlapping = (x, y) => {
+            const found = this.state.points.filter(p => p.x - 5 < x && x < p.x + 5 && p.y - 5 < y && y < p.y + 5);
+            return found;
+        };
+        const removeOverlapping = (overlapping: Point[]) => {
+            const found = this.state.points.filter(p => !overlapping.find(pp => pp === p));
+            this.setState({ points: found });
+
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            context.fillStyle = getColor();
+            found.forEach(p => context.fillRect(p.x, p.y, 5, 5));
+        };
+
         const getColor = () => this.state.color;
 
         canvas.addEventListener("click", function (e) {
             const x = Math.floor(e.offsetX);
             const y = Math.floor(e.offsetY);
 
-            f(x, y);
+            const overlapping = findOverlapping(x, y);
 
-            context.fillStyle = getColor();
-            context.fillRect(x, y, 5, 5);
+            if (overlapping.length > 0) {
+                removeOverlapping(overlapping);
+            }
+            else {
+                addPoint(x, y);
+
+                context.fillStyle = getColor();
+                context.fillRect(x, y, 5, 5);
+            }
         }, true);
-
     }
-
-
 
     render() {
         const url = this.props.instancesIds.length > 0 ?
@@ -231,7 +248,7 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                     });
                 }}
             >
-                Save contour
+                Generate contour
             </Button>
             <Button
                 variant="flat"
@@ -239,6 +256,18 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                 onClick={() => this.setState({ chooseColor: true })}
             >
                 Choose color
+            </Button>
+            <Button
+                variant="flat"
+                color="primary"
+                onClick={() => {
+                    const canvas: any = document.getElementById("canvas");
+                    const context = canvas.getContext("2d");
+                    context.clearRect(0, 0, canvas.width, canvas.height);
+                    this.setState({ points: [] });
+                }}
+            >
+                Clear points
             </Button>
         </>;
     }

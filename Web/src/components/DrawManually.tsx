@@ -235,6 +235,17 @@ class DrawManually extends React.Component<DrawManuallyProps, DrawManuallyState>
             >
                 Choose color
             </Button>
+            <Button
+                variant="flat"
+                color="primary"
+                onClick={() => {
+                    this.state.reload ?
+                        this.saveableCanvas1.clear() :
+                        this.saveableCanvas2.clear();
+                }}
+            >
+                Clear image
+            </Button>
         </>;
     }
 }
