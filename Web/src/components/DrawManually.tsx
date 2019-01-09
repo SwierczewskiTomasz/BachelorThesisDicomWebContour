@@ -41,16 +41,25 @@ class DrawManually extends React.Component<DrawManuallyProps, DrawManuallyState>
             color: "#ff0000",
             chooseColor: false
         };
-        console.warn(this.state);
+        console.warn("state", this.state);
         const url = props.instancesIds.length > 0 ?
             orthancURL + "instances/" +
             this.props.instancesIds[this.props.currentInstanceId]
             + "/preview" :
             "https://http.cat/404";
         let img = new Image();
-        const fun = (w, h) => this.setState(prev => { return { size: { width: w, height: h }, reload: !prev.reload }; });
+        const fun = (w, h) => {
+            h = (h * 1000 / w);
+            w = 1000;
+            if (h > 600) {
+                w = w * 600 / h;
+                h = 600;
+            }
+            this.setState(prev => ({ size: { width: w, height: h }, reload: !prev.reload }));
+        };
+
         img.onload = function () {
-            console.log(img.naturalWidth, img.naturalHeight);
+            console.warn(img.naturalWidth, img.naturalHeight);
             fun(img.naturalWidth, img.naturalHeight);
         };
         img.src = url;
@@ -63,7 +72,16 @@ class DrawManually extends React.Component<DrawManuallyProps, DrawManuallyState>
             + "/preview" :
             "https://http.cat/404";
         let img = new Image();
-        const fun = (w, h) => this.setState({ size: { width: w, height: h } });
+        const fun = (w, h) => {
+            h = (h * 1000 / w);
+            w = 1000;
+            if (h > 600) {
+                w = w * 600 / h;
+                h = 600;
+            }
+            this.setState(prev => ({ size: { width: w, height: h }, reload: !prev.reload }));
+        };
+
         img.onload = function () {
             console.warn(img.naturalWidth, img.naturalHeight);
             fun(img.naturalWidth, img.naturalHeight);
