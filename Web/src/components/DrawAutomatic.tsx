@@ -186,7 +186,7 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                     }));
 
                     // Send to API
-                    fetch("https://localhost:1337/localhost:5001/api/semiautomaticcontour/post/", {
+                    fetch("https://localhost:5001/api/semiautomaticcontour/post/", {
                         mode: "cors",
                         method: "post",
                         headers: {
