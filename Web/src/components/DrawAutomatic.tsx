@@ -57,7 +57,17 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
             + "/preview" :
             "https://http.cat/404";
         let img = new Image();
-        const fun = (w, h) => this.setState(prev => { return { size: { width: w, height: h }, reload: !prev.reload }; });
+        const fun = (w, h) => {
+            h = h * 1000 / w;
+            w = 1000;
+            if (h > 600) {
+                w = w * 600 / h;
+                h = 600;
+            }
+            this.setState(prev => {
+                return { size: { width: w, height: h }, reload: !prev.reload };
+            });
+        };
         img.onload = function () {
             console.log(img.naturalWidth, img.naturalHeight);
             fun(img.naturalWidth, img.naturalHeight);
@@ -72,7 +82,17 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
             + "/preview" :
             "https://http.cat/404";
         let img = new Image();
-        const fun = (w, h) => this.setState({ size: { width: w, height: h } });
+        const fun = (w, h) => {
+            h = h * 1000 / w;
+            w = 1000;
+            if (h > 600) {
+                w = w * 600 / h;
+                h = 600;
+            }
+            this.setState(prev => {
+                return { size: { width: w, height: h }, reload: !prev.reload };
+            });
+        };
         img.onload = function () {
             console.warn(img.naturalWidth, img.naturalHeight);
             fun(img.naturalWidth, img.naturalHeight);
