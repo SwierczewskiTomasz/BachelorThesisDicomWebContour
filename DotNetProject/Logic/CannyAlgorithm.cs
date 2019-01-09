@@ -39,6 +39,9 @@ namespace Logic
             List<Point> pixels = new List<Point>(Graph.FindShortestPath(foundedEdges2, width, height, weight, points));
             //List<Point> pixels = FindPoints(foundedEdges, width, height);
 
+            int[,] matrixWithContour = MakeMatrixFromPoints(width, height, pixels);
+            
+
             return pixels;
         }
 
@@ -246,6 +249,14 @@ namespace Logic
                         result.Add(new Point(x, y));
 
             return result;
+        }
+
+        public static int[,] MakeMatrixFromPoints(int width, int height, List<Point> points)
+        {
+            int[,] matrix = new int[width, height];
+            foreach(var p in points)
+                matrix[p.x, p.y] = 1;
+            return matrix;
         }
     }
 }
