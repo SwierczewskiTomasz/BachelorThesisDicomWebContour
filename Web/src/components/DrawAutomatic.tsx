@@ -216,38 +216,74 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                     }));
 
                     // Send to API
-                    fetch("https://localhost:5001/api/semiautomaticcontour/post/", {
-                        mode: "cors",
-                        method: "post",
-                        headers: {
-                            "Accept": "application/json",
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify({
-                            dicomid: this.props.instancesIds[this.props.currentInstanceId],
-                            tag: "SemiAutomatic Test",
-                            lines: [
-                                {
-                                    points: this.state.points,
-                                    brushColor: "#f00"
-                                }
-                            ],
-                            width: this.state.size.width,
-                            height: this.state.size.height
-                        })
-                    }).then(response => {
-                        console.log(response);
-                        return response.json();
-                    }).then(data => {
-                        console.log(data);
-                        this.setState(prev => ({
-                            guid: data.guid,
-                            pixels: data.lines[0].pixels
-                        }));
-                    }).then(prev => {
-                        console.log(this.state.guid);
-                        console.log(this.state.pixels);
-                    });
+                    if (this.state.guid == null) {
+                        fetch("https://localhost:5001/api/semiautomaticcontour/post/", {
+                            mode: "cors",
+                            method: "post",
+                            headers: {
+                                "Accept": "application/json",
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({
+                                dicomid: this.props.instancesIds[this.props.currentInstanceId],
+                                tag: "SemiAutomatic Test",
+                                lines: [
+                                    {
+                                        points: this.state.points,
+                                        brushColor: "#f00"
+                                    }
+                                ],
+                                width: this.state.size.width,
+                                height: this.state.size.height
+                            })
+                        }).then(response => {
+                            console.log(response);
+                            return response.json();
+                        }).then(data => {
+                            console.log(data);
+                            this.setState(prev => ({
+                                guid: data.guid,
+                                pixels: data.lines[0].pixels
+                            }));
+                        }).then(prev => {
+                            console.log(this.state.guid);
+                            console.log(this.state.pixels);
+                        });
+                    }
+                    else {
+                        fetch("https://localhost:5001/api/semiautomaticcontour/put/", {
+                            mode: "cors",
+                            method: "put",
+                            headers: {
+                                "Accept": "application/json",
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({
+                                dicomid: this.props.instancesIds[this.props.currentInstanceId],
+                                tag: "SemiAutomatic Test",
+                                lines: [
+                                    {
+                                        points: this.state.points,
+                                        brushColor: "#f00"
+                                    }
+                                ],
+                                width: this.state.size.width,
+                                height: this.state.size.height
+                            })
+                        }).then(response => {
+                            console.log(response);
+                            return response.json();
+                        }).then(data => {
+                            console.log(data);
+                            this.setState(prev => ({
+                                guid: data.guid,
+                                pixels: data.lines[0].pixels
+                            }));
+                        }).then(prev => {
+                            console.log(this.state.guid);
+                            console.log(this.state.pixels);
+                        });
+                    }
 
                     // Draw pixels
                     const canvas: any = document.getElementById("canvas");
@@ -276,7 +312,10 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                     const canvas: any = document.getElementById("canvas");
                     const context = canvas.getContext("2d");
                     context.clearRect(0, 0, canvas.width, canvas.height);
-                    this.setState({ points: [] });
+                    this.setState({
+                        guid: null,
+                        points: []
+                    });
                 }}
             >
                 Clear points
