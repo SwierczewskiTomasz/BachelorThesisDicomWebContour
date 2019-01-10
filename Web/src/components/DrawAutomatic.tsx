@@ -162,8 +162,9 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
             {<canvas id="canvas"
                 width={this.state.size.width + "px"}
                 height={this.state.size.height + "px"}
-                style={{ background: bgimg }}
+                style={{ backgroundImage: bgimg, backgroundSize: "cover" }}
                 onWheel={(e) => {
+                    e.preventDefault();
                     if (e.deltaY < 0) {
                         console.log("scrolling up");
                         this.props.setCurrentInd(
