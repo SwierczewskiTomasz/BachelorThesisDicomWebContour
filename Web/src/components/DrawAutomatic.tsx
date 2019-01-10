@@ -277,7 +277,10 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                     const canvas: any = document.getElementById("canvas");
                     const context = canvas.getContext("2d");
                     context.clearRect(0, 0, canvas.width, canvas.height);
-                    this.setState({ points: [] });
+                    this.setState({
+                        guid: null,
+                        points: []
+                    });
                 }}
             >
                 Clear points
