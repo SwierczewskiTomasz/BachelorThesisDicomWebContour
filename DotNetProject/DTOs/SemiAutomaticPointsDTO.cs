@@ -13,7 +13,7 @@ namespace DTOs
 
     public class SemiAutomaticPointsDTO
     {
-        public Guid guid {get; set; }
+        public Guid guid { get; set; }
         public string dicomid { get; set; }
         public string tag { get; set; }
         public List<LinePoints> lines { get; set; }

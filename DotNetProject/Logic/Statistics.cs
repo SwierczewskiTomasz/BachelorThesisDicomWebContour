@@ -7,37 +7,6 @@ using DataAccess;
 
 namespace Logic
 {
-    public class StatisticsResult
-    {
-        Point CenterOfMass;
-        int[] Histogram;
-        int HistogramMin;
-        int HistogramMax;
-        double HistogramMean;
-        double Area;
-        double Permieter;
-        int NumberOfPixelsInsideContour;
-        int NumberOfPixelsOfContour;
-
-        public static StatisticsResult GenerateStatistics(List<Point> pixels, int[,] matrixWithContour, 
-        int[,] image, int xmin, int xmax, int ymin, int ymax, Point startPoint, double pixelAreaInMms,
-        double pixelLenghtInMms)
-        {
-            StatisticsResult statisticsResult = new StatisticsResult();
-            statisticsResult.CenterOfMass = Statistics.Barycentrum(pixels);
-            statisticsResult.Histogram = Statistics.HistogramOfContour(matrixWithContour, image, xmin, xmax, ymin, ymax, startPoint);
-            statisticsResult.HistogramMin = Statistics.MinInHistogram(statisticsResult.Histogram);
-            statisticsResult.HistogramMax = Statistics.MaxInHistogram(statisticsResult.Histogram);
-            statisticsResult.HistogramMean = Statistics.MeanInHistogram(statisticsResult.Histogram);
-            statisticsResult.Area = Statistics.AreaInMms(statisticsResult.Histogram, pixelAreaInMms);
-            statisticsResult.Permieter = Statistics.PerimeterInMmsSecondMethod(pixels, pixelLenghtInMms);   
-            statisticsResult.NumberOfPixelsInsideContour = Statistics.AreaInPixels(statisticsResult.Histogram);
-            statisticsResult.NumberOfPixelsOfContour = Statistics.PerimeterInPixels(pixels);
-            return statisticsResult;
-        }
-
-    }
-
     public static class Statistics
     {
         //Center of mass ;)
@@ -62,7 +31,7 @@ namespace Logic
             return barycentrum;
         }
 
-        public static int[] HistogramOfContour(int[,] matrixWithContour, int[,] image, int xmin, int xmax, int ymin, int ymax, Point startPoint)
+        public static int[] HistogramOfContour(int[,] matrixWithContour, int[,] image, int xmin, int xmax, int ymin, int ymax)
         {
             int[] histogram = new int[CannyAlgorithm.numberOfColors];
             bool inside;
@@ -178,6 +147,31 @@ namespace Logic
 
             double Mean = Sum / count;
             return Mean;
+        }
+
+        
+        public static StatisticsResult GenerateStatistics(List<Point> pixels, int[,] matrixWithContour,
+        int[,] image, int xmin, int xmax, int ymin, int ymax,  double pixelAreaInMms,
+        double pixelLenghtInMms)
+        {
+            StatisticsResult statisticsResult = new StatisticsResult();
+            statisticsResult.CenterOfMass = Statistics.Barycentrum(pixels);
+            try
+            {
+                statisticsResult.Histogram = Statistics.HistogramOfContour(matrixWithContour, image, xmin, xmax, ymin, ymax);
+                statisticsResult.HistogramMin = Statistics.MinInHistogram(statisticsResult.Histogram);
+                statisticsResult.HistogramMax = Statistics.MaxInHistogram(statisticsResult.Histogram);
+                statisticsResult.HistogramMean = Statistics.MeanInHistogram(statisticsResult.Histogram);
+                statisticsResult.Area = Statistics.AreaInMms(statisticsResult.Histogram, pixelAreaInMms);
+                statisticsResult.NumberOfPixelsInsideContour = Statistics.AreaInPixels(statisticsResult.Histogram);
+            }
+            catch (Exception e)
+            {
+
+            }
+            statisticsResult.Permieter = Statistics.PerimeterInMmsSecondMethod(pixels, pixelLenghtInMms);
+            statisticsResult.NumberOfPixelsOfContour = Statistics.PerimeterInPixels(pixels);
+            return statisticsResult;
         }
     }
 }

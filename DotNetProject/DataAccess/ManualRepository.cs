@@ -105,11 +105,60 @@ namespace DataAccess
 
             buffor = sr.ReadLine();
             height = int.Parse(buffor);
+            if (sr.EndOfStream)
+                throw new Exception($"Unexpected end of file {filename}");
 
+            StatisticsResult statisticsResult = new StatisticsResult();
+
+            buffor = sr.ReadLine();
+            List<int> list = buffor.Split(',').Select(s => int.Parse(s)).ToList();
+            statisticsResult.CenterOfMass = new Point(list[0], list[1]);
+            if (sr.EndOfStream)
+                throw new Exception($"Unexpected end of file {filename}");
+
+            buffor = sr.ReadLine();
+            statisticsResult.Histogram = buffor.Split(',').Select(s => int.Parse(s)).ToArray();
+            if (sr.EndOfStream)
+                throw new Exception($"Unexpected end of file {filename}");
+
+            buffor = sr.ReadLine();
+            statisticsResult.HistogramMin = int.Parse(buffor);
+            if (sr.EndOfStream)
+                throw new Exception($"Unexpected end of file {filename}");
+
+            buffor = sr.ReadLine();
+            statisticsResult.HistogramMax = int.Parse(buffor);
+            if (sr.EndOfStream)
+                throw new Exception($"Unexpected end of file {filename}");
+
+            buffor = sr.ReadLine();
+            statisticsResult.HistogramMean = double.Parse(buffor);
+            if (sr.EndOfStream)
+                throw new Exception($"Unexpected end of file {filename}");
+
+            buffor = sr.ReadLine();
+            statisticsResult.Area = double.Parse(buffor);
+            if (sr.EndOfStream)
+                throw new Exception($"Unexpected end of file {filename}");
+
+            buffor = sr.ReadLine();
+            statisticsResult.Permieter = double.Parse(buffor);
+            if (sr.EndOfStream)
+                throw new Exception($"Unexpected end of file {filename}");
+
+            buffor = sr.ReadLine();
+            statisticsResult.NumberOfPixelsInsideContour = int.Parse(buffor);
+            if (sr.EndOfStream)
+                throw new Exception($"Unexpected end of file {filename}");
+
+            buffor = sr.ReadLine();
+            statisticsResult.NumberOfPixelsOfContour = int.Parse(buffor);
+            if (sr.EndOfStream)
+                throw new Exception($"Unexpected end of file {filename}");
 
             sr.Close();
 
-            ManualContourDTO contour = new ManualContourDTO(guid, DICOMid, tag, lines, width, height);
+            ManualContourDTO contour = new ManualContourDTO(guid, DICOMid, tag, lines, width, height, statisticsResult);
 
             return contour;
         }
@@ -142,6 +191,15 @@ namespace DataAccess
             sw.WriteLine(contour.lines.First().brushColor);
             sw.WriteLine(contour.width);
             sw.WriteLine(contour.height);
+            sw.WriteLine(contour.statistics.CenterOfMass.x + "," + contour.statistics.CenterOfMass.y);
+            sw.WriteLine(string.Join(',', contour.statistics.Histogram));
+            sw.WriteLine(contour.statistics.HistogramMin);
+            sw.WriteLine(contour.statistics.HistogramMax);
+            sw.WriteLine(contour.statistics.HistogramMean);
+            sw.WriteLine(contour.statistics.Area);
+            sw.WriteLine(contour.statistics.Permieter);
+            sw.WriteLine(contour.statistics.NumberOfPixelsInsideContour);
+            sw.WriteLine(contour.statistics.NumberOfPixelsOfContour);
 
             sw.Close();
         }

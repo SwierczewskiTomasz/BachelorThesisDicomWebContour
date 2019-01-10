@@ -11,7 +11,7 @@ namespace Logic
     {
         public static int numberOfColors = 256;
 
-        public static List<Point> Canny(string dicomId, List<Point> points)
+        public static (List<Point>, StatisticsResult) Canny(string dicomId, List<Point> points)
         {
             System.Drawing.Bitmap bitmap = OrthancConnection.GetBitmapByInstanceId(dicomId);
 
@@ -40,9 +40,11 @@ namespace Logic
             //List<Point> pixels = FindPoints(foundedEdges, width, height);
 
             int[,] matrixWithContour = MakeMatrixFromPoints(width, height, pixels);
-            
+            int[,] image = ReadMatrixFromBitmap(bitmap);
 
-            return pixels;
+            StatisticsResult statisticsResult = Statistics.GenerateStatistics(pixels, matrixWithContour, image, 0, width, 0, height, 0, 0);
+
+            return (pixels, statisticsResult);
         }
 
         public static (double[,][], int, int) SobelOperator(System.Drawing.Bitmap bitmap)
@@ -254,8 +256,21 @@ namespace Logic
         public static int[,] MakeMatrixFromPoints(int width, int height, List<Point> points)
         {
             int[,] matrix = new int[width, height];
-            foreach(var p in points)
+            foreach (var p in points)
                 matrix[p.x, p.y] = 1;
+            return matrix;
+        }
+
+        public static int[,] ReadMatrixFromBitmap(System.Drawing.Bitmap bitmap)
+        {
+            int[,] matrix = new int[bitmap.Width, bitmap.Height];
+            for (int x = 0; x < bitmap.Width; x++)
+            {
+                for (int y = 0; y < bitmap.Height; y++)
+                {
+                    matrix[x, y] = bitmap.GetPixel(x, y).R;
+                }
+            }
             return matrix;
         }
     }

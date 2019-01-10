@@ -11,10 +11,13 @@ namespace Logic
     {
         public static SemiAutomaticContourDTO Default(SemiAutomaticPointsDTO points)
         => Canny(points);
-        
+
         public static SemiAutomaticContourDTO Canny(SemiAutomaticPointsDTO points)
         {
-            List<Point> pixels = CannyAlgorithm.Canny(points.dicomid, points.lines.First().points);
+            List<Point> pixels;
+            StatisticsResult statisticsResult;
+
+            (pixels, statisticsResult) = CannyAlgorithm.Canny(points.dicomid, points.lines.First().points);
 
             List<LinePointsAndPixels> lines = new List<LinePointsAndPixels>();
             LinePointsAndPixels line = new LinePointsAndPixels();
@@ -24,8 +27,8 @@ namespace Logic
 
             lines.Add(line);
 
-            SemiAutomaticContourDTO contour = new SemiAutomaticContourDTO(points.guid, 
-            points.dicomid, points.tag, lines, points.width, points.height);
+            SemiAutomaticContourDTO contour = new SemiAutomaticContourDTO(points.guid,
+            points.dicomid, points.tag, lines, points.width, points.height, statisticsResult);
             return contour;
         }
 
@@ -37,9 +40,9 @@ namespace Logic
             {
                 int x1 = points.lines.First().points[i].x;
                 int y1 = points.lines.First().points[i].y;
-                int x2 = points.lines.First().points[(i + 1)%count].x;
-                int y2 = points.lines.First().points[(i + 1)%count].y;
-                List<Point> pixelsBresenham = new List<Point>(); 
+                int x2 = points.lines.First().points[(i + 1) % count].x;
+                int y2 = points.lines.First().points[(i + 1) % count].y;
+                List<Point> pixelsBresenham = new List<Point>();
                 BresenhamClass.Bresenham(pixelsBresenham, x1, y1, x2, y2);
                 pixels = pixels.Concat(pixelsBresenham).ToList();
             }
@@ -52,8 +55,14 @@ namespace Logic
 
             lines.Add(line);
 
-            SemiAutomaticContourDTO contour = new SemiAutomaticContourDTO(points.guid, 
-            points.dicomid, points.tag, lines, points.width, points.height);
+            System.Drawing.Bitmap bitmap = OrthancConnection.GetBitmapByInstanceId(points.dicomid);
+            int[,] matrixWithContour = CannyAlgorithm.MakeMatrixFromPoints(bitmap.Width, bitmap.Height, pixels);
+            int[,] image = CannyAlgorithm.ReadMatrixFromBitmap(bitmap);
+
+            StatisticsResult statisticsResult = Statistics.GenerateStatistics(pixels, matrixWithContour, image, 0, bitmap.Width, 0, bitmap.Height, 0, 0);
+
+            SemiAutomaticContourDTO contour = new SemiAutomaticContourDTO(points.guid,
+            points.dicomid, points.tag, lines, points.width, points.height, statisticsResult);
             return contour;
         }
     }

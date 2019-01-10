@@ -13,19 +13,21 @@ namespace DTOs
     }
     public class SemiAutomaticContourDTO
     {
-        public Guid guid {get; set;}
-        public string dicomid {get; set;}
-        public string tag {get; set;}
-        public List<LinePointsAndPixels> lines {get; set;}
-        public int width {get; set;}
-        public int height {get; set;}
+        public Guid guid { get; set; }
+        public string dicomid { get; set; }
+        public string tag { get; set; }
+        public List<LinePointsAndPixels> lines { get; set; }
+        public int width { get; set; }
+        public int height { get; set; }
+        public StatisticsResult statistics { get; set; }
 
         public SemiAutomaticContourDTO()
         {
             guid = Guid.NewGuid();
         }
 
-        public SemiAutomaticContourDTO(Guid _guid, string _DICOMid, string _tag, List<LinePointsAndPixels> _lines, int _width, int _height)
+        public SemiAutomaticContourDTO(Guid _guid, string _DICOMid, string _tag, List<LinePointsAndPixels> _lines, int _width, int _height, 
+        StatisticsResult _statistics)
         {
             guid = _guid;
             dicomid = _DICOMid;
@@ -33,9 +35,11 @@ namespace DTOs
             lines = new List<LinePointsAndPixels>(_lines);
             width = _width;
             height = _height;
+            statistics = _statistics;
         }
 
-        public SemiAutomaticContourDTO(string _DICOMid, string _tag, List<LinePointsAndPixels> _lines, int _width, int _height)
+        public SemiAutomaticContourDTO(string _DICOMid, string _tag, List<LinePointsAndPixels> _lines, int _width, int _height, 
+        StatisticsResult _statistics)
         {
             guid = Guid.NewGuid();
             dicomid = _DICOMid;
@@ -43,6 +47,7 @@ namespace DTOs
             lines = new List<LinePointsAndPixels>(_lines);
             width = _width;
             height = _height;
+            statistics = _statistics;
         }
     }
 }
