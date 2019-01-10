@@ -4,18 +4,23 @@ import { connect } from "react-redux";
 import CanvasDraw from "react-canvas-draw";
 import { Button } from "@material-ui/core";
 import { defaultCipherList } from "constants";
+import ChooseColorDialog from "./ChooseColorDialog";
+import { Dispatch } from "redux";
+import { setCurrentInstanceInd } from "../containers/instances/reducers";
 
 export interface DrawAutimaticProps {
     readonly instancesIds: string[];
+    readonly currentInstanceId: number;
+    readonly setCurrentInd: (ind: number) => void;
 }
 
 export interface DrawAutimaticState {
-    readonly currentInstanceId: number;
     readonly size: Size;
     readonly points: Point[];
     readonly pixels: Point[];
-    readonly reload: boolean;
     readonly guid: string;
+    readonly color: string;
+    readonly chooseColor: boolean;
 }
 
 interface Size {
@@ -33,24 +38,34 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
     constructor(props: DrawAutimaticProps) {
         super(props);
         this.state = {
-            currentInstanceId: 0,
             size: {
                 width: -1,
                 height: -1
             },
-            reload: true,
             points: [],
             pixels: [],
-            guid: null
+            guid: null,
+            color: "#00ff00",
+            chooseColor: false
         };
         console.warn(this.state);
         const url = props.instancesIds.length > 0 ?
             orthancURL + "instances/" +
-            this.props.instancesIds[this.state.currentInstanceId]
+            this.props.instancesIds[this.props.currentInstanceId]
             + "/preview" :
             "https://http.cat/404";
         let img = new Image();
-        const fun = (w, h) => this.setState(prev => { return { size: { width: w, height: h }, reload: !prev.reload }; });
+        const fun = (w, h) => {
+            h = h * 1000 / w;
+            w = 1000;
+            if (h > 600) {
+                w = w * 600 / h;
+                h = 600;
+            }
+            this.setState({
+                size: { width: w, height: h }
+            });
+        };
         img.onload = function () {
             console.log(img.naturalWidth, img.naturalHeight);
             fun(img.naturalWidth, img.naturalHeight);
@@ -61,17 +76,26 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
     componentWillReceiveProps(nextProps: DrawAutimaticProps) {
         const url = nextProps.instancesIds.length > 0 ?
             orthancURL + "instances/" +
-            this.props.instancesIds[this.state.currentInstanceId]
+            this.props.instancesIds[this.props.currentInstanceId]
             + "/preview" :
             "https://http.cat/404";
         let img = new Image();
-        const fun = (w, h) => this.setState({ size: { width: w, height: h } });
+        const fun = (w, h) => {
+            h = h * 1000 / w;
+            w = 1000;
+            if (h > 600) {
+                w = w * 600 / h;
+                h = 600;
+            }
+            this.setState({
+                size: { width: w, height: h }
+            });
+        };
         img.onload = function () {
             console.warn(img.naturalWidth, img.naturalHeight);
             fun(img.naturalWidth, img.naturalHeight);
         };
         img.src = url;
-        this.setState(prev => { return { reload: !prev.reload }; });
 
     }
 
@@ -85,41 +109,55 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
         // context.fillStyle = "#0f0";
         // context.fillRect(0, 0, canvas.width, canvas.height);
 
-        const f = (x, y) => this.setState(prev => { return { points: [...prev.points, { x, y }] }; });
+        const addPoint = (x, y) => this.setState(prev => { return { points: [...prev.points, { x, y }] }; });
+        const findOverlapping = (x, y) => {
+            const found = this.state.points.filter(p => p.x - 5 < x && x < p.x + 5 && p.y - 5 < y && y < p.y + 5);
+            return found;
+        };
+        const removeOverlapping = (overlapping: Point[]) => {
+            const found = this.state.points.filter(p => !overlapping.find(pp => pp === p));
+            this.setState({ points: found });
+
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            context.fillStyle = getColor();
+            found.forEach(p => context.fillRect(p.x, p.y, 5, 5));
+        };
+
+        const getColor = () => this.state.color;
 
         canvas.addEventListener("click", function (e) {
             const x = Math.floor(e.offsetX);
             const y = Math.floor(e.offsetY);
 
-            f(x, y);
+            const overlapping = findOverlapping(x, y);
 
-            // Zoomed in red 'square'
-            context.fillStyle = "#F0F";
-            context.fillRect(x, y, 5, 5);
+            if (overlapping.length > 0) {
+                removeOverlapping(overlapping);
+            }
+            else {
+                addPoint(x, y);
+
+                context.fillStyle = getColor();
+                context.fillRect(x, y, 5, 5);
+            }
         }, true);
-
     }
 
     render() {
-        const canvasProps = {
-            loadTimeOffset: 5,
-            lazyRadius: 0,
-            brushRadius: 0,
-            brushColor: "#f00",
-            catenaryColor: "transparent",
-            gridColor: "rgba(150,150,150,0.17)",
-            hideGrid: true,
-            disabled: false,
-            saveData: null,
-            immediateLoading: false
-        };
         const url = this.props.instancesIds.length > 0 ?
             orthancURL + "instances/" +
-            this.props.instancesIds[this.state.currentInstanceId]
+            this.props.instancesIds[this.props.currentInstanceId]
             + "/preview" :
             "https://http.cat/404";
         const bgimg = "url(" + url + ")";
         return <>
+            <ChooseColorDialog
+                open={this.state.chooseColor}
+                initialColor={this.state.color}
+                onClose={() => this.setState({ chooseColor: false })}
+                onConfirm={(color: string) => this.setState({ color })}
+            />
+            {this.props.instancesIds.length > 0 ? (this.props.currentInstanceId + 1) + "/" + this.props.instancesIds.length : null}
             <br />
             {<canvas id="canvas"
                 width={this.state.size.width + "px"}
@@ -128,19 +166,17 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                 onWheel={(e) => {
                     if (e.deltaY < 0) {
                         console.log("scrolling up");
-                        this.setState(prev => ({
-                            currentInstanceId: prev.currentInstanceId + 1 >= this.props.instancesIds.length ?
+                        this.props.setCurrentInd(
+                            this.props.currentInstanceId + 1 >= this.props.instancesIds.length ?
                                 this.props.instancesIds.length - 1 :
-                                prev.currentInstanceId + 1,
-                            reload: !prev.reload
-                        }));
+                                this.props.currentInstanceId + 1
+                        );
                     }
                     if (e.deltaY > 0) {
                         console.log("scrolling down");
-                        this.setState(prev => ({
-                            currentInstanceId: prev.currentInstanceId - 1 < 0 ? 0 : prev.currentInstanceId - 1,
-                            reload: !prev.reload
-                        }));
+                        this.props.setCurrentInd(
+                            this.props.currentInstanceId - 1 < 0 ? 0 : this.props.currentInstanceId - 1
+                        );
                     }
                 }}
             />}
@@ -167,7 +203,7 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                         JSON.stringify(this.state.points)
                     );
                     console.log(JSON.stringify({
-                        dicomid: this.props.instancesIds[this.state.currentInstanceId],
+                        dicomid: this.props.instancesIds[this.props.currentInstanceId],
                         tag: "SemiAutomatic Test",
                         lines: [
                             {
@@ -188,7 +224,7 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                             "Content-Type": "application/json"
                         },
                         body: JSON.stringify({
-                            dicomid: this.props.instancesIds[this.state.currentInstanceId],
+                            dicomid: this.props.instancesIds[this.props.currentInstanceId],
                             tag: "SemiAutomatic Test",
                             lines: [
                                 {
@@ -206,8 +242,7 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                         console.log(data);
                         this.setState(prev => ({
                             guid: data.guid,
-                            pixels: data.lines[0].pixels,
-                            reload: !prev.reload
+                            pixels: data.lines[0].pixels
                         }));
                     }).then(prev => {
                         console.log(this.state.guid);
@@ -225,7 +260,26 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                     });
                 }}
             >
-                Save contour
+                Generate contour
+            </Button>
+            <Button
+                variant="flat"
+                color="primary"
+                onClick={() => this.setState({ chooseColor: true })}
+            >
+                Choose color
+            </Button>
+            <Button
+                variant="flat"
+                color="primary"
+                onClick={() => {
+                    const canvas: any = document.getElementById("canvas");
+                    const context = canvas.getContext("2d");
+                    context.clearRect(0, 0, canvas.width, canvas.height);
+                    this.setState({ points: [] });
+                }}
+            >
+                Clear points
             </Button>
         </>;
     }
@@ -234,6 +288,12 @@ export default connect(
     (state: AppState) => {
         return {
             instancesIds: state.instancesIds,
+            currentInstanceId: state.currentInstanceId
         };
-    }
+    },
+    (dispatch: Dispatch<any>) => ({
+        setCurrentInd: (ind: number) => {
+            dispatch(setCurrentInstanceInd(ind));
+        },
+    })
 )(DrawAutimatic);

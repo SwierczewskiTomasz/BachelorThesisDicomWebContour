@@ -11,13 +11,13 @@ import { connect } from "react-redux";
 import { orthancURL } from "../helpers/requestHelper";
 import DrawManually from "./DrawManually";
 import DisplayImage from "./DisplayImage";
+import ContourList from "./ContourList";
 
 
 export interface AppViewProps {
 }
 
 interface AppViewState {
-    readonly drawerOpen: boolean;
     readonly currentInstanceId: number;
     // readonly stack: {
     //     imageIds: string[];
@@ -32,17 +32,12 @@ export default class AppView extends React.Component<AppViewProps, AppViewState>
     constructor(props: AppViewProps) {
         super(props);
         this.state = {
-            drawerOpen: false,
             currentInstanceId: 0
             // stack: {
             //     imageIds: [imageId],
             //     currentImageIdIndex: 0
             // }
         };
-    }
-
-    openDrawer() {
-        this.setState(prev => ({ drawerOpen: true }));
     }
 
     render() {
@@ -58,22 +53,21 @@ export default class AppView extends React.Component<AppViewProps, AppViewState>
                         color="inherit"
                         style={{ margin: "1rem" }}
                     >
-                        <IconButton onClick={() => this.openDrawer()} style={{ marginRight: "1rem" }}>
-                            <MenuIcon style={{ color: "fff" }} />
-                        </IconButton>
                         DICOM contour
                     </Typography>
                 </AppBar>
-                <div style={{ width: "100%", textAlign: "center" }}>
-                    <Drawer open={this.state.drawerOpen}
-                        onClose={() => this.setState({ drawerOpen: false })}>
-                        <SideMenu />
-                    </Drawer>
+                <div style={{ float: "left", width: "20%" }}>
+                    <SideMenu />
+                </div>
+                <div style={{ float: "left", width: "60%", textAlign: "center" }}>
                     <DisplayImage />
                     {/* <DrawManually /> */}
                     {/* <div style={{ overflow: "auto", height: "100%", float: "left" }}>
                         <CornerstoneElement stack={{ ...this.state.stack }} />
                     </div> */}
+                </div>
+                <div style={{ float: "left", width: "20%" }}>
+                    <ContourList />
                 </div>
             </>
         );

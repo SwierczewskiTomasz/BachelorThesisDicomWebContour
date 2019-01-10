@@ -25,7 +25,7 @@ namespace DataAccess
             List<Guid> contours = new List<Guid>();
             using (var db = new ContourContext())
             {
-                foreach (var c in db.Contours.Where(c => c.IsManual && c.DicomId == DicomId))
+                foreach (var c in db.Contours.Where(c => !c.IsManual && c.DicomId == DicomId))
                     contours.Add(c.ContourEntityId);
             }
             return contours;

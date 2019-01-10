@@ -25,6 +25,8 @@ export interface PatientInfoProps {
     readonly referringPhysicianName?: string;
     readonly studyDate?: string;
     readonly studyDescription?: string;
+    readonly pixelSpacing?: string;
+    readonly spacingBetweenSlices?: string;
     readonly anonymizePatient: (name: string, birthdate: string, sex: string) => void;
 }
 
@@ -66,6 +68,8 @@ class PatientInfo extends React.Component<PatientInfoProps, PatientInfoState> {
                 <p><span style={{ ...strong }}>Referring Physician Name</span>: {this.props.referringPhysicianName || "No data"}</p>
                 <p><span style={{ ...strong }}>Study Date</span>: {this.props.studyDate || "No data"}</p>
                 <p><span style={{ ...strong }}>Study Description</span>: {this.props.studyDescription || "No data"}</p>
+                <p><span style={{ ...strong }}>Pixel Spacing</span>: {this.props.pixelSpacing || "No data"}</p>
+                <p><span style={{ ...strong }}>Study Description</span>: {this.props.spacingBetweenSlices || "No data"}</p>
                 <Button
                     variant={"contained"}
                     color={"primary"}
@@ -129,7 +133,7 @@ class PatientInfo extends React.Component<PatientInfoProps, PatientInfoState> {
                             onClick={() => this.setState({ dialogOpen: false })}
                         >
                             Cancel
-                </Button>
+                        </Button>
                     </DialogActions>
                 </Dialog>
             </>
@@ -147,7 +151,9 @@ export default connect(
             institutionName: state.institutionName,
             referringPhysicianName: state.referringPhysicianName,
             studyDate: state.studyDate,
-            studyDescription: state.studyDescription
+            studyDescription: state.studyDescription,
+            pixelSpacing: state.pixelSpacing,
+            spacingBetweenSlices: state.spacingBetweenSlices
         };
     },
     (dispatch: Dispatch<any>) => ({

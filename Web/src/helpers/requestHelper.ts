@@ -1,4 +1,5 @@
 export const orthancURL = `http://localhost:1337/localhost:8042/`;
+export const apiURL = `https://localhost:5001/`;
 
 export async function getBuilder<TResult>(
     baseUrl: string,
@@ -12,7 +13,14 @@ export async function getBuilder<TResult>(
             headers: new Headers({})
         };
 
-        return await fetch(url, requestInit);
+        const result = await fetch(url, requestInit);
+
+        if (result.ok) {
+            return result;
+        }
+        else {
+            return undefined;
+        }
     };
 
     let response = await makeRequest();
