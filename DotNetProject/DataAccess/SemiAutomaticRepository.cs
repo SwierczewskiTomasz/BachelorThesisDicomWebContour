@@ -191,7 +191,11 @@ namespace DataAccess
             sw.WriteLine(contour.width);
             sw.WriteLine(contour.height);
             sw.WriteLine(contour.statistics.CenterOfMass.x + "," + contour.statistics.CenterOfMass.y);
-            sw.WriteLine(string.Join(',', contour.statistics.Histogram));
+            
+            if(contour.statistics.Histogram == null)
+                sw.WriteLine();
+            else 
+                sw.WriteLine(string.Join(',', contour.statistics.Histogram));
             sw.WriteLine(contour.statistics.HistogramMin);
             sw.WriteLine(contour.statistics.HistogramMax);
             sw.WriteLine(contour.statistics.HistogramMean);

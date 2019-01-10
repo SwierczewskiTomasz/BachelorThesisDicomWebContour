@@ -17,7 +17,7 @@ namespace Logic
             List<Point> pixels;
             StatisticsResult statisticsResult;
 
-            (pixels, statisticsResult) = CannyAlgorithm.Canny(points.dicomid, points.lines.First().points);
+            (pixels, statisticsResult) = CannyAlgorithm.Canny(points.dicomid, points.lines.First().points, points.width, points.height);
 
             List<LinePointsAndPixels> lines = new List<LinePointsAndPixels>();
             LinePointsAndPixels line = new LinePointsAndPixels();

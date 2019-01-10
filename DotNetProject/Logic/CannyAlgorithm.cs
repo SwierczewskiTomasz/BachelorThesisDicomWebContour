@@ -11,7 +11,7 @@ namespace Logic
     {
         public static int numberOfColors = 256;
 
-        public static (List<Point>, StatisticsResult) Canny(string dicomId, List<Point> points)
+        public static (List<Point>, StatisticsResult) Canny(string dicomId, List<Point> points, int canvasWidth, int canvasHeight)
         {
             System.Drawing.Bitmap bitmap = OrthancConnection.GetBitmapByInstanceId(dicomId);
 
@@ -23,6 +23,12 @@ namespace Logic
             double[,] edges = NonMaximumSuppression(gradient, width, height);
             int[] distribution = DistributionFunction(edges, width, height);
             distribution = CumulativeDistributionFunction(distribution);
+
+            foreach (var p in points)
+            {
+                p.x *= canvasWidth / width;
+                p.y *= canvasHeight / height;
+            }
 
             int min, max;
             double lowerThreshold = 0.70, higherThreshold = 0.95;

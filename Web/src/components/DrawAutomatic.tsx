@@ -285,6 +285,23 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
             >
                 Clear points
             </Button>
+            <Button
+                variant="flat"
+                color="primary"
+                onClick={() => {
+                    const canvas: any = document.getElementById("canvas");
+                    const context = canvas.getContext("2d");
+                    context.clearRect(0, 0, canvas.width, canvas.height);
+                    this.setState({
+                        pixels: []
+                    });
+                    this.state.points.forEach((pixel) => {
+                        context.fillRect(pixel.x, pixel.y, 5, 5);
+                    });
+                }}
+            >
+                Clear generated contour
+            </Button>
         </>;
     }
 }
