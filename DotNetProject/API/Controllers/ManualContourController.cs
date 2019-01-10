@@ -5,11 +5,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using DTOs;
 using Logic;
+using Microsoft.AspNetCore.Cors;
 
 namespace API.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
+    [EnableCors("AllowSpecificOrigin")]
+    //[ApiController]
     public class ManualContourController : ControllerBase
     {
         readonly private ManualContourLogic logic;

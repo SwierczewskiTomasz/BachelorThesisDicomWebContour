@@ -23,8 +23,9 @@ namespace DTOs
     }
     public class Line
     {
-        public List<Point> pixels;
+        public List<Point> points;
         public string brushColor;
+        public int brushRadius;
     }
 
     public class ManualContourDTO
