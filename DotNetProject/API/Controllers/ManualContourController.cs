@@ -5,11 +5,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using DTOs;
 using Logic;
+using Microsoft.AspNetCore.Cors;
 
 namespace API.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
+    [EnableCors("AllowSpecificOrigin")]
+    //[ApiController]
     public class ManualContourController : ControllerBase
     {
         readonly private ManualContourLogic logic;
@@ -82,15 +84,15 @@ namespace API.Controllers
         {
             List<Line> lines = new List<Line>();
             Line line = new Line();
-            line.pixels = new List<Point>();
-            line.pixels.Add(new Point(0, 0));
-            line.pixels.Add(new Point(1, 0));
-            line.pixels.Add(new Point(2, 0));
-            line.pixels.Add(new Point(2, 1));
-            line.pixels.Add(new Point(2, 2));
-            line.pixels.Add(new Point(1, 2));
-            line.pixels.Add(new Point(0, 2));
-            line.pixels.Add(new Point(0, 1));
+            line.points = new List<Point>();
+            line.points.Add(new Point(0, 0));
+            line.points.Add(new Point(1, 0));
+            line.points.Add(new Point(2, 0));
+            line.points.Add(new Point(2, 1));
+            line.points.Add(new Point(2, 2));
+            line.points.Add(new Point(1, 2));
+            line.points.Add(new Point(0, 2));
+            line.points.Add(new Point(0, 1));
             line.brushColor = "#f00";
             lines.Add(line);
 

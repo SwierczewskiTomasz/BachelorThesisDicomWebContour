@@ -122,9 +122,6 @@ namespace DataAccess
                 ce.DicomId = contour.dicomid;
                 ce.Tag = contour.tag;
                 ce.IsManual = false;
-#warning "Tak tego nie powinno się robić! Do poprawy"
-                // ce.UserId = Guid.Empty;
-                // ce.User = null;
 
                 db.Contours.Add(ce);
                 db.SaveChanges();

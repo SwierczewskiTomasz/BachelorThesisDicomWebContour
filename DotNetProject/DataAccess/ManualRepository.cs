@@ -75,14 +75,14 @@ namespace DataAccess
                 throw new Exception($"Unexpected end of file {filename}");
 
             Line line = new Line();
-            line.pixels = new List<Point>();
+            line.points = new List<Point>();
 
             buffor = sr.ReadLine();
             List<int> points = buffor.Split(',').Select(s => int.Parse(s)).ToList();
             int i = 0;
 
             while (i + 1 < points.Count)
-                line.pixels.Add(new Point(points[i++], points[i++]));
+                line.points.Add(new Point(points[i++], points[i++]));
 
             //It the same as:
             // while(i + 1 < points.Count)
@@ -93,6 +93,7 @@ namespace DataAccess
             // But it's look more funny
 
             line.brushColor = sr.ReadLine();
+            line.brushRadius = 0;
             if (sr.EndOfStream)
                 throw new Exception($"Unexpected end of file {filename}");
 
@@ -123,9 +124,6 @@ namespace DataAccess
                 ce.DicomId = contour.dicomid;
                 ce.Tag = contour.tag;
                 ce.IsManual = true;
-#warning "Tak tego nie powinno się robić! Do poprawy"
-                // ce.UserId = Guid.Empty;
-                // ce.User = null;
 
                 db.Contours.Add(ce);
                 db.SaveChanges();
@@ -137,7 +135,7 @@ namespace DataAccess
             sw.WriteLine(contour.guid.ToString());
             sw.WriteLine(contour.dicomid.ToString());
             sw.WriteLine(contour.tag);
-            sw.WriteLine(string.Join(',', contour.lines.First().pixels.Select(s => s.x.ToString() +
+            sw.WriteLine(string.Join(',', contour.lines.First().points.Select(s => s.x.ToString() +
              "," + s.y.ToString())));
             sw.WriteLine(contour.lines.First().brushColor);
             sw.WriteLine(contour.width);
