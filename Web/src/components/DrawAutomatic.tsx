@@ -248,17 +248,17 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                     }).then(prev => {
                         console.log(this.state.guid);
                         console.log(this.state.pixels);
+                        // Draw pixels
+                        const canvas: any = document.getElementById("canvas");
+
+                        const context = canvas.getContext("2d");
+                        context.fillStyle = "#F00";
+
+                        this.state.pixels.forEach((pixel) => {
+                            context.fillRect(pixel.x, pixel.y, 2, 2);
+                        });
                     });
 
-                    // Draw pixels
-                    const canvas: any = document.getElementById("canvas");
-
-                    const context = canvas.getContext("2d");
-                    context.fillStyle = "#F00";
-
-                    this.state.pixels.forEach((pixel) => {
-                        context.fillRect(pixel.x, pixel.y, 2, 2);
-                    });
                 }}
             >
                 Generate contour
