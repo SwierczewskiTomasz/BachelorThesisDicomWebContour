@@ -226,14 +226,18 @@ class DrawManually extends React.Component<DrawManuallyProps, DrawManuallyState>
                 color="primary"
                 onClick={() => {
                     console.log("click");
-                    const data = JSON.parse(this.state.reload ? this.saveableCanvas1.getSaveData() : this.saveableCanvas2.getSaveData());
+                    const rawData = JSON.parse(this.state.reload ? this.saveableCanvas1.getSaveData() : this.saveableCanvas2.getSaveData());
                     // localStorage.setItem("savedDrawing", data);
+                    console.warn(rawData);
+                    const lines = rawData.lines.map(line => {
+                        let next = line;
+                        next.points = next.points.map(p => {
+                            return { x: parseInt(p.x), y: parseInt(p.y) };
+                        });
+                        return next;
+                    });
+                    const data = { ...rawData, lines };
                     console.warn(data);
-                    // console.warn(JSON.stringify({
-                    //     dicomid: this.props.instancesIds[this.props.currentInstanceId],
-                    //     tag: "Manual Test",
-                    //     ...data
-                    // }));
                     // Send to API
                     fetch("https://localhost:5001/api/manualcontour/post/", {
                         mode: "cors",
