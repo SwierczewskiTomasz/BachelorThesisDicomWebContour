@@ -7,11 +7,14 @@ import { defaultCipherList } from "constants";
 import ChooseColorDialog from "./ChooseColorDialog";
 import { Dispatch } from "redux";
 import { setCurrentInstanceInd } from "../containers/instances/reducers";
+import SendToApiDialog from "./SendToApiDialog";
+import { sendAutomaticContour, Contour } from "../containers/contours/reducers";
 
 export interface DrawAutimaticProps {
     readonly instancesIds: string[];
     readonly currentInstanceId: number;
     readonly setCurrentInd: (ind: number) => void;
+    sendAutomaticContour: (contour: Contour, centralPoints: Point[], title: string) => void;
 }
 
 export interface DrawAutimaticState {
@@ -21,13 +24,14 @@ export interface DrawAutimaticState {
     readonly guid: string;
     readonly color: string;
     readonly chooseColor: boolean;
+    readonly saveContourOpen: boolean;
 }
 
-interface Size {
+export interface Size {
     readonly width: number;
     readonly height: number;
 }
-interface Point {
+export interface Point {
     readonly x: number;
     readonly y: number;
 }
@@ -46,7 +50,8 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
             pixels: [],
             guid: null,
             color: "#00ff00",
-            chooseColor: false
+            chooseColor: false,
+            saveContourOpen: false
         };
         console.warn(this.state);
         const url = props.instancesIds.length > 0 ?
@@ -102,7 +107,7 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
     componentDidMount() {
 
         const canvas: any = document.getElementById("canvas");
-
+        console.log(canvas);
         const context = canvas.getContext("2d");
 
         // Background
@@ -157,6 +162,33 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                 onClose={() => this.setState({ chooseColor: false })}
                 onConfirm={(color: string) => this.setState({ color })}
             />
+            <SendToApiDialog
+                open={this.state.saveContourOpen}
+                size={this.state.size}
+                imgUrl={bgimg}
+                contour={{
+                    dicomid: this.props.instancesIds[this.props.currentInstanceId],
+                    tag: "SemiAutomatic Test",
+                    lines: [
+                        {
+                            points: this.state.points,
+                            brushColor: this.state.color
+                        }
+                    ],
+                    width: this.state.size.width,
+                    height: this.state.size.height
+                }}
+                onConfirm={(c, cp, t) => {
+                    this.props.sendAutomaticContour(c, cp, t);
+                    const canvas: any = document.getElementById("canvas");
+                    const context = canvas.getContext("2d");
+                    context.clearRect(0, 0, canvas.width, canvas.height);
+                    this.setState({
+                        points: []
+                    });
+                }}
+                onClose={() => this.setState({ saveContourOpen: false })}
+            />
             {this.props.instancesIds.length > 0 ? (this.props.currentInstanceId + 1) + "/" + this.props.instancesIds.length : null}
             <br />
             {<canvas id="canvas"
@@ -194,72 +226,66 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
             <Button
                 variant="contained"
                 color="primary"
-                onClick={() => {
-                    console.log("click");
-                    localStorage.setItem(
-                        "savedDrawing",
-                        JSON.stringify(this.state.points)
-                    );
-                    console.warn(
-                        JSON.stringify(this.state.points)
-                    );
-                    console.log(JSON.stringify({
-                        dicomid: this.props.instancesIds[this.props.currentInstanceId],
-                        tag: "SemiAutomatic Test",
-                        lines: [
-                            {
-                                points: this.state.points,
-                                brushColor: "#f00"
-                            }
-                        ],
-                        width: this.state.size.width,
-                        height: this.state.size.height
-                    }));
+                // onClick={() => {
+                //     console.log("click");
+                // const contour = {
+                //     dicomid: this.props.instancesIds[this.props.currentInstanceId],
+                //     tag: "SemiAutomatic Test",
+                //     lines: [
+                //         {
+                //             points: this.state.points,
+                //             brushColor: "#f00"
+                //         }
+                //     ],
+                //     width: this.state.size.width,
+                //     height: this.state.size.height
+                // };
 
-                    // Send to API
-                    fetch("https://localhost:5001/api/semiautomaticcontour/post/", {
-                        mode: "cors",
-                        method: "post",
-                        headers: {
-                            "Accept": "application/json",
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify({
-                            dicomid: this.props.instancesIds[this.props.currentInstanceId],
-                            tag: "SemiAutomatic Test",
-                            lines: [
-                                {
-                                    points: this.state.points,
-                                    brushColor: "#f00"
-                                }
-                            ],
-                            width: this.state.size.width,
-                            height: this.state.size.height
-                        })
-                    }).then(response => {
-                        console.log(response);
-                        return response.json();
-                    }).then(data => {
-                        console.log(data);
-                        this.setState(prev => ({
-                            guid: data.guid,
-                            pixels: data.lines[0].pixels
-                        }));
-                    }).then(prev => {
-                        console.log(this.state.guid);
-                        console.log(this.state.pixels);
-                        // Draw pixels
-                        const canvas: any = document.getElementById("canvas");
+                //     // Send to API
+                //     fetch("https://localhost:5001/", {
+                //         mode: "cors",
+                //         method: "post",
+                //         headers: {
+                //             "Accept": "application/json",
+                //             "Content-Type": "application/json"
+                //         },
+                //         body: JSON.stringify({
+                //             dicomid: this.props.instancesIds[this.props.currentInstanceId],
+                //             tag: "SemiAutomatic Test",
+                //             lines: [
+                //                 {
+                //                     points: this.state.points,
+                //                     brushColor: "#f00"
+                //                 }
+                //             ],
+                //             width: this.state.size.width,
+                //             height: this.state.size.height
+                //         })
+                //     }).then(response => {
+                //         console.log(response);
+                //         return response.json();
+                //     }).then(data => {
+                //         console.log(data);
+                //         this.setState(prev => ({
+                //             guid: data.guid,
+                //             pixels: data.lines[0].pixels
+                //         }));
+                //     }).then(prev => {
+                //         console.log(this.state.guid);
+                //         console.log(this.state.pixels);
+                //         // Draw pixels
+                //         const canvas: any = document.getElementById("canvas");
 
-                        const context = canvas.getContext("2d");
-                        context.fillStyle = "#F00";
+                //         const context = canvas.getContext("2d");
+                //         context.fillStyle = "#F00";
 
-                        this.state.pixels.forEach((pixel) => {
-                            context.fillRect(pixel.x, pixel.y, 2, 2);
-                        });
-                    });
+                //         this.state.pixels.forEach((pixel) => {
+                //             context.fillRect(pixel.x, pixel.y, 2, 2);
+                //         });
+                //     });
 
-                }}
+                // }}
+                onClick={() => this.setState({ saveContourOpen: true })}
             >
                 Generate contour
             </Button>
@@ -285,7 +311,7 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
             >
                 Clear points
             </Button>
-            <Button
+            {/* <Button
                 variant="flat"
                 color="primary"
                 onClick={() => {
@@ -301,7 +327,7 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                 }}
             >
                 Clear generated contour
-            </Button>
+            </Button> */}
         </>;
     }
 }
@@ -316,5 +342,8 @@ export default connect(
         setCurrentInd: (ind: number) => {
             dispatch(setCurrentInstanceInd(ind));
         },
+        sendAutomaticContour: (contour: Contour, centralPoints: Point[], title: string) => {
+            dispatch(sendAutomaticContour("api/semiautomaticcontour/post/", { ...contour, centralPoints, tag: title }));
+        }
     })
 )(DrawAutimatic);

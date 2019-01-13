@@ -3,13 +3,13 @@ import { Action, combineReducers } from "redux";
 import { Dispatch } from "redux";
 
 import { startTask, endTask } from "../../helpers/asyncActions";
-import { getBuilder, orthancURL, apiURL } from "../../helpers/requestHelper";
+import { getBuilder, apiURL, postBuilder } from "../../helpers/requestHelper";
 import { Thunk } from "../../helpers/Thunk";
 import { getPatientData } from "../patients/reducers";
 import { getStudyData } from "../studies/reducers";
 
 export interface Contour {
-    guid: string;
+    guid?: string;
     dicomid: string;
     tag: string;
     lines: {
@@ -21,6 +21,13 @@ export interface Contour {
     }[];
     width: number;
     height: number;
+}
+
+export interface ContourWithCenralPoints extends Contour {
+    centralPoints: {
+        x: number;
+        y: number;
+    }[];
 }
 
 export const updateContours = createAction("CONTOURS/UPDATE", (contours: Contour[]) => ({ contours: contours }));
@@ -67,6 +74,35 @@ function updateContourReducer(state: AppState, action) {
     }
 }
 
+export const sendAutomaticContour = (getOpts: string, body: ContourWithCenralPoints): Thunk =>
+    async (dispatch, getState) => {
+        {
+            dispatch(startTask());
+            let response = await postBuilder<Contour>(apiURL, getOpts, body);
+            if (response !== undefined) {
+                dispatch(updateContour(response));
+                console.warn("update contour");
+            }
+            else {
+                console.log("sendAutomaticContour() failed");
+            }
+            dispatch(endTask());
+        }
+    };
+export const sendManualContour = (getOpts: string, body: ContourWithCenralPoints): Thunk =>
+    async (dispatch, getState) => {
+        {
+            dispatch(startTask());
+            let response = await postBuilder<Contour>(apiURL, getOpts, body);
+            if (response !== undefined) {
+                console.log("sendManualContour() succeded");
+            }
+            else {
+                console.log("sendManualContour() failed");
+            }
+            dispatch(endTask());
+        }
+    };
 
 
 export const contoursReducers = {
