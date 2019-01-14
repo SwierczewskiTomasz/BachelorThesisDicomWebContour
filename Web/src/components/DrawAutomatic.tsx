@@ -232,68 +232,72 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
             <Button
                 variant="contained"
                 color="primary"
-                // onClick={() => {
-                //     console.log("click");
-                // const contour = {
-                //     dicomid: this.props.instancesIds[this.props.currentInstanceId],
-                //     tag: "SemiAutomatic Test",
-                //     lines: [
-                //         {
-                //             points: this.state.points,
-                //             brushColor: "#f00"
-                //         }
-                //     ],
-                //     width: this.state.size.width,
-                //     height: this.state.size.height
-                // };
+                onClick={() => {
+                    console.log("click");
+                    const contour = {
+                        dicomid: this.props.instancesIds[this.props.currentInstanceId],
+                        tag: "SemiAutomatic Test",
+                        lines: [
+                            {
+                                points: this.state.points,
+                                brushColor: "#f00"
+                            }
+                        ],
+                        width: this.state.size.width,
+                        height: this.state.size.height
+                    };
 
-                //     // Send to API
-                //     fetch("https://localhost:5001/", {
-                //         mode: "cors",
-                //         method: "post",
-                //         headers: {
-                //             "Accept": "application/json",
-                //             "Content-Type": "application/json"
-                //         },
-                //         body: JSON.stringify({
-                //             dicomid: this.props.instancesIds[this.props.currentInstanceId],
-                //             tag: "SemiAutomatic Test",
-                //             lines: [
-                //                 {
-                //                     points: this.state.points,
-                //                     brushColor: "#f00"
-                //                 }
-                //             ],
-                //             width: this.state.size.width,
-                //             height: this.state.size.height
-                //         })
-                //     }).then(response => {
-                //         console.log(response);
-                //         return response.json();
-                //     }).then(data => {
-                //         console.log(data);
-                //         this.setState(prev => ({
-                //             guid: data.guid,
-                //             pixels: data.lines[0].pixels
-                //         }));
-                //     }).then(prev => {
-                //         console.log(this.state.guid);
-                //         console.log(this.state.pixels);
-                //         // Draw pixels
-                //         const canvas: any = document.getElementById("canvas");
+                    // Send to API
 
-                //         const context = canvas.getContext("2d");
-                //         context.fillStyle = "#F00";
+                    // TODO: Refactor => make api call inside reducer
+                    fetch("https://localhost:5001/" + "api/semiautomaticcontour/post/", {
+                        mode: "cors",
+                        method: "post",
+                        headers: {
+                            "Accept": "application/json",
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            dicomid: this.props.instancesIds[this.props.currentInstanceId],
+                            tag: "SemiAutomatic Test",
+                            lines: [
+                                {
+                                    points: this.state.points,
+                                    brushColor: this.state.color
+                                }
+                            ],
+                            width: this.state.size.width,
+                            height: this.state.size.height
+                        })
+                    }).then(response => {
+                        console.log(response);
+                        return response.json();
+                    }).then(data => {
+                        console.log(data);
+                        this.setState(prev => ({
+                            guid: data.guid,
+                            pixels: data.lines[0].pixels
+                        }));
+                        // Draw pixels
+                        const canvas: any = document.getElementById("canvas");
 
-                //         this.state.pixels.forEach((pixel) => {
-                //             context.fillRect(pixel.x, pixel.y, 2, 2);
-                //         });
-                //     });
+                        const context = canvas.getContext("2d");
+                        context.fillStyle = "#F00";
 
-                // }}
+                        this.state.pixels.forEach((pixel) => {
+                            context.fillRect(pixel.x, pixel.y, 2, 2);
+                        });
+                    });
+                }}
+            >
+                Preview contour
+            </Button>
+            <Button
+                variant="contained"
+                color="primary"
                 onClick={() => this.setState({ saveContourOpen: true })}
             >
-                Generate contour
+                Save contour
             </Button>
             <Button
                 variant="flat"
@@ -317,7 +321,7 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
             >
                 Clear points
             </Button>
-            {/* <Button
+            <Button
                 variant="flat"
                 color="primary"
                 onClick={() => {
@@ -333,7 +337,7 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                 }}
             >
                 Clear generated contour
-            </Button> */}
+            </Button>
         </>;
     }
 }
