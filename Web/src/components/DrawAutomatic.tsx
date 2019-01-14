@@ -262,7 +262,15 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                             tag: "SemiAutomatic Test",
                             lines: [
                                 {
-                                    points: this.state.points,
+                                    points: this.state.points
+                                        .map(p => ({
+                                            x: p.x * this.state.imgSize.width / this.state.size.width,
+                                            y: p.y * this.state.imgSize.height / this.state.size.height
+                                        }))
+                                        .map(p => ({
+                                            x: parseInt(p.x.toString()),
+                                            y: parseInt(p.y.toString())
+                                        })),
                                     brushColor: this.state.color
                                 }
                             ],
@@ -276,13 +284,16 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                         console.log(data);
                         this.setState(prev => ({
                             guid: data.guid,
-                            pixels: data.lines[0].pixels
+                            pixels: data.lines[0].pixels.map(p => ({
+                                x: p.x * this.state.size.width / this.state.imgSize.width,
+                                y: p.y * this.state.size.height / this.state.imgSize.height
+                            }))
                         }));
                         // Draw pixels
                         const canvas: any = document.getElementById("canvas");
 
                         const context = canvas.getContext("2d");
-                        context.fillStyle = "#F00";
+                        context.fillStyle = data.brushColor;
 
                         this.state.pixels.forEach((pixel) => {
                             context.fillRect(pixel.x, pixel.y, 2, 2);
@@ -331,6 +342,7 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                     this.setState({
                         pixels: []
                     });
+                    context.fillStyle = this.state.color;
                     this.state.points.forEach((pixel) => {
                         context.fillRect(pixel.x, pixel.y, 5, 5);
                     });
