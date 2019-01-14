@@ -14,11 +14,12 @@ export interface DrawAutimaticProps {
     readonly instancesIds: string[];
     readonly currentInstanceId: number;
     readonly setCurrentInd: (ind: number) => void;
-    sendAutomaticContour: (contour: Contour, centralPoints: Point[], title: string) => void;
+    sendAutomaticContour: (contour: Contour, centralPoints: Point[], title: string, canvasSize: Size, imgSize: Size) => void;
 }
 
 export interface DrawAutimaticState {
     readonly size: Size;
+    readonly imgSize: Size;
     readonly points: Point[];
     readonly pixels: Point[];
     readonly guid: string;
@@ -46,6 +47,10 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                 width: -1,
                 height: -1
             },
+            imgSize: {
+                width: -1,
+                height: -1
+            },
             points: [],
             pixels: [],
             guid: null,
@@ -61,6 +66,7 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
             "https://http.cat/404";
         let img = new Image();
         const fun = (w, h) => {
+            this.setState({ imgSize: { width: w, height: h } });
             h = h * 1000 / w;
             w = 1000;
             if (h > 600) {
@@ -179,7 +185,7 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                     height: this.state.size.height
                 }}
                 onConfirm={(c, cp, t) => {
-                    this.props.sendAutomaticContour(c, cp, t);
+                    this.props.sendAutomaticContour(c, cp, t, this.state.size, this.state.imgSize);
                     const canvas: any = document.getElementById("canvas");
                     const context = canvas.getContext("2d");
                     context.clearRect(0, 0, canvas.width, canvas.height);
@@ -342,8 +348,8 @@ export default connect(
         setCurrentInd: (ind: number) => {
             dispatch(setCurrentInstanceInd(ind));
         },
-        sendAutomaticContour: (contour: Contour, centralPoints: Point[], title: string) => {
-            dispatch(sendAutomaticContour("api/semiautomaticcontour/post/", { ...contour, centralPoints, tag: title }));
+        sendAutomaticContour: (contour: Contour, centralPoints: Point[], title: string, canvasSize: Size, imgSize: Size) => {
+            dispatch(sendAutomaticContour("api/semiautomaticcontour/post/", { ...contour, centralPoints, tag: title }, canvasSize, imgSize));
         }
     })
 )(DrawAutimatic);

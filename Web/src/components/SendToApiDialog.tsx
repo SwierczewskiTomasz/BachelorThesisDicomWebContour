@@ -109,10 +109,11 @@ export default class SendToApiDialog extends React.Component<SendToApiDialogProp
             </DialogContent>
             <DialogActions>
                 <Button
-                    disabled={this.state.points.length > 0}
+                    disabled={!this.state.preview}
                     variant={"contained"}
                     color={"primary"}
                     onClick={() => {
+                        this.setState({ preview: false });
                         const canvas: any = document.getElementById("canvas-send");
 
                         console.log(canvas);
@@ -129,8 +130,9 @@ export default class SendToApiDialog extends React.Component<SendToApiDialogProp
                             context.moveTo(l.points[0].x, l.points[0].y);
                             for (let i = 1; i < l.points.length; i++) {
                                 const p = l.points[i];
-                                context.lineTo(p.x, p.y, 5, 5);
+                                context.lineTo(p.x, p.y);
                             }
+                            context.lineTo(l.points[0].x, l.points[0].y);
                             context.stroke();
                         });
 
@@ -163,7 +165,6 @@ export default class SendToApiDialog extends React.Component<SendToApiDialogProp
                                 context.fillRect(x, y, 5, 5);
                             }
                         }, true);
-                        this.setState({ preview: false });
                     }}
                 >
                     Preview Points

@@ -69,8 +69,8 @@ class SideMenuView extends React.Component<SideMenuProps, SideMenuState> {
                 </ListItemSecondaryAction>
                 {this.state.listType}
             </ListItem>
+                <Divider />
                 {this.state.listType === "patients" && <>
-                    <Divider />
                     {this.props.patients
                         .map(p => <ListItem
                             button

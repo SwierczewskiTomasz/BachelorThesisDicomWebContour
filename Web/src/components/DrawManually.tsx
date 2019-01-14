@@ -15,11 +15,12 @@ export interface DrawManuallyProps {
     readonly currentInstanceId: number;
     readonly selectedContour: Contour;
     readonly setCurrentInd: (ind: number) => void;
-    readonly sendManualContour: (contour: Contour, centralPoints: Point[], title: string) => void;
+    readonly sendManualContour: (contour: Contour, centralPoints: Point[], title: string, canvasSize: Size, imgSize: Size) => void;
 }
 
 export interface DrawManuallyState {
     readonly size: Size;
+    readonly imgSize: Size;
     readonly reload: boolean;
     readonly color: string;
     readonly chooseColor: boolean;
@@ -37,6 +38,10 @@ class DrawManually extends React.Component<DrawManuallyProps, DrawManuallyState>
                 width: -1,
                 height: -1
             },
+            imgSize: {
+                width: -1,
+                height: -1
+            },
             reload: true,
             color: "#ff0000",
             chooseColor: false,
@@ -50,6 +55,7 @@ class DrawManually extends React.Component<DrawManuallyProps, DrawManuallyState>
             "https://http.cat/404";
         let img = new Image();
         const fun = (w, h) => {
+            this.setState({ imgSize: { width: w, height: h } });
             h = (h * 1000 / w);
             w = 1000;
             if (h > 600) {
@@ -135,10 +141,10 @@ class DrawManually extends React.Component<DrawManuallyProps, DrawManuallyState>
                 imgUrl={bgimg}
                 contour={this.state.contour}
                 onConfirm={(c, cp, t) => {
-                    this.props.sendManualContour(c, cp, t);
-                    const canvas: any = document.getElementById("canvas");
-                    const context = canvas.getContext("2d");
-                    context.clearRect(0, 0, canvas.width, canvas.height);
+                    this.props.sendManualContour(c, cp, t, this.state.size, this.state.imgSize);
+                    // const canvas: any = document.getElementById("canvas");
+                    // const context = canvas.getContext("2d");
+                    // context.clearRect(0, 0, canvas.width, canvas.height);
                     this.state.reload ?
                         this.saveableCanvas1.clear() :
                         this.saveableCanvas2.clear();
@@ -244,22 +250,15 @@ class DrawManually extends React.Component<DrawManuallyProps, DrawManuallyState>
                 color="primary"
                 onClick={() => {
                     console.log("click");
-                    const rawData = JSON.parse(this.state.reload ? this.saveableCanvas1.getSaveData() : this.saveableCanvas2.getSaveData());
+                    const data = JSON.parse(this.state.reload ? this.saveableCanvas1.getSaveData() : this.saveableCanvas2.getSaveData());
                     // localStorage.setItem("savedDrawing", data);
-                    console.warn(rawData);
-                    const lines = rawData.lines.map(line => {
-                        let next = line;
-                        next.points = next.points.map(p => {
-                            return { x: parseInt(p.x), y: parseInt(p.y) };
-                        });
-                        // add closing line
-                        const l = next.points.length;
-                        next.points[l] = { x: next.points[0].x, y: next.points[l - 1].y };
-                        return next;
-                    });
-                    const data = { ...rawData, lines };
                     console.warn(data);
-                    this.setState({ contour: data });
+                    this.setState({
+                        contour: {
+                            ...data,
+                            dicomid: this.props.instancesIds[this.props.currentInstanceId]
+                        }
+                    });
                     // // Send to API
                     // fetch("https://localhost:5001/api/manualcontour/post/", {
                     //     mode: "cors",
@@ -315,8 +314,8 @@ export default connect(
         setCurrentInd: (ind: number) => {
             dispatch(setCurrentInstanceInd(ind));
         },
-        sendManualContour: (contour: Contour, centralPoints: Point[], title: string) => {
-            dispatch(sendManualContour("api/manualcontour/post/", { ...contour, centralPoints, tag: title }));
+        sendManualContour: (contour: Contour, centralPoints: Point[], title: string, canvasSize: Size, imgSize: Size) => {
+            dispatch(sendManualContour("api/manualcontour/post/", { ...contour, centralPoints, tag: title }, canvasSize, imgSize));
         }
     })
 )(DrawManually);
