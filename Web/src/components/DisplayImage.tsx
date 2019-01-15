@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Tabs, Tab, Grid, Typography } from "@material-ui/core";
+import { Tabs, Tab, Grid } from "@material-ui/core";
 import DrawManually from "./DrawManually";
 import DrawAutomatic from "./DrawAutomatic";
 import PatientInfo from "./PatientInfo";

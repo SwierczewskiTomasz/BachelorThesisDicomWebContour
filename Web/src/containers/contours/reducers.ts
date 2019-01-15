@@ -1,12 +1,8 @@
-import { ReducerMap, createAction } from "redux-actions";
-import { Action, combineReducers } from "redux";
-import { Dispatch } from "redux";
+import { createAction } from "redux-actions";
 
 import { startTask, endTask } from "../../helpers/asyncActions";
 import { getBuilder, apiURL, postBuilder } from "../../helpers/requestHelper";
 import { Thunk } from "../../helpers/Thunk";
-import { getPatientData } from "../patients/reducers";
-import { getStudyData } from "../studies/reducers";
 import { Size } from "../../components/DrawAutomatic";
 
 export interface Contour {

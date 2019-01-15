@@ -1,9 +1,7 @@
 import * as React from "react";
 import { orthancURL } from "../helpers/requestHelper";
 import { connect } from "react-redux";
-import CanvasDraw from "react-canvas-draw";
 import { Button } from "@material-ui/core";
-import { defaultCipherList } from "constants";
 import ChooseColorDialog from "./ChooseColorDialog";
 import { Dispatch } from "redux";
 import { setCurrentInstanceInd } from "../containers/instances/reducers";
@@ -92,6 +90,7 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
             "https://http.cat/404";
         let img = new Image();
         const fun = (w, h) => {
+            this.setState({ imgSize: { width: w, height: h } });
             h = h * 1000 / w;
             w = 1000;
             if (h > 600) {
@@ -111,16 +110,11 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
     }
 
     componentDidMount() {
-
         const canvas: any = document.getElementById("canvas");
         console.log(canvas);
         const context = canvas.getContext("2d");
 
-        // Background
-        // context.fillStyle = "#0f0";
-        // context.fillRect(0, 0, canvas.width, canvas.height);
-
-        const addPoint = (x, y) => this.setState(prev => { return { points: [...prev.points, { x, y }] }; });
+        const addPoint = (x, y) => this.setState(prev => ({ points: [...prev.points, { x, y }] }));
         const findOverlapping = (x, y) => {
             const found = this.state.points.filter(p => p.x - 5 < x && x < p.x + 5 && p.y - 5 < y && y < p.y + 5);
             return found;

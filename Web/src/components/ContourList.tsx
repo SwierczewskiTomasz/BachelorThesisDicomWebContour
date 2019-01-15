@@ -1,15 +1,8 @@
 import * as React from "react";
-import { Drawer, List, ListItem, ListItemIcon, Divider, ListItemSecondaryAction, Icon } from "@material-ui/core";
+import { Drawer, List, ListItem, ListItemIcon, Divider, ListItemSecondaryAction } from "@material-ui/core";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
-import { fetchSeries, Serie } from "../containers/series/reducers";
-import { fetchPatients, Patient } from "../containers/patients/reducers";
-import { fetchStudies, Study } from "../containers/studies/reducers";
-import { fetchInstances, setCurrentInstanceInd } from "../containers/instances/reducers";
-import ArrowBackIcon from "@material-ui/icons/ArrowBackOutlined";
 import PersonIcon from "@material-ui/icons/PersonOutlined";
-import CollectionIcon from "@material-ui/icons/CollectionsOutlined";
-import PhotoIcon from "@material-ui/icons/PhotoOutlined";
 import { Contour, setCurrentContur } from "../containers/contours/reducers";
 
 export interface ContourListProps {
@@ -31,7 +24,7 @@ class ContourListView extends React.Component<ContourListProps, ContourListState
 
         return (
             <List>
-                <ListItem                >
+                <ListItem>
                     {"Available Contours"}
                 </ListItem>
                 <Divider />

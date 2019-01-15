@@ -1,6 +1,4 @@
-import { ReducerMap, createAction } from "redux-actions";
-import { Action, combineReducers } from "redux";
-import { Dispatch } from "redux";
+import { createAction } from "redux-actions";
 
 import { startTask, endTask } from "../../helpers/asyncActions";
 import { getBuilder, orthancURL } from "../../helpers/requestHelper";

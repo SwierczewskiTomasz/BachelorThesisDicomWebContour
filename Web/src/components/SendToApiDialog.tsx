@@ -30,55 +30,6 @@ export default class SendToApiDialog extends React.Component<SendToApiDialogProp
         };
     }
 
-    componentDidMount() {
-
-        // const canvas: any = document.getElementById("canvas-send");
-
-        // console.log(canvas);
-        // const context = canvas.getContext("2d");
-
-        // // Background
-        // // context.fillStyle = "#0f0";
-        // // context.fillRect(0, 0, canvas.width, canvas.height);
-
-        // this.props.contour.lines.forEach(l => {
-        //     l.points.forEach(p => {
-        //         context.fillStyle = l.brushColor;
-        //         context.fillRect(p.x, p.y, 5, 5);
-        //     });
-        // });
-
-        // const addPoint = (x, y) => this.setState(prev => { return { points: [...prev.points, { x, y }] }; });
-        // const findOverlapping = (x, y) => {
-        //     const found = this.state.points.filter(p => p.x - 5 < x && x < p.x + 5 && p.y - 5 < y && y < p.y + 5);
-        //     return found;
-        // };
-        // const removeOverlapping = (overlapping: Point[]) => {
-        //     const found = this.state.points.filter(p => !overlapping.find(pp => pp === p));
-        //     this.setState({ points: found });
-
-        //     overlapping.forEach(p => context.clearRect(p.x, p.y, 5, 5));
-        // };
-
-
-        // canvas.addEventListener("click", function (e) {
-        //     const x = Math.floor(e.offsetX);
-        //     const y = Math.floor(e.offsetY);
-
-        //     const overlapping = findOverlapping(x, y);
-
-        //     if (overlapping.length > 0) {
-        //         removeOverlapping(overlapping);
-        //     }
-        //     else {
-        //         addPoint(x, y);
-
-        //         context.fillStyle = "#0000ff";
-        //         context.fillRect(x, y, 5, 5);
-        //     }
-        // }, true);
-    }
-
     render() {
         return <Dialog
             maxWidth={"lg"}
@@ -119,10 +70,6 @@ export default class SendToApiDialog extends React.Component<SendToApiDialogProp
                         console.log(canvas);
                         const context = canvas.getContext("2d");
 
-                        // Background
-                        // context.fillStyle = "#0f0";
-                        // context.fillRect(0, 0, canvas.width, canvas.height);
-
                         this.props.contour.lines.forEach(l => {
                             console.warn(l.brushColor);
                             context.strokeStyle = l.brushColor;
@@ -147,7 +94,6 @@ export default class SendToApiDialog extends React.Component<SendToApiDialogProp
 
                             overlapping.forEach(p => context.clearRect(p.x, p.y, 5, 5));
                         };
-
 
                         canvas.addEventListener("click", function (e) {
                             const x = Math.floor(e.offsetX);
