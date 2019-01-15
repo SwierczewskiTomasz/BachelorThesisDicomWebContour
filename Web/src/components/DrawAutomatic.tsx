@@ -293,8 +293,12 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                         const canvas: any = document.getElementById("canvas");
 
                         const context = canvas.getContext("2d");
+                        context.clearRect(0, 0, canvas.width, canvas.height);
                         context.fillStyle = data.brushColor;
 
+                        this.state.points.forEach((pixel) => {
+                            context.fillRect(pixel.x, pixel.y, 5, 5);
+                        });
                         this.state.pixels.forEach((pixel) => {
                             context.fillRect(pixel.x, pixel.y, 2, 2);
                         });
