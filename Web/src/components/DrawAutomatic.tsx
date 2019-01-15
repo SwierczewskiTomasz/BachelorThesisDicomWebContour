@@ -262,15 +262,16 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                             tag: "SemiAutomatic Test",
                             lines: [
                                 {
-                                    points: this.state.points
-                                        .map(p => ({
-                                            x: p.x * this.state.imgSize.width / this.state.size.width,
-                                            y: p.y * this.state.imgSize.height / this.state.size.height
-                                        }))
-                                        .map(p => ({
-                                            x: parseInt(p.x.toString()),
-                                            y: parseInt(p.y.toString())
-                                        })),
+                                    // points: this.state.points
+                                    //     .map(p => ({
+                                    //         x: p.x * this.state.imgSize.width / this.state.size.width,
+                                    //         y: p.y * this.state.imgSize.height / this.state.size.height
+                                    //     }))
+                                    //     .map(p => ({
+                                    //         x: parseInt(p.x.toString()),
+                                    //         y: parseInt(p.y.toString())
+                                    //     })),
+                                    points: this.state.points,
                                     brushColor: this.state.color
                                 }
                             ],
@@ -284,10 +285,11 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                         console.log(data);
                         this.setState(prev => ({
                             guid: data.guid,
-                            pixels: data.lines[0].pixels.map(p => ({
-                                x: p.x * this.state.size.width / this.state.imgSize.width,
-                                y: p.y * this.state.size.height / this.state.imgSize.height
-                            }))
+                            // pixels: data.lines[0].pixels.map(p => ({
+                            //     x: p.x * this.state.size.width / this.state.imgSize.width,
+                            //     y: p.y * this.state.size.height / this.state.imgSize.height
+                            // }))
+                            pixels: data.lines[0].pixels
                         }));
                         // Draw pixels
                         const canvas: any = document.getElementById("canvas");
