@@ -1,6 +1,4 @@
-import { ReducerMap, createAction } from "redux-actions";
-import { Action, combineReducers } from "redux";
-import { Dispatch } from "redux";
+import { createAction } from "redux-actions";
 
 import { startTask, endTask } from "../../helpers/asyncActions";
 import { getBuilder, orthancURL } from "../../helpers/requestHelper";
@@ -22,9 +20,7 @@ export const fetchStudies = (getOpts: string): Thunk =>
             dispatch(startTask());
             let response = await getBuilder<any>(orthancURL, getOpts);
             console.warn(response);
-            const studies: Study[] = response.map(r => {
-                return { id: r.ID, name: r.MainDicomTags.StudyDescription };
-            });
+            const studies: Study[] = response.map(r => ({ id: r.ID, name: r.MainDicomTags.StudyDescription }));
             console.log(studies);
             if (studies !== undefined) {
                 dispatch(updateStudies(studies));

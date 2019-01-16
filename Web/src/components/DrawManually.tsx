@@ -80,6 +80,7 @@ class DrawManually extends React.Component<DrawManuallyProps, DrawManuallyState>
             "https://http.cat/404";
         let img = new Image();
         const fun = (w, h) => {
+            this.setState({ imgSize: { width: w, height: h } });
             h = (h * 1000 / w);
             w = 1000;
             if (h > 600) {
@@ -142,9 +143,6 @@ class DrawManually extends React.Component<DrawManuallyProps, DrawManuallyState>
                 contour={this.state.contour}
                 onConfirm={(c, cp, t) => {
                     this.props.sendManualContour(c, cp, t, this.state.size, this.state.imgSize);
-                    // const canvas: any = document.getElementById("canvas");
-                    // const context = canvas.getContext("2d");
-                    // context.clearRect(0, 0, canvas.width, canvas.height);
                     this.state.reload ?
                         this.saveableCanvas1.clear() :
                         this.saveableCanvas2.clear();
@@ -218,33 +216,6 @@ class DrawManually extends React.Component<DrawManuallyProps, DrawManuallyState>
 
                 />
             </div>}
-            {/* <img style={{ margin: "0 auto" }}
-                src={
-                    this.props.instancesIds.length > 0 ?
-                        orthancURL + "instances/" +
-                        this.props.instancesIds[this.state.currentInstanceId]
-                        + "/preview" :
-                        "https://http.cat/404"
-                }
-                onWheel={(e) => {
-                    if (e.deltaY < 0) {
-                        console.log("scrolling up");
-                        this.setState(prev => ({
-                            currentInstanceId: prev.currentInstanceId + 1 >= this.props.instancesIds.length ?
-                                this.props.instancesIds.length - 1 :
-                                prev.currentInstanceId + 1,
-                            reload: !prev.reload
-                        }));
-                    }
-                    if (e.deltaY > 0) {
-                        console.log("scrolling down");
-                        this.setState(prev => ({
-                            currentInstanceId: prev.currentInstanceId - 1 < 0 ? 0 : prev.currentInstanceId - 1,
-                            reload: !prev.reload
-                        }));
-                    }
-                }}
-            /> */}
             <Button
                 variant="contained"
                 color="primary"
@@ -259,23 +230,6 @@ class DrawManually extends React.Component<DrawManuallyProps, DrawManuallyState>
                             dicomid: this.props.instancesIds[this.props.currentInstanceId]
                         }
                     });
-                    // // Send to API
-                    // fetch("https://localhost:5001/api/manualcontour/post/", {
-                    //     mode: "cors",
-                    //     method: "post",
-                    //     headers: {
-                    //         "Accept": "application/json",
-                    //         "Content-Type": "application/json"
-                    //     },
-                    //     body: JSON.stringify({
-                    //         dicomid: this.props.instancesIds[this.props.currentInstanceId],
-                    //         tag: "Manual Test",
-                    //         ...data
-                    //     })
-                    // }).then(response => {
-                    //     console.log(response);
-                    //     return response.json();
-                    // });
                     this.setState({ saveContourOpen: true });
                 }}
             >

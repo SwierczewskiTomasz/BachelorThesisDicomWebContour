@@ -1,6 +1,4 @@
-import { ReducerMap, createAction } from "redux-actions";
-import { Action, combineReducers } from "redux";
-import { Dispatch } from "redux";
+import { createAction } from "redux-actions";
 
 import { startTask, endTask } from "../../helpers/asyncActions";
 import { getBuilder, orthancURL, postBuilder, deleteBuilder } from "../../helpers/requestHelper";
@@ -26,7 +24,7 @@ export const fetchPatients = (): Thunk =>
         {
             dispatch(startTask());
             const response = await getBuilder<any[]>(orthancURL, "patients?expand");
-            const patients = response.map(r => { return { id: r.ID, name: r.MainDicomTags.PatientName }; });
+            const patients = response.map(r => ({ id: r.ID, name: r.MainDicomTags.PatientName }));
             console.log(patients);
             if (patients !== undefined) {
                 dispatch(updatePatients(patients));
@@ -98,7 +96,12 @@ function updatePatientsReducer(state: AppState, action) {
         case "PATIENTS/UPDATE":
             return Object.assign({}, state, { patients: action.payload.patients });
         case "PATIENT/UPDATE":
-            return Object.assign({}, state, { name: action.payload.name, birthdate: action.payload.birthdate, sex: action.payload.sex, patientId: action.payload.patientId });
+            return Object.assign({}, state, {
+                name: action.payload.name,
+                birthdate: action.payload.birthdate,
+                sex: action.payload.sex,
+                patientId: action.payload.patientId
+            });
         default:
             return state;
     }

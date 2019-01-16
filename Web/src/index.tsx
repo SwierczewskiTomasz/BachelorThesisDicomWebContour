@@ -5,8 +5,6 @@ import AppView from "./components/App";
 import { Provider } from "react-redux";
 import store from "./Store";
 
-// import "./../assets/scss/index.scss";
-
 const rootEl = document.getElementById("root");
 
 render(

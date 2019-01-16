@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Drawer, List, ListItem, ListItemIcon, Divider, ListItemSecondaryAction, Icon } from "@material-ui/core";
+import { List, ListItem, ListItemIcon, Divider, ListItemSecondaryAction } from "@material-ui/core";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { fetchSeries, Serie } from "../containers/series/reducers";
@@ -44,31 +44,32 @@ class SideMenuView extends React.Component<SideMenuProps, SideMenuState> {
     render() {
 
         return (
-            <List><ListItem
-                button={this.state.listType !== "patients"}
-                onClick={() => {
-                    switch (this.state.listType) {
-                        case "patients":
-                            break;
-                        case "studies":
-                            this.setState({ listType: "patients" });
-                            break;
-                        case "series":
-                            this.setState({ listType: "studies" });
-                            break;
-                        case "instances":
-                            this.setState({ listType: "series" });
-                            break;
-                    }
-                }}
-            >
-                <ListItemSecondaryAction>
-                    <ListItemIcon>
-                        {this.state.listType === "patients" ? null : <ArrowBackIcon />}
-                    </ListItemIcon>
-                </ListItemSecondaryAction>
-                {this.state.listType}
-            </ListItem>
+            <List>
+                <ListItem
+                    button={this.state.listType !== "patients"}
+                    onClick={() => {
+                        switch (this.state.listType) {
+                            case "patients":
+                                break;
+                            case "studies":
+                                this.setState({ listType: "patients" });
+                                break;
+                            case "series":
+                                this.setState({ listType: "studies" });
+                                break;
+                            case "instances":
+                                this.setState({ listType: "series" });
+                                break;
+                        }
+                    }}
+                >
+                    <ListItemSecondaryAction>
+                        <ListItemIcon>
+                            {this.state.listType === "patients" ? null : <ArrowBackIcon />}
+                        </ListItemIcon>
+                    </ListItemSecondaryAction>
+                    {this.state.listType}
+                </ListItem>
                 <Divider />
                 {this.state.listType === "patients" && <>
                     {this.props.patients

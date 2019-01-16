@@ -1,5 +1,4 @@
 import * as React from "react";
-import { orthancURL } from "../helpers/requestHelper";
 import { connect } from "react-redux";
 import {
     Button,
@@ -54,11 +53,6 @@ class PatientInfo extends React.Component<PatientInfoProps, PatientInfoState> {
     }
 
     render() {
-        const patientUrl = this.props.instancesIds.length > 0 ?
-            orthancURL + "instances/" +
-            this.props.instancesIds[0]
-            + "/preview" :
-            "";
         return <>
             {this.props.instancesIds.length > 0 && <>
                 <p><span style={{ ...strong }}>Name</span>: {this.props.name || "No data"}</p>

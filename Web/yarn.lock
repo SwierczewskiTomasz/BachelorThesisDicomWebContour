@@ -2532,35 +2532,6 @@ core-util-is@1.0.2, core-util-is@~1.0.0:
   resolved "https://registry.yarnpkg.com/core-util-is/-/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
   integrity sha1-tf1UIgqivFq1eqtxQMlAdUUDwac=
 
-cornerstone-core@^2.2.6:
-  version "2.2.6"
-  resolved "https://registry.yarnpkg.com/cornerstone-core/-/cornerstone-core-2.2.6.tgz#a461face67a78d89b2bab3abbb17763ae9a2c20a"
-  integrity sha512-+ocgGaJSEcWM53oAJ992mtozKpxtkwbiZ4o62hBiKleOb9gfHcA+zmIfWEbfllA+jXtX06TAHeZtv0jE7E03MQ==
-
-cornerstone-math@^0.1.6:
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/cornerstone-math/-/cornerstone-math-0.1.6.tgz#93b3ad72fae815383cce5180af23836550200c3a"
-  integrity sha1-k7OtcvroFTg8zlGAryODZVAgDDo=
-
-cornerstone-tools@^2.3.9:
-  version "2.3.9"
-  resolved "https://registry.yarnpkg.com/cornerstone-tools/-/cornerstone-tools-2.3.9.tgz#8deaa485e649817d7aed2e2ccdea5fe61aeeaff5"
-  integrity sha512-jOMTzL5pfg3ifyuvcGnYINK1AoueNoKKC5KI+5HG9EnX/VuGzJnLG4CmMRitn20Dxqt8vVNnEMlmleYk4CoVZw==
-  dependencies:
-    cornerstone-math "^0.1.6"
-
-cornerstone-wado-image-loader@2.2.3:
-  version "2.2.3"
-  resolved "https://registry.yarnpkg.com/cornerstone-wado-image-loader/-/cornerstone-wado-image-loader-2.2.3.tgz#2d4c06b5c87cd9198b52906c48e2d9dd145de986"
-  integrity sha512-0N5ykSEVoUx3zzfGn5Oaa7OJL/EHOthPUI2Kv8gSnMgf6ipcz5TcK8xGMOfu6grMkKlNb0SFJ/cEqsHR7bddKQ==
-  dependencies:
-    dicom-parser "^1.8.1"
-
-cornerstone-web-image-loader@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/cornerstone-web-image-loader/-/cornerstone-web-image-loader-2.1.0.tgz#3ab6a2f87bdf2ffb8457753e9139459b87a90f82"
-  integrity sha512-RllTpe+NNDY5rPr9/8mjbFOpwYHrPZFuqT1wsLzoKnbapSXAWNy6waCjPVKGON0dLThLE7gihvuX/q7eSEmdsg==
-
 cosmiconfig@^5.0.0:
   version "5.0.6"
   resolved "https://registry.yarnpkg.com/cosmiconfig/-/cosmiconfig-5.0.6.tgz#dca6cf680a0bd03589aff684700858c81abeeb39"
@@ -3150,11 +3121,6 @@ detect-node@^2.0.3:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/detect-node/-/detect-node-2.0.4.tgz#014ee8f8f669c5c58023da64b8179c083a28c46c"
   integrity sha512-ZIzRpLJrOj7jjP2miAtgqIfmzbxa4ZOr5jJc601zklsfEx9oTzmmj2nVpIPRpNlRTIh8lc1kyViIY7BWSGNmKw==
-
-dicom-parser@^1.8.1:
-  version "1.8.3"
-  resolved "https://registry.yarnpkg.com/dicom-parser/-/dicom-parser-1.8.3.tgz#6e4b862898112304db30143147562011c1ce6a4d"
-  integrity sha512-CMeUr+jea7Ml70N+/Z5Pd2MYtvLp6IU+TnvdLe6VRVKzZuTeYLYyuAQa9R+sFK4v4N39hig+hKHN+Wfi9sQ6GA==
 
 diff@^3.2.0:
   version "3.5.0"
