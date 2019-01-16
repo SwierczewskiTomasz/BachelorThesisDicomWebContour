@@ -11,7 +11,7 @@ namespace Logic
     {
         public static int numberOfColors = 256;
 
-        public static (List<Point>, StatisticsResult) Canny(string dicomId, List<Point> points, int canvasWidth, int canvasHeight)
+        public static (List<Point>, StatisticsResult) Canny(string dicomId, List<Point> points, int canvasWidth, int canvasHeight, List<Point> centralPoints)
         {
             System.Drawing.Bitmap bitmap = OrthancConnection.GetBitmapByInstanceId(dicomId);
 

@@ -17,7 +17,7 @@ namespace Logic
             List<Point> pixels;
             StatisticsResult statisticsResult;
 
-            (pixels, statisticsResult) = CannyAlgorithm.Canny(points.dicomid, points.lines.First().points, points.width, points.height);
+            (pixels, statisticsResult) = CannyAlgorithm.Canny(points.dicomid, points.lines.First().points, points.width, points.height, points.centralPoints);
 
             List<LinePointsAndPixels> lines = new List<LinePointsAndPixels>();
             LinePointsAndPixels line = new LinePointsAndPixels();
@@ -28,7 +28,7 @@ namespace Logic
             lines.Add(line);
 
             SemiAutomaticContourDTO contour = new SemiAutomaticContourDTO(points.guid,
-            points.dicomid, points.tag, lines, points.width, points.height, statisticsResult);
+            points.dicomid, points.tag, lines, points.width, points.height, statisticsResult, points.centralPoints);
             return contour;
         }
 
@@ -62,7 +62,7 @@ namespace Logic
             StatisticsResult statisticsResult = Statistics.GenerateStatistics(pixels, matrixWithContour, image, 0, bitmap.Width, 0, bitmap.Height, 0, 0);
 
             SemiAutomaticContourDTO contour = new SemiAutomaticContourDTO(points.guid,
-            points.dicomid, points.tag, lines, points.width, points.height, statisticsResult);
+            points.dicomid, points.tag, lines, points.width, points.height, statisticsResult, points.centralPoints);
             return contour;
         }
     }

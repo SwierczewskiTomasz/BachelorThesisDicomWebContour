@@ -156,9 +156,17 @@ namespace DataAccess
             if (sr.EndOfStream)
                 throw new Exception($"Unexpected end of file {filename}");
 
+            buffor = sr.ReadLine();
+            points = buffor.Split(',').Select(s => int.Parse(s)).ToList();
+            i = 0;
+            List<Point> centralPoints = new List<Point>();
+            while (i + 1 < points.Count)
+                centralPoints.Add(new Point(points[i++], points[i++]));
+
+
             sr.Close();
 
-            SemiAutomaticContourDTO contour = new SemiAutomaticContourDTO(guid, DICOMid, tag, lines, width, height, statisticsResult);
+            SemiAutomaticContourDTO contour = new SemiAutomaticContourDTO(guid, DICOMid, tag, lines, width, height, statisticsResult, centralPoints);
 
             return contour;
         }
@@ -191,10 +199,10 @@ namespace DataAccess
             sw.WriteLine(contour.width);
             sw.WriteLine(contour.height);
             sw.WriteLine(contour.statistics.CenterOfMass.x + "," + contour.statistics.CenterOfMass.y);
-            
-            if(contour.statistics.Histogram == null)
+
+            if (contour.statistics.Histogram == null)
                 sw.WriteLine();
-            else 
+            else
                 sw.WriteLine(string.Join(',', contour.statistics.Histogram));
             sw.WriteLine(contour.statistics.HistogramMin);
             sw.WriteLine(contour.statistics.HistogramMax);
@@ -203,6 +211,8 @@ namespace DataAccess
             sw.WriteLine(contour.statistics.Permieter);
             sw.WriteLine(contour.statistics.NumberOfPixelsInsideContour);
             sw.WriteLine(contour.statistics.NumberOfPixelsOfContour);
+            sw.WriteLine(string.Join(',', contour.centralPoints.Select(s => s.x.ToString() +
+            "," + s.y.ToString())));
 
             sw.Close();
         }

@@ -157,9 +157,17 @@ namespace DataAccess
             if (sr.EndOfStream)
                 throw new Exception($"Unexpected end of file {filename}");
 
+            buffor = sr.ReadLine();
+            points = buffor.Split(',').Select(s => int.Parse(s)).ToList();
+            i = 0;
+            List<Point> centralPoints = new List<Point>();
+            while (i + 1 < points.Count)
+                centralPoints.Add(new Point(points[i++], points[i++]));
+
+
             sr.Close();
 
-            ManualContourDTO contour = new ManualContourDTO(guid, DICOMid, tag, lines, width, height, statisticsResult);
+            ManualContourDTO contour = new ManualContourDTO(guid, DICOMid, tag, lines, width, height, statisticsResult, centralPoints);
 
             return contour;
         }
@@ -202,6 +210,8 @@ namespace DataAccess
             sw.WriteLine(contour.statistics.Permieter);
             sw.WriteLine(contour.statistics.NumberOfPixelsInsideContour);
             sw.WriteLine(contour.statistics.NumberOfPixelsOfContour);
+            sw.WriteLine(string.Join(',', contour.centralPoints.Select(s => s.x.ToString() +
+            "," + s.y.ToString())));
 
             sw.Close();
         }

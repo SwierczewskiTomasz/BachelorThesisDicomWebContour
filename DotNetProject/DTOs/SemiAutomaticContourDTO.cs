@@ -20,6 +20,7 @@ namespace DTOs
         public int width { get; set; }
         public int height { get; set; }
         public StatisticsResult statistics { get; set; }
+        public List<Point> centralPoints {get; set; }
 
         public SemiAutomaticContourDTO()
         {
@@ -27,7 +28,7 @@ namespace DTOs
         }
 
         public SemiAutomaticContourDTO(Guid _guid, string _DICOMid, string _tag, List<LinePointsAndPixels> _lines, int _width, int _height, 
-        StatisticsResult _statistics)
+        StatisticsResult _statistics, List<Point> _centralPoints)
         {
             guid = _guid;
             dicomid = _DICOMid;
@@ -36,10 +37,11 @@ namespace DTOs
             width = _width;
             height = _height;
             statistics = _statistics;
+            centralPoints = new List<Point>(_centralPoints);
         }
 
         public SemiAutomaticContourDTO(string _DICOMid, string _tag, List<LinePointsAndPixels> _lines, int _width, int _height, 
-        StatisticsResult _statistics)
+        StatisticsResult _statistics, List<Point> _centralPoints)
         {
             guid = Guid.NewGuid();
             dicomid = _DICOMid;
@@ -48,6 +50,7 @@ namespace DTOs
             width = _width;
             height = _height;
             statistics = _statistics;
+            centralPoints = new List<Point>(_centralPoints);
         }
     }
 }
