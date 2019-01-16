@@ -14,10 +14,27 @@ export interface Contour {
             x: number;
             y: number;
         }[];
+        pixels?: {
+            x: number;
+            y: number;
+        }[];
         brushColor: string;
     }[];
     width: number;
     height: number;
+    statistics: StatisticsResult | undefined;
+}
+
+export interface StatisticsResult {
+    centerOfMass: { x: number, y: number };
+    histogram: number[];
+    histogramMin: number;
+    histogramMax: number;
+    histogramMean: number;
+    area: number;
+    permieter: number;
+    numberOfPixelsInsideContour: number;
+    numberOfPixelsOfContour: number;
 }
 
 export interface ContourWithCenralPoints extends Contour {
@@ -52,6 +69,12 @@ export const setCurrentContur = (guid: string): Thunk =>
             dispatch(updateContour(getState().contours.find(c => c.guid === guid)));
         }
     };
+export const discardCurrentContur = (): Thunk =>
+    async (dispatch, getState) => {
+        {
+            dispatch(updateContour(undefined));
+        }
+    };
 
 
 function updateContoursReducer(state: AppState, action) {
@@ -65,7 +88,7 @@ function updateContoursReducer(state: AppState, action) {
 function updateContourReducer(state: AppState, action) {
     switch (action.type) {
         case "CONTOUR/UPDATE":
-            return Object.assign({}, state, { contour: action.payload.contour });
+            return Object.assign({}, state, { selectedContour: action.payload.contour });
         default:
             return state;
     }
@@ -98,7 +121,7 @@ export const sendAutomaticContour = (getOpts: string, data: ContourWithCenralPoi
                     x: parseInt(p.x.toString()),
                     y: parseInt(p.y.toString())
                 }));
-            const body = { ...data, lines, centralPoints };
+            const body = { ...data, lines, centralPoints, ...imgSize };
             let response = await postBuilder<Contour>(apiURL, getOpts, body);
             if (response !== undefined) {
                 dispatch(updateContour(response));
@@ -140,7 +163,7 @@ export const sendManualContour = (getOpts: string, data: ContourWithCenralPoints
                     x: parseInt(p.x.toString()),
                     y: parseInt(p.y.toString())
                 }));
-            const body = { ...data, lines, centralPoints };
+            const body = { ...data, lines, centralPoints, ...imgSize };
             let response = await postBuilder<Contour>(apiURL, getOpts, body);
             if (response !== undefined) {
                 console.log("sendManualContour() succeded");

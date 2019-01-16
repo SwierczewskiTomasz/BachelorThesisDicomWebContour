@@ -176,7 +176,8 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                         }
                     ],
                     width: this.state.size.width,
-                    height: this.state.size.height
+                    height: this.state.size.height,
+                    statistics: undefined
                 }}
                 onConfirm={(c, cp, t) => {
                     this.props.sendAutomaticContour(c, cp, t, this.state.size, this.state.imgSize);
