@@ -146,7 +146,7 @@ namespace Logic
                     }
                     catch (Exception e)
                     {
-
+                        e.ToString();
                     }
                     if (next != null)
                     {
@@ -159,7 +159,7 @@ namespace Logic
             return ConnectedParts;
         }
 
-        public void FillUnconnectedGraphs(List<List<Vertex>> ConnectedParts, double weight)
+        public void FillUnconnectedGraphs(List<List<Vertex>> ConnectedParts, double weight, double maxDistance)
         {
             for (int i = 0; i < ConnectedParts.Count; i++)
             {
@@ -186,28 +186,31 @@ namespace Logic
                         }
                     }
 
-                    int weightedDistance = (int)(weight * distance);
-                    Edge edge = new Edge();
-                    edge.Artificial = true;
-                    edge.weight = weight;
-                    edge.vertex1 = vertex1;
-                    edge.vertex2 = vertex2;
+                    if (distance < maxDistance)
+                    {
+                        int weightedDistance = (int)(weight * distance);
+                        Edge edge = new Edge();
+                        edge.Artificial = true;
+                        edge.weight = weight;
+                        edge.vertex1 = vertex1;
+                        edge.vertex2 = vertex2;
 
-                    vertex1.Edges.Add(edge);
-                    vertex2.Edges.Add(edge);
+                        vertex1.Edges.Add(edge);
+                        vertex2.Edges.Add(edge);
 
-                    vertex1.Vertices.Add(vertex2, weightedDistance);
-                    vertex2.Vertices.Add(vertex1, weightedDistance);
+                        vertex1.Vertices.Add(vertex2, weightedDistance);
+                        vertex2.Vertices.Add(vertex1, weightedDistance);
 
-                    Edges.Add(edge);
+                        Edges.Add(edge);
+                    }
                 }
             }
         }
 
-        public void PrepareGraph(List<Vertex> pointsVertices, double weight)
+        public void PrepareGraph(List<Vertex> pointsVertices, double weight, double maxDistance)
         {
             List<List<Vertex>> ConnectedParts = FindUnconnectedGraph(pointsVertices);
-            FillUnconnectedGraphs(ConnectedParts, weight);
+            FillUnconnectedGraphs(ConnectedParts, weight, maxDistance);
         }
 
         public Dictionary<Vertex, Vertex> ModificatedAStarAlgotihm(Vertex startVertex, Vertex endVertex, Func<Point, Point, int> heuristicFunction, double weight)
@@ -232,7 +235,19 @@ namespace Logic
                 pointsVertices.Add(vertex);
             }
 
-            PrepareGraph(pointsVertices, weight);
+            double maxDistance = 0;
+            int ip = 0;
+            for (ip = 0; ip < points.Count; ip++)
+            {
+                Point p1 = points[ip];
+                Point p2 = points[(ip + 1) % points.Count];
+
+                double distance = ManhattanDistance(p1, p2);
+                if (distance > maxDistance)
+                    maxDistance = distance;
+            }
+
+            PrepareGraph(pointsVertices, weight, maxDistance * 2);
 
             // foreach (var e in Edges)
             // {
@@ -392,7 +407,7 @@ namespace Logic
 
                                             if (listOfPotentialPoints.Count != 0)
                                                 throw new Exception("Unexpected situation - not all points in list of potential points for edge has been reviewed");
-                                                // listOfPotentialPoints.Clear();
+                                            // listOfPotentialPoints.Clear();
                                         }
                                         else if (countPointNeighbours == 1)
                                         {
@@ -411,7 +426,7 @@ namespace Logic
                                         //Cleaning visited points
                                         matrix[potentialPoint.x, potentialPoint.y] = 0;
 
-                                        if(listOfPotentialPoints.Count == 2)
+                                        if (listOfPotentialPoints.Count == 2)
                                             throw new Exception("");
                                     }
                                 }

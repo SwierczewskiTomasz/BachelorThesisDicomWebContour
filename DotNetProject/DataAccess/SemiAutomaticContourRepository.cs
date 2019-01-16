@@ -105,10 +105,71 @@ namespace DataAccess
             buffor = sr.ReadLine();
             height = int.Parse(buffor);
 
+            if (sr.EndOfStream)
+                throw new Exception($"Unexpected end of file {filename}");
+
+            StatisticsResult statisticsResult = new StatisticsResult();
+            List<Point> centralPoints = new List<Point>();
+
+            buffor = sr.ReadLine();
+            if (buffor != "")
+            {
+                List<int> list = buffor.Split(',').Select(s => int.Parse(s)).ToList();
+                statisticsResult.CenterOfMass = new Point(list[0], list[1]);
+                if (sr.EndOfStream)
+                    throw new Exception($"Unexpected end of file {filename}");
+
+                buffor = sr.ReadLine();
+                statisticsResult.Histogram = buffor.Split(',').Select(s => int.Parse(s)).ToArray();
+                if (sr.EndOfStream)
+                    throw new Exception($"Unexpected end of file {filename}");
+
+                buffor = sr.ReadLine();
+                statisticsResult.HistogramMin = int.Parse(buffor);
+                if (sr.EndOfStream)
+                    throw new Exception($"Unexpected end of file {filename}");
+
+                buffor = sr.ReadLine();
+                statisticsResult.HistogramMax = int.Parse(buffor);
+                if (sr.EndOfStream)
+                    throw new Exception($"Unexpected end of file {filename}");
+
+                buffor = sr.ReadLine();
+                statisticsResult.HistogramMean = double.Parse(buffor);
+                if (sr.EndOfStream)
+                    throw new Exception($"Unexpected end of file {filename}");
+
+                buffor = sr.ReadLine();
+                statisticsResult.Area = double.Parse(buffor);
+                if (sr.EndOfStream)
+                    throw new Exception($"Unexpected end of file {filename}");
+
+                buffor = sr.ReadLine();
+                statisticsResult.Permieter = double.Parse(buffor);
+                if (sr.EndOfStream)
+                    throw new Exception($"Unexpected end of file {filename}");
+
+                buffor = sr.ReadLine();
+                statisticsResult.NumberOfPixelsInsideContour = int.Parse(buffor);
+                if (sr.EndOfStream)
+                    throw new Exception($"Unexpected end of file {filename}");
+
+                buffor = sr.ReadLine();
+                statisticsResult.NumberOfPixelsOfContour = int.Parse(buffor);
+                if (sr.EndOfStream)
+                    throw new Exception($"Unexpected end of file {filename}");
+
+                buffor = sr.ReadLine();
+                points = buffor.Split(',').Select(s => int.Parse(s)).ToList();
+                i = 0;
+                
+                while (i + 1 < points.Count)
+                    centralPoints.Add(new Point(points[i++], points[i++]));
+            }
 
             sr.Close();
 
-            SemiAutomaticContourDTO contour = new SemiAutomaticContourDTO(guid, DICOMid, tag, lines, width, height);
+            SemiAutomaticContourDTO contour = new SemiAutomaticContourDTO(guid, DICOMid, tag, lines, width, height, statisticsResult, centralPoints);
 
             return contour;
         }
@@ -122,9 +183,6 @@ namespace DataAccess
                 ce.DicomId = contour.dicomid;
                 ce.Tag = contour.tag;
                 ce.IsManual = false;
-#warning "Tak tego nie powinno się robić! Do poprawy"
-                // ce.UserId = Guid.Empty;
-                // ce.User = null;
 
                 db.Contours.Add(ce);
                 db.SaveChanges();
@@ -143,6 +201,34 @@ namespace DataAccess
             sw.WriteLine(contour.lines.First().brushColor);
             sw.WriteLine(contour.width);
             sw.WriteLine(contour.height);
+
+            if (contour.statistics != null)
+            {
+                sw.WriteLine(contour.statistics.CenterOfMass.x + "," + contour.statistics.CenterOfMass.y);
+                sw.WriteLine(string.Join(',', contour.statistics.Histogram));
+                sw.WriteLine(contour.statistics.HistogramMin);
+                sw.WriteLine(contour.statistics.HistogramMax);
+                sw.WriteLine(contour.statistics.HistogramMean);
+                sw.WriteLine(contour.statistics.Area);
+                sw.WriteLine(contour.statistics.Permieter);
+                sw.WriteLine(contour.statistics.NumberOfPixelsInsideContour);
+                sw.WriteLine(contour.statistics.NumberOfPixelsOfContour);
+                sw.WriteLine(string.Join(',', contour.centralPoints.Select(s => s.x.ToString() +
+                "," + s.y.ToString())));
+            }
+            else
+            {
+                sw.WriteLine();
+                sw.WriteLine();
+                sw.WriteLine();
+                sw.WriteLine();
+                sw.WriteLine();
+                sw.WriteLine();
+                sw.WriteLine();
+                sw.WriteLine();
+                sw.WriteLine();
+                sw.WriteLine();
+            }
 
             sw.Close();
         }

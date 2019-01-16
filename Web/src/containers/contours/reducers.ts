@@ -3,13 +3,14 @@ import { Action, combineReducers } from "redux";
 import { Dispatch } from "redux";
 
 import { startTask, endTask } from "../../helpers/asyncActions";
-import { getBuilder, orthancURL, apiURL } from "../../helpers/requestHelper";
+import { getBuilder, apiURL, postBuilder } from "../../helpers/requestHelper";
 import { Thunk } from "../../helpers/Thunk";
 import { getPatientData } from "../patients/reducers";
 import { getStudyData } from "../studies/reducers";
+import { Size } from "../../components/DrawAutomatic";
 
 export interface Contour {
-    guid: string;
+    guid?: string;
     dicomid: string;
     tag: string;
     lines: {
@@ -21,6 +22,13 @@ export interface Contour {
     }[];
     width: number;
     height: number;
+}
+
+export interface ContourWithCenralPoints extends Contour {
+    centralPoints: {
+        x: number;
+        y: number;
+    }[];
 }
 
 export const updateContours = createAction("CONTOURS/UPDATE", (contours: Contour[]) => ({ contours: contours }));
@@ -67,6 +75,86 @@ function updateContourReducer(state: AppState, action) {
     }
 }
 
+export const sendAutomaticContour = (getOpts: string, data: ContourWithCenralPoints, canvasSize: Size, imgSize: Size): Thunk =>
+    async (dispatch, getState) => {
+        {
+            dispatch(startTask());
+            console.warn(data);
+            const lines = data.lines.map(line => {
+                let next = line;
+                next.points = next.points
+                    .map(p => ({
+                        x: p.x * imgSize.width / canvasSize.width,
+                        y: p.y * imgSize.height / canvasSize.height
+                    }))
+                    .map(p => ({
+                        x: parseInt(p.x.toString()),
+                        y: parseInt(p.y.toString())
+                    }));
+                return next;
+            });
+            const centralPoints = data.centralPoints
+                .map(p => ({
+                    x: p.x * imgSize.width / canvasSize.width,
+                    y: p.y * imgSize.height / canvasSize.height
+                }))
+                .map(p => ({
+                    x: parseInt(p.x.toString()),
+                    y: parseInt(p.y.toString())
+                }));
+            const body = { ...data, lines, centralPoints };
+            let response = await postBuilder<Contour>(apiURL, getOpts, body);
+            if (response !== undefined) {
+                dispatch(updateContour(response));
+                console.warn("update contour");
+            }
+            else {
+                console.log("sendAutomaticContour() failed");
+            }
+            dispatch(endTask());
+        }
+    };
+export const sendManualContour = (getOpts: string, data: ContourWithCenralPoints, canvasSize: Size, imgSize: Size): Thunk =>
+    async (dispatch, getState) => {
+        {
+            dispatch(startTask());
+            console.warn(data);
+            const lines = data.lines.map(line => {
+                let next = line;
+                next.points = next.points
+                    .map(p => ({
+                        x: p.x * imgSize.width / canvasSize.width,
+                        y: p.y * imgSize.height / canvasSize.height
+                    }))
+                    .map(p => ({
+                        x: parseInt(p.x.toString()),
+                        y: parseInt(p.y.toString())
+                    }));
+                // add closing line
+                const l = next.points.length;
+                next.points[l] = { x: next.points[0].x, y: next.points[l - 1].y };
+                return next;
+            });
+            const centralPoints = data.centralPoints
+                .map(p => ({
+                    x: p.x * imgSize.width / canvasSize.width,
+                    y: p.y * imgSize.height / canvasSize.height
+                }))
+                .map(p => ({
+                    x: parseInt(p.x.toString()),
+                    y: parseInt(p.y.toString())
+                }));
+            const body = { ...data, lines, centralPoints };
+            let response = await postBuilder<Contour>(apiURL, getOpts, body);
+            if (response !== undefined) {
+                console.log("sendManualContour() succeded");
+            }
+            else {
+                console.log("sendManualContour() failed");
+            }
+            dispatch(endTask());
+        }
+    };
 
 
 export const contoursReducers = {

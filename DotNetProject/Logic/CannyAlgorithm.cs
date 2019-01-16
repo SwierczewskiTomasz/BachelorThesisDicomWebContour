@@ -11,7 +11,7 @@ namespace Logic
     {
         public static int numberOfColors = 256;
 
-        public static List<Point> Canny(string dicomId, List<Point> points)
+        public static List<Point> CannyWithoutStatistics(string dicomId, List<Point> points, int canvasWidth, int canvasHeight)
         {
             System.Drawing.Bitmap bitmap = OrthancConnection.GetBitmapByInstanceId(dicomId);
 
@@ -30,16 +30,48 @@ namespace Logic
             (min, max) = ChooseThreshold(distribution, lowerThreshold, higherThreshold);
             int[,] foundedEdges = HysteresisThreshold(edges, width, height, min, max);
 
-            //All pixels, all edges, no connection from one point to other one!!!
-            //List<Point> pixels = new List<Point>(FindPoints(foundedEdges, width, height));
+            int[,] foundedEdges2 = Make4ConnectedMatrix(foundedEdges, width, height, 0, width, 0, height);
+
+            double weight = 2.5;
+            List<Point> pixels = new List<Point>(Graph.FindShortestPath(foundedEdges2, width, height, weight, points));
+
+            int[,] matrixWithContour = MakeMatrixFromPoints(width, height, pixels);
+
+            return pixels;
+        }
+
+        public static (List<Point>, StatisticsResult) Canny(string dicomId, List<Point> points, int canvasWidth, int canvasHeight, List<Point> centralPoints)
+        {
+            System.Drawing.Bitmap bitmap = OrthancConnection.GetBitmapByInstanceId(dicomId);
+
+            double[,][] sobel;
+            int width, height;
+
+            (sobel, width, height) = SobelOperator(bitmap);
+            double[,][] gradient = FindIntensityGradient(sobel, width, height);
+            double[,] edges = NonMaximumSuppression(gradient, width, height);
+            int[] distribution = DistributionFunction(edges, width, height);
+            distribution = CumulativeDistributionFunction(distribution);
+
+            int min, max;
+            double lowerThreshold = 0.70, higherThreshold = 0.95;
+
+            (min, max) = ChooseThreshold(distribution, lowerThreshold, higherThreshold);
+            int[,] foundedEdges = HysteresisThreshold(edges, width, height, min, max);
 
             int[,] foundedEdges2 = Make4ConnectedMatrix(foundedEdges, width, height, 0, width, 0, height);
 
             double weight = 2.5;
             List<Point> pixels = new List<Point>(Graph.FindShortestPath(foundedEdges2, width, height, weight, points));
-            //List<Point> pixels = FindPoints(foundedEdges, width, height);
 
-            return pixels;
+            int[,] matrixWithContour = MakeMatrixFromPoints(width, height, pixels);
+            int[,] image = ReadMatrixFromBitmap(bitmap);
+
+            StatisticsResult statisticsResult = null;
+
+            statisticsResult = Statistics.GenerateStatistics(pixels, matrixWithContour, image, 0, width, 0, height, 0, 0, centralPoints.First());
+
+            return (pixels, statisticsResult);
         }
 
         public static (double[,][], int, int) SobelOperator(System.Drawing.Bitmap bitmap)
@@ -246,6 +278,27 @@ namespace Logic
                         result.Add(new Point(x, y));
 
             return result;
+        }
+
+        public static int[,] MakeMatrixFromPoints(int width, int height, List<Point> points)
+        {
+            int[,] matrix = new int[width, height];
+            foreach (var p in points)
+                matrix[p.x, p.y] = 1;
+            return matrix;
+        }
+
+        public static int[,] ReadMatrixFromBitmap(System.Drawing.Bitmap bitmap)
+        {
+            int[,] matrix = new int[bitmap.Width, bitmap.Height];
+            for (int x = 0; x < bitmap.Width; x++)
+            {
+                for (int y = 0; y < bitmap.Height; y++)
+                {
+                    matrix[x, y] = bitmap.GetPixel(x, y).R;
+                }
+            }
+            return matrix;
         }
     }
 }

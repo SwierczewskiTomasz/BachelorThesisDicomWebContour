@@ -5,11 +5,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using DTOs;
 using Logic;
+using Microsoft.AspNetCore.Cors;
 
 namespace API.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
+    [EnableCors("AllowSpecificOrigin")]
+    //[ApiController]
     public class ManualContourController : ControllerBase
     {
         readonly private ManualContourLogic logic;
@@ -76,28 +78,28 @@ namespace API.Controllers
                 new { guid = contour.guid }, contour);
         }
 
-        [Route("[action]/{DICOMid}")]
-        [HttpPost]
-        public ActionResult<Guid> Post(string DICOMid)
-        {
-            List<Line> lines = new List<Line>();
-            Line line = new Line();
-            line.pixels = new List<Point>();
-            line.pixels.Add(new Point(0, 0));
-            line.pixels.Add(new Point(1, 0));
-            line.pixels.Add(new Point(2, 0));
-            line.pixels.Add(new Point(2, 1));
-            line.pixels.Add(new Point(2, 2));
-            line.pixels.Add(new Point(1, 2));
-            line.pixels.Add(new Point(0, 2));
-            line.pixels.Add(new Point(0, 1));
-            line.brushColor = "#f00";
-            lines.Add(line);
+        // [Route("[action]/{DICOMid}")]
+        // [HttpPost]
+        // public ActionResult<Guid> Post(string DICOMid)
+        // {
+        //     List<Line> lines = new List<Line>();
+        //     Line line = new Line();
+        //     line.pixels = new List<Point>();
+        //     line.pixels.Add(new Point(0, 0));
+        //     line.pixels.Add(new Point(1, 0));
+        //     line.pixels.Add(new Point(2, 0));
+        //     line.pixels.Add(new Point(2, 1));
+        //     line.pixels.Add(new Point(2, 2));
+        //     line.pixels.Add(new Point(1, 2));
+        //     line.pixels.Add(new Point(0, 2));
+        //     line.pixels.Add(new Point(0, 1));
+        //     line.brushColor = "#f00";
+        //     lines.Add(line);
 
-            ManualContourDTO contour = new ManualContourDTO(DICOMid, "Test", lines, 500, 500);
-            logic.Add(contour);
-            return Ok(contour.guid);
-        }
+        //     ManualContourDTO contour = new ManualContourDTO(DICOMid, "Test", lines, 500, 500);
+        //     logic.Add(contour);
+        //     return Ok(contour.guid);
+        // }
 
         [Route("[action]/")]
         [HttpPut]

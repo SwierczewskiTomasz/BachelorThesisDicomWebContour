@@ -21,7 +21,7 @@ namespace Logic
         public MySortedListElement first = null;
         public MySortedListElement Add(Vertex key, int value)
         {
-            double Value = value + random.NextDouble() / 2;
+            double Value = value;
 
             MySortedListElement element = new MySortedListElement();
             element.Key = key;

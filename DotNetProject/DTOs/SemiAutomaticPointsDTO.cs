@@ -13,19 +13,20 @@ namespace DTOs
 
     public class SemiAutomaticPointsDTO
     {
-        public Guid guid {get; set; }
+        public Guid guid { get; set; }
         public string dicomid { get; set; }
         public string tag { get; set; }
         public List<LinePoints> lines { get; set; }
         public int width { get; set; }
         public int height { get; set; }
+        public List<Point> centralPoints { get; set; }
 
         public SemiAutomaticPointsDTO()
         {
             guid = Guid.NewGuid();
         }
 
-        public SemiAutomaticPointsDTO(Guid _guid, string _dicomid, string _tag, List<LinePoints> _lines, int _width, int _height)
+        public SemiAutomaticPointsDTO(Guid _guid, string _dicomid, string _tag, List<LinePoints> _lines, int _width, int _height, List<Point> _centralPoints)
         {
             guid = _guid;
             dicomid = _dicomid;
@@ -33,9 +34,11 @@ namespace DTOs
             lines = new List<LinePoints>(_lines);
             width = _width;
             height = _height;
+            if(_centralPoints != null)
+                centralPoints= new List<Point>(_centralPoints);
         }
 
-        public SemiAutomaticPointsDTO(string _dicomid, string _tag, List<LinePoints> _lines, int _width, int _height)
+        public SemiAutomaticPointsDTO(string _dicomid, string _tag, List<LinePoints> _lines, int _width, int _height, List<Point> _centralPoints)
         {
             guid = Guid.NewGuid();
             dicomid = _dicomid;
@@ -43,6 +46,8 @@ namespace DTOs
             lines = new List<LinePoints>(_lines);
             width = _width;
             height = _height;
+            if(_centralPoints != null)
+                centralPoints= new List<Point>(_centralPoints);
         }
     }
 }
