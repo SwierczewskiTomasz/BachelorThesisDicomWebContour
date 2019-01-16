@@ -63,7 +63,8 @@ export const setCurrentInstanceInd = (index: number): Thunk =>
             dispatch(updateCurrentInstance(index));
             dispatch(getDetails(getState().instancesIds[index]));
 
-            dispatch(fetchContours("api/semiautomaticcontour/FetchByDicomIdToDTOs/" + getState().instancesIds[index]));
+            dispatch(fetchContours("api/semiautomaticcontour/FetchByDicomIdToDTOs/" + getState().instancesIds[index],
+                "api/manualcontour/FetchByDicomIdToDTOs/" + getState().instancesIds[index]));
             dispatch(endTask());
         }
     };

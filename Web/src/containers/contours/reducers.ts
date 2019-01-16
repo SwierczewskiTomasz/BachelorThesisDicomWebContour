@@ -47,14 +47,21 @@ export interface ContourWithCenralPoints extends Contour {
 export const updateContours = createAction("CONTOURS/UPDATE", (contours: Contour[]) => ({ contours: contours }));
 export const updateContour = createAction("CONTOUR/UPDATE", (contour: Contour) => ({ contour: contour }));
 
-export const fetchContours = (getOpts: string): Thunk =>
+export const fetchContours = (getOpts: string, getOpts2: string): Thunk =>
     async (dispatch, getState) => {
         {
             dispatch(startTask());
             let response = await getBuilder<Contour[]>(apiURL, getOpts);
-            if (response !== undefined) {
-                dispatch(updateContours(response));
+            let response2 = await getBuilder<Contour[]>(apiURL, getOpts2);
+            if (response !== undefined && response2 !== undefined) {
+                dispatch(updateContours([...response, ...response2]));
                 console.warn("update contours");
+            } else if (response !== undefined) {
+                dispatch(updateContours(response));
+                console.warn(getOpts2, "failed");
+            } else if (response2 !== undefined) {
+                dispatch(updateContours(response2));
+                console.warn(getOpts, "failed");
             }
             else {
                 console.log("fetchContours() failed");
