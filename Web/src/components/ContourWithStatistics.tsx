@@ -26,6 +26,20 @@ export default class ContourWithStatistics extends React.Component<ContourWithSt
 
     redraw(props: ContourWithStatisticsProps) {
         const canvas: any = document.getElementById("canvas-preview");
+        const canvas2: any = document.getElementById("canvas-histogram");
+        if (canvas2 !== null && canvas2 !== undefined && props.contour !== undefined && props.contour !== null) {
+            const ctx = canvas2.getContext("2d");
+            const max = Math.max(...this.props.contour.statistics.histogram);
+
+            props.contour.statistics.histogram.map(v => v * 255 / max).forEach((v, i) => {
+                ctx.strokeStyle = "#fff";
+                ctx.beginPath();
+                ctx.moveTo(i, 255);
+                ctx.lineTo(i, 255 - v);
+                ctx.stroke();
+            });
+        }
+
         if (canvas === null || canvas === undefined || props.contour === undefined || props.contour === null) return;
         console.log(canvas);
         const context = canvas.getContext("2d");
@@ -44,7 +58,6 @@ export default class ContourWithStatistics extends React.Component<ContourWithSt
                     p.y * props.size.height / props.contour.height,
                     2, 2);
             }
-            context.stroke();
         });
     }
 
@@ -79,6 +92,12 @@ export default class ContourWithStatistics extends React.Component<ContourWithSt
                             <p><span style={{ ...strong }}>HistogramMean</span>: {this.props.contour.statistics.histogramMean}</p>
                             <p><span style={{ ...strong }}>Number Of Pixels Inside Contour</span>: {this.props.contour.statistics.numberOfPixelsInsideContour}</p>
                             <p><span style={{ ...strong }}>Permieter</span>: {this.props.contour.statistics.permieter}</p>
+                            <h1> Histogram </h1>
+                            <canvas id="canvas-histogram"
+                                width={"256px"}
+                                height={"256px"}
+                                style={{ background: "#000" }}
+                            />
                         </Grid>
                     </Grid>
 
