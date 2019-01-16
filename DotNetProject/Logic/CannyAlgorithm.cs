@@ -26,8 +26,8 @@ namespace Logic
 
             foreach (var p in points)
             {
-                p.x *= canvasWidth / width;
-                p.y *= canvasHeight / height;
+                p.x = (int)(p.x / ((double)canvasWidth / width));
+                p.y = (int)(p.y / ((double)canvasHeight / height));
             }
 
             int min, max;
@@ -53,6 +53,12 @@ namespace Logic
             if(centralPoints != null)
                 if(centralPoints.Count != 0)
                     statisticsResult = Statistics.GenerateStatistics(pixels, matrixWithContour, image, 0, width, 0, height, 0, 0, centralPoints.First());
+
+            foreach (var p in pixels)
+            {
+                p.x = (int)(p.x * ((double)canvasWidth / width));
+                p.y = (int)(p.y * ((double)canvasHeight / height));
+            }
 
             return (pixels, statisticsResult);
         }

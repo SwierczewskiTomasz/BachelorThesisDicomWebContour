@@ -203,7 +203,7 @@ namespace Logic
             return Mean;
         }
 
-        
+
         public static StatisticsResult GenerateStatistics(List<Point> pixels, int[,] matrixWithContour,
         int[,] image, int xmin, int xmax, int ymin, int ymax,  double pixelAreaInMms,
         double pixelLenghtInMms, Point startPoint)
