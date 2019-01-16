@@ -92,6 +92,7 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
             "https://http.cat/404";
         let img = new Image();
         const fun = (w, h) => {
+            this.setState({ imgSize: { width: w, height: h } });
             h = h * 1000 / w;
             w = 1000;
             if (h > 600) {
@@ -249,6 +250,8 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
 
                     // Send to API
 
+                    console.log(this.state);
+
                     // TODO: Refactor => make api call inside reducer
                     fetch("https://localhost:5001/" + "api/semiautomaticcontour/post/", {
                         mode: "cors",
@@ -262,16 +265,15 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                             tag: "SemiAutomatic Test",
                             lines: [
                                 {
-                                    // points: this.state.points
-                                    //     .map(p => ({
-                                    //         x: p.x * this.state.imgSize.width / this.state.size.width,
-                                    //         y: p.y * this.state.imgSize.height / this.state.size.height
-                                    //     }))
-                                    //     .map(p => ({
-                                    //         x: parseInt(p.x.toString()),
-                                    //         y: parseInt(p.y.toString())
-                                    //     })),
-                                    points: this.state.points,
+                                    points: this.state.points
+                                        .map(p => ({
+                                            x: (p.x * this.state.imgSize.width) / this.state.size.width,
+                                            y: (p.y * this.state.imgSize.height) / this.state.size.height
+                                        }))
+                                        .map(p => ({
+                                            x: parseInt(p.x.toString()),
+                                            y: parseInt(p.y.toString())
+                                        })),
                                     brushColor: this.state.color
                                 }
                             ],
