@@ -63,6 +63,60 @@ namespace Logic
             return histogram;
         }
 
+        public static int[] HistogramOfContourFloodFill(int[,] matrixWithContour, int[,] image, int xmin, int xmax, int ymin, int ymax, Point StartPoint)
+        {
+            int[] histogram = new int[CannyAlgorithm.numberOfColors];
+            Queue<Point> points = new Queue<Point>();
+            int[,] checkedMatrix = new int[xmax - xmin, ymax - ymin];
+
+            points.Enqueue(StartPoint);
+            checkedMatrix[StartPoint.x, StartPoint.y] = 1;
+
+            while (points.Count > 0)
+            {
+                Point currentPoint = points.Dequeue();
+                histogram[image[currentPoint.x, currentPoint.y]]++;
+
+                if (currentPoint.x + 1 < xmax)
+                {
+                    if (checkedMatrix[currentPoint.x + 1, currentPoint.y] == 0)
+                    {
+                        points.Enqueue(new Point(currentPoint.x + 1, currentPoint.y));
+                        checkedMatrix[currentPoint.x + 1, currentPoint.y] = 1;
+                    }
+                }
+
+                if (currentPoint.x - 1 >= xmin)
+                {
+                    if (checkedMatrix[currentPoint.x - 1, currentPoint.y] == 0)
+                    {
+                        points.Enqueue(new Point(currentPoint.x - 1, currentPoint.y));
+                        checkedMatrix[currentPoint.x - 1, currentPoint.y] = 1;
+                    }
+                }
+
+                if (currentPoint.y + 1 < ymax)
+                {
+                    if (checkedMatrix[currentPoint.x, currentPoint.y + 1] == 0)
+                    {
+                        points.Enqueue(new Point(currentPoint.x, currentPoint.y + 1));
+                        checkedMatrix[currentPoint.x, currentPoint.y + 1] = 1;
+                    }
+                }
+
+                if (currentPoint.y - 1 >= ymin)
+                {
+                    if (checkedMatrix[currentPoint.x, currentPoint.y - 1] == 0)
+                    {
+                        points.Enqueue(new Point(currentPoint.x, currentPoint.y - 1));
+                        checkedMatrix[currentPoint.x, currentPoint.y - 1] = 1;
+                    }
+                }
+            }
+
+            return histogram;
+        }
+
         public static int AreaInPixels(int[] histogram)
         {
             int count = 0;
@@ -152,13 +206,13 @@ namespace Logic
         
         public static StatisticsResult GenerateStatistics(List<Point> pixels, int[,] matrixWithContour,
         int[,] image, int xmin, int xmax, int ymin, int ymax,  double pixelAreaInMms,
-        double pixelLenghtInMms)
+        double pixelLenghtInMms, Point startPoint)
         {
             StatisticsResult statisticsResult = new StatisticsResult();
             statisticsResult.CenterOfMass = Statistics.Barycentrum(pixels);
             try
             {
-                statisticsResult.Histogram = Statistics.HistogramOfContour(matrixWithContour, image, xmin, xmax, ymin, ymax);
+                statisticsResult.Histogram = Statistics.HistogramOfContourFloodFill(matrixWithContour, image, xmin, xmax, ymin, ymax, startPoint);
                 statisticsResult.HistogramMin = Statistics.MinInHistogram(statisticsResult.Histogram);
                 statisticsResult.HistogramMax = Statistics.MaxInHistogram(statisticsResult.Histogram);
                 statisticsResult.HistogramMean = Statistics.MeanInHistogram(statisticsResult.Histogram);

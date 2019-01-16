@@ -59,7 +59,8 @@ namespace Logic
             int[,] matrixWithContour = CannyAlgorithm.MakeMatrixFromPoints(bitmap.Width, bitmap.Height, pixels);
             int[,] image = CannyAlgorithm.ReadMatrixFromBitmap(bitmap);
 
-            StatisticsResult statisticsResult = Statistics.GenerateStatistics(pixels, matrixWithContour, image, 0, bitmap.Width, 0, bitmap.Height, 0, 0);
+            StatisticsResult statisticsResult = Statistics.GenerateStatistics(pixels, matrixWithContour, image, 0, bitmap.Width, 0, bitmap.Height,
+            0, 0, points.centralPoints.First());
 
             SemiAutomaticContourDTO contour = new SemiAutomaticContourDTO(points.guid,
             points.dicomid, points.tag, lines, points.width, points.height, statisticsResult, points.centralPoints);

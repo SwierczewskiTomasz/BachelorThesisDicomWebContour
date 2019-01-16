@@ -48,7 +48,7 @@ namespace Logic
             int[,] matrixWithContour = MakeMatrixFromPoints(width, height, pixels);
             int[,] image = ReadMatrixFromBitmap(bitmap);
 
-            StatisticsResult statisticsResult = Statistics.GenerateStatistics(pixels, matrixWithContour, image, 0, width, 0, height, 0, 0);
+            StatisticsResult statisticsResult = Statistics.GenerateStatistics(pixels, matrixWithContour, image, 0, width, 0, height, 0, 0, centralPoints.First());
 
             return (pixels, statisticsResult);
         }
