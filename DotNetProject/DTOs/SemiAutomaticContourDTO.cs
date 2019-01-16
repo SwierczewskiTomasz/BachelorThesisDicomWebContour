@@ -37,7 +37,8 @@ namespace DTOs
             width = _width;
             height = _height;
             statistics = _statistics;
-            centralPoints = new List<Point>(_centralPoints);
+            if(_centralPoints != null)
+                centralPoints = new List<Point>(_centralPoints);
         }
 
         public SemiAutomaticContourDTO(string _DICOMid, string _tag, List<LinePointsAndPixels> _lines, int _width, int _height, 
@@ -50,7 +51,8 @@ namespace DTOs
             width = _width;
             height = _height;
             statistics = _statistics;
-            centralPoints = new List<Point>(_centralPoints);
+            if(_centralPoints != null)
+                centralPoints = new List<Point>(_centralPoints);
         }
     }
 }

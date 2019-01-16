@@ -198,21 +198,34 @@ namespace DataAccess
             sw.WriteLine(contour.lines.First().brushColor);
             sw.WriteLine(contour.width);
             sw.WriteLine(contour.height);
-            sw.WriteLine(contour.statistics.CenterOfMass.x + "," + contour.statistics.CenterOfMass.y);
 
-            if (contour.statistics.Histogram == null)
-                sw.WriteLine();
-            else
+            if (contour.statistics != null)
+            {
+                sw.WriteLine(contour.statistics.CenterOfMass.x + "," + contour.statistics.CenterOfMass.y);
                 sw.WriteLine(string.Join(',', contour.statistics.Histogram));
-            sw.WriteLine(contour.statistics.HistogramMin);
-            sw.WriteLine(contour.statistics.HistogramMax);
-            sw.WriteLine(contour.statistics.HistogramMean);
-            sw.WriteLine(contour.statistics.Area);
-            sw.WriteLine(contour.statistics.Permieter);
-            sw.WriteLine(contour.statistics.NumberOfPixelsInsideContour);
-            sw.WriteLine(contour.statistics.NumberOfPixelsOfContour);
-            sw.WriteLine(string.Join(',', contour.centralPoints.Select(s => s.x.ToString() +
-            "," + s.y.ToString())));
+                sw.WriteLine(contour.statistics.HistogramMin);
+                sw.WriteLine(contour.statistics.HistogramMax);
+                sw.WriteLine(contour.statistics.HistogramMean);
+                sw.WriteLine(contour.statistics.Area);
+                sw.WriteLine(contour.statistics.Permieter);
+                sw.WriteLine(contour.statistics.NumberOfPixelsInsideContour);
+                sw.WriteLine(contour.statistics.NumberOfPixelsOfContour);
+                sw.WriteLine(string.Join(',', contour.centralPoints.Select(s => s.x.ToString() +
+                "," + s.y.ToString())));
+            }
+            else
+            {
+                sw.WriteLine();
+                sw.WriteLine();
+                sw.WriteLine();
+                sw.WriteLine();
+                sw.WriteLine();
+                sw.WriteLine();
+                sw.WriteLine();
+                sw.WriteLine();
+                sw.WriteLine();
+                sw.WriteLine();
+            }
 
             sw.Close();
         }
