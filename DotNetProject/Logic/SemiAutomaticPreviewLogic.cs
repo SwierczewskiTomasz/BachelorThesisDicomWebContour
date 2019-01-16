@@ -7,38 +7,13 @@ using DataAccess;
 
 namespace Logic
 {
-    public class SemiAutomaticContourLogic
+    public class SemiAutomaticPreviewLogic
     {
-        private readonly SemiAutomaticContourRepository repository = new SemiAutomaticContourRepository();
+        private readonly SemiAutomaticPreviewRepository repository = new SemiAutomaticPreviewRepository();
 
-        public List<SemiAutomaticContourDTO> FetchAllToDTOs()
+        public SemiAutomaticPreviewDTO Get(Guid guid)
         {
-            List<SemiAutomaticContourDTO> contours = new List<SemiAutomaticContourDTO>();
-            foreach (Guid guid in repository.FetchAll())
-            {
-                contours.Add(repository.Load(guid));
-            }
-            return contours;
-        }
-
-        public List<SemiAutomaticContourDTO> FetchByDicomIdToDTOs(string dicomid)
-        {
-            List<SemiAutomaticContourDTO> contours = new List<SemiAutomaticContourDTO>();
-            foreach (Guid guid in repository.FetchByDicomId(dicomid))
-            {
-                contours.Add(repository.Load(guid));
-            }
-            return contours;
-        }
-
-        public List<Guid> FetchAll() => repository.FetchAll();
-
-        public List<Guid> FetchByDicomId(string dicomid) => repository.FetchByDicomId(dicomid);
-
-
-        public SemiAutomaticContourDTO Get(Guid guid)
-        {
-            SemiAutomaticContourDTO result = null;
+            SemiAutomaticPreviewDTO result = null;
             try
             {
                 result = repository.Load(guid);
@@ -51,9 +26,9 @@ namespace Logic
             return result;
         }
 
-        public SemiAutomaticContourDTO Add(SemiAutomaticPointsDTO contour)
+        public SemiAutomaticPreviewDTO Add(SemiAutomaticPreviewDTO contour)
         {
-            SemiAutomaticContourDTO result = SemiAutomatic.Default(contour);
+            SemiAutomaticPreviewDTO result = SemiAutomatic.Default(contour);
             repository.Save(result);
             return result;
         }
@@ -63,9 +38,9 @@ namespace Logic
             return repository.Delete(guid);
         }
 
-        public void Edit(SemiAutomaticContourDTO contour)
+        public SemiAutomaticPreviewDTO Edit(SemiAutomaticPreviewDTO contour)
         {
-            SemiAutomaticContourDTO old = repository.Load(contour.guid);
+            SemiAutomaticPreviewDTO old = repository.Load(contour.guid);
 
             if(old == null)
             {
@@ -127,17 +102,19 @@ namespace Logic
 
             contour.lines.First().points = new List<Point>(newListOfPoints);
 
-            List<LinePoints> list = new List<LinePoints>();
-            LinePoints line = new LinePoints();
+            List<LinePointsAndPixels> list = new List<LinePointsAndPixels>();
+            LinePointsAndPixels line = new LinePointsAndPixels();
             line.points = new List<Point>(newListOfPoints);
+            line.pixels = null;
             line.brushColor = contour.lines.First().brushColor;
             list.Add(line);
 
-            SemiAutomaticPointsDTO contourPointsDTO = new SemiAutomaticPointsDTO(contour.guid, contour.dicomid, contour.tag, list, contour.width, contour.height,
-            contour.centralPoints);
-            SemiAutomaticContourDTO result = SemiAutomatic.Default(contourPointsDTO);
+            SemiAutomaticPreviewDTO contourPointsDTO = new SemiAutomaticPreviewDTO(contour.guid, contour.dicomid, contour.tag, list, contour.width, contour.height);
+            SemiAutomaticPreviewDTO result = SemiAutomatic.Default(contourPointsDTO);
 
             repository.Edit(result);
+
+            return result;
         }
     }
 }

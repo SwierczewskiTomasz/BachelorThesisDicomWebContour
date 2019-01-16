@@ -12,6 +12,29 @@ namespace Logic
         public static SemiAutomaticContourDTO Default(SemiAutomaticPointsDTO points)
         => Canny(points);
 
+        public static SemiAutomaticPreviewDTO Default(SemiAutomaticPreviewDTO points)
+        => CannyWithoutStatistics(points);
+
+        public static SemiAutomaticPreviewDTO CannyWithoutStatistics(SemiAutomaticPreviewDTO points)
+        {
+            List<Point> pixels;
+
+            pixels = CannyAlgorithm.CannyWithoutStatistics(points.dicomid, points.lines.First().points, points.width, points.height);
+
+            List<LinePointsAndPixels> lines = new List<LinePointsAndPixels>();
+            LinePointsAndPixels line = new LinePointsAndPixels();
+            line.points = new List<Point>(points.lines.First().points);
+            line.pixels = new List<Point>(pixels);
+            line.brushColor = points.lines.First().brushColor;
+
+            lines.Add(line);
+
+            SemiAutomaticPreviewDTO contour = new SemiAutomaticPreviewDTO(points.guid,
+            points.dicomid, points.tag, lines, points.width, points.height);
+            return contour;
+        }
+
+
         public static SemiAutomaticContourDTO Canny(SemiAutomaticPointsDTO points)
         {
             List<Point> pixels;

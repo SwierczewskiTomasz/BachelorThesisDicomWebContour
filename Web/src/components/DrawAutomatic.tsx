@@ -253,14 +253,15 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                     console.log(this.state);
 
                     // TODO: Refactor => make api call inside reducer
-                    fetch("https://localhost:5001/" + "api/semiautomaticcontour/post/", {
+                    fetch("https://localhost:5001/" + (this.state.guid == null ? "api/semiautomaticpreview/post/" : "api/semiautomaticpreview/put/") , {
                         mode: "cors",
-                        method: "post",
+                        method: this.state.guid == null ? "post" : "put",
                         headers: {
                             "Accept": "application/json",
                             "Content-Type": "application/json"
                         },
-                        body: JSON.stringify({
+                        body: (this.state.guid != null ? JSON.stringify({
+                            guid: this.state.guid,
                             dicomid: this.props.instancesIds[this.props.currentInstanceId],
                             tag: "SemiAutomatic Test",
                             lines: [
@@ -279,7 +280,27 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                             ],
                             width: this.state.size.width,
                             height: this.state.size.height
-                        })
+                        }) :
+                        JSON.stringify({
+                            dicomid: this.props.instancesIds[this.props.currentInstanceId],
+                            tag: "SemiAutomatic Test",
+                            lines: [
+                                {
+                                    points: this.state.points
+                                        .map(p => ({
+                                            x: (p.x * this.state.imgSize.width) / this.state.size.width,
+                                            y: (p.y * this.state.imgSize.height) / this.state.size.height
+                                        }))
+                                        .map(p => ({
+                                            x: parseInt(p.x.toString()),
+                                            y: parseInt(p.y.toString())
+                                        })),
+                                    brushColor: this.state.color
+                                }
+                            ],
+                            width: this.state.size.width,
+                            height: this.state.size.height
+                        }))
                     }).then(response => {
                         console.log(response);
                         return response.json();
@@ -287,11 +308,11 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                         console.log(data);
                         this.setState(prev => ({
                             guid: data.guid,
-                            // pixels: data.lines[0].pixels.map(p => ({
-                            //     x: p.x * this.state.size.width / this.state.imgSize.width,
-                            //     y: p.y * this.state.size.height / this.state.imgSize.height
-                            // }))
-                            pixels: data.lines[0].pixels
+                            pixels: data.lines[0].pixels.map(p => ({
+                                x: p.x * this.state.size.width / this.state.imgSize.width,
+                                y: p.y * this.state.size.height / this.state.imgSize.height
+                            }))
+                            // pixels: data.lines[0].pixels
                         }));
                         // Draw pixels
                         const canvas: any = document.getElementById("canvas");

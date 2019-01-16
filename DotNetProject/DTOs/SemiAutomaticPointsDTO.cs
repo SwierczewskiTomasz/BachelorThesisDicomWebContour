@@ -34,7 +34,8 @@ namespace DTOs
             lines = new List<LinePoints>(_lines);
             width = _width;
             height = _height;
-            centralPoints = new List<Point>(_centralPoints);
+            if(_centralPoints != null)
+                centralPoints= new List<Point>(_centralPoints);
         }
 
         public SemiAutomaticPointsDTO(string _dicomid, string _tag, List<LinePoints> _lines, int _width, int _height, List<Point> _centralPoints)
@@ -45,7 +46,8 @@ namespace DTOs
             lines = new List<LinePoints>(_lines);
             width = _width;
             height = _height;
-            centralPoints = new List<Point>(_centralPoints);
+            if(_centralPoints != null)
+                centralPoints= new List<Point>(_centralPoints);
         }
     }
 }
