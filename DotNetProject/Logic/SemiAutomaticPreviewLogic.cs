@@ -42,7 +42,7 @@ namespace Logic
         {
             SemiAutomaticPreviewDTO old = repository.Load(contour.guid);
 
-            if(old == null)
+            if (old == null)
             {
                 throw new Exception("This Contour doesn't exist in database");
             }
@@ -74,6 +74,7 @@ namespace Logic
             }
             while (j < countNew)
             {
+                currentInNew = contour.lines.First().points[j];
                 double minDistance = double.MaxValue;
                 int index = 0;
 
@@ -92,7 +93,7 @@ namespace Logic
                     if (distance < minDistance)
                     {
                         minDistance = distance;
-                        index = k;
+                        index = k + 1;
                     }
                 }
 

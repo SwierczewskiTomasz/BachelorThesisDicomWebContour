@@ -221,7 +221,7 @@ namespace Logic
             }
             catch (Exception e)
             {
-
+                e.ToString();
             }
             statisticsResult.Permieter = Statistics.PerimeterInMmsSecondMethod(pixels, pixelLenghtInMms);
             statisticsResult.NumberOfPixelsOfContour = Statistics.PerimeterInPixels(pixels);
