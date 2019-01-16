@@ -1,17 +1,7 @@
 {
-  "name": "react-webpack-typescript-starter",
+  "name": "dicom-web-contour",
   "version": "0.1.0",
-  "description": "Starter kit for React, Webpack (with Hot Module Replacement), Typescript and Babel.",
-  "keywords": [
-    "react",
-    "webpack",
-    "typescript",
-    "babel",
-    "sass",
-    "hmr",
-    "starter",
-    "boilerplate"
-  ],
+  "description": "Web app to draw contours on DICOM files",
   "author": "Łukasz Garstecki, Tomasz Świerczewski",
   "license": "MIT",
   "scripts": {
@@ -24,6 +14,7 @@
     "start-dev": "webpack-dev-server --config=configs/webpack/dev.js",
     "dev": "webpack-dev-server --config=configs/webpack/dev.js",
     "start-prod": "yarn run build && node express.js",
+    "prod": "yarn run start-prod",
     "test": "jest --watch --coverage --config=configs/jest.json"
   },
   "devDependencies": {
