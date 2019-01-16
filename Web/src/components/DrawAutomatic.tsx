@@ -243,6 +243,8 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
 
                     // Send to API
 
+                    console.log(this.state);
+
                     // TODO: Refactor => make api call inside reducer
                     fetch("https://localhost:5001/" + "api/semiautomaticcontour/post/", {
                         mode: "cors",
@@ -258,8 +260,8 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                                 {
                                     points: this.state.points
                                         .map(p => ({
-                                            x: p.x * this.state.imgSize.width / this.state.size.width,
-                                            y: p.y * this.state.imgSize.height / this.state.size.height
+                                            x: (p.x * this.state.imgSize.width) / this.state.size.width,
+                                            y: (p.y * this.state.imgSize.height) / this.state.size.height
                                         }))
                                         .map(p => ({
                                             x: parseInt(p.x.toString()),
