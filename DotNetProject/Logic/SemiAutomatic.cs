@@ -30,7 +30,7 @@ namespace Logic
             lines.Add(line);
 
             SemiAutomaticPreviewDTO contour = new SemiAutomaticPreviewDTO(points.guid,
-            points.dicomid, points.tag, lines, points.width, points.height);
+                points.dicomid, points.tag, lines, points.width, points.height);
             return contour;
         }
 
@@ -51,7 +51,7 @@ namespace Logic
             lines.Add(line);
 
             SemiAutomaticContourDTO contour = new SemiAutomaticContourDTO(points.guid,
-            points.dicomid, points.tag, lines, points.width, points.height, statisticsResult, points.centralPoints);
+                points.dicomid, points.tag, lines, points.width, points.height, statisticsResult, points.centralPoints);
             return contour;
         }
 
@@ -83,10 +83,10 @@ namespace Logic
             int[,] image = CannyAlgorithm.ReadMatrixFromBitmap(bitmap);
 
             StatisticsResult statisticsResult = Statistics.GenerateStatistics(pixels, matrixWithContour, image, 0, bitmap.Width, 0, bitmap.Height,
-            0, 0, points.centralPoints.First());
+                0, 0, points.centralPoints.First());
 
             SemiAutomaticContourDTO contour = new SemiAutomaticContourDTO(points.guid,
-            points.dicomid, points.tag, lines, points.width, points.height, statisticsResult, points.centralPoints);
+                points.dicomid, points.tag, lines, points.width, points.height, statisticsResult, points.centralPoints);
             return contour;
         }
     }
