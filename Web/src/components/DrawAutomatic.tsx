@@ -20,7 +20,7 @@ export interface DrawAutimaticState {
     readonly imgSize: Size;
     readonly points: Point[];
     readonly pixels: Point[];
-    readonly guid: string;
+    readonly guid: string | null;
     readonly color: string;
     readonly chooseColor: boolean;
     readonly saveContourOpen: boolean;
@@ -247,6 +247,16 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                     console.log(this.state);
 
                     // TODO: Refactor => make api call inside reducer
+                    if (this.state.guid != null) {
+                        fetch("https://localhost:5001/" + "api/semiautomaticpreview/delete/" + this.state.guid, {
+                            mode: "cors",
+                            method: "delete",
+                            headers: {
+                                "Accept": "application/json",
+                                "Content-Type": "application/json"
+                            }
+                        });
+                    }
                     fetch("https://localhost:5001/" + (this.state.guid == null ? "api/semiautomaticpreview/post/" : "api/semiautomaticpreview/put/"), {
                         mode: "cors",
                         method: this.state.guid == null ? "post" : "put",
@@ -292,8 +302,8 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                                         brushColor: this.state.color
                                     }
                                 ],
-                                width: this.state.size.width,
-                                height: this.state.size.height
+                                width: parseInt(this.state.size.width.toString()),
+                                height: parseInt(this.state.size.height.toString())
                             }))
                     }).then(response => {
                         console.log(response);

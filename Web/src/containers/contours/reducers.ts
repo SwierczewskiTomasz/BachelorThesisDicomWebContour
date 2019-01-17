@@ -128,7 +128,8 @@ export const sendAutomaticContour = (getOpts: string, data: ContourWithCenralPoi
                     x: parseInt(p.x.toString()),
                     y: parseInt(p.y.toString())
                 }));
-            const body = { ...data, lines, centralPoints, ...imgSize };
+            const imgSize2 = { width: parseInt(imgSize.width.toString()), height: parseInt(imgSize.height.toString()) };
+            const body = { ...data, lines, centralPoints, ...imgSize2 };
             let response = await postBuilder<Contour>(apiURL, getOpts, body);
             if (response !== undefined) {
                 dispatch(updateContour(response));
@@ -170,7 +171,8 @@ export const sendManualContour = (getOpts: string, data: ContourWithCenralPoints
                     x: parseInt(p.x.toString()),
                     y: parseInt(p.y.toString())
                 }));
-            const body = { ...data, lines, centralPoints, ...imgSize };
+            const imgSize2 = { width: parseInt(imgSize.width.toString()), height: parseInt(imgSize.height.toString()) };
+            const body = { ...data, lines, centralPoints, ...imgSize2 };
             let response = await postBuilder<Contour>(apiURL, getOpts, body);
             if (response !== undefined) {
                 console.log("sendManualContour() succeded");
