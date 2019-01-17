@@ -85,11 +85,11 @@ export default class ContourWithStatistics extends React.Component<ContourWithSt
                         <Grid item key="stats-grid">
                             {console.log(this.props.contour)}
                             <p><span style={{ ...strong }}>Area</span>: {this.props.contour.statistics.area}</p>
-                            <p><span style={{ ...strong }}>CenterOfMass</span>: {"[" + this.props.contour.statistics.centerOfMass.x +
+                            <p><span style={{ ...strong }}>Center Of Mass</span>: {"[" + this.props.contour.statistics.centerOfMass.x +
                                 "," + this.props.contour.statistics.centerOfMass.x + "]"}</p>
-                            <p><span style={{ ...strong }}>HistogramMax</span>: {this.props.contour.statistics.histogramMax}</p>
-                            <p><span style={{ ...strong }}>HistogramMin</span>: {this.props.contour.statistics.histogramMin}</p>
-                            <p><span style={{ ...strong }}>HistogramMean</span>: {this.props.contour.statistics.histogramMean}</p>
+                            <p><span style={{ ...strong }}>Histogram Max</span>: {this.props.contour.statistics.histogramMax}</p>
+                            <p><span style={{ ...strong }}>Histogram Min</span>: {this.props.contour.statistics.histogramMin}</p>
+                            <p><span style={{ ...strong }}>Histogram Mean</span>: {this.props.contour.statistics.histogramMean}</p>
                             <p><span style={{ ...strong }}>Number Of Pixels Inside Contour</span>: {this.props.contour.statistics.numberOfPixelsInsideContour}</p>
                             <p><span style={{ ...strong }}>Permieter</span>: {this.props.contour.statistics.permieter}</p>
                             <h1> Histogram </h1>
