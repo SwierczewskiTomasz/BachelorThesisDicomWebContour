@@ -75,41 +75,60 @@ namespace Logic
             while (points.Count > 0)
             {
                 Point currentPoint = points.Dequeue();
-                histogram[image[currentPoint.x, currentPoint.y]]++;
-
-                if (currentPoint.x + 1 < xmax)
+                if (matrixWithContour[currentPoint.x, currentPoint.y] == 0)
                 {
-                    if (checkedMatrix[currentPoint.x + 1, currentPoint.y] == 0)
+                    histogram[image[currentPoint.x, currentPoint.y]]++;
+
+                    if (currentPoint.x + 1 < xmax)
                     {
-                        points.Enqueue(new Point(currentPoint.x + 1, currentPoint.y));
-                        checkedMatrix[currentPoint.x + 1, currentPoint.y] = 1;
+                        if (checkedMatrix[currentPoint.x + 1, currentPoint.y] == 0)
+                        {
+                            if (matrixWithContour[currentPoint.x + 1, currentPoint.y] == 0)
+                            {
+                                points.Enqueue(new Point(currentPoint.x + 1, currentPoint.y));
+                                checkedMatrix[currentPoint.x + 1, currentPoint.y] = 1;
+                            }
+                            else
+                            {
+                                currentPoint.ToString();
+                            }
+                        }
                     }
-                }
 
-                if (currentPoint.x - 1 >= xmin)
-                {
-                    if (checkedMatrix[currentPoint.x - 1, currentPoint.y] == 0)
+                    if (currentPoint.x - 1 >= xmin)
                     {
-                        points.Enqueue(new Point(currentPoint.x - 1, currentPoint.y));
-                        checkedMatrix[currentPoint.x - 1, currentPoint.y] = 1;
+                        if (checkedMatrix[currentPoint.x - 1, currentPoint.y] == 0)
+                        {
+                            if (matrixWithContour[currentPoint.x - 1, currentPoint.y] == 0)
+                            {
+                                points.Enqueue(new Point(currentPoint.x - 1, currentPoint.y));
+                                checkedMatrix[currentPoint.x - 1, currentPoint.y] = 1;
+                            }
+                        }
                     }
-                }
 
-                if (currentPoint.y + 1 < ymax)
-                {
-                    if (checkedMatrix[currentPoint.x, currentPoint.y + 1] == 0)
+                    if (currentPoint.y + 1 < ymax)
                     {
-                        points.Enqueue(new Point(currentPoint.x, currentPoint.y + 1));
-                        checkedMatrix[currentPoint.x, currentPoint.y + 1] = 1;
+                        if (checkedMatrix[currentPoint.x, currentPoint.y + 1] == 0)
+                        {
+                            if (matrixWithContour[currentPoint.x, currentPoint.y + 1] == 0)
+                            {
+                                points.Enqueue(new Point(currentPoint.x, currentPoint.y + 1));
+                                checkedMatrix[currentPoint.x, currentPoint.y + 1] = 1;
+                            }
+                        }
                     }
-                }
 
-                if (currentPoint.y - 1 >= ymin)
-                {
-                    if (checkedMatrix[currentPoint.x, currentPoint.y - 1] == 0)
+                    if (currentPoint.y - 1 >= ymin)
                     {
-                        points.Enqueue(new Point(currentPoint.x, currentPoint.y - 1));
-                        checkedMatrix[currentPoint.x, currentPoint.y - 1] = 1;
+                        if (checkedMatrix[currentPoint.x, currentPoint.y - 1] == 0)
+                        {
+                            if (matrixWithContour[currentPoint.x, currentPoint.y - 1] == 0)
+                            {
+                                points.Enqueue(new Point(currentPoint.x, currentPoint.y - 1));
+                                checkedMatrix[currentPoint.x, currentPoint.y - 1] = 1;
+                            }
+                        }
                     }
                 }
             }
@@ -205,7 +224,7 @@ namespace Logic
 
 
         public static StatisticsResult GenerateStatistics(List<Point> pixels, int[,] matrixWithContour,
-        int[,] image, int xmin, int xmax, int ymin, int ymax,  double pixelAreaInMms,
+        int[,] image, int xmin, int xmax, int ymin, int ymax, double pixelAreaInMms,
         double pixelLenghtInMms, Point startPoint)
         {
             StatisticsResult statisticsResult = new StatisticsResult();
@@ -226,6 +245,33 @@ namespace Logic
             statisticsResult.Permieter = Statistics.PerimeterInMmsSecondMethod(pixels, pixelLenghtInMms);
             statisticsResult.NumberOfPixelsOfContour = Statistics.PerimeterInPixels(pixels);
             return statisticsResult;
+        }
+
+        public static StatisticsResult GenerateStatistics(ManualContourDTO contour)
+        {
+            System.Drawing.Bitmap bitmap = OrthancConnection.GetBitmapByInstanceId(contour.dicomid);
+            int width = bitmap.Width;
+            int height = bitmap.Height;
+            int[,] matrixWithContour = CannyAlgorithm.MakeMatrixFromPoints(width, height, contour.lines.First().points);
+
+            int count = 0;
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    if (matrixWithContour[x, y] == 0)
+                    {
+                        count++;
+                    }
+                }
+            }
+
+            int[,] image = CannyAlgorithm.ReadMatrixFromBitmap(bitmap);
+
+            double pixelAreaInMms = 0;
+            double pixelLenghtInMms = 0;
+
+            return GenerateStatistics(contour.lines.First().points, matrixWithContour, image, 0, width, 0, height, pixelAreaInMms, pixelLenghtInMms, contour.centralPoints.First());
         }
     }
 }

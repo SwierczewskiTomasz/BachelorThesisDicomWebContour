@@ -52,6 +52,8 @@ namespace Logic
 
         public void Add(ManualContourDTO contour)
         {
+            contour = PrepareContour(contour);
+            contour.statistics = Statistics.GenerateStatistics(contour);
             repository.Save(contour);
         }
 
@@ -63,6 +65,24 @@ namespace Logic
         public void Edit(ManualContourDTO contour)
         {
             repository.Edit(contour);
+        }
+
+        public static ManualContourDTO PrepareContour(ManualContourDTO contour)
+        {
+            List<Point> result = new List<Point>();
+            int count = contour.lines.First().points.Count;
+            int i;
+            for(i = 0; i < count; i++)
+            {
+                Point p1 = contour.lines.First().points[i];
+                Point p2 = contour.lines.First().points[(i + 1) % count];
+                result.Add(p1);
+                result.Add(p2);
+                result.AddRange(BresenhamClass.Bresenham(new List<Point>(), p1.x, p1.y, p2.x, p2.y));
+            }
+
+            contour.lines.First().points = new List<Point>(result);
+            return contour;
         }
     }
 }
