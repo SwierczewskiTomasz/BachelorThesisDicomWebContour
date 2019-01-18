@@ -310,9 +310,9 @@ namespace Logic
             }
         }
 
-        public static List<Point> FindShortestPath(int[,] matrix, int width, int height, double weight, List<Point> points)
+        public static List<Point> FindShortestPath(int[,] matrix, int xmin, int xmax, int ymin, int ymax, double weight, List<Point> points)
         {
-            Graph graph = GenerateGraphFromMatrix(matrix, width, height);
+            Graph graph = GenerateGraphFromMatrix(matrix, xmin, xmax, ymin, ymax);
             List<Point> result = new List<Point>(graph.FindShortestPath(points, weight));
             return result;
         }
@@ -322,12 +322,15 @@ namespace Logic
             return Math.Abs(point1.x - point2.x) + Math.Abs(point1.y - point2.y);
         }
 
-        public static Graph GenerateGraphFromMatrix(int[,] matrix, int width, int height)
+        public static Graph GenerateGraphFromMatrix(int[,] matrix, int xmin, int xmax, int ymin, int ymax)
         {
             Graph graph = new Graph();
 
             graph.Vertices = new List<Vertex>();
             graph.Edges = new List<Edge>();
+
+            int width = xmax - xmin;
+            int height = ymax - ymin;
 
             for (int x = 0; x < width; x++)
             {
@@ -340,53 +343,52 @@ namespace Logic
                         if (!(count == 1 || count == 3))
                         {
                             Vertex vertex = new Vertex();
-                            vertex.point = new Point(x, y);
+                            vertex.point = new Point(x + xmin, y + ymin);
                             vertex.Vertices = new Dictionary<Vertex, int>();
                             vertex.Edges = new List<Edge>();
 
-                            List<Vertex> listVertices = new List<Vertex>();
-                            listVertices.Add(vertex);
+                            Queue<Vertex> queueVertices = new Queue<Vertex>();
+                            queueVertices.Enqueue(vertex);
 
                             //Cleaning visited points
                             matrix[x, y] = 0;
 
-                            while (listVertices.Count != 0)
+                            while (queueVertices.Count != 0)
                             {
-                                Vertex currentVertex = listVertices.First();
-                                listVertices.RemoveAt(0);
+                                Vertex currentVertex = queueVertices.Dequeue();
                                 graph.Vertices.Add(currentVertex);
 
-                                List<Edge> listEdges = new List<Edge>();
+                                Queue<Edge> queueEdges = new Queue<Edge>();
 
                                 foreach (Point n in Neighbours(width, height, x, y))
+                                {
                                     if (matrix[n.x, n.y] != 0)
                                     {
                                         Edge e = new Edge();
                                         e.vertex1 = currentVertex;
                                         e.Artificial = false;
                                         e.points = new List<Point>();
-                                        e.points.Add(new Point(n.x, n.y));
-                                        listEdges.Add(e);
+                                        e.points.Add(new Point(n.x + xmin, n.y + ymin));
+                                        queueEdges.Enqueue(e);
                                     }
+                                }
 
-                                while (listEdges.Count != 0)
+                                while (queueEdges.Count != 0)
                                 {
-                                    Edge currentEdge = listEdges.First();
-                                    listEdges.RemoveAt(0);
+                                    Edge currentEdge = queueEdges.Dequeue();
                                     //graph.Edges.Add(currentEdge);
 
-                                    List<Point> listOfPotentialPoints = new List<Point>();
+                                    Queue<Point> queueOfPotentialPoints = new Queue<Point>();
 
                                     Point currentPoint = currentEdge.points.First();
                                     currentEdge.points.RemoveAt(0);
-                                    listOfPotentialPoints.Add(currentPoint);
+                                    queueOfPotentialPoints.Enqueue(currentPoint);
 
-                                    while (listOfPotentialPoints.Count != 0)
+                                    while (queueOfPotentialPoints.Count != 0)
                                     {
-                                        Point potentialPoint = listOfPotentialPoints.First();
-                                        listOfPotentialPoints.RemoveAt(0);
+                                        Point potentialPoint = queueOfPotentialPoints.Dequeue();
 
-                                        int countPointNeighbours = CountNeighbours(matrix, width, height, potentialPoint.x, potentialPoint.y);
+                                        int countPointNeighbours = CountNeighbours(matrix, width, height, potentialPoint.x - xmin, potentialPoint.y - ymin);
                                         if (countPointNeighbours == 0 || countPointNeighbours > 1)
                                         {
                                             //new Vertex!!!
@@ -403,19 +405,19 @@ namespace Logic
                                             currentVertex.Vertices.Add(secondVertex, currentEdge.Lenght);
 
                                             currentVertex.Edges.Add(currentEdge);
-                                            listVertices.Add(secondVertex);
+                                            queueVertices.Enqueue(secondVertex);
 
-                                            if (listOfPotentialPoints.Count != 0)
+                                            if (queueOfPotentialPoints.Count != 0)
                                                 throw new Exception("Unexpected situation - not all points in list of potential points for edge has been reviewed");
                                             // listOfPotentialPoints.Clear();
                                         }
                                         else if (countPointNeighbours == 1)
                                         {
                                             currentEdge.points.Add(potentialPoint);
-                                            foreach (Point p in Neighbours(width, height, potentialPoint.x, potentialPoint.y))
+                                            foreach (Point p in Neighbours(width, height, potentialPoint.x - xmin, potentialPoint.y - ymin))
                                             {
                                                 if (matrix[p.x, p.y] != 0)
-                                                    listOfPotentialPoints.Add(p);
+                                                    queueOfPotentialPoints.Enqueue(p);
                                             }
                                         }
                                         else
@@ -424,9 +426,9 @@ namespace Logic
                                         }
 
                                         //Cleaning visited points
-                                        matrix[potentialPoint.x, potentialPoint.y] = 0;
+                                        matrix[potentialPoint.x - xmin, potentialPoint.y - ymin] = 0;
 
-                                        if (listOfPotentialPoints.Count == 2)
+                                        if (queueOfPotentialPoints.Count == 2)
                                             throw new Exception("");
                                     }
                                 }
