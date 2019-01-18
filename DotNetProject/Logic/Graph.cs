@@ -417,7 +417,7 @@ namespace Logic
                                             foreach (Point p in Neighbours(width, height, potentialPoint.x - xmin, potentialPoint.y - ymin))
                                             {
                                                 if (matrix[p.x, p.y] != 0)
-                                                    queueOfPotentialPoints.Enqueue(p);
+                                                    queueOfPotentialPoints.Enqueue(new Point(p.x + xmin, p.y + ymin));
                                             }
                                         }
                                         else
@@ -429,7 +429,8 @@ namespace Logic
                                         matrix[potentialPoint.x - xmin, potentialPoint.y - ymin] = 0;
 
                                         if (queueOfPotentialPoints.Count == 2)
-                                            throw new Exception("");
+                                            queueOfPotentialPoints.Clear();
+                                            //throw new Exception("");
                                     }
                                 }
                             }

@@ -115,7 +115,7 @@ namespace Logic
             int height = ymax - ymin;
 
             xmin -= width / 2;
-            ymax += width / 2;
+            xmax += width / 2;
             ymin -= height / 2;
             ymax += height / 2;
 
@@ -156,7 +156,7 @@ namespace Logic
                     s2 = bitmap.GetPixel(x + 1, y - 1).R + 2 * bitmap.GetPixel(x + 1, y).R + bitmap.GetPixel(x + 1, y + 1).R;
                     s2 -= bitmap.GetPixel(x - 1, y - 1).R + 2 * bitmap.GetPixel(x - 1, y).R + bitmap.GetPixel(x - 1, y + 1).R;
 
-                    result[x, y] = new double[2] { s1, s2 };
+                    result[x - xmin, y - ymin] = new double[2] { s1, s2 };
                 }
             }
 
@@ -307,9 +307,9 @@ namespace Logic
         public static int[,] Make4ConnectedMatrix(int[,] matrix, int xmin, int xmax, int ymin, int ymax)
         {
             int added = 0;
-            for (int i = xmin; i < xmax - 1; i++)
+            for (int i = 1; i < xmax - xmin - 1; i++)
             {
-                for (int j = ymin; j < ymax - 1; j++)
+                for (int j = 1; j < ymax - ymin - 1; j++)
                 {
                     if (matrix[i, j] != 0 && matrix[i + 1, j + 1] != 0 && matrix[i + 1, j] == 0 && matrix[i, j + 1] == 0)
                     {
