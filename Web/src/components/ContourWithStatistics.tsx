@@ -45,18 +45,29 @@ export default class ContourWithStatistics extends React.Component<ContourWithSt
         const context = canvas.getContext("2d");
 
         props.contour.lines.forEach(l => {
-            context.fillStyle = l.brushColor;
-            for (let i = 0; i < l.points.length; i++) {
-                context.fillRect(
-                    l.points[0].x * props.size.width / props.contour.width,
-                    l.points[0].y * props.size.height / props.contour.height,
-                    5, 5);
+            if (l.pixels !== undefined) {
+                context.fillStyle = l.brushColor;
+                for (let i = 0; i < l.points.length; i++) {
+                    context.fillRect(
+                        l.points[i].x * props.size.width / props.contour.width,
+                        l.points[i].y * props.size.height / props.contour.height,
+                        5, 5);
+                }
+                for (let i = 0; i < l.pixels.length; i++) {
+                    const p = l.pixels[i];
+                    context.fillRect(p.x * props.size.width / props.contour.width,
+                        p.y * props.size.height / props.contour.height,
+                        2, 2);
+                }
             }
-            for (let i = 0; i < l.pixels.length; i++) {
-                const p = l.pixels[i];
-                context.fillRect(p.x * props.size.width / props.contour.width,
-                    p.y * props.size.height / props.contour.height,
-                    2, 2);
+            else {
+                context.strokeStyle = l.brushColor;
+                context.beginPath();
+                context.moveTo(l.points[0].x * props.size.width / props.contour.width, l.points[0].y * props.size.height / props.contour.height);
+                for (let i = 1; i < l.points.length; i++) {
+                    context.lineTo(l.points[i].x * props.size.width / props.contour.width, l.points[i].y * props.size.height / props.contour.height);
+                }
+                context.stroke();
             }
         });
     }

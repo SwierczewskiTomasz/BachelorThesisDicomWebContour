@@ -4,6 +4,7 @@ import { AppBar, Typography } from "@material-ui/core";
 import SideMenu from "./SideMenu";
 import DisplayImage from "./DisplayImage";
 import ContourList from "./ContourList";
+import ProgressSpinner from "./ProgressSpinner";
 
 
 export interface AppViewProps {
@@ -36,6 +37,7 @@ export default class AppView extends React.Component<AppViewProps> {
                 <div style={{ float: "left", width: "20%" }}>
                     <ContourList />
                 </div>
+                <ProgressSpinner />
             </>
         );
     }

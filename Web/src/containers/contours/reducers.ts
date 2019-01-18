@@ -3,7 +3,7 @@ import { createAction } from "redux-actions";
 import { startTask, endTask } from "../../helpers/asyncActions";
 import { getBuilder, apiURL, postBuilder } from "../../helpers/requestHelper";
 import { Thunk } from "../../helpers/Thunk";
-import { Size } from "../../components/DrawAutomatic";
+import { Size, Point } from "../../components/DrawAutomatic";
 
 export interface Contour {
     guid?: string;
@@ -46,6 +46,7 @@ export interface ContourWithCenralPoints extends Contour {
 
 export const updateContours = createAction("CONTOURS/UPDATE", (contours: Contour[]) => ({ contours: contours }));
 export const updateContour = createAction("CONTOUR/UPDATE", (contour: Contour) => ({ contour: contour }));
+export const updatePreview = createAction("PREVIEW/UPDATE", (preview: any) => ({ preview: preview }));
 
 export const fetchContours = (getOpts: string, getOpts2: string): Thunk =>
     async (dispatch, getState) => {
@@ -76,10 +77,18 @@ export const setCurrentContur = (guid: string): Thunk =>
             dispatch(updateContour(getState().contours.find(c => c.guid === guid)));
         }
     };
+
 export const discardCurrentContur = (): Thunk =>
     async (dispatch, getState) => {
         {
             dispatch(updateContour(undefined));
+        }
+    };
+
+export const discardPreview = (): Thunk =>
+    async (dispatch, getState) => {
+        {
+            dispatch(updatePreview(undefined));
         }
     };
 
@@ -100,6 +109,87 @@ function updateContourReducer(state: AppState, action) {
             return state;
     }
 }
+
+
+function updatePreviewReducer(state: AppState, action) {
+    switch (action.type) {
+        case "PREVIEW/UPDATE":
+            return Object.assign({}, state, { preview: action.payload.preview });
+        default:
+            return state;
+    }
+}
+
+export const sendPreviewContour = (guid: string, points: Point[], color: string, canvasSize: Size, imgSize: Size): Thunk =>
+
+    async (dispatch, getState) => {
+        dispatch(startTask());
+        const state = getState();
+        if (guid != null) {
+            fetch("https://localhost:5001/" + "api/semiautomaticpreview/delete/" + guid, {
+                mode: "cors",
+                method: "delete",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json"
+                }
+            });
+        }
+        const response = await fetch("https://localhost:5001/" + (guid == null ? "api/semiautomaticpreview/post/" : "api/semiautomaticpreview/put/"), {
+            mode: "cors",
+            method: guid == null ? "post" : "put",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            },
+            body: (guid != null ? JSON.stringify({
+                guid: guid,
+                dicomid: state.instancesIds[state.currentInstanceId],
+                tag: "SemiAutomatic Test",
+                lines: [
+                    {
+                        points: points
+                            .map(p => ({
+                                x: (p.x * imgSize.width) / canvasSize.width,
+                                y: (p.y * imgSize.height) / canvasSize.height
+                            }))
+                            .map(p => ({
+                                x: parseInt(p.x.toString()),
+                                y: parseInt(p.y.toString())
+                            })),
+                        brushColor: color
+                    }
+                ],
+                width: canvasSize.width,
+                height: canvasSize.height
+            }) :
+                JSON.stringify({
+                    dicomid: state.instancesIds[state.currentInstanceId],
+                    tag: "SemiAutomatic Test",
+                    lines: [
+                        {
+                            points: points
+                                .map(p => ({
+                                    x: (p.x * imgSize.width) / canvasSize.width,
+                                    y: (p.y * imgSize.height) / canvasSize.height
+                                }))
+                                .map(p => ({
+                                    x: parseInt(p.x.toString()),
+                                    y: parseInt(p.y.toString())
+                                })),
+                            brushColor: color
+                        }
+                    ],
+                    width: parseInt(canvasSize.width.toString()),
+                    height: parseInt(canvasSize.height.toString())
+                }))
+        });
+        console.warn(response);
+        const responseDeserialized = await response.json();
+        console.warn(responseDeserialized);
+        dispatch(updatePreview(responseDeserialized));
+        dispatch(endTask());
+    };
 
 export const sendAutomaticContour = (getOpts: string, data: ContourWithCenralPoints, canvasSize: Size, imgSize: Size): Thunk =>
     async (dispatch, getState) => {
@@ -141,6 +231,7 @@ export const sendAutomaticContour = (getOpts: string, data: ContourWithCenralPoi
             dispatch(endTask());
         }
     };
+
 export const sendManualContour = (getOpts: string, data: ContourWithCenralPoints, canvasSize: Size, imgSize: Size): Thunk =>
     async (dispatch, getState) => {
         {
@@ -187,5 +278,6 @@ export const sendManualContour = (getOpts: string, data: ContourWithCenralPoints
 
 export const contoursReducers = {
     [updateContours.toString()](state: AppState, action) { return { ...state, ...updateContoursReducer(state, action) }; },
-    [updateContour.toString()](state: AppState, action) { return { ...state, ...updateContourReducer(state, action) }; }
+    [updateContour.toString()](state: AppState, action) { return { ...state, ...updateContourReducer(state, action) }; },
+    [updatePreview.toString()](state: AppState, action) { return { ...state, ...updatePreviewReducer(state, action) }; }
 };
