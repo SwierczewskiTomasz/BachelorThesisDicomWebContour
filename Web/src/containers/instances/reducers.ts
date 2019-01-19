@@ -5,7 +5,7 @@ import { getBuilder, orthancURL } from "../../helpers/requestHelper";
 import { Thunk } from "../../helpers/Thunk";
 import { getPatientData } from "../patients/reducers";
 import { getStudyData } from "../studies/reducers";
-import { fetchContours } from "../contours/reducers";
+import { fetchContours, removeAllSelectedContour } from "../contours/reducers";
 
 export const updateInstances = createAction("INSTANCES/UPDATE", (instancesIds: string[]) => ({ instancesIds }));
 export const updateInstanceDetails = createAction("INSTANCE_DETAILS/UPDATE",
@@ -42,15 +42,18 @@ export const fetchInstances = (getOpts: string): Thunk =>
         }
     };
 
-export const getDetails = (id: string): Thunk =>
+export const getDetails = (id: string | undefined): Thunk =>
     async (dispatch, getState) => {
         {
             dispatch(startTask());
-            let response = await getBuilder<any>(orthancURL, "/instances/" + id + "/tags");
-            if (response !== undefined) {
-                const pixelSpacing: string | undefined = response["0028,0030"].Value;
-                const spacingBetweenSlices: string | undefined = response["0018,0088"].Value;
-                dispatch(updateInstanceDetails(pixelSpacing, spacingBetweenSlices));
+
+            if (id !== undefined) {
+                let response = await getBuilder<any>(orthancURL, "instances/" + id + "/tags");
+                if (response !== undefined) {
+                    const pixelSpacing: string | undefined = response["0028,0030"].Value;
+                    const spacingBetweenSlices: string | undefined = response["0018,0088"].Value;
+                    dispatch(updateInstanceDetails(pixelSpacing, spacingBetweenSlices));
+                }
             }
             dispatch(endTask());
         }
@@ -61,10 +64,13 @@ export const setCurrentInstanceInd = (index: number): Thunk =>
         {
             dispatch(startTask());
             dispatch(updateCurrentInstance(index));
-            dispatch(getDetails(getState().instancesIds[index]));
+            if (index >= 0) {
+                dispatch(getDetails(getState().instancesIds[index]));
 
-            dispatch(fetchContours("api/semiautomaticcontour/FetchByDicomIdToDTOs/" + getState().instancesIds[index],
-                "api/manualcontour/FetchByDicomIdToDTOs/" + getState().instancesIds[index]));
+                dispatch(fetchContours("api/semiautomaticcontour/FetchByDicomIdToDTOs/" + getState().instancesIds[index],
+                    "api/manualcontour/FetchByDicomIdToDTOs/" + getState().instancesIds[index]));
+                dispatch(removeAllSelectedContour());
+            }
             dispatch(endTask());
         }
     };

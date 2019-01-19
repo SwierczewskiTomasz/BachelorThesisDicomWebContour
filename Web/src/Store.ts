@@ -23,7 +23,8 @@ const initialState: AppState = {
     patientId: undefined,
     currentInstanceId: 0,
     contours: [],
-    preview: undefined
+    preview: undefined,
+    selectedContourGuids: []
 };
 
 let store: Store<any>;

@@ -249,15 +249,6 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                 }}
             />}
             <br />
-            {/* <img style={{ margin: "0 auto" }}
-                src={
-                    this.props.instancesIds.length > 0 ?
-                        orthancURL + "instances/" +
-                        this.props.instancesIds[this.state.currentInstanceId]
-                        + "/preview" :
-                        "https://http.cat/404"
-                }
-            /> */}
             <Button
                 variant="contained"
                 color="primary"
@@ -295,6 +286,7 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
             >
                 Save contour
             </Button>
+            <br />
             <Button
                 variant="flat"
                 color="primary"

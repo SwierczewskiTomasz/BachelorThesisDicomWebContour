@@ -3,6 +3,10 @@ import { Button, Dialog, DialogContent, DialogActions, DialogTitle, Grid } from 
 import { Contour } from "../containers/contours/reducers";
 import { Size } from "./DrawAutomatic";
 
+const gridStyle = {
+    margin: "2rem"
+};
+
 interface ContourWithStatisticsProps {
     readonly open: boolean;
     readonly contour: Contour;
@@ -86,14 +90,14 @@ export default class ContourWithStatistics extends React.Component<ContourWithSt
                 </DialogTitle>
                 <DialogContent>
                     <Grid container>
-                        <Grid item key="canvas-preview-grid">
+                        <Grid item key="canvas-preview-grid" style={{ ...gridStyle }}>
                             <canvas id="canvas-preview"
                                 width={this.props.size.width + "px"}
                                 height={this.props.size.height + "px"}
                                 style={{ backgroundImage: this.props.imgUrl, backgroundSize: "cover" }}
                             />
                         </Grid>
-                        <Grid item key="stats-grid">
+                        <Grid item key="stats-grid" style={{ ...gridStyle }}>
                             {console.log(this.props.contour)}
                             <p><span style={{ ...strong }}>Area</span>: {this.props.contour.statistics.area}</p>
                             <p><span style={{ ...strong }}>Center Of Mass</span>: {"[" + this.props.contour.statistics.centerOfMass.x +

@@ -44,6 +44,7 @@ export interface ContourWithCenralPoints extends Contour {
     }[];
 }
 
+export const updateSelectedContourGuids = createAction("SELECTED_CONTOURS/UPDATE", (contourGuids: string[]) => ({ selectedContourGuids: contourGuids }));
 export const updateContours = createAction("CONTOURS/UPDATE", (contours: Contour[]) => ({ contours: contours }));
 export const updateContour = createAction("CONTOUR/UPDATE", (contour: Contour) => ({ contour: contour }));
 export const updatePreview = createAction("PREVIEW/UPDATE", (preview: any) => ({ preview: preview }));
@@ -71,17 +72,40 @@ export const fetchContours = (getOpts: string, getOpts2: string): Thunk =>
         }
     };
 
-export const setCurrentContur = (guid: string): Thunk =>
+export const setCurrentContour = (guid: string): Thunk =>
     async (dispatch, getState) => {
         {
             dispatch(updateContour(getState().contours.find(c => c.guid === guid)));
         }
     };
 
-export const discardCurrentContur = (): Thunk =>
+export const discardCurrentContour = (): Thunk =>
     async (dispatch, getState) => {
         {
             dispatch(updateContour(undefined));
+        }
+    };
+
+export const addSelectedContour = (guid: string): Thunk =>
+    async (dispatch, getState) => {
+        {
+            const contourGuids = getState().selectedContourGuids;
+            dispatch(updateSelectedContourGuids([...contourGuids, guid]));
+        }
+    };
+
+export const removeSelectedContour = (guid: string): Thunk =>
+    async (dispatch, getState) => {
+        {
+            const contourGuids = getState().selectedContourGuids.filter(cg => cg !== guid);
+            dispatch(updateSelectedContourGuids(contourGuids));
+        }
+    };
+
+export const removeAllSelectedContour = (): Thunk =>
+    async (dispatch, getState) => {
+        {
+            dispatch(updateSelectedContourGuids([]));
         }
     };
 
@@ -92,6 +116,14 @@ export const discardPreview = (): Thunk =>
         }
     };
 
+function updateSelectedContourGuidsReducer(state: AppState, action) {
+    switch (action.type) {
+        case "SELECTED_CONTOURS/UPDATE":
+            return Object.assign({}, state, { selectedContourGuids: action.payload.selectedContourGuids });
+        default:
+            return state;
+    }
+}
 
 function updateContoursReducer(state: AppState, action) {
     switch (action.type) {
@@ -101,6 +133,7 @@ function updateContoursReducer(state: AppState, action) {
             return state;
     }
 }
+
 function updateContourReducer(state: AppState, action) {
     switch (action.type) {
         case "CONTOUR/UPDATE":
@@ -277,6 +310,7 @@ export const sendManualContour = (getOpts: string, data: ContourWithCenralPoints
 
 
 export const contoursReducers = {
+    [updateSelectedContourGuids.toString()](state: AppState, action) { return { ...state, ...updateSelectedContourGuidsReducer(state, action) }; },
     [updateContours.toString()](state: AppState, action) { return { ...state, ...updateContoursReducer(state, action) }; },
     [updateContour.toString()](state: AppState, action) { return { ...state, ...updateContourReducer(state, action) }; },
     [updatePreview.toString()](state: AppState, action) { return { ...state, ...updatePreviewReducer(state, action) }; }
