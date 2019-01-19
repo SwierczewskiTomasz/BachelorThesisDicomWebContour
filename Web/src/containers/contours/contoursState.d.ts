@@ -50,6 +50,7 @@ declare interface ContoursState {
         } | undefined;
     },
     readonly preview: any;
+    readonly selectedContourGuids: string[];
 }
 
 declare interface AppState extends ContoursState { }

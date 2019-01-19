@@ -3,11 +3,10 @@ import { Drawer, List, ListItem, ListItemIcon, Divider, ListItemSecondaryAction 
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import PersonIcon from "@material-ui/icons/PersonOutlined";
-import { Contour, setCurrentContur as setCurrentContour, discardCurrentContur as discardCurrentContour } from "../containers/contours/reducers";
+import { Contour, setCurrentContour as setCurrentContour, discardCurrentContour as discardCurrentContour } from "../containers/contours/reducers";
 import ContourWithStatistics from "./ContourWithStatistics";
 import { orthancURL } from "../helpers/requestHelper";
 import { Size } from "./DrawAutomatic";
-import { number } from "prop-types";
 
 export interface ContourListProps {
     readonly contours: Contour[];
