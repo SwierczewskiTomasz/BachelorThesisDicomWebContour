@@ -108,6 +108,12 @@ namespace DataAccess
             if (sr.EndOfStream)
                 throw new Exception($"Unexpected end of file {filename}");
 
+            double pixelSpacing;
+            buffor = sr.ReadLine();
+            pixelSpacing = double.Parse(buffor);
+            if (sr.EndOfStream)
+                throw new Exception($"Unexpected end of file {filename}");
+
             StatisticsResult statisticsResult = new StatisticsResult();
             List<Point> centralPoints = new List<Point>();
 
@@ -162,14 +168,14 @@ namespace DataAccess
                 buffor = sr.ReadLine();
                 points = buffor.Split(',').Select(s => int.Parse(s)).ToList();
                 i = 0;
-                
+
                 while (i + 1 < points.Count)
                     centralPoints.Add(new Point(points[i++], points[i++]));
             }
 
             sr.Close();
 
-            SemiAutomaticContourDTO contour = new SemiAutomaticContourDTO(guid, DICOMid, tag, lines, width, height, statisticsResult, centralPoints);
+            SemiAutomaticContourDTO contour = new SemiAutomaticContourDTO(guid, DICOMid, tag, lines, width, height, statisticsResult, centralPoints, pixelSpacing);
 
             return contour;
         }

@@ -109,6 +109,11 @@ namespace DataAccess
             if (sr.EndOfStream)
                 throw new Exception($"Unexpected end of file {filename}");
 
+            buffor = sr.ReadLine();
+            double pixelSpacing = double.Parse(buffor);
+            if (sr.EndOfStream)
+                throw new Exception($"Unexpected end of file {filename}");
+
             StatisticsResult statisticsResult = new StatisticsResult();
 
             buffor = sr.ReadLine();
@@ -167,7 +172,7 @@ namespace DataAccess
 
             sr.Close();
 
-            ManualContourDTO contour = new ManualContourDTO(guid, DICOMid, tag, lines, width, height, statisticsResult, centralPoints);
+            ManualContourDTO contour = new ManualContourDTO(guid, DICOMid, tag, lines, width, height, statisticsResult, centralPoints, pixelSpacing);
 
             return contour;
         }

@@ -106,12 +106,17 @@ namespace Logic
             List<LinePointsAndPixels> list = new List<LinePointsAndPixels>();
             LinePointsAndPixels line = new LinePointsAndPixels();
             line.points = new List<Point>(newListOfPoints);
-            line.pixels = null;
+            line.pixels = old.lines.First().pixels;
             line.brushColor = contour.lines.First().brushColor;
             list.Add(line);
 
-            SemiAutomaticPreviewDTO contourPointsDTO = new SemiAutomaticPreviewDTO(contour.guid, contour.dicomid, contour.tag, list, contour.width, contour.height);
-            SemiAutomaticPreviewDTO result = SemiAutomatic.Default(contourPointsDTO);
+            SemiAutomaticPreviewDTO contourPointsDTO = new SemiAutomaticPreviewDTO(contour.guid, contour.dicomid, contour.tag, list, contour.width, contour.height, 
+                contour.pixelSpacing, contour.runAlgorithm);
+            SemiAutomaticPreviewDTO result = contourPointsDTO;
+            if(contour.runAlgorithm != 0)
+            {
+                result = SemiAutomatic.Default(contourPointsDTO);
+            } 
 
             repository.Edit(result);
 

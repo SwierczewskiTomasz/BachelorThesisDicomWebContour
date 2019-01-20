@@ -247,7 +247,8 @@ namespace Logic
                     maxDistance = distance;
             }
 
-            PrepareGraph(pointsVertices, weight, maxDistance * 2);
+            //PrepareGraph(pointsVertices, weight, maxDistance * 2);
+            PrepareGraph(pointsVertices, weight, maxDistance * 1.2);
 
             // foreach (var e in Edges)
             // {
@@ -430,7 +431,7 @@ namespace Logic
 
                                         if (queueOfPotentialPoints.Count == 2)
                                             queueOfPotentialPoints.Clear();
-                                            //throw new Exception("");
+                                        //throw new Exception("");
                                     }
                                 }
                             }

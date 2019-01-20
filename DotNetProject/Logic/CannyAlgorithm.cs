@@ -14,6 +14,12 @@ namespace Logic
         public static List<Point> CannyWithoutStatistics(string dicomId, List<Point> points, int canvasWidth, int canvasHeight)
         {
             System.Drawing.Bitmap bitmap = OrthancConnection.GetBitmapByInstanceId(dicomId);
+            System.Drawing.Rectangle rect = new System.Drawing.Rectangle(0, 0, bitmap.Width, bitmap.Height);
+            System.Drawing.Imaging.BitmapData bmpData = bitmap.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadOnly, bitmap.PixelFormat);
+            IntPtr ptr = bmpData.Scan0;
+            int bytes = Math.Abs(bmpData.Stride) * bitmap.Height;
+            byte[] rgbValues = new byte[bytes];
+            System.Runtime.InteropServices.Marshal.Copy(ptr, rgbValues, 0, bytes);
 
             double[,][] sobel;
             int width, height;
@@ -23,7 +29,10 @@ namespace Logic
             int xmin, xmax, ymin, ymax;
             (xmin, xmax, ymin, ymax) = FindPointsMinMaxPositions(points, width, height);
 
-            sobel = SobelOperator(bitmap, xmin, xmax, ymin, ymax);
+            //sobel = SobelOperator(bitmap, xmin, xmax, ymin, ymax);
+            sobel = SobelOperator(rgbValues, xmin, xmax, ymin, ymax, bmpData.Stride);
+            bitmap.UnlockBits(bmpData);
+
             double[,][] gradient = FindIntensityGradient(sobel, xmin, xmax, ymin, ymax);
             double[,] edges = NonMaximumSuppression(gradient, xmin, xmax, ymin, ymax);
             int[] distribution = DistributionFunction(edges, xmin, xmax, ymin, ymax);
@@ -40,12 +49,11 @@ namespace Logic
             double weight = 2.5;
             List<Point> pixels = new List<Point>(Graph.FindShortestPath(foundedEdges2, xmin, xmax, ymin, ymax, weight, points));
 
-            int[,] matrixWithContour = MakeMatrixFromPoints(width, height, pixels);
-
             return pixels;
         }
 
-        public static (List<Point>, StatisticsResult) Canny(string dicomId, List<Point> points, int canvasWidth, int canvasHeight, List<Point> centralPoints)
+        public static (List<Point>, StatisticsResult) Canny(string dicomId, List<Point> points, int canvasWidth, int canvasHeight, 
+            List<Point> centralPoints, double pixelSpacing)
         {
             System.Drawing.Bitmap bitmap = OrthancConnection.GetBitmapByInstanceId(dicomId);
 
@@ -79,7 +87,10 @@ namespace Logic
 
             StatisticsResult statisticsResult = null;
 
-            statisticsResult = Statistics.GenerateStatistics(pixels, matrixWithContour, image, 0, width, 0, height, 0, 0, centralPoints.First());
+            double pixelAreaInMms = pixelSpacing * pixelSpacing;
+            double pixelLenghtInMms = pixelSpacing;
+
+            statisticsResult = Statistics.GenerateStatistics(pixels, matrixWithContour, image, 0, width, 0, height, pixelAreaInMms, pixelLenghtInMms, centralPoints.First());
 
             return (pixels, statisticsResult);
         }
@@ -123,15 +134,15 @@ namespace Logic
             {
                 xmin = 1;
             }
-            if(xmax > bitmapWidth - 1)
+            if (xmax > bitmapWidth - 1)
             {
                 xmax = bitmapWidth - 1;
             }
-            if(ymin < 1)
+            if (ymin < 1)
             {
                 ymin = 1;
             }
-            if(ymax > bitmapHeight - 1)
+            if (ymax > bitmapHeight - 1)
             {
                 ymax = bitmapHeight - 1;
             }
@@ -161,6 +172,38 @@ namespace Logic
             }
 
             return result;
+        }
+
+        public static double[,][] SobelOperator(byte[] rgbValues, int xmin, int xmax, int ymin, int ymax, int stride)
+        {
+            double[,][] result = new double[xmax - xmin, ymax - ymin][];
+
+            for (int x = xmin; x < xmax; x++)
+            {
+                for (int y = ymin; y < ymax; y++)
+                {
+                    double s1, s2;
+
+                    s1 = GetPixelFromArray(rgbValues, x - 1, y + 1, stride) + 2 * GetPixelFromArray(rgbValues, x, y + 1, stride)
+                        + GetPixelFromArray(rgbValues, x + 1, y + 1, stride);
+                    s1 -= GetPixelFromArray(rgbValues, x - 1, y - 1, stride) + 2 * GetPixelFromArray(rgbValues, x, y - 1, stride)
+                        + GetPixelFromArray(rgbValues, x + 1, y - 1, stride);
+
+                    s2 = GetPixelFromArray(rgbValues, x + 1, y - 1, stride) + 2 * GetPixelFromArray(rgbValues, x + 1, y, stride)
+                        + GetPixelFromArray(rgbValues, x + 1, y + 1, stride);
+                    s2 -= GetPixelFromArray(rgbValues, x - 1, y - 1, stride) + 2 * GetPixelFromArray(rgbValues, x - 1, y, stride)
+                        + GetPixelFromArray(rgbValues, x - 1, y + 1, stride);
+
+                    result[x - xmin, y - ymin] = new double[2] { s1, s2 };
+                }
+            }
+
+            return result;
+        }
+
+        public static byte GetPixelFromArray(byte[] rgbValues, int x, int y, int stride)
+        {
+            return rgbValues[x * stride + y + 1];
         }
 
         public static double[,][] FindIntensityGradient(double[,][] sobel, int xmin, int xmax, int ymin, int ymax)
@@ -225,16 +268,16 @@ namespace Logic
 
         public static int[] DistributionFunction(double[,] edges, int xmin, int xmax, int ymin, int ymax)
         {
-            int[] result = new int[numberOfColors];
+            int[] result = new int[65536];
             for (int x = 0; x < xmax - xmin; x++)
                 for (int y = 0; y < ymax - ymin; y++)
-                    result[(int)edges[x, y] < 256 ? (int)edges[x, y] : 255]++;
+                    result[(int)edges[x, y] < 65536 ? (int)edges[x, y] : 65535]++;
             return result;
         }
 
         public static int[] CumulativeDistributionFunction(int[] distribution)
         {
-            for (int i = 1; i < numberOfColors; i++)
+            for (int i = 1; i < 65536; i++)
                 distribution[i] += distribution[i - 1];
             return distribution;
         }
@@ -244,11 +287,11 @@ namespace Logic
             int min = 0;
             int max = 0;
 
-            for (int i = 0; i < numberOfColors; i++)
+            for (int i = 0; i < 65536; i++)
             {
-                if (cumulativeDistribution[i] < cumulativeDistribution[numberOfColors - 1] * lowerThreshold)
+                if (cumulativeDistribution[i] < cumulativeDistribution[65535] * lowerThreshold)
                     min = i;
-                if (cumulativeDistribution[i] < cumulativeDistribution[numberOfColors - 1] * higherThreshold)
+                if (cumulativeDistribution[i] < cumulativeDistribution[65535] * higherThreshold)
                     max = i;
             }
 
@@ -278,7 +321,7 @@ namespace Logic
 
                     for (int i = x - 1 < 0 ? 0 : x - 1; i < (x + 1 < width ? x + 1 : width); i++)
                         for (int j = y - 1 < 0 ? 0 : y - 1; y < (y + 1 < height ? y + 1 : height); y++)
-                            if (i != x && j != y && result[i, j] != 1)
+                            if (i != x && j != y && result[i, j] == 0)
                             {
                                 queue.Enqueue((i, j));
                                 result[i, j] = 2;
@@ -291,7 +334,7 @@ namespace Logic
 
                     for (int i = x - 1 < 0 ? 0 : x - 1; i < (x + 1 < width ? x + 1 : width); i++)
                         for (int j = y - 1 < 0 ? 0 : y - 1; y < (y + 1 < height ? y + 1 : height); y++)
-                            if (i != x && j != y && result[i, j] != 1)
+                            if (i != x && j != y && result[i, j] == 0)
                             {
                                 queue.Enqueue((i, j));
                                 result[i, j] = 2;

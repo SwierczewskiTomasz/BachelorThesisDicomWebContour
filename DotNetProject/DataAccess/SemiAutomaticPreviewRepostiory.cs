@@ -82,10 +82,17 @@ namespace DataAccess
 
             buffor = sr.ReadLine();
             height = int.Parse(buffor);
+            if (sr.EndOfStream)
+                throw new Exception($"Unexpected end of file {filename}");
+
+            buffor = sr.ReadLine();
+            double pixelSpacing = double.Parse(buffor);
+            if (sr.EndOfStream)
+                throw new Exception($"Unexpected end of file {filename}");
 
             sr.Close();
 
-            SemiAutomaticPreviewDTO contour = new SemiAutomaticPreviewDTO(guid, DICOMid, tag, lines, width, height);
+            SemiAutomaticPreviewDTO contour = new SemiAutomaticPreviewDTO(guid, DICOMid, tag, lines, width, height, pixelSpacing, 0);
 
             return contour;
         }

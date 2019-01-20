@@ -134,7 +134,7 @@ namespace Logic
             list.Add(line);
 
             SemiAutomaticPointsDTO contourPointsDTO = new SemiAutomaticPointsDTO(contour.guid, contour.dicomid, contour.tag, list, contour.width, contour.height,
-            contour.centralPoints);
+            contour.centralPoints, contour.pixelSpacing);
             SemiAutomaticContourDTO result = SemiAutomatic.Default(contourPointsDTO);
 
             repository.Edit(result);

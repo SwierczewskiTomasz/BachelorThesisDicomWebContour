@@ -46,6 +46,8 @@ namespace DTOs
         public int height { get; set; }
         public StatisticsResult statistics { get; set; }
         public List<Point> centralPoints { get; set; }
+        public double pixelSpacing { get; set; }
+
 
         public SemiAutomaticContourDTO()
         {
@@ -65,7 +67,7 @@ namespace DTOs
         /// <param name="_statistics"> Statistics of contour, counting after creating the contour by semi-automatic </param>
         /// <param name="_centralPoints"> List of central points, must exists at least one Point </param>
         public SemiAutomaticContourDTO(Guid _guid, string _DICOMid, string _tag, List<LinePointsAndPixels> _lines, int _width, int _height,
-            StatisticsResult _statistics, List<Point> _centralPoints)
+            StatisticsResult _statistics, List<Point> _centralPoints, double _pixelSpacing)
         {
             guid = _guid;
             dicomid = _DICOMid;
@@ -78,6 +80,7 @@ namespace DTOs
             {
                 centralPoints = new List<Point>(_centralPoints);
             }
+            pixelSpacing = _pixelSpacing;
         }
 
         /// <summary>
@@ -92,7 +95,7 @@ namespace DTOs
         /// <param name="_statistics"> Statistics of contour, counting after creating the contour by semi-automatic </param>
         /// <param name="_centralPoints"> List of central points, must exists at least one Point </param>
         public SemiAutomaticContourDTO(string _DICOMid, string _tag, List<LinePointsAndPixels> _lines, int _width, int _height,
-            StatisticsResult _statistics, List<Point> _centralPoints)
+            StatisticsResult _statistics, List<Point> _centralPoints, double _pixelSpacing)
         {
             guid = Guid.NewGuid();
             dicomid = _DICOMid;
@@ -105,6 +108,7 @@ namespace DTOs
             {
                 centralPoints = new List<Point>(_centralPoints);
             }
+            pixelSpacing = _pixelSpacing;
         }
     }
 }

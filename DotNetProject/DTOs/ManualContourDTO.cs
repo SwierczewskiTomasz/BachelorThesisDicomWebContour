@@ -38,6 +38,7 @@ namespace DTOs
         public int height { get; set; }
         public StatisticsResult statistics { get; set; }
         public List<Point> centralPoints { get; set; }
+        public double pixelSpacing{get;set;}
 
         public ManualContourDTO()
         {
@@ -45,7 +46,7 @@ namespace DTOs
         }
 
         public ManualContourDTO(Guid _guid, string _DICOMid, string _tag, List<Line> _lines, int _width, int _height, 
-        StatisticsResult _statistics, List<Point> _centralPoints)
+            StatisticsResult _statistics, List<Point> _centralPoints, double _pixelSpacing)
         {
             guid = _guid;
             dicomid = _DICOMid;
@@ -55,9 +56,11 @@ namespace DTOs
             height = _height;
             statistics = _statistics;
             centralPoints = new List<Point>(_centralPoints);
+            pixelSpacing = _pixelSpacing;
         }
 
-        public ManualContourDTO(string _DICOMid, string _tag, List<Line> _lines, int _width, int _height, StatisticsResult _statistics, List<Point> _centralPoints)
+        public ManualContourDTO(string _DICOMid, string _tag, List<Line> _lines, int _width, int _height, StatisticsResult _statistics, 
+            List<Point> _centralPoints, double _pixelSpacing)
         {
             guid = Guid.NewGuid();
             dicomid = _DICOMid;
@@ -67,6 +70,7 @@ namespace DTOs
             height = _height;
             statistics = _statistics;
             centralPoints = new List<Point>(_centralPoints);
+            pixelSpacing = _pixelSpacing;
         }
     }
 }
