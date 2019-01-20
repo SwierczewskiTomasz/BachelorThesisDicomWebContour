@@ -14,7 +14,7 @@ namespace DTOs
         public int width { get; set; }
         public int height { get; set; }
         public double pixelSpacing {get; set;}
-        public int runAlgorithm {get; set;}
+        public bool disablePreviewCalculations {get; set;}
 
         public SemiAutomaticPreviewDTO()
         {
@@ -22,7 +22,7 @@ namespace DTOs
         }
 
         public SemiAutomaticPreviewDTO(Guid _guid, string _DICOMid, string _tag, List<LinePointsAndPixels> _lines, int _width, int _height, 
-            double _pixelSpacing, int _runAlgorithm)
+            double _pixelSpacing, bool _disablePreviewCalculations)
         {
             guid = _guid;
             dicomid = _DICOMid;
@@ -31,11 +31,11 @@ namespace DTOs
             width = _width;
             height = _height;
             pixelSpacing = _pixelSpacing;
-            runAlgorithm = _runAlgorithm;
+            disablePreviewCalculations = _disablePreviewCalculations;
         }
 
         public SemiAutomaticPreviewDTO(string _DICOMid, string _tag, List<LinePointsAndPixels> _lines, int _width, int _height, 
-            double _pixelSpacing, int _runAlgorithm)
+            double _pixelSpacing, bool _disablePreviewCalculations)
         {
             guid = Guid.NewGuid();
             dicomid = _DICOMid;
@@ -44,7 +44,7 @@ namespace DTOs
             width = _width;
             height = _height;
             pixelSpacing = _pixelSpacing;
-            runAlgorithm = _runAlgorithm;
+            disablePreviewCalculations = _disablePreviewCalculations;
         }
     }
 }

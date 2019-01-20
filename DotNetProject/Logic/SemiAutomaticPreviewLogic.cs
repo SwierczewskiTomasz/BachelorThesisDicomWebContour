@@ -111,9 +111,9 @@ namespace Logic
             list.Add(line);
 
             SemiAutomaticPreviewDTO contourPointsDTO = new SemiAutomaticPreviewDTO(contour.guid, contour.dicomid, contour.tag, list, contour.width, contour.height, 
-                contour.pixelSpacing, contour.runAlgorithm);
+                contour.pixelSpacing, contour.disablePreviewCalculations);
             SemiAutomaticPreviewDTO result = contourPointsDTO;
-            if(contour.runAlgorithm != 0)
+            if(!contour.disablePreviewCalculations)
             {
                 result = SemiAutomatic.Default(contourPointsDTO);
             } 

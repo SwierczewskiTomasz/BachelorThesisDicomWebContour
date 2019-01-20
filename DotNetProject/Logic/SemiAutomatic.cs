@@ -30,7 +30,7 @@ namespace Logic
             lines.Add(line);
 
             SemiAutomaticPreviewDTO contour = new SemiAutomaticPreviewDTO(points.guid,
-                points.dicomid, points.tag, lines, points.width, points.height, points.pixelSpacing, 1);
+                points.dicomid, points.tag, lines, points.width, points.height, points.pixelSpacing, false);
             return contour;
         }
 

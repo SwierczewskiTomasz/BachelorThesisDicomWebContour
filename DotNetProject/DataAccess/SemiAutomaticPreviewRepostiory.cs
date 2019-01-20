@@ -100,7 +100,7 @@ namespace DataAccess
 
             sr.Close();
 
-            SemiAutomaticPreviewDTO contour = new SemiAutomaticPreviewDTO(guid, DICOMid, tag, lines, width, height, pixelSpacing, 0);
+            SemiAutomaticPreviewDTO contour = new SemiAutomaticPreviewDTO(guid, DICOMid, tag, lines, width, height, pixelSpacing, true);
 
             return contour;
         }
