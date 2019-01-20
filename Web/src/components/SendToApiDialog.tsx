@@ -36,7 +36,7 @@ export default class SendToApiDialog extends React.Component<SendToApiDialogProp
             open={this.props.open}
             onClose={() => {
                 this.props.onClose();
-                this.setState({ preview: true });
+                this.setState({ preview: true, points: [] });
             }}
         >
             <DialogTitle>
@@ -122,7 +122,7 @@ export default class SendToApiDialog extends React.Component<SendToApiDialogProp
                     onClick={() => {
                         this.props.onConfirm(this.props.contour, this.state.points, this.state.title);
                         this.props.onClose();
-                        this.setState({ preview: true });
+                        this.setState({ preview: true, points: [] });
                     }}
                 >
                     Send
@@ -132,7 +132,7 @@ export default class SendToApiDialog extends React.Component<SendToApiDialogProp
                     color={"secondary"}
                     onClick={() => {
                         this.props.onClose();
-                        this.setState({ preview: true });
+                        this.setState({ preview: true, points: [] });
                     }}
                 >
                     Cancel

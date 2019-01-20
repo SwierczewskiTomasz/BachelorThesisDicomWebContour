@@ -250,6 +250,7 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
             />}
             <br />
             <Button
+                disabled={this.state.points.length < 3}
                 variant="contained"
                 color="primary"
                 onClick={async () => {
@@ -280,6 +281,7 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                 Preview contour
             </Button>
             <Button
+                disabled={this.state.points.length < 3}
                 variant="contained"
                 color="primary"
                 onClick={() => this.setState({ saveContourOpen: true })}

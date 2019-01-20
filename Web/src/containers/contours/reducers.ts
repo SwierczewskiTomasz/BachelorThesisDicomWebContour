@@ -158,16 +158,6 @@ export const sendPreviewContour = (guid: string, points: Point[], color: string,
     async (dispatch, getState) => {
         dispatch(startTask());
         const state = getState();
-        if (guid != null) {
-            fetch("https://localhost:5001/" + "api/semiautomaticpreview/delete/" + guid, {
-                mode: "cors",
-                method: "delete",
-                headers: {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json"
-                }
-            });
-        }
         const response = await fetch("https://localhost:5001/" + (guid == null ? "api/semiautomaticpreview/post/" : "api/semiautomaticpreview/put/"), {
             mode: "cors",
             method: guid == null ? "post" : "put",
@@ -194,7 +184,8 @@ export const sendPreviewContour = (guid: string, points: Point[], color: string,
                     }
                 ],
                 width: canvasSize.width,
-                height: canvasSize.height
+                height: canvasSize.height,
+                pixelSpacing: state.pixelSpacing
             }) :
                 JSON.stringify({
                     dicomid: state.instancesIds[state.currentInstanceId],
@@ -214,7 +205,8 @@ export const sendPreviewContour = (guid: string, points: Point[], color: string,
                         }
                     ],
                     width: parseInt(canvasSize.width.toString()),
-                    height: parseInt(canvasSize.height.toString())
+                    height: parseInt(canvasSize.height.toString()),
+                    pixelSpacing: state.pixelSpacing
                 }))
         });
         console.warn(response);
@@ -224,11 +216,31 @@ export const sendPreviewContour = (guid: string, points: Point[], color: string,
         dispatch(endTask());
     };
 
+export const deletePreviewRecord = (guid: string): Thunk =>
+    async (dispatch, getState) => {
+        dispatch(startTask());
+        fetch("https://localhost:5001/" + "api/semiautomaticpreview/delete/" + guid, {
+            mode: "cors",
+            method: "delete",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            }
+        });
+        dispatch(endTask());
+    };
+
+
 export const sendAutomaticContour = (getOpts: string, data: ContourWithCenralPoints, canvasSize: Size, imgSize: Size): Thunk =>
     async (dispatch, getState) => {
         {
+            const state = getState();
             dispatch(startTask());
             console.warn(data);
+            const guid = data.guid;
+            if (guid != null) {
+                deletePreviewRecord(guid);
+            }
             const lines = data.lines.map(line => {
                 let next = line;
                 next.points = next.points
@@ -252,7 +264,13 @@ export const sendAutomaticContour = (getOpts: string, data: ContourWithCenralPoi
                     y: parseInt(p.y.toString())
                 }));
             const imgSize2 = { width: parseInt(imgSize.width.toString()), height: parseInt(imgSize.height.toString()) };
-            const body = { ...data, lines, centralPoints, ...imgSize2 };
+            const body = {
+                ...data,
+                lines,
+                centralPoints,
+                ...imgSize2,
+                pixelSpacing: state.pixelSpacing
+            };
             let response = await postBuilder<Contour>(apiURL, getOpts, body);
             if (response !== undefined) {
                 dispatch(updateContour(response));
@@ -268,6 +286,7 @@ export const sendAutomaticContour = (getOpts: string, data: ContourWithCenralPoi
 export const sendManualContour = (getOpts: string, data: ContourWithCenralPoints, canvasSize: Size, imgSize: Size): Thunk =>
     async (dispatch, getState) => {
         {
+            const state = getState();
             dispatch(startTask());
             console.warn(data);
             const lines = data.lines.map(line => {
@@ -296,7 +315,13 @@ export const sendManualContour = (getOpts: string, data: ContourWithCenralPoints
                     y: parseInt(p.y.toString())
                 }));
             const imgSize2 = { width: parseInt(imgSize.width.toString()), height: parseInt(imgSize.height.toString()) };
-            const body = { ...data, lines, centralPoints, ...imgSize2 };
+            const body = {
+                ...data,
+                lines,
+                centralPoints,
+                ...imgSize2,
+                pixelSpacing: state.pixelSpacing
+            };
             let response = await postBuilder<Contour>(apiURL, getOpts, body);
             if (response !== undefined) {
                 console.log("sendManualContour() succeded");

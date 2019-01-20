@@ -5,7 +5,6 @@ import { Dispatch } from "redux";
 import AddIcon from "@material-ui/icons/AddOutlined";
 import RemoveIcon from "@material-ui/icons/RemoveOutlined";
 import { Contour, addSelectedContour, removeSelectedContour, } from "../containers/contours/reducers";
-import { Size } from "./DrawAutomatic";
 
 export interface ContourListProps {
     readonly contours: Contour[];
