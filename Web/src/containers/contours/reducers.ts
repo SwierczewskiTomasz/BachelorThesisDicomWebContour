@@ -194,7 +194,8 @@ export const sendPreviewContour = (guid: string, points: Point[], color: string,
                     }
                 ],
                 width: canvasSize.width,
-                height: canvasSize.height
+                height: canvasSize.height,
+                pixelSpacing: state.pixelSpacing
             }) :
                 JSON.stringify({
                     dicomid: state.instancesIds[state.currentInstanceId],
@@ -214,7 +215,8 @@ export const sendPreviewContour = (guid: string, points: Point[], color: string,
                         }
                     ],
                     width: parseInt(canvasSize.width.toString()),
-                    height: parseInt(canvasSize.height.toString())
+                    height: parseInt(canvasSize.height.toString()),
+                    pixelSpacing: state.pixelSpacing
                 }))
         });
         console.warn(response);
@@ -227,6 +229,7 @@ export const sendPreviewContour = (guid: string, points: Point[], color: string,
 export const sendAutomaticContour = (getOpts: string, data: ContourWithCenralPoints, canvasSize: Size, imgSize: Size): Thunk =>
     async (dispatch, getState) => {
         {
+            const state = getState();
             dispatch(startTask());
             console.warn(data);
             const lines = data.lines.map(line => {
@@ -252,7 +255,13 @@ export const sendAutomaticContour = (getOpts: string, data: ContourWithCenralPoi
                     y: parseInt(p.y.toString())
                 }));
             const imgSize2 = { width: parseInt(imgSize.width.toString()), height: parseInt(imgSize.height.toString()) };
-            const body = { ...data, lines, centralPoints, ...imgSize2 };
+            const body = {
+                ...data,
+                lines,
+                centralPoints,
+                ...imgSize2,
+                pixelSpacing: state.pixelSpacing
+            };
             let response = await postBuilder<Contour>(apiURL, getOpts, body);
             if (response !== undefined) {
                 dispatch(updateContour(response));
@@ -268,6 +277,7 @@ export const sendAutomaticContour = (getOpts: string, data: ContourWithCenralPoi
 export const sendManualContour = (getOpts: string, data: ContourWithCenralPoints, canvasSize: Size, imgSize: Size): Thunk =>
     async (dispatch, getState) => {
         {
+            const state = getState();
             dispatch(startTask());
             console.warn(data);
             const lines = data.lines.map(line => {
@@ -296,7 +306,13 @@ export const sendManualContour = (getOpts: string, data: ContourWithCenralPoints
                     y: parseInt(p.y.toString())
                 }));
             const imgSize2 = { width: parseInt(imgSize.width.toString()), height: parseInt(imgSize.height.toString()) };
-            const body = { ...data, lines, centralPoints, ...imgSize2 };
+            const body = {
+                ...data,
+                lines,
+                centralPoints,
+                ...imgSize2,
+                pixelSpacing: state.pixelSpacing
+            };
             let response = await postBuilder<Contour>(apiURL, getOpts, body);
             if (response !== undefined) {
                 console.log("sendManualContour() succeded");
