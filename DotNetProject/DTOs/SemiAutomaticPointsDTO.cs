@@ -20,7 +20,7 @@ namespace DTOs
         public int width { get; set; }
         public int height { get; set; }
         public List<Point> centralPoints { get; set; }
-        public double pixelSpacing { get; set; }
+        public string pixelSpacing { get; set; }
 
         public SemiAutomaticPointsDTO()
         {
@@ -28,7 +28,7 @@ namespace DTOs
         }
 
         public SemiAutomaticPointsDTO(Guid _guid, string _dicomid, string _tag, List<LinePoints> _lines, int _width, int _height, List<Point> _centralPoints,
-            double _pixelSpacing)
+            string _pixelSpacing)
         {
             guid = _guid;
             dicomid = _dicomid;
@@ -44,7 +44,7 @@ namespace DTOs
         }
 
         public SemiAutomaticPointsDTO(string _dicomid, string _tag, List<LinePoints> _lines, int _width, int _height, List<Point> _centralPoints,
-            double _pixelSpacing)
+            string _pixelSpacing)
         {
             guid = Guid.NewGuid();
             dicomid = _dicomid;
