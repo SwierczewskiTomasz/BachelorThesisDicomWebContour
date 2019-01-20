@@ -50,8 +50,8 @@ export const getDetails = (id: string | undefined): Thunk =>
             if (id !== undefined) {
                 let response = await getBuilder<any>(orthancURL, "instances/" + id + "/tags");
                 if (response !== undefined) {
-                    const pixelSpacing: string | undefined = response["0028,0030"].Value;
-                    const spacingBetweenSlices: string | undefined = response["0018,0088"].Value;
+                    const pixelSpacing: string | undefined = response["0028,0030"] === undefined ? undefined : response["0028,0030"].Value;
+                    const spacingBetweenSlices: string | undefined = response["0018,0088"] === undefined ? undefined : response["0018,0088"].Value;
                     dispatch(updateInstanceDetails(pixelSpacing, spacingBetweenSlices));
                 }
             }

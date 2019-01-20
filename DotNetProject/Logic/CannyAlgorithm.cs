@@ -52,7 +52,7 @@ namespace Logic
         }
 
         public static (List<Point>, StatisticsResult) Canny(string dicomId, List<Point> points, int canvasWidth, int canvasHeight,
-            List<Point> centralPoints, double pixelSpacing)
+            List<Point> centralPoints, string pixelSpacing)
         {
             System.Drawing.Bitmap bitmap = OrthancConnection.GetBitmapByInstanceId(dicomId);
             System.Drawing.Rectangle rect = new System.Drawing.Rectangle(0, 0, bitmap.Width, bitmap.Height);
@@ -94,8 +94,27 @@ namespace Logic
 
             StatisticsResult statisticsResult = null;
 
-            double pixelAreaInMms = pixelSpacing * pixelSpacing;
-            double pixelLenghtInMms = pixelSpacing;
+            double pixelSizeX = 0;
+            double pixelSizeY = 0;
+
+            List<string> splitString = pixelSpacing.Split('\\').ToList();
+            List<double> split = new List<double>();
+            foreach (var s in splitString)
+            {
+                double d = 0;
+                if (double.TryParse(s, System.Globalization.NumberStyles.Number, System.Globalization.CultureInfo.InvariantCulture, out d))
+                {
+                    split.Add(d);
+                }
+            }
+            if (split.Count >= 2)
+            {
+                pixelSizeX = split[0];
+                pixelSizeY = split[1];
+            }
+
+            double pixelAreaInMms = pixelSizeX * pixelSizeY;
+            double pixelLenghtInMms = pixelSizeX;
 
             statisticsResult = Statistics.GenerateStatistics(pixels, matrixWithContour, image, 0, width, 0, height, pixelAreaInMms, pixelLenghtInMms, centralPoints.First());
 
