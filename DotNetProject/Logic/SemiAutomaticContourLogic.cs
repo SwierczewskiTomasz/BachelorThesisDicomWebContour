@@ -63,13 +63,13 @@ namespace Logic
             return repository.Delete(guid);
         }
 
-        public void Edit(SemiAutomaticContourDTO contour)
+        public bool Edit(SemiAutomaticContourDTO contour)
         {
             SemiAutomaticContourDTO old = repository.Load(contour.guid);
 
             if(old == null)
             {
-                throw new Exception("This Contour doesn't exist in database");
+                return false;
             }
 
             List<Point> newListOfPoints = new List<Point>();
@@ -137,7 +137,7 @@ namespace Logic
             contour.centralPoints, contour.pixelSpacing);
             SemiAutomaticContourDTO result = SemiAutomatic.Default(contourPointsDTO);
 
-            repository.Edit(result);
+            return repository.Edit(result);
         }
     }
 }

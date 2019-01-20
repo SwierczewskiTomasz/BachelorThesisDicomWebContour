@@ -12,7 +12,7 @@ namespace DataAccess
         TEntity Load(Guid guid);
         void Save(TEntity entity);
         bool Delete(Guid guid);
-        void Edit(TEntity entity);
+        bool Edit(TEntity entity);
     }
 
     public class ManualContourRepository : IFilesRepository<ManualContourDTO>
@@ -225,7 +225,17 @@ namespace DataAccess
         {
             using (var db = new ContourContext())
             {
-                ContourEntity ce = db.Contours.Single(c => c.ContourEntityId == guid);
+                ContourEntity ce = null;
+                try
+                {
+                    ce = db.Contours.Single(c => c.ContourEntityId == guid);
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+                if (ce == null)
+                    return false;
                 if (!ce.IsManual)
                     return false;
                 db.Contours.Remove(ce);
@@ -236,10 +246,14 @@ namespace DataAccess
             return true;
         }
 
-        public void Edit(ManualContourDTO contour)
+        public bool Edit(ManualContourDTO contour)
         {
-            Delete(contour.guid);
-            Save(contour);
+            if (Delete(contour.guid))
+            {
+                Save(contour);
+                return true;
+            }
+            return false;
         }
     }
 }

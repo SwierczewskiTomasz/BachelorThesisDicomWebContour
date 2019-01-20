@@ -243,7 +243,17 @@ namespace DataAccess
         {
             using (var db = new ContourContext())
             {
-                ContourEntity ce = db.Contours.Single(c => c.ContourEntityId == guid);
+                ContourEntity ce = null;
+                try
+                {
+                    ce = db.Contours.Single(c => c.ContourEntityId == guid);
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+                if (ce == null)
+                    return false;
                 if (ce.IsManual)
                     return false;
                 db.Contours.Remove(ce);
@@ -254,10 +264,14 @@ namespace DataAccess
             return true;
         }
 
-        public void Edit(SemiAutomaticContourDTO contour)
+        public bool Edit(SemiAutomaticContourDTO contour)
         {
-            Delete(contour.guid);
-            Save(contour);
+            if(Delete(contour.guid))
+            {
+                Save(contour);
+                return true;
+            }
+            return false;
         }
     }
 

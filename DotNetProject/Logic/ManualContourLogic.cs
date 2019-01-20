@@ -62,9 +62,9 @@ namespace Logic
             return repository.Delete(guid);
         }
 
-        public void Edit(ManualContourDTO contour)
+        public bool Edit(ManualContourDTO contour)
         {
-            repository.Edit(contour);
+            return repository.Edit(contour);
         }
 
         public static ManualContourDTO PrepareContour(ManualContourDTO contour)

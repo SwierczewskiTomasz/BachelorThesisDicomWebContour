@@ -72,50 +72,48 @@ namespace API.Controllers
                 return BadRequest(ModelState);
             }
 
+            if (contour == null)
+                return BadRequest();
+
+            if (contour.lines == null)
+                return BadRequest();
+
+            if (contour.lines.Count == 0)
+                return BadRequest();
+
+            foreach (var l in contour.lines)
+            {
+                if (l.points == null)
+                    return BadRequest();
+
+                if (l.points.Count < 3)
+                    return BadRequest();
+            }
+
             logic.Add(contour);
 
             return CreatedAtAction(nameof(Get),
                 new { guid = contour.guid }, contour);
         }
 
-        // [Route("[action]/{DICOMid}")]
-        // [HttpPost]
-        // public ActionResult<Guid> Post(string DICOMid)
-        // {
-        //     List<Line> lines = new List<Line>();
-        //     Line line = new Line();
-        //     line.pixels = new List<Point>();
-        //     line.pixels.Add(new Point(0, 0));
-        //     line.pixels.Add(new Point(1, 0));
-        //     line.pixels.Add(new Point(2, 0));
-        //     line.pixels.Add(new Point(2, 1));
-        //     line.pixels.Add(new Point(2, 2));
-        //     line.pixels.Add(new Point(1, 2));
-        //     line.pixels.Add(new Point(0, 2));
-        //     line.pixels.Add(new Point(0, 1));
-        //     line.brushColor = "#f00";
-        //     lines.Add(line);
-
-        //     ManualContourDTO contour = new ManualContourDTO(DICOMid, "Test", lines, 500, 500);
-        //     logic.Add(contour);
-        //     return Ok(contour.guid);
-        // }
-
         [Route("[action]/")]
         [HttpPut]
-        public void Put([FromBody] ManualContourDTO contour)
+        [ProducesResponseType(400)]
+        public ActionResult Put([FromBody] ManualContourDTO contour)
         {
-            logic.Edit(contour);
+            if (logic.Edit(contour))
+                return Ok();
+            return BadRequest();
         }
 
         [Route("[action]/{guid}")]
         [HttpDelete]
-        public void Delete(Guid guid)
+        [ProducesResponseType(404)]
+        public ActionResult Delete(Guid guid)
         {
-            // if(logic.Delete(guid))
-            //     return OK();
-            // return NotFound();
-            logic.Delete(guid);
+            if (logic.Delete(guid))
+                return Ok();
+            return NotFound();
         }
     }
 }
