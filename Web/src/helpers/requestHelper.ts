@@ -55,7 +55,7 @@ export async function postBuilder<TResult>(
     };
 
     let response = await makeRequest();
-    return response.json();
+    return response === undefined ? undefined : response.json();
 }
 
 export async function deleteBuilder<TResult>(
