@@ -119,8 +119,7 @@ namespace DataAccess
             if (sr.EndOfStream)
                 throw new Exception($"Unexpected end of file {filename}");
 
-            buffor = sr.ReadLine();
-            double pixelSpacing = double.Parse(buffor);
+            string pixelSpacing = sr.ReadLine();
             if (sr.EndOfStream)
                 throw new Exception($"Unexpected end of file {filename}");
 
