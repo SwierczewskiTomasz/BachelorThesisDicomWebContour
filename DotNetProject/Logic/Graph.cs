@@ -233,6 +233,7 @@ namespace Logic
                 vertex.Edges = new List<Edge>();
                 Vertices.Add(vertex);
                 pointsVertices.Add(vertex);
+                result.Add(point);
             }
 
             double maxDistance = 0;
@@ -270,6 +271,7 @@ namespace Logic
                 Dictionary<Vertex, Vertex> previous = AStarAlgotihm(startVertex, endVertex, ManhattanDistance);
 
                 Vertex currentVertex = endVertex;
+                result.Add(currentVertex.point);
 
                 Vertex exists = previous[currentVertex];
                 int count = 0;
@@ -290,7 +292,7 @@ namespace Logic
                     {
                         result.AddRange(e.points);
                     }
-
+                    result.Add(currentVertex.point);
                     currentVertex = previousVertex;
                 }
             }

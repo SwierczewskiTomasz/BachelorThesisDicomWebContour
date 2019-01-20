@@ -90,6 +90,9 @@ namespace Logic
             List<Point> pixels = new List<Point>(Graph.FindShortestPath(foundedEdges2, xmin, xmax, ymin, ymax, weight, points));
 
             int[,] matrixWithContour = MakeMatrixFromPoints(width, height, pixels);
+            int[,] matrix4Connected = Make4ConnectedMatrix(matrixWithContour, 0, 0, width, height);
+            List<Point> shortestPixels = new List<Point>(MakePointsFromMatrix(width, height, matrix4Connected));
+
             int[,] image = ReadMatrixFromBitmap(bitmap);
 
             StatisticsResult statisticsResult = null;
@@ -97,28 +100,31 @@ namespace Logic
             double pixelSizeX = 0;
             double pixelSizeY = 0;
 
-            List<string> splitString = pixelSpacing.Split('\\').ToList();
-            List<double> split = new List<double>();
-            foreach (var s in splitString)
+            if (pixelSpacing != null)
             {
-                double d = 0;
-                if (double.TryParse(s, System.Globalization.NumberStyles.Number, System.Globalization.CultureInfo.InvariantCulture, out d))
+                List<string> splitString = pixelSpacing.Split('\\').ToList();
+                List<double> split = new List<double>();
+                foreach (var s in splitString)
                 {
-                    split.Add(d);
+                    double d = 0;
+                    if (double.TryParse(s, System.Globalization.NumberStyles.Number, System.Globalization.CultureInfo.InvariantCulture, out d))
+                    {
+                        split.Add(d);
+                    }
                 }
-            }
-            if (split.Count >= 2)
-            {
-                pixelSizeX = split[0];
-                pixelSizeY = split[1];
+                if (split.Count >= 2)
+                {
+                    pixelSizeX = split[0];
+                    pixelSizeY = split[1];
+                }
             }
 
             double pixelAreaInMms = pixelSizeX * pixelSizeY;
             double pixelLenghtInMms = pixelSizeX;
 
-            statisticsResult = Statistics.GenerateStatistics(pixels, matrixWithContour, image, 0, width, 0, height, pixelAreaInMms, pixelLenghtInMms, centralPoints.First());
+            statisticsResult = Statistics.GenerateStatistics(shortestPixels, matrixWithContour, image, 0, width, 0, height, pixelAreaInMms, pixelLenghtInMms, centralPoints.First());
 
-            return (pixels, statisticsResult);
+            return (shortestPixels, statisticsResult);
         }
 
         public static (int, int, int, int) FindPointsMinMaxPositions(List<Point> points, int bitmapWidth, int bitmapHeight)
@@ -423,6 +429,20 @@ namespace Logic
             foreach (var p in points)
                 matrix[p.x, p.y] = 1;
             return matrix;
+        }
+
+        public static List<Point> MakePointsFromMatrix(int width, int height, int[,] matrix)
+        {
+            List<Point> points = new List<Point>();
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    if (matrix[x, y] == 1)
+                        points.Add(new Point(x, y));
+                }
+            }
+            return points;
         }
 
         public static int[,] ReadMatrixFromBitmap(System.Drawing.Bitmap bitmap)
