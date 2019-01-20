@@ -227,9 +227,9 @@ export const deletePreviewRecord = (guid: string): Thunk =>
                 "Content-Type": "application/json"
             }
         });
+        dispatch(updatePreview(undefined));
         dispatch(endTask());
     };
-
 
 export const sendAutomaticContour = (getOpts: string, data: ContourWithCenralPoints, canvasSize: Size, imgSize: Size): Thunk =>
     async (dispatch, getState) => {
