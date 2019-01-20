@@ -26,7 +26,17 @@ namespace DataAccess
             string buffor;
 
             string filename = "../data/preview/" + guid.ToString() + ".csv";
-            StreamReader sr = new StreamReader(filename);
+
+            StreamReader sr = null;
+            try
+            {
+                sr = new StreamReader(filename);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+            
             if (sr.EndOfStream)
                 throw new Exception($"Unexpected end of file {filename}");
 
@@ -87,8 +97,6 @@ namespace DataAccess
 
             buffor = sr.ReadLine();
             double pixelSpacing = double.Parse(buffor);
-            if (sr.EndOfStream)
-                throw new Exception($"Unexpected end of file {filename}");
 
             sr.Close();
 
@@ -124,6 +132,7 @@ namespace DataAccess
             sw.WriteLine(contour.lines.First().brushColor);
             sw.WriteLine(contour.width);
             sw.WriteLine(contour.height);
+            sw.WriteLine(contour.pixelSpacing);
 
             sw.Close();
         }
@@ -155,7 +164,7 @@ namespace DataAccess
 
         public bool Edit(SemiAutomaticPreviewDTO contour)
         {
-            if(Delete(contour.guid))
+            if (Delete(contour.guid))
             {
                 Save(contour);
                 return true;

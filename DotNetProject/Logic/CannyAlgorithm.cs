@@ -29,7 +29,6 @@ namespace Logic
             int xmin, xmax, ymin, ymax;
             (xmin, xmax, ymin, ymax) = FindPointsMinMaxPositions(points, width, height);
 
-            //sobel = SobelOperator(bitmap, xmin, xmax, ymin, ymax);
             sobel = SobelOperator(rgbValues, xmin, xmax, ymin, ymax, bmpData.Stride);
             bitmap.UnlockBits(bmpData);
 
@@ -52,10 +51,16 @@ namespace Logic
             return pixels;
         }
 
-        public static (List<Point>, StatisticsResult) Canny(string dicomId, List<Point> points, int canvasWidth, int canvasHeight, 
+        public static (List<Point>, StatisticsResult) Canny(string dicomId, List<Point> points, int canvasWidth, int canvasHeight,
             List<Point> centralPoints, double pixelSpacing)
         {
             System.Drawing.Bitmap bitmap = OrthancConnection.GetBitmapByInstanceId(dicomId);
+            System.Drawing.Rectangle rect = new System.Drawing.Rectangle(0, 0, bitmap.Width, bitmap.Height);
+            System.Drawing.Imaging.BitmapData bmpData = bitmap.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadOnly, bitmap.PixelFormat);
+            IntPtr ptr = bmpData.Scan0;
+            int bytes = Math.Abs(bmpData.Stride) * bitmap.Height;
+            byte[] rgbValues = new byte[bytes];
+            System.Runtime.InteropServices.Marshal.Copy(ptr, rgbValues, 0, bytes);
 
             double[,][] sobel;
             int width, height;
@@ -65,7 +70,9 @@ namespace Logic
             int xmin, xmax, ymin, ymax;
             (xmin, xmax, ymin, ymax) = FindPointsMinMaxPositions(points, width, height);
 
-            sobel = SobelOperator(bitmap, xmin, xmax, ymin, ymax);
+            sobel = SobelOperator(rgbValues, xmin, xmax, ymin, ymax, bmpData.Stride);
+            bitmap.UnlockBits(bmpData);
+
             double[,][] gradient = FindIntensityGradient(sobel, xmin, xmax, ymin, ymax);
             double[,] edges = NonMaximumSuppression(gradient, xmin, xmax, ymin, ymax);
             int[] distribution = DistributionFunction(edges, xmin, xmax, ymin, ymax);
@@ -203,7 +210,7 @@ namespace Logic
 
         public static byte GetPixelFromArray(byte[] rgbValues, int x, int y, int stride)
         {
-            return rgbValues[x * stride + y + 1];
+            return rgbValues[y * stride + 4 * x + 1];
         }
 
         public static double[,][] FindIntensityGradient(double[,][] sobel, int xmin, int xmax, int ymin, int ymax)

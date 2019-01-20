@@ -16,7 +16,11 @@ namespace Logic
             List<SemiAutomaticContourDTO> contours = new List<SemiAutomaticContourDTO>();
             foreach (Guid guid in repository.FetchAll())
             {
-                contours.Add(repository.Load(guid));
+                SemiAutomaticContourDTO contour = repository.Load(guid);
+                if (contour != null)
+                {
+                    contours.Add(contour);
+                }
             }
             return contours;
         }
@@ -26,7 +30,11 @@ namespace Logic
             List<SemiAutomaticContourDTO> contours = new List<SemiAutomaticContourDTO>();
             foreach (Guid guid in repository.FetchByDicomId(dicomid))
             {
-                contours.Add(repository.Load(guid));
+                SemiAutomaticContourDTO contour = repository.Load(guid);
+                if (contour != null)
+                {
+                    contours.Add(contour);
+                }
             }
             return contours;
         }
@@ -67,7 +75,7 @@ namespace Logic
         {
             SemiAutomaticContourDTO old = repository.Load(contour.guid);
 
-            if(old == null)
+            if (old == null)
             {
                 return false;
             }

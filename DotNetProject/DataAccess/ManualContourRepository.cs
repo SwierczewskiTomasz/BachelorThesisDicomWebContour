@@ -56,7 +56,17 @@ namespace DataAccess
             string buffor;
 
             string filename = "../data/manual/" + guid.ToString() + ".csv";
-            StreamReader sr = new StreamReader(filename);
+
+            StreamReader sr = null;
+            try
+            {
+                sr = new StreamReader(filename);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+
             if (sr.EndOfStream)
                 throw new Exception($"Unexpected end of file {filename}");
 
@@ -202,6 +212,7 @@ namespace DataAccess
             sw.WriteLine(contour.lines.First().brushColor);
             sw.WriteLine(contour.width);
             sw.WriteLine(contour.height);
+            sw.WriteLine(contour.pixelSpacing);
             sw.WriteLine(contour.statistics.CenterOfMass.x + "," + contour.statistics.CenterOfMass.y);
 
             if (contour.statistics.Histogram == null)

@@ -16,7 +16,11 @@ namespace Logic
             List<ManualContourDTO> contours = new List<ManualContourDTO>();
             foreach (Guid guid in repository.FetchAll())
             {
-                contours.Add(repository.Load(guid));
+                ManualContourDTO contour = repository.Load(guid);
+                if (contour != null)
+                {
+                    contours.Add(contour);
+                }
             }
             return contours;
         }
@@ -26,7 +30,11 @@ namespace Logic
             List<ManualContourDTO> contours = new List<ManualContourDTO>();
             foreach (Guid guid in repository.FetchByDicomId(dicomid))
             {
-                contours.Add(repository.Load(guid));
+                ManualContourDTO contour = repository.Load(guid);
+                if (contour != null)
+                {
+                    contours.Add(contour);
+                }
             }
             return contours;
         }
@@ -72,7 +80,7 @@ namespace Logic
             List<Point> result = new List<Point>();
             int count = contour.lines.First().points.Count;
             int i;
-            for(i = 0; i < count; i++)
+            for (i = 0; i < count; i++)
             {
                 Point p1 = contour.lines.First().points[i];
                 Point p2 = contour.lines.First().points[(i + 1) % count];
