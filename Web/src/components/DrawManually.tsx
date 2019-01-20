@@ -142,10 +142,20 @@ class DrawManually extends React.Component<DrawManuallyProps, DrawManuallyState>
                 imgUrl={bgimg}
                 contour={this.state.contour}
                 onConfirm={(c, cp, t) => {
-                    this.props.sendManualContour(c, cp, t, this.state.size, this.state.imgSize);
+                    const toSend = { ...c };
+                    toSend.lines = [toSend.lines[0]];
+                    this.props.sendManualContour(toSend, cp, t, this.state.size, this.state.imgSize);
                     this.state.reload ?
                         this.saveableCanvas1.clear() :
                         this.saveableCanvas2.clear();
+                    if (c.lines.length > 1) {
+                        const { dicomid, ...contour } = c;
+                        contour.lines = c.lines.filter((l, i) => i > 0);
+                        console.warn(contour);
+                        this.state.reload ?
+                            this.saveableCanvas1.loadSaveData(JSON.stringify(contour), true) :
+                            this.saveableCanvas2.loadSaveData(JSON.stringify(contour), true);
+                    }
                 }}
                 onClose={() => this.setState({ saveContourOpen: false })}
             />
