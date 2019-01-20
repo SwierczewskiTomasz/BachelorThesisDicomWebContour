@@ -6,13 +6,14 @@ import ChooseColorDialog from "./ChooseColorDialog";
 import { Dispatch } from "redux";
 import { setCurrentInstanceInd } from "../containers/instances/reducers";
 import SendToApiDialog from "./SendToApiDialog";
-import { sendAutomaticContour, Contour, sendPreviewContour } from "../containers/contours/reducers";
+import { sendAutomaticContour, Contour, sendPreviewContour, deletePreviewRecord } from "../containers/contours/reducers";
 
 export interface DrawAutimaticProps {
     readonly instancesIds: string[];
     readonly preview: any;
     readonly currentInstanceId: number;
     readonly setCurrentInd: (ind: number) => void;
+    readonly deletePreview: (guid: string) => void;
     readonly sendAutomaticContour: (contour: Contour, centralPoints: Point[], title: string, canvasSize: Size, imgSize: Size) => void;
     readonly sendPreviewContour: (guid: string, points: Point[], color: string, canvasSize: Size, imgSize: Size) => Promise<any>;
 }
@@ -58,6 +59,8 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
             chooseColor: false,
             saveContourOpen: false
         };
+
+        this.props.preview !== undefined && this.props.deletePreview(this.props.preview.guid);
         console.warn(this.state);
         const url = props.instancesIds.length > 0 ?
             orthancURL + "instances/" +
@@ -359,6 +362,9 @@ export default connect(
         },
         sendPreviewContour: async (guid: string, points: Point[], color: string, canvasSize: Size, imgSize: Size) => {
             await dispatch(sendPreviewContour(guid, points, color, canvasSize, imgSize));
+        },
+        deletePreview: (guid: string) => {
+            dispatch(deletePreviewRecord(guid));
         }
     })
 )(DrawAutimatic);
