@@ -90,7 +90,21 @@ namespace Logic
                     double m = Math.Sqrt(A * A + B * B);
                     double distance = Math.Abs(A * currentInNew.x + B * currentInNew.y + C) / m;
 
-                    if (distance < minDistance)
+                    double dy = Math.Abs(point2.y - point1.y);
+                    double dx = Math.Abs(point2.x - point1.x);
+
+                    bool inside = true;
+
+                    if (currentInNew.x > Math.Max(point1.x, point2.x) + (dx + dy) / 2)
+                        inside = false;
+                    if (currentInNew.x < Math.Min(point1.x, point2.x) - (dx + dy) / 2)
+                        inside = false;
+                    if (currentInNew.y > Math.Max(point1.y, point2.y) + (dy + dx) / 2)
+                        inside = false;
+                    if (currentInNew.y < Math.Min(point1.y, point2.y) - (dy + dx) / 2)
+                        inside = false;
+
+                    if (distance < minDistance && inside)
                     {
                         minDistance = distance;
                         index = k + 1;
@@ -110,15 +124,15 @@ namespace Logic
             line.brushColor = contour.lines.First().brushColor;
             list.Add(line);
 
-            SemiAutomaticPreviewDTO contourPointsDTO = new SemiAutomaticPreviewDTO(contour.guid, contour.dicomid, contour.tag, list, contour.width, contour.height, 
+            SemiAutomaticPreviewDTO contourPointsDTO = new SemiAutomaticPreviewDTO(contour.guid, contour.dicomid, contour.tag, list, contour.width, contour.height,
                 contour.pixelSpacing, contour.disablePreviewCalculations);
             SemiAutomaticPreviewDTO result = contourPointsDTO;
-            if(!contour.disablePreviewCalculations)
+            if (!contour.disablePreviewCalculations)
             {
                 result = SemiAutomatic.Default(contourPointsDTO);
-            } 
+            }
 
-            if(repository.Edit(result))
+            if (repository.Edit(result))
             {
                 return (true, result);
             }
