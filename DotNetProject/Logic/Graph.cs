@@ -414,11 +414,33 @@ namespace Logic
                                         }
                                         else if (countPointNeighbours == 1)
                                         {
-                                            currentEdge.points.Add(potentialPoint);
-                                            foreach (Point p in Neighbours(width, height, potentialPoint.x - xmin, potentialPoint.y - ymin))
+
+                                            if (currentEdge.Lenght >= 15)
                                             {
-                                                if (matrix[p.x, p.y] != 0)
-                                                    queueOfPotentialPoints.Enqueue(new Point(p.x + xmin, p.y + ymin));
+                                                Vertex secondVertex = new Vertex();
+                                                secondVertex.point = potentialPoint;
+                                                secondVertex.Edges = new List<Edge>();
+                                                secondVertex.Edges.Add(currentEdge);
+                                                secondVertex.Vertices = new Dictionary<Vertex, int>();
+
+                                                currentEdge.vertex2 = secondVertex;
+                                                graph.Edges.Add(currentEdge);
+
+                                                secondVertex.Vertices.Add(currentVertex, currentEdge.Lenght);
+                                                currentVertex.Vertices.Add(secondVertex, currentEdge.Lenght);
+
+                                                currentVertex.Edges.Add(currentEdge);
+                                                queueVertices.Enqueue(secondVertex);
+                                            }
+                                            else
+                                            {
+                                                currentEdge.points.Add(potentialPoint);
+
+                                                foreach (Point p in Neighbours(width, height, potentialPoint.x - xmin, potentialPoint.y - ymin))
+                                                {
+                                                    if (matrix[p.x, p.y] != 0)
+                                                        queueOfPotentialPoints.Enqueue(new Point(p.x + xmin, p.y + ymin));
+                                                }
                                             }
                                         }
                                         else
