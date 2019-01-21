@@ -64,6 +64,8 @@ namespace Logic
                 while (currentInOld.x != currentInNew.x || currentInOld.y != currentInNew.y)
                 {
                     i++;
+                    if(i == countOld)
+                        break;
                     currentInOld = old.lines.First().points[i];
                 }
                 newListOfPoints.Add(currentInOld);
