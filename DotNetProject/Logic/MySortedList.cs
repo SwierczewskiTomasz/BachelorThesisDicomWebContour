@@ -40,6 +40,7 @@ namespace Logic
                 if (current.Value > Value)
                 {
                     element.next = first;
+                    first.previous = element;
                     first = element;
                 }
                 else if (current.next == null)
