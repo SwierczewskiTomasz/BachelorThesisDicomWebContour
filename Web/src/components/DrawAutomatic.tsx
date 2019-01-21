@@ -217,11 +217,14 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                     statistics: undefined
                 }}
                 onConfirm={(c, cp, t) => {
+                    this.props.deletePreview(this.state.guid);
                     this.props.sendAutomaticContour(c, cp, t, this.state.size, this.state.imgSize);
                     const canvas: any = document.getElementById("canvas");
                     const context = canvas.getContext("2d");
                     context.clearRect(0, 0, canvas.width, canvas.height);
                     this.setState({
+                        guid: null,
+                        pixels: [],
                         points: []
                     });
                 }}
