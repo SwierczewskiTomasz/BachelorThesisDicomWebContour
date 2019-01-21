@@ -70,7 +70,11 @@ namespace Logic
             int xmin, xmax, ymin, ymax;
             (xmin, xmax, ymin, ymax) = FindPointsMinMaxPositions(points, width, height);
 
-            sobel = SobelOperator(rgbValues, xmin, xmax, ymin, ymax, bmpData.Stride);
+            int[,] image = ReadMatrixFromBitmap(rgbValues, width, height, bmpData.Stride);
+            int[,] threshold = ChooseThresholdAndGenerateMatrix(rgbValues, width, height, bmpData.Stride, points, image, centralPoints);
+            sobel = SobelOperator(threshold, xmin, xmax, ymin, ymax);
+
+            //sobel = SobelOperator(rgbValues, xmin, xmax, ymin, ymax, bmpData.Stride);
             bitmap.UnlockBits(bmpData);
 
             double[,][] gradient = FindIntensityGradient(sobel, xmin, xmax, ymin, ymax);
@@ -90,7 +94,6 @@ namespace Logic
             List<Point> pixels = new List<Point>(Graph.FindShortestPath(foundedEdges2, xmin, xmax, ymin, ymax, weight, points));
 
             int[,] matrixWithContour = MakeMatrixFromPoints(width, height, pixels);
-            int[,] image = ReadMatrixFromBitmap(bitmap);
 
             StatisticsResult statisticsResult = null;
 
@@ -192,6 +195,29 @@ namespace Logic
 
                     s2 = bitmap.GetPixel(x + 1, y - 1).R + 2 * bitmap.GetPixel(x + 1, y).R + bitmap.GetPixel(x + 1, y + 1).R;
                     s2 -= bitmap.GetPixel(x - 1, y - 1).R + 2 * bitmap.GetPixel(x - 1, y).R + bitmap.GetPixel(x - 1, y + 1).R;
+
+                    result[x - xmin, y - ymin] = new double[2] { s1, s2 };
+                }
+            }
+
+            return result;
+        }
+
+        public static double[,][] SobelOperator(int[,] matrix, int xmin, int xmax, int ymin, int ymax)
+        {
+            double[,][] result = new double[xmax - xmin, ymax - ymin][];
+
+            for (int x = xmin; x < xmax; x++)
+            {
+                for (int y = ymin; y < ymax; y++)
+                {
+                    double s1, s2;
+
+                    s1 = matrix[x - 1, y + 1] + 2 * matrix[x, y + 1] + matrix[x + 1, y + 1];
+                    s1 -= matrix[x - 1, y - 1] + 2 * matrix[x, y - 1] + matrix[x + 1, y - 1];
+
+                    s2 = matrix[x + 1, y - 1] + 2 * matrix[x + 1, y] + matrix[x + 1, y + 1];
+                    s2 -= matrix[x - 1, y - 1] + 2 * matrix[x - 1, y] + matrix[x - 1, y + 1];
 
                     result[x - xmin, y - ymin] = new double[2] { s1, s2 };
                 }
@@ -303,7 +329,7 @@ namespace Logic
 
         public static int[] CumulativeDistributionFunction(int[] distribution)
         {
-            for (int i = 1; i < 65536; i++)
+            for (int i = 1; i < distribution.Length; i++)
                 distribution[i] += distribution[i - 1];
             return distribution;
         }
@@ -313,11 +339,13 @@ namespace Logic
             int min = 0;
             int max = 0;
 
-            for (int i = 0; i < 65536; i++)
+            int l = cumulativeDistribution.Length;
+
+            for (int i = 0; i < l; i++)
             {
-                if (cumulativeDistribution[i] < cumulativeDistribution[65535] * lowerThreshold)
+                if (cumulativeDistribution[i] < cumulativeDistribution[l - 1] * lowerThreshold)
                     min = i;
-                if (cumulativeDistribution[i] < cumulativeDistribution[65535] * higherThreshold)
+                if (cumulativeDistribution[i] < cumulativeDistribution[l - 1] * higherThreshold)
                     max = i;
             }
 
@@ -425,6 +453,19 @@ namespace Logic
             return matrix;
         }
 
+        public static int[,] ReadMatrixFromBitmap(byte[] rgbValues, int width, int height, int stride)
+        {
+            int[,] matrix = new int[width, height];
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    matrix[x, y] = GetPixelFromArray(rgbValues, x, y, stride);
+                }
+            }
+            return matrix;
+        }
+
         public static int[,] ReadMatrixFromBitmap(System.Drawing.Bitmap bitmap)
         {
             int[,] matrix = new int[bitmap.Width, bitmap.Height];
@@ -436,6 +477,51 @@ namespace Logic
                 }
             }
             return matrix;
+        }
+
+        public static int[,] ChooseThresholdAndGenerateMatrix(byte[] rgbValues, int width, int height, int stride, List<Point> points, int[,] image,
+            List<Point> centralPoints)
+        {
+            List<Point> pixels = new List<Point>();
+            int count = points.Count;
+            for (int i = 0; i < points.Count; i++)
+            {
+                int x1 = points[i].x;
+                int y1 = points[i].y;
+                int x2 = points[(i + 1) % count].x;
+                int y2 = points[(i + 1) % count].y;
+                List<Point> pixelsBresenham = new List<Point>();
+                BresenhamClass.Bresenham(pixelsBresenham, x1, y1, x2, y2);
+                pixels = pixels.Concat(pixelsBresenham).ToList();
+            }
+
+            int[,] matrixWithContour = CannyAlgorithm.MakeMatrixFromPoints(width, height, pixels);
+
+            StatisticsResult statisticsResult = Statistics.GenerateStatistics(pixels, matrixWithContour, image, 0, width, 0, height,
+                0, 0, centralPoints.First());
+
+            // int[] histogram = new int[256];
+
+            // for (int x = 0; x < width; x++)
+            // {
+            //     for (int y = 0; y < height; y++)
+            //     {
+            //         histogram[GetPixelFromArray(rgbValues, x, y, stride)]++;
+            //     }
+            // }
+
+            int[] cummu = CumulativeDistributionFunction(statisticsResult.Histogram);
+            int min, max;
+            (min, max) = ChooseThreshold(cummu, 0.1, 0.9);
+
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    image[x, y] = image[x, y] < min ? 0 : image[x, y] < max ? 1 : 2;
+                }
+            }
+            return image;
         }
     }
 }
