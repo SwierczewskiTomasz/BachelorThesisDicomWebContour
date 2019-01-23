@@ -800,6 +800,26 @@ Z wyżej wymienionych powodów zdecydowano się na łączność 4-krotną. Przyg
 \markboth{}{Instrukcja instalacji}
 \addcontentsline{toc}{chapter}{Instrukcja instalacji}
 
+W celu instalacji serwera Orthanc należy udać się na stronę \url{https://www.orthanc-server.com/download.php}, pobrać wersję odpowiednią dla używanego systemu operacyjnego, a następnie postępować zgodnie z instrukcjami wyświetlanymi podczas instalacji. W celu uzyskania szczegółowych informacji odnośnie konfiguracji należy zapoznać się z dokumentacją znajdującą się na stronie \url{http://book.orthanc-server.com/users/cookbook.html}
+
+W celu instalacji serwera obrysów i aplikacji przeglądarkowej należy skopiować pliki znajdujące się na płycie w folderach Web oraz DotNetProject na stację na której aplikacje te zostaną uruchomione. 
+
+Do działania serwera obrysów wymagany jest .NET Core w wersji 2.2 lub nowszej. Aby zainstalować .NET Core należy udać się na stronę \url{https://dotnet.microsoft.com/download}, pobrać wersję odpowiednią dla używanego systemu operacyjnego, a następnie postępować zgodnie z informacjami wyświetlanymi w trakcie instalacji.
+
+KONFIGURACJA PORTÓW W SERWERZE
+
+Aby uruchomić serwer obrysów należy przejść do skopiowanego folderu DotNetProject/API i wykonać w konsoli polecenie \texttt{\$ dotnet build \&\& dotnet run}.
+
+Do działania aplikacji przeglądarkowej wymagany jest Node w wersji co najmniej 9.4 oraz yarn w wersji co najmniej 1.10.1. Aby zainstalować Node.js należy udać się na stronę \url{https://nodejs.org/en/download/} i wybrać wersję odpowiadającą systemowi z którego korzystamy. Postępować zgodnie ze wskazówkami instalatora. W celu instalacji yarn należy udać się na stronę https://yarnpkg.com/en/docs/install aby pobrać wersję odpowiadającą systemowi na którym będzie uruchamiana aplikacja i uruchomić instalator.
+
+W celu konfiguracji portu na który będzie wystawiona aplikacja webowa należy ustawić odpowiednią liczbę w 4 linii pliku Web/express.js. Przykładowa poprawna konfiguracja:\\
+\texttt{\$ const portNumber = 3000;}
+
+Ponadto w celu konfiguracji aplikacji należy ustawić adresy do API serwera obrysów i serwera Orthanc w pliku Web/src/helpers/requestHelper.ts poprzez zmianę zawartości cudzysłowów w pierwszych dwóch linijkach pliku. 	Przykładowa poprawna konfiguracja:\\
+\texttt{export const orthancURL = "http://localhost:8042/";}\\
+\texttt{export const apiURL = "https://localhost:5001/";}
+
+W celu uruchomienia aplikacji przeglądarkowej wchodzimy do folderu Web w którym wykonujemy polecenie \texttt{\$ yarn install \&\& yarn prod}. Uwaga, tę komendę należy uruchomić w konsoli obsługującej skrypty w języku bash.
 
 
 % --- 8. Instrukcja użytkowania
