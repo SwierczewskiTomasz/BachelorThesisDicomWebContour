@@ -24,6 +24,8 @@
 %Do bawienia się kolorkami w grid
 \usepackage{tikz}
 
+\hyphenation{DICOM}
+
 % ---------------- Marginesy, akapity, interlinia ------------------
 
 \usepackage[inner=20mm, outer=20mm, bindingoffset=10mm, top=25mm, bottom=25mm]{geometry}
@@ -306,13 +308,13 @@ O czym jest praca? Co się w niej znajduje? Jaki jest wkład autora?
 
 \chapter {Stan wiedzy}
 
-W poniższym rozdziale zostały przestawione istniejące na rynku aplikacje oferujące podobne funkcjonalności do wymagań postawionych przed autorskim systemem do obrysów na obrazach DICOM. Przedstawiono również proponowane rozwiązanie postawionych przed systemem wymagań.
+W poniższym rozdziale zostały przedstawione istniejące na rynku aplikacje oferujące podobne funkcjonalności do wymagań postawionych przed autorskim systemem do obrysów na obrazach DICOM. Przedstawiono również proponowane rozwiązanie postawionych przed systemem wymagań.
 
 \section {Przegląd istniejących rozwiązań}
 
 \subsection {Cornerstone}
 
-Cornerstone Core to biblioteka, która umożliwia wyświetlanie obrazów medycznych z wykożystaniem elementu canvas z języka HTML5. Biblioteka udostępnia interfejs do wyświetlania obrazów medycznych pozwalający na zarządzanie wyświetlaniem zdjęcia. Podstawowe funkcjonalności obsługiwane przez bibliotekę to:
+Cornerstone Core to biblioteka, która umożliwia wyświetlanie obrazów medycznych z wykorzystaniem elementu canvas z języka HTML5. Biblioteka udostępnia interfejs do wyświetlania obrazów medycznych pozwalający na zarządzanie wyświetlaniem zdjęcia. Podstawowe funkcjonalności obsługiwane przez bibliotekę to:
 
 \begin{itemize}[noitemsep]
 \item Przybliżanie i oddalanie obrazu.
@@ -328,11 +330,11 @@ Ponadto twórcy biblioteki Cornerstone Core stworzyli bibliotekę Cornerstone To
 \begin{itemize}[noitemsep]
 \item Mierzenie odległości w linii prostej na obrazie z podaniem rzeczywistych wartości.
 \item Oznaczanie obszarów przy pomocy prostokątów oraz elips.
-\item oznaczanie niewielkich zmian w postaci małego okręgu.
-\item Mierzenie kątów na podstawie 3 podanych przez użytkownika punktów.
+\item Oznaczanie niewielkich zmian w postaci małego okręgu.
+\item Mierzenie kątów na podstawie 3 wybranych przez użytkownika punktów.
 \end{itemize}
 
-Przykładowym projektem korzystającym z bibliotek Cornerstone jest OHIF\footnote {Open Health Imaging Foundation - http://ohif.org/ } Viewer. Aplikacja pozwala na wykorzystanie większości możliwości udostępnianych przez biblioteki Cornerstone. Przykładowe urzycie aplikacji zostało przedstawione na rysunku \ref{fig:OHIF-example}.
+Przykładowym projektem korzystającym z bibliotek Cornerstone jest OHIF\footnote {Open Health Imaging Foundation - http://ohif.org/ } Viewer. Aplikacja pozwala na wykorzystanie większości możliwości udostępnianych przez biblioteki Cornerstone. Przykładowe użycie aplikacji zostało przedstawione na rysunku \ref{fig:OHIF-example}.
 
 \begin{figure}[h]
 	\includegraphics[width=\textwidth]{OHIF-example}
@@ -346,7 +348,7 @@ Przykładowym projektem korzystającym z bibliotek Cornerstone jest OHIF\footnot
 
 Orthanc to serwer z bazą plików DICOM, który umożliwia łatwe przechowywanie, zarządzanie oraz dostęp do plików medycznych DICOM. Ponadto Orthanc udostępnia REST API, które umożliwia przeglądanie wgranych na serwer plików DICOM podzielonych względem pacjentów, badań i serii. 
 
-Serwer Orthanc udostępnia również prosty interfejs przeglądarkowy który pozwala na wgrywanie nowych plików (interfejs wgrywania plików przedstawiono na ryskunku \ref{fig:Orthanc-upload}), przeglądanie zapisanych plików --- w szczególności tagów (rysunek \ref{fig:Orthanc-tags}) oraz podglądu obrazu (rysunek \ref{fig:Orthanc-preview}). Interfejs przeglądarkowy nie zapewnia żadnej metody rysowania na przeglądanym obrazie. Pozwala natomiast na przełączanie obrazu na kolejny lub poprzedni poprzez kliknięcie lewym przyciskiem myszy w prawą lub część podglądu obrazu.
+Serwer Orthanc udostępnia również prosty interfejs przeglądarkowy, który pozwala na wgrywanie nowych plików (interfejs wgrywania plików przedstawiono na ryskunku \ref{fig:Orthanc-upload}), przeglądanie zapisanych plików --- w szczególności tagów (rysunek \ref{fig:Orthanc-tags}) oraz podglądu obrazu (rysunek \ref{fig:Orthanc-preview}). Interfejs przeglądarkowy nie zapewnia żadnej metody rysowania na przeglądanym obrazie. Pozwala natomiast na przełączanie obrazu na kolejny przez kliknięcie lewym przyciskiem myszy w prawą część podglądu obrazu.
 
 \begin{figure}[h]
 	\center
@@ -386,9 +388,9 @@ Do podstawowych funkcjonalności systemu zaliczają się:
 \begin{itemize}[noitemsep]
 %O listach wyliczeniowych https://sjp.pwn.pl/poradnia/haslo/listy-wyliczeniowe;4812.html
 \item Generowanie obrysu manualnego.
-\item Generowanie obrysu półautomatycznego na podstawie punktów podanych przez użytkownika.
+\item Generowanie obrysu półautomatycznego na podstawie punktów wybranych przez użytkownika.
 \item Zapisywanie wygenerowanych obrysów.
-\item \textbf {Anonimizacja}\footnote {Anonimizacja (ang. anonymization) --- operacja mająca na celu usunięcie z danych informacji o pacjentach, które pozwoliłyby na identyfikację danych z tożsamością pacjenta. Są to między innymi: imiona, nazwisko, pesel. Inne tłumaczenia słowa anonymization --- utajnianie, usuwanie danych niejawnych. Z uwagę na fakt, że te tłumaczenia nie oddają dobrze kontekstu zastosowano kalkę językową.} danych zapisanych w strukturze pliku DICOM.
+\item \textbf {Anonimizacja}\footnote {Anonimizacja (ang. anonymization) --- operacja mająca na celu usunięcie z danych informacji o pacjentach, które pozwoliłyby na identyfikację danych z tożsamością pacjenta. Są to między innymi: imiona, nazwisko, pesel. Inne tłumaczenia słowa anonymization --- utajnianie, usuwanie danych niejawnych. Z uwagę na fakt, że te tłumaczenia nie oddają dobrze kontekstu, zastosowano kalkę językową.} danych zapisanych w strukturze pliku DICOM.
 \end{itemize}
 
 \subsection {Wymagania funkcjonalne}
@@ -399,32 +401,35 @@ Poniżej przedstawiono wymagania funkcjonalne w postaci historyjek użytkownika 
 Użytkownik może wybrać obraz w menu bocznym, w którym ma możliwość wyboru pacjenta, badania oraz serii. Wybranie serii skutkuje wyświetleniem pierwszego obrazu DICOM z tej serii.
 
 \item \textbf {Jako użytkownik chcę zmienić obraz w serii przy użyciu rolki myszy.} \\
-Po najechaniu na obraz przewijanie rolką myszy do góry powoduje zmianę wyświetlanego obrazu na kolejny obraz w serii. Gdy przewijamy rolką myszy do góry na ostatnim obrazie w serii wyświetlany obraz nie zmienia się. Analogicznie przewijanie rolką myszy w dół powoduje zmianę wyświetlanego obrazu na poprzedni obraz w serii, a przewijanie w dół rolką myszy na pierwszym obrazie w serii nie powoduje zmiany obrazu.
+Po umieszczenie kursora na obrazie przewijanie rolką myszy do góry powoduje zmianę wyświetlanego obrazu na kolejny obraz w serii. Gdy przewijamy rolką myszy do góry na ostatnim obrazie w serii wyświetlany obraz nie zmienia się. Analogicznie przewijanie rolką myszy w dół powoduje zmianę wyświetlanego obrazu na poprzedni obraz w serii, a przewijanie w dół rolką myszy na pierwszym obrazie w serii nie powoduje zmiany obrazu.
 
 \item \textbf {Jako użytkownik chcę wykonać obrys przy użyciu tabletu graficznego.} \\
-Po najechaniu na obraz kursorem sterowanym przez tablet graficzny, po wciśnięciu końcówki rysika użytkownik prowadzi kursor po obrazie wykonując obrys bez odrywania końcówki rysika od podkładki. Jeżeli użytkownik nie zakończy obrysu dokładnie w punkcie, w którym go rozpoczął, obrys powinien zakończyć się linią prostą, łączącą punkt końcowy z punktem początkowym.
+Po umieszczenie kursora na obrazie sterowanym przez tablet graficzny, użytkownik prowadzi kursor po obrazie wykonując obrys bez odrywania końcówki rysika od podkładki. Jeżeli użytkownik nie zakończy obrysu dokładnie w punkcie, w którym go rozpoczął, obrys powinien zakończyć się linią prostą, łączącą punkt końcowy z punktem początkowym.
 
 \item \textbf {Jako użytkownik chcę wygenerować obrys na podstawie wybranych punktów.} \\
-Po najechaniu kursorem na obraz użytkownik może wybierać punkty, na podstawie których zostanie wygenerowany obrys, poprzez wciśnięcie lewego przycisku myszy w miejscach, w których chce, aby znalazły się punkty. Użytkownik może zobaczyć efekt wygenerowanego przez system obrysu
+Po umieszczenie kursora na obrazie użytkownik może wybierać punkty, na podstawie których zostanie wygenerowany obrys, poprzez wciśnięcie lewego przycisku myszy w miejscach, w których chce, aby znalazły się punkty. Użytkownik może zobaczyć efekt wygenerowanego przez system obrysu.
 
 \item \textbf {Jako użytkownik chcę edytować listę punktów, z której wygenerowany zostanie obrys.} \\
-Użytkownik może usunąć wcześniej wybrany punkt po najechaniu na niego kursorem i wciśnięciu lewego przycisku myszy. Użytkownik może dodać nowy punkt do listy punktów poprzez wciśnięcie lewego przycisku myszy w miejscu, w którym chce wstawić punkt.
+Użytkownik może usunąć wcześniej wybrany punkt po umieszczając nad nim kursor i wciśnięciu lewego przycisku myszy. Użytkownik może dodać nowy punkt do listy punktów poprzez wciśnięcie lewego przycisku myszy w miejscu, w którym chce wstawić punkt.
 
 \item \textbf {Jako użytkownik chcę wybrać kolor obrysu.} \\
-Użytkownik wybiera kolor z palety kolorów lub zdefiniować własny kolor poprzez podanie numeru RGB koloru, który chce wybrać.
+Użytkownik wybiera kolor z palety kolorów lub może zdefiniować własny kolor poprzez podanie kodu RGB koloru, który chce wybrać.
 
 \item \textbf {Jako użytkownik chcę zapisać obrys.} \\
-Po wykonaniu obrysu manualnego lub wybraniu listy punktów do wygenerowania obrysu półautomatycznego użytkownik wybiera nazwę obrysu i zapisuje obrys w systemie.
+Po wykonaniu obrysu manualnego lub wybraniu listy punktów do wygenerowania obrysu półautomatycznego, użytkownik wybiera nazwę obrysu i zapisuje obrys w systemie.
 
 \item \textbf {Jako użytkownik chcę obejrzeć zapisany obrys.} \\
 Użytkownik wybiera z listy po prawej stronie zapisany obrys i przegląda obrys naniesiony na obraz, na którym został wykonany.
 
+%Doprecyzować listę po prawej stronie
 \item \textbf {Jako użytkownik chcę zobaczyć statystyki dotyczące obrysu.} \\
 Użytkownik wybiera z listy po prawej stronie zapisany obrys i przegląda statystyki obliczone na podstawie zapisanego obrysu. Do statystyk zalicza się obwód obrysu, pole obrysu, histogram obrazu na obszarze obrysu oraz liczba pikseli wewnątrz obrysu.
 
+%Doprecyzować listę po prawej stronie
 \item \textbf {Jako użytkownik chcę zobaczyć jednocześnie dowolną liczbę zapisanych w systemie obrysów na jednym obrazie DICOM.} \\
 Użytkownik wybiera poprzez kliknięcie lewym przyciskiem myszy na nazwie obrysu znajdującej się na liście po prawej stronie. Wybrane obrysy wyświetlane są jednocześnie na przeglądanym przez użytkownika zdjęciu. Użytkownik może wyłączyć podgląd wcześniej wybranego obrysu poprzez ponowne wciśnięcie lewego przycisku myszy na nazwie obrysu na liście po prawej stronie. Na zdjęciu wyświetlane są jedynie obrysy wykonane na tym obrazie.
 
+%Doprecyzować listę po prawej stronie
 \item \textbf {Jako użytkownik chcę zanonimizować dane pacjenta zawarte w pliku DICOM.} \\
 Użytkownik może zanonimizować pacjenta, gdy przegląda jego obraz. Użytkownik może anonimizować imię i nazwisko pacjenta, datę urodzenia pacjenta oraz płeć pacjenta poprzez nadanie nowych wartości lub poprzez usunięcie poprzedniej wartości i pozostawienie pustych pól w formularzu.
 
@@ -452,8 +457,8 @@ Użytkownik może zanonimizować pacjenta, gdy przegląda jego obraz. Użytkowni
   Użyteczność (ang. Usability) & 1 & Każda funkcjonalność aplikacji dostępna dla użytkownika musi mieścić się na pojedynczym ekranie przy rozdzielczości 1920x1080 i czcionce nie mniejszej niż 12pt. \\ 
   \cline{2-3}
     & 2 & Aplikacja powinna udostępniać pobranie zapisanych obrysów przy użyciu serwisu REST. \\ \hline
-  Niezawodność (ang. Reliability) & 3 & Aplikacja ma być dostępna 24h w ciągu doby. Dopuszczalne jest brak działania aplikacji w dowolnym momencie przez okres nie dłuższy niż przez 12h. Po przerwie w działaniu aplikacja musi być dostępna przez kolejne 24h bez utrudnień. \\ \hline
-  Wydajność (ang. Performance) & 4 & Aplikacja powinna pobierać dane zewnętrzne w postaci pliku DICOM (około 20MB) nie dłużej niż 5 sekund \\ 
+  Niezawodność (ang. Reliability) & 3 & Aplikacja ma być dostępna 24h w ciągu doby. Dopuszczalny jest brak działania aplikacji w dowolnym momencie przez okres nie dłuższy niż przez 12h. Po przerwie w działaniu aplikacja musi być dostępna przez kolejne 24h bez utrudnień. \\ \hline
+  Wydajność (ang. Performance) & 4 & Aplikacja powinna pobierać dane zewnętrzne w postaci pliku DICOM (około 20MB) nie dłużej niż 5 sekund. \\ 
   \cline{2-3}
   & 5 & Aplikacja powinna generować obrys półautomatyczny i zapisywać obrys do systemu w czasie nie dłuższym niż 30 sekund. \\ 
   \cline{2-3}
@@ -491,11 +496,11 @@ Poniżej zostaną przedstawione dokładne rozwiązania dla każdego z tych krok�
 
 \subsection {Wykrycie krawędzi na bitmapie}
 
-Często na obrazach medycznych różnice w charakterystyce poziomów szarości pikseli reprezentujących interesujące nas obiekty są małe, nie są dane dodatkowe informacje o naturze obrazu. Problem opracowania uniwersalnego algorytmu wykrywania krawędzi jest problemem trudnym. Dla wielu algorytmów można znaleźć takie przykłady, że te algorytmy nie wyznaczą poprawnie krawędzi. Ponadto są wymagania dla stwierdzania poprawności działania danego algorytmu, czy też operatora morfologicznego. Zgodnie z \cite{Cyfrowe przetwarzanie obrazów medycznych} ,,dobry detektor krawędzi powinien spełniać następujące warunki:
+Często na obrazach medycznych różnice w charakterystyce poziomów szarości pikseli reprezentujących interesujące nas obiekty są małe, nie są dane dodatkowe informacje o naturze obrazu. Problem opracowania uniwersalnego algorytmu wykrywania krawędzi jest problemem trudnym. Dla wielu algorytmów można znaleźć takie przykłady, że te algorytmy nie wyznaczą poprawnie krawędzi. Te algorytmy muszą spełniać szereg wymagań, które stwierdzają poprawność danego algorytmu, czy też operatora morfologicznego. Zgodnie z \cite{Cyfrowe przetwarzanie obrazów medycznych} ,,dobry detektor krawędzi powinien spełniać następujące warunki:
 \begin{itemize}[noitemsep]
 \item {niskie prawdopodobieństwo zaznaczenia punktów nienależących do krawędzi oraz niskie prawdopodobieństwo niezaznaczenia punktów należących do krawędzi,}
 \item {zaznaczone pukty krawędzi powinny być możliwie blisko jej osi,}
-\item {wyłącznie jedna odpowiedź na pojedyńczy punkt krawędzi.''}
+\item {wyłącznie jedna odpowiedź na pojedynczy punkt krawędzi.''}
 \end{itemize}
 
 Po zapoznaniu się z literaturą związaną z przetwarzaniem obrazów medycznych w algorytmie został użyty operator Canny'ego. Jest on powszechnym i dobrze sprawdzonym rozwiązaniem do wykrywania krawędzi. Jak napisał autor \cite{Cyfrowe przetwarzanie obrazów medycznych} ,,Operator ten (Canny'ego) jest bardzo popularny, chętnie wykorzystywany i adoptowany do wielu zastosowań. (\dots) Stał on się również standardem często używanym do porównań innych metod wykrywania krawędzi.'' Zgodnie z rysunkiem 4.25 ,,Porównanie operatorów wykrywania krawędzi'' w \cite{Cyfrowe przetwarzanie obrazów medycznych} najlepiej wykrywał główne narządy, takie jak wątroba czy też trzustka. Z wyżej wymienionych powodów został on wykorzystany w tym algorytmie.
@@ -503,7 +508,7 @@ Po zapoznaniu się z literaturą związaną z przetwarzaniem obrazów medycznych
 Operator Canny'ego \cite{Canny} składa się z 3 zasadniczych kroków:
 \begin{enumerate}%[noitemsep]
 \item \textbf {Określenie wartości i kąta gradientu.} \\
-W tym celu został wykorzystany operator gradientu, a estymatorem gradientu w funkcji dyskrentej, jaką jest obraz zastosowano maskę, czy też operator Sobela. Wykorzystując go uzskano dla każdego piksela wielkość oraz kierunek gradientu, co służy do dalszych obliczeń. 
+W tym celu został wykorzystany operator gradientu, a estymatorem gradientu w funkcji dyskretnej, jaką jest obraz, zastosowano maskę, czy też operator Sobela. Wykorzystując go uzskano dla każdego piksela wielkość oraz kierunek gradientu, co służy do dalszych obliczeń. 
 \item \textbf {Wykrycie miejsc występowania krawędzi.} \\
 W tym celu został wykorzystany algorytm non-max suppression. Polega on na wyborze takich pikseli, które mają największą wartość gradientu na linii o kierunku zgodnym z kątem danego gradientu. Możliwe są 4 kierunki: pionowy, poziomy oraz dwa diagonalne. Jeśli dany piksel miał większą wartość gradientu od dwóch swoich sąsiadów, to zaznaczono go jako potencjalny punkt tworzący krawędzie. W ten sposób otrzymano obraz z potencjalnymi krawędziami.
 \item \textbf {Wyznaczanie krawędzi progowaniem histerezy} \\
@@ -543,7 +548,7 @@ $\sqrt{s_1^2 + s_2^2}$ & $\tan^{-1} \Bigg[ {\cfrac{s_1}{s_2}} \Bigg]$
 \end{tabular}
 \end{table}
 
-Detektory krawędzi oparte na gradiencie, w tym operator Canny'ego są często używane. Za ich główne zalety na podstawie \cite{Cyfrowe przetwarzanie obrazów medycznych} są:
+Detektory krawędzi oparte na gradiencie, w tym operator Canny'ego są często używane. Ich główne zalety na podstawie \cite{Cyfrowe przetwarzanie obrazów medycznych} to:
 \begin{itemize}[noitemsep]
 \item Dają dobre wyniki dla obrazów o dobrej jakości i bez szumów.
 \item Są wydajne - ich złożoność jest liniowa względem liczby przetwarzanych pikseli.
@@ -553,7 +558,7 @@ Detektory krawędzi oparte na gradiencie, w tym operator Canny'ego są często u
 Zgodnie z \cite{Cyfrowe przetwarzanie obrazów medycznych} za ich główne wady można uznać:
 \begin{itemize}[noitemsep]
 \item ,,Konieczność określenia rozmiaru maski i wartości progowej. Rozmiar maski znacząco wpływa na położenie miejsc, w których gradient przecina zera lub osiąga wartości maksymalne.
-\item Pomijanie narożników spowodowane faktem, że wartość 1D gradientu w narożnikach jest zwyczajnie mała.
+\item Pomijanie narożników spowodowane faktem, że wartość 1D gradientu w narożnikach jest zazwyczaj mała.
 \item Operator pierwszej pochodnej wykrywa tylko schodkowe krawędzie.
 \item Duża wrażliwość na szum.''
 \item Na podstawie obserwacji działania algorytmu - rozmyte krawędzie często nie są wykrywane przez małe różnice w wartościach kolejnych sąsiadujących pikseli.
@@ -565,7 +570,7 @@ W ten sposób otrzymano macierz, gdzie każde pole w macierzy odpowiada pikselow
 
 Na tym etapie algorytm potrzebuje następujących danych wejściowych:
 \begin{itemize}[noitemsep]
-\item Macierz z wartościami logicznymi prawda/fałsz czy znajduje się danym punkcie krawędź. Może to być także realizowane poprzez macierz wartości liczbowych.
+\item Macierz z wartościami logicznymi prawda/fałsz czy znajduje się w danym punkcie krawędź. Może to być także realizowane poprzez macierz wartości liczbowych.
 \item Punkty wybrane przez użytkownika aplikacji.
 \end{itemize}
 
@@ -604,7 +609,7 @@ Dla łączności 8-krotnej sprawdza się wszystkich możliwych sąsiadów, takż
 %Bibliografia do tego?
 W przypadku zastosowania łączności 8-krotnej przy wyznaczaniu długości krawędzi musiano by zastosować metrykę Czebyszewa, która jest specjalnym przypadkiem odległości Minkowskiego. Jeśli zostanie łączność 4-krotna to długość krawędzi byłaby obliczana zgodnie z metryką miejską, zwaną też metryką Manhattan. 
 
-Metryka Manhattan w kontekście dalszego przetwarzania w celu wyszukiwania najkrótszych ścieżek w grafie jest bardziej adekwatna, ponieważ jest intuicyjna w wyznaczaniu odległości na obrazie płaskim w porównaniu do metryki Czebyszewa. W tym przypadku najlepsza byłbay tutaj metryka Euklidesa, lecz mamy do czynienia nie z kolejnymi punktami oddalonymi od siebie, a z sąsiadującymi pikselami. Ponadto w tym algorytmie istotne jest szybkie szacowanie odległości, czy też długości danej krawędzi.
+Metryka Manhattan w kontekście dalszego przetwarzania w celu wyszukiwania najkrótszych ścieżek w grafie jest bardziej adekwatna, ponieważ jest intuicyjna w wyznaczaniu odległości na obrazie płaskim w porównaniu do metryki Czebyszewa. W tym przypadku najlepsza byłaby tutaj metryka Euklidesa, lecz mamy do czynienia nie z kolejnymi punktami oddalonymi od siebie, a z sąsiadującymi pikselami. Ponadto w tym algorytmie istotne jest szybkie szacowanie odległości, czy też długości danej krawędzi.
 
 Wykrywanie wierzchołków przy łączności 4-krotnej jest prostsze. Wystarczy zliczyć liczbę sąsiadów. Poniżej zakładamy, że piksel jest oznaczony jako krawędź w macierzy wejściowej. W zależności od liczby sąsiadów mamy następujące przypadki:
 \begin{itemize}[noitemsep]
@@ -632,7 +637,7 @@ $
 z & z & z 
 \end{bmatrix}
 $,
-\item punkty łączące (ang. linkpixels), czyli fragmenty krawędzi, posiadają dokładnie 2 sąsiadów,
+\item punkty łączące (ang. linkpixels), czyli fragmenty krawędzi, posiadają dokładnie 2 sąsiadów, nie używamy przekształcenia Hit-or-Miss a tylko liczymy sąsiadów
 \item punkty węzłowe (ang. vertices), czyli punkty, od których odchodzą co najmniej 3 krawędzie: \\
 $
 \begin{bmatrix}
@@ -649,11 +654,11 @@ z & 1 & z \\
 $,.
 \end{itemize}
 
-Warto zauważyć, że te elementy strukturalne należy obracać o 90, 180, 270 stopni. Za każdym razem potrzeba wielokrotnie sprawdzać te same piksele. Ponadto należy sprawdzać 8, a nie 4 sąsiadów. 
+Warto zauważyć, że te elementy strukturalne należy obracać o 90, 180 i 270 stopni. Za każdym razem potrzeba wielokrotnie sprawdzać te same piksele. Ponadto należy sprawdzać 8, a nie 4 sąsiadów. 
 
 Kolejnym problemem jest fakt, że przy spójności 8-krotnej przekształcenie Hit-or-Miss może w najbliższym otoczeniu punktu krzyżowania się krawędzi oznaczyć kilka otaczających punktów, jako punkty węzłowe. Jest to złe rozwiązanie, ponieważ w ten sposób może nawet kilkukrotnie zwiększyć liczbę wierzchołków w grafie, co przełożyłoby się na niską wydajność algorytmu.
 
-Ostatnim problemem z jakim należałoby się wiązać wybierając łączność 8-krotną jest fakt, że macierz wejściową dla tego etapu algorytmu należałby poddać procesowi szkieletyzacji. Najlepiej byłoby w tym celu skorzystać z algorytmu KMM \cite{KMM} lub K3M \cite{K3M}. Te algorytmy musiałby co namniej raz przejrzeć całą macierz z wykrytymi krawędziami w optymistycznym przypadku.
+Ostatnim problemem z jakim należałoby się wiązać wybierając łączność 8-krotną jest fakt, że macierz wejściową dla tego etapu algorytmu należałby poddać procesowi szkieletyzacji. Najlepiej byłoby w tym celu skorzystać z algorytmu KMM \cite{KMM} lub K3M \cite{K3M}. Te algorytmy musiałyby co namniej raz przejrzeć całą macierz z wykrytymi krawędziami w optymistycznym przypadku.
 
 \bigskip
 
@@ -726,15 +731,15 @@ Z wyżej wymienionych powodów zdecydowano się na łączność 4-krotną. Przyg
 
 Utworzony w ten sposób graf jest grafem nieskierowanym z wagami, gdzie wagi to liczba pikseli, czy też punktów należących do krawędzi. Graf ten może nie być spójny. Ponadto ten graf może nie zawierać wierzchołków, które pokrywają się z punktami wybranymi przez użytkownika.
 
-Graf ten zazwyczaj jest rzadki, ponieważ liczba jego krawędzi jest rzędu liczby jego wierzchołków.  Z uwagi na czasami bardzo dużą liczbę wierzchołków --- nawet do kilkudziesięciu tysięcy --- próba implementacji przy pomocy macierzy sąsiedztwa mogłaby spowodować zużycie całej możliwej pamięci operacyjnej. Dla 50 tysięcy wierzchołków program musiałby zadeklarować macierz sąsiedztwa zawierającą 2,5 miliarda komórek. Z tych powodów graf został zaimplementowany przy pomoc list sąsiedztwa.
+Graf ten zazwyczaj jest rzadki, ponieważ liczba jego krawędzi jest rzędu liczby jego wierzchołków.  Z uwagi na czasami bardzo dużą liczbę wierzchołków --- nawet do kilkudziesięciu tysięcy --- próba implementacji przy pomocy macierzy sąsiedztwa mogłaby spowodować zużycie całej możliwej pamięci operacyjnej. Dla 50 tysięcy wierzchołków program musiałby zadeklarować macierz sąsiedztwa zawierającą 2,5 miliarda komórek. Z tych powodów graf został zaimplementowany przy pomocy list sąsiedztwa.
 
 W przyjętej implementacji każda krawędź zawiera dodatkowo informację o tym, jakie piksele należą do danej krawędzi w rzeczywistym obrazie.
 
 \subsection {Zapewnienie spójności grafu}
 
-W pierwszym kroku na tym etapie przetwarzania grafu dodajemu punkty wybrane przez użytkownika do grafu.
+W pierwszym kroku na tym etapie przetwarzania grafu są dodawane punkty wybrane przez użytkownika do grafu.
 
-Graf, który uzyskaliśmy w poprzednim kroku może nie być spójny. Powoduje to fakt, że między punktami wybranymi przez użytkownika mogą nie istnieć ścieżki. W celu zapewnienia spójności grafu należy dodawać sztuczne krawędzie. Zostają one dodawane z większymi wagami, niż wynikałoby to w rzeczywistości z liczebnosci listy pikseli, które reprezentują, ponieważ ma to na celu używanie z większym priorytetem prawdziwych krawędzi, a nie sztucznych. W sytuacji gdy nie istnieje dobre połączenie, to zostaną użyte krawędzie sztuczne. Duże wagi dodatkowo będą zmuszały algorytmy wyszukiwania najkrótszych ścieżek w grafie do minimalizowania długości takich ścieżek. 
+Graf, który uzyskano w poprzednim kroku może nie być spójny. Powoduje to fakt, że między punktami wybranymi przez użytkownika mogą nie istnieć ścieżki. W celu zapewnienia spójności grafu należy dodawać sztuczne krawędzie. Zostają one dodawane z większymi wagami, niż wynikałoby to w rzeczywistości z liczebności listy pikseli, które reprezentują, ponieważ ma to na celu używanie z większym priorytetem prawdziwych krawędzi, a nie sztucznych. W sytuacji gdy nie istnieje dobra ścieżka z prawdziwych krawędzi, to zostaną użyte krawędzie sztuczne. Duże wagi dodatkowo będą zmuszały algorytmy wyszukiwania najkrótszych ścieżek w grafie do minimalizowania długości takich fragmentów zawierających sztuczne krawędzie. 
 
 Do znajdowania spójnych składowych grafu najczęściej używa się albo algorytmu przeszukiwania grafu w głąb (ang. Depth-first search, w skrócie DFS) lub przeszukiwania grafu wszerz (ang. Breadth-first search, w skrócie BFS) \cite{Algorytmy Sedgewick}. Użyto algorytmu przeszukiwania wszerz, opierając się na przykładowej implementacji w materiałach \cite{AiSD2}. Wykorzystano Queue<T>, a zatem kolejkę, więc jest to przeszukiwanie wszerz. Złożoność obliczeniowa tego algorytmu to $O(|E|)$.  
 
@@ -760,9 +765,9 @@ W ten sposób osiągnięto spójny graf, który zawiera punkty dodane przez uży
 
 \subsection {Wyszukanie najkrótszych ścieżek w grafie}
 
-Na tym etapie została zapewniona spójność grafu, z całą pewnością istnieje ścieżka pomiędzy punktami wybranymi przez użytkownika, te punkty są osiągalne. Pozostało wybrać najkrótszą ścieżkę łączącą kolejne te punkty. Zakładamy, że jest dana jest lista punktów wybranych przez użytkownika i zawiera ona kolejne punkty, tzn. pierwszy należy połączyć z drugim, drugi z trzeci, \dots, ostatni z pierwszym. 
+Na tym etapie została zapewniona spójność grafu. Z całą pewnością istnieje ścieżka pomiędzy punktami wybranymi przez użytkownika, te punkty są osiągalne. Pozostało wybrać najkrótszą ścieżkę łączącą kolejne te punkty. Założono, że jest dana lista punktów wybranych przez użytkownika i zawiera ona kolejne punkty, tzn. pierwszy należy połączyć z drugim, drugi z trzecim, \dots, ostatni z pierwszym. 
 
-Warto zaznaczyć, że wyszukiwane były ścieżki o minimalnej wadze, czy też o minimalnym koszcie. Z uwagi na fakt, że wagi w grafie są ściśle związane z odległościami to używane jest sformułowanie szukania najkrótszych ścieżek. Wagi w tym grafie są nieujemne. Może istnieć w tym grafie kilka ścieżek z jednego punktu do drugiego o tym samym koszcie, więc algorytm kończy swoje działanie na typ etapie gdy znajdzie jedną z nich. W tym grafie nie występują krawędzie wielokrotne. Ten graf nie zawiera cykli własnych.
+Warto zaznaczyć, że wyszukiwano ścieżki o minimalnej wadze, czy też o minimalnym koszcie. Z uwagi na fakt, że wagi w grafie są ściśle związane z odległościami to używane jest sformułowanie szukania najkrótszych ścieżek. Wagi w tym grafie są nieujemne. Może istnieć w tym grafie kilka ścieżek z jednego punktu do drugiego o tym samym koszcie, więc algorytm kończy swoje działanie na tym etapie, gdy znajdzie jedną z nich. W tym grafie nie występują krawędzie wielokrotne. Ten graf nie zawiera cykli własnych.
 
 Do wyszukiwania najkrótszych ścieżek w grafie po zgłębieniu literatury \cite{Algorytmy Sedgewick} i \cite{AiSD2} były rozważane do użycia 2 algorytmy. Był to algorytm Dijkstry i A*. Do algorytmu A* była rozważana heurestyka w postaci odległości miejskiej, Manhattan z wierzchołka $v$ do celu $t$, ozn. $h(v)$.
 
@@ -770,10 +775,10 @@ Zgodnie z \cite{AiSD2} ,,Funkcja $h$ musi spełniać następujące warunki:
 
 \begin{itemize}[noitemsep]
 \item musi być oszacowaniem dolnym, czyli dla każdego wierzchołka $v$ $h(v) <=$ odległość $v$ od celu $t$,
-\item musi być monotoniczna, czylid la dowolnej krawędzi $<u,v>$ $h(u) <= waga<u,v> + h(v)$.''
+\item musi być monotoniczna, czyli dla dowolnej krawędzi $<u,v>$ $h(u) <= $waga$<u,v> + h(v)$.''
 \end{itemize} 
 
-Heurestyka w postaci metryki Manhattan spełnia te wymagania. Z tego powodu może zostać wykorzystany algorytm A*. Porównując złożoności algorytmu A* i Dijkstry w \cite{AiSD2} możemy zauważyć, że algorytm A* w psymistycznym przypadku ma taką samą złożoność jak algorytm Djikstry, czyli $O(|E|*log(|V|))$ z kolejką priorytetową dla grafów rzadkich, a $O(|V|^2)$ nie wykorzystując kolejki priorytetowej dla grafów gęstych. W praktyce dla grafów rzadkich nie ma potrzeby rozważania znacznej części wierzchołków, co poprawia złożoność średnią. Wynosi ona wtedy $O(|E|)$.
+Heurestyka w postaci metryki Manhattan spełnia te wymagania. Z tego powodu może zostać wykorzystany algorytm A*. Porównując złożoności algorytmu A* i Dijkstry w \cite{AiSD2} możemy zauważyć, że algorytm A* w pesymistycznym przypadku ma taką samą złożoność jak algorytm Djikstry, czyli $O(|E|*log(|V|))$ z kolejką priorytetową dla grafów rzadkich, a $O(|V|^2)$ nie wykorzystując kolejki priorytetowej dla grafów gęstych. W praktyce dla grafów rzadkich nie ma potrzeby rozważania znacznej części wierzchołków, co poprawia złożoność średnią. Wynosi ona wtedy $O(|E|)$.
 
 Do implementacji wyszukiwania najkrótszych ścieżek w grafie na podstawie wyżej wymienionych wniosków został wykorzystany algorytm A* z heurestyką w postaci metryki Manhattan. Przykładowy pseudokod tego algorytmie można znaleźć w \cite{AiSD2} i jest on nastepujący: %Także nie powinno tak tego się robić!
 
@@ -809,13 +814,13 @@ Do implementacji wyszukiwania najkrótszych ścieżek w grafie na podstawie wyż
 29) }
 \end{verbatim}
 
-Aby maksymalnie dobrze wykorzystać niską złożoność obliczeniową algorytmu A* należało wykorzystać dobre struktury danych do tego algorytmu. Zbiór CLOSE,  wymagał szybkiego sprawdzania przynależności. Po przenalizowaniu rekomendowanych struktur danych \cite{Dotnet struktury} został użyty HashSet<T>. 
+Aby maksymalnie dobrze wykorzystać niską złożoność obliczeniową algorytmu A* należało wykorzystać dobre struktury danych do tego algorytmu. Zbiór CLOSE  wymagał szybkiego sprawdzania przynależności. Po przenalizowaniu rekomendowanych struktur danych \cite{Dotnet struktury} został użyty HashSet<T>. 
 
-Zbiór Open oferował zastosowanie znacznie bardziej finezyjnych struktur danych. Wymagane było od niego, aby był kolejką priorytetową, czyli aby był sortowany po priorytetach będącymi sumą odległości wierzchołków od źródła i oszacowań odległości tych wierzchołków od celu. Warto zauważyć, że oprócz sortowania często są wstawiane do niego wierzchołki, pobierane, usuwane i modyfikowane wartości priorytetu. Bardzo często jest sprawdzana przynależność i wyszukujemy według klucza. 
+Zbiór Open oferował zastosowanie znacznie bardziej finezyjnych struktur danych. Wymagane było od niego, aby był kolejką priorytetową, czyli aby był sortowany po priorytetach będącymi sumą odległości wierzchołków od źródła i oszacowań odległości tych wierzchołków od celu. Warto zauważyć, że oprócz sortowania często są wstawiane do niego wierzchołki, pobierane, usuwane i modyfikowane wartości priorytetu. Bardzo często jest sprawdzana przynależność i jest wyszukiwanie według klucza. 
 
-W \cite{C w pigulce} na stronie 317 możemy znaleźć tabelę 7.1. Przedstawia one prównanie czasów różnych operacji dla różnych klas słownikowych zaimplementowanych w technologii .NET. Najlepszą strukturą danych byłoby SortedDictionary<K,V>, która jest implementowane przed drzewo czerowon-czarne gdyby nie fakt, że jest sortowane po kluczu, a nie tak jak nam jest potrzebne sortowanie po wartości. Poszukiwano zatem struktury danych, która sortuje po wartościach i ma łatwy dostęp przez klucz. 
+W \cite{C w pigulce} na stronie 317 znajduje się tabela 7.1. Przedstawia ona porównanie czasów różnych operacji dla różnych klas słownikowych zaimplementowanych w technologii .NET. Najlepszą strukturą danych byłoby SortedDictionary<K,V>, która jest implementowana przez drzewo czerwono-czarne gdyby nie fakt, że jest sortowane po kluczu, a nie tak jak jest potrzebne w tym przypadku sortowanie po wartości. Poszukiwano zatem struktury danych, która sortuje po wartościach i ma łatwy dostęp przez klucz. 
 
-W naszym rozwiązaniu została zaimplementowana struktura danych opierająca się na dwóch podstrukturach - zainplementowanej kolejki priorytetowej poprzez listę, oraz słownik Dictionary<K,V> z technologii .NET, który opiera się o Tablicę skrótów. Zaimplementowana lista miała nastepującą strukturę:
+W naszym rozwiązaniu została zaimplementowana struktura danych opierająca się na dwóch podstrukturach - zainplementowanej kolejki priorytetowej poprzez listę, oraz słownik Dictionary<K,V> z technologii .NET, który opiera się o Tablicę skrótów. Zaimplementowana lista miała następującą strukturę:
 
 \begin{verbatim}
 public class MySortedListElement
@@ -837,18 +842,18 @@ Dictionary<Vertex, MySortedListElement> OpenDictionary =
 MySortedList OpenList = new MySortedList();
 \end{verbatim}
 
-W ten sposób w połaczeniu tych dwóch podstruktur otrzymujemy strukturę danych o następujących własnościach:
+W ten sposób w połączeniu tych dwóch podstruktur otrzymujemy strukturę danych o następujących własnościach:
 \begin{itemize}[noitemsep]
 \item dodawanie w czasie $O(n)$,
 \item wyszukiwanie po kluczu w czasie $O(1)$,
-\item najmniejszy po wartości w czasie $O(1)$,
+\item wybierz najmniejszy element według wartości w czasie $O(1)$,
 \item usuwanie w czasie $O(1)$
 \item modyfikowanie jednego elementu w czasie $O(n)$.
 \end{itemize}
 
-Algorytm A* jest odpalany dla każdego punktu wybranego przez użytkownika. Wyszukuje on najkrótszą ścieżkę do kolejnego punktu wybranego przez użytkownika. Po wszystkich obliczeniach kontur składa się z poszczególnych ścieżek. Są one konsolidowane i zwracane jako lista pikseli na podstawie danych z krawędzi o listach pikseli, z których jest zbudowana krawędź. W ten sposób jest wykrywany obrys pomiędzy punktami zaznaczonymi przez użytkownika.
+Algorytm A* jest uruchamiany dla każdego punktu wybranego przez użytkownika. Wyszukuje on najkrótszą ścieżkę do kolejnego punktu wybranego przez użytkownika. Po wszystkich obliczeniach obrys składa się z poszczególnych ścieżek. Są one konsolidowane i zwracane jako lista pikseli na podstawie danych z krawędzi o listach pikseli, z których jest zbudowana krawędź. W ten sposób jest wykrywany obrys pomiędzy punktami zaznaczonymi przez użytkownika.
 
-W sytuacji, gdy nie istnieją prawdziwe krawędzie lub tylko jej fragmenty, to algorytm w miarę możlwości będzie starał się używać prawdziwych krawędzi, dzięki odpowiedniej wadze krawędzi sztucznych. Dzięki sztucznym krawędziom na pewno istnieje droga między kolejnymi punktami, zatem algorytm z całą pewnością zwróci poprawny wynik. Co najwyżej będzie to wielokąt z punktami wybranymi przez użytkownika. 
+W sytuacji, gdy pomiędzy różnymi wierzchołkami nie istnieją prawdziwe krawędzie, albo istnieją tylko w wybranym fragmencie ścieżki łaczącej te dwa wierzchołki, to algorytm w miarę możlwości będzie starał się używać prawdziwych krawędzi, dzięki odpowiedniej wadze krawędzi sztucznych. Dzięki sztucznym krawędziom na pewno istnieje droga między kolejnymi punktami, zatem algorytm z całą pewnością zwróci poprawny wynik. Co najwyżej będzie to wielokąt z punktami wybranymi przez użytkownika. 
 
 Algorytm dla sztucznych krawędzi generuje listę pikseli algorytmem Bresenhama \cite{Bresenham}. Jest to algorytm, który dodaje w najbardziej optymalny sposób krawędzie. W celu zapewnienia łączności 4-krotnej jest przeprowadzana operacja morflologiczna z wykrywaniem 2 pikseli po przekątnej z maską 4-pikselową. Gdy zostaną takie piksele wykryte, to na jednym z rogów jest dodawany piksel w celu zapewnienia łączności 4-krotnej.
 
@@ -857,17 +862,39 @@ Algorytm dla sztucznych krawędzi generuje listę pikseli algorytmem Bresenhama 
 Większość plików medycznych ma rozdzielczości rzędu kilkaset na kilkaset pikseli, a więc na całym obrazie znajduje się kilkaset tysięcy pikseli. Zdarzają się też pliki w znacznie większej rozdzielczości, a takimi jest między innymi mammografia i zdjęcie rentgenowskie. Na tych obrazach znajduje się do kilkudziesięciu milionów pikseli. W celu sprawnego przetwarzania tych informacji potrzebne były optymalizacje do algorytmu. Zostały dodane następujące usprawnienia:
 \begin{enumerate}
 \item \textbf {Zmniejszenie rozmiaru obrazu roboczego} \\
-W pierwszym kroku zmniejszono rozmiar obrazu roboczego. Wyznaczono najmniejszy prostokąt, w którym mieszczą się wszystkie punkty zaznaczone przez użytkownika. Powiększono ten prostokąt o marginesy w taki sposób, a by wyjściowy prostokąt nadal był w środku, a pole powiększonego było 4-krotnie większe. Innymi słowami --- dodano marginesy po 50\% szerokości / wysokości do każdego wymiaru. Jeśli rozmiar powiększonego jest większy niż obrazu, to nie jest zmieniany obraz roboczy.
+W pierwszym kroku zmniejszono rozmiar obrazu roboczego. Wyznaczono najmniejszy prostokąt, w którym mieszczą się wszystkie punkty zaznaczone przez użytkownika. Powiększono ten prostokąt o marginesy w taki sposób, by wyjściowy prostokąt nadal był w środku, a pole powiększonego było 4-krotnie większe. Innymi słowami --- dodano marginesy po 50\% szerokości / wysokości do każdego wymiaru. Jeśli rozmiar powiększonego prostokąta jest większe niż obrazu, to nie jest zmieniany obraz roboczy.
 Optymalizując w ten sposób w sytuacji, gdy użytkownik stworzył mały obrys, to rozmiar przetwarzanego obrazu od momentu operatora Sobela jest już najczęściej kilkukrotnie mniejszy, czasami nawet kilkadziesiąt razy. W sytuacji gdy obrys zajmuje prawie cały obraz medyczny, to nadal musi być przetwarzany cały obraz.
 \item \textbf {Sięganie do pamięci zamiast to bitmapy} \\
-W celu przyśpieszenia działania operatora Sobela i liczenia statystyk zamiast sięgać do bitmapy metodą .GetPixel() na platformie .NET bitmapa została zapisana do tablicy bajtów i był z niej bezpośredni dostęp. Została wykorzystana do tego funkcja .LockBits(). Zysk na tej operacji był kilkudziesięcio krotny. Na późniejszch etapach algorytmu pracowano na macierzy, która nie była już bitmapą, więc operacje te wykonywały się znacznie szybciej. 
+W celu przyśpieszenia działania operatora Sobela i liczenia statystyk zamiast sięgać do bitmapy metodą .GetPixel() na platformie .NET bitmapa została zapisana do tablicy bajtów i był z niej bezpośredni dostęp. Została wykorzystana do tego funkcja .LockBits(). Zysk na tej operacji był kilkudziesięciokrotny. Na późniejszch etapach algorytmu pracowano na macierzy, która nie była już bitmapą, więc operacje te wykonywały się znacznie szybciej. 
 \item \textbf {Dzielenie zbyt długich krawędzi} \\
-W sytuacji, gdy wczytane krawędzie do grafu są bardzo długie, to może zdarzyć się taka sytuacja, że punkt zaznaczony przez użytkownika znajduje się bardzo blisko krawędzi, ale daleko od punktu poczatkowego lub końcowego krawędzi. W tym celu jest wprowadzony mechanizm dzielenia zbyt długich krawędzi na kilka krótszych. 
+W sytuacji, gdy wczytane krawędzie do grafu są bardzo długie, to może zdarzyć się taka sytuacja, że punkt zaznaczony przez użytkownika znajduje się bardzo blisko krawędzi, ale daleko od punktu początkowego lub końcowego krawędzi. W tym celu jest wprowadzony mechanizm dzielenia zbyt długich krawędzi na kilka krótszych. 
 \item \textbf {Problem z ilością punktów} \\
-Dla każdego punktu jest uruchamiany algorytm A*, zatem w sposób liniowy od ilości punktów zależny liczba wywołań algorytmu A*. Nie można wyznaczyć, czy w złożoności średniej całego algorytmu algorytm jest zależny liniowo od ilości punktów, czy w sposób logarytmiczny, czy też w sposób stały. W przypadku małej liczby punktów (<20) dominującą częścią dla obrazów o średniej rozdzielczości (kilkaset tysięcy pikseli) będą operacje na obrazie, takie jak operator Sobela, histereza. Gdy zostanie wykryta duża liczba wierzchołków i krawędzi, czyli np. na obrazie o wysokiej rozdzielczości, to złożoność całęgo algorytmu będzie zależała liniowo od ilości punktów. Dla dużej liczby punktów będzie zależała liniowo niezależnie od rozdzielczości, ponieważ stanie się to czynnikiem dominującym. Te przypuszczenia zostaną sprawdzone w części o eksperymentach.
+Dla każdego punktu jest uruchamiany algorytm A*, zatem w sposób liniowy od ilości punktów zależy liczba wywołań algorytmu A*. Nie można wyznaczyć, czy w złożoności średniej całego algorytmu algorytm jest zależny liniowo od ilości punktów, czy w sposób logarytmiczny, czy też w sposób stały. 
 \end{enumerate}
 
 \section {Moduł obliczeń statystyk}
+
+Nasz system zapewnia liczenie statystyk dotyczących obrysu. Statystyki są identyczne zarówno dla obrysów manualnych i półautomatycznych.
+Nastepujące statystyki są prezentowane użytkownikowi:
+
+\begin{itemize}[noitemsep]
+\item Histogram,
+\begin{itemize}[noitemsep]
+\item Wartość maksymalna,
+\item Wartość minimalna,
+\item Wartość średnia,
+\end{itemize}
+\item Środek ciężkości,
+\item Długość obrysu w $mm$,
+\item Długość obrysu w pikselach,
+\item Pole powierzchni w $mm^2$,
+\item Liczba pikseli wewnątrz obrysu.
+\end{itemize}
+
+Do obliczenia histogramu jest wymagany punkt wewnętrzny obrysu. Środek ciężkości obrysu nie zawsze musi znajdować się wewnątrz obrysu. W przypadku zastosowania algorytmu scan-linii dla obrysu manualnego nie jest dana informacja o logicznych wartościach gdzie jest krawędź, więc nie można wykryć np. krawędzi poziomych. Algorytm scan-linii lepiej nadaje się w przypadku gdy wypełniamy wielokąt, a nie obrys.
+
+Z tego powodu wybrano algorytm Flood Fill, czyli rozlewania się rekurencyjnego zliczonych pikseli od punktu wewnętrznego. Właśnie z tego powodu od użytkownika jest wymagane podanie dodatkowej informacji, jaką jest punkt wewnętrzny obrysu. Założono, że użytkownik zaznaczy go poprawnie. W sytuacji, gdy zostanie podany błędny punkt to ten algorytm policzy to co znajduje się na zewnątrz obrysu, a nie to co jest wewnątrz.
+
 
 \chapter {Przeprowadzone eksperymenty}
 
