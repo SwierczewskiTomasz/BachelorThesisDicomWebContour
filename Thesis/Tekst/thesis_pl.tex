@@ -397,7 +397,7 @@ W rozwiązaniu zdecydowano się skorzystać z serwera Orthanc jako bazy przechow
 
 Poza serwerem Orthanc stworzono serwer w technologii .NET Core wspomagający interfejs użytkownika, który pozwala na przeprowadzanie czasochłonnych aplikacji poza interfejsem użytkownika. Podstawowymi zadaniami tego serwera było przechowywanie wykonanych przez użytkownika obrysów manualnych, generowanie i przechowywanie obrysów półautomatycznych oraz obliczanie statystyk związanych z zapisanymi obrysami.
 
-Jako interfejs użytkownika wykorzystano narzędzie ReactJS z biblioteką Redux. Wybranie tej technologii pozwaliło na stworzenie eleganckiej aplikacji przeglądarkowej pozwalającej na generowanie obrysów manualnych przy użyciu myszy lub tabletu graficznego, wybieranie punktów, z których generowane będą obrysy półautomatyczne, oglądanie wcześniej wygenerowanych i zapisanych obrysów oraz wyświetlanie statystyk dotczących wykonanego obrysu. Interfejs inspirowany jest podglądem obrazu w aplikacji DWV, ale funkcjonalność automatycznego obrysu została zmieniona --- obrys nie jest generowany na bierząco, lecz na życzenie użytkownika wybrane przez niego punkty wysyłane są do serwera i wyświetlany jest wynik półautomatycznego dopasowania obrysu.
+Jako interfejs użytkownika wykorzystano bibliotekę ReactJS w połączeniu z biblioteką Redux. Wybranie tej technologii pozwaliło na stworzenie eleganckiej aplikacji przeglądarkowej pozwalającej na generowanie obrysów manualnych przy użyciu myszy lub tabletu graficznego, wybieranie punktów, z których generowane będą obrysy półautomatyczne, oglądanie wcześniej wygenerowanych i zapisanych obrysów oraz wyświetlanie statystyk dotczących wykonanego obrysu. Interfejs inspirowany jest podglądem obrazu w aplikacji DWV, ale funkcjonalność automatycznego obrysu została zmieniona --- obrys nie jest generowany na bierząco, lecz na życzenie użytkownika wybrane przez niego punkty wysyłane są do serwera i wyświetlany jest wynik półautomatycznego dopasowania obrysu.
 
 \chapter {Opis autorskiego systemu informatycznego}
 
@@ -492,6 +492,25 @@ Użytkownik może zanonimizować pacjenta, gdy przegląda jego obraz. Użytkowni
 Tabela \ref{tabela wymagania niefunkcjonalne} przedstawia wymagania niefunkcjonalne, które system musi spełnić.
 
 \section {Architektura rozwiązania}
+
+Na rysunku \ref{fig:architektura} przedstawiono architekturę autorskiego systemu.
+
+\begin{figure}[h]
+	\center
+	\includegraphics[width=0.8\textwidth]{architektura}
+	\caption{Diiagram UML przedstawiający architekturę autorskiego systemu}
+    	\label{fig:architektura}
+\end{figure}
+ 
+Architektura pozwala na połączenie z serwerem plików DICOM (Orthanc) oraz serwerem obrysów dowolnej liczby klientów korzystających z przeglądarki. Algorytmy zapisu obrysu, generowania obrysu, obliczania statystyk oraz anonimizacji plików są od siebie niezależne i mogą zostać zrównoleglone --- ograniczeniem jest tutaj moc obliczeniowa maszyny na której uruchomiony jest serwer. Niemożliwe jest zwiększenie wydajności poprzez zwiększenie liczby instancji serwera. Dopuszczalne jest takie rozwiązanie, gdyż planowana liczba użytkowników jednocześnie krzystających z aplikacji to nie więcej niż 20 osób. Możliwości zwiększenia skalowalności w kontekście obliczeniowej zostało opisane w rozdziale 5.2.
+
+\subsection {Interfejs użytkownika}
+
+Kluczowym elementem stworzonego systemu jest interfejs użytkownika napisany w języku skryptowym JavaScript przy użyciu biblioteki ReactJS. Udostępnia ona interfejs nawigujący po zapisanych w serwerze Orthanc plikach DICOM. Ponadto dla wyświetlonego obrazu udostępnia szczegóły dotyczące obrazu, badania i pacjenta. Umożliwia także wykonanie obrysu manualnego zrealizowanego przy uzyciu biblioteki react-canvas-draw. W aplikacji zawarto również autorski interfejs do wyboru punktów do algorymu półautomatycznego. Podgląd zapisanych w systemie obrysów wraz z wyliczonymi dla nich statystykami jest możliwy z poziomu tworzenia obrysów oraz w osobnej zakładce udostępniono widok, w którym użytkownik może ogladać wybrane przez siebie obrysy z listy obrysów jednocześnie na jednym obrazie.
+
+\subsection {Serwer obrysów i obliczeń}
+
+
 
 \section {Opracowany algorytm półautomatyczny}
 
