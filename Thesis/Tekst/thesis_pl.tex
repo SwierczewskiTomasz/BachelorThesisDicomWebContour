@@ -561,10 +561,6 @@ Zgodnie z \cite{Cyfrowe przetwarzanie obrazów medycznych} za ich główne wady 
 
 W ten sposób otrzymano macierz, gdzie każde pole w macierzy odpowiada pikselowi w wejściowej bitmapie --- obrazie medycznym. Jeśli w komórce macierzy znajduje się 1, to w tym miejscu na bitmapie znajduje się krawędź, w przeciwnym przypadku 0. W ten sposób algorytm wykrył wszystkie znaczące krawędzie na bitmapie. Kolejnym krokiem przetwarzania było stworzenie grafu na podstawie wyżej wymienionej macierzy.
 
-\cite{Algorytmy Sedgewick}
-\cite{C w pigulce}
-
-
 \subsection {Stworzenie grafu z bitmapy}
 
 Na tym etapie algorytm potrzebuje następujących danych wejściowych:
@@ -664,27 +660,212 @@ Ostatnim problemem z jakim należałoby się wiązać wybierając łączność 8
 Z wyżej wymienionych powodów zdecydowano się na łączność 4-krotną. Przygotowano i zaimplementowano algorytm tworzący graf z bitmapy, a jego pseudokod znajduje się poniżej. %Poprawić, nie poniżej!!!
 
 \begin{verbatim}
- 1) Dla każdego punktu oznaczonego jako krawędź w macierzy wejściowej
- 2)     Jeśli punkt ma 1 sąsiada albo co najmniej 3 sąsiadów (tzn.
-        jest albo punktem końcowym albo węzłowym)
- 3)         Dodaj punkt jako nowy wierzchołek do grafu. 
- 1) Dla każdego k w { 0, 1, ..., |V_2| - 1 }:
- 2)     Dla każdej kombinacji k wierzchołków v ze zbioru V_2:
- 3)         Tworzymy graf G_3, który powstaje poprzez usunięcie z G_2
- 4)             wierzchołków należących do zbioru v (oraz przyległych krawędzi).
- 5)         Ozn.: G_3 = G_2 - x.
- 6)         Niech n = |V_1| - |V_3|.
- 7)         Dla każdej kombinacji n wierzchołków x ze zbioru V_1:
- 8)             Dla każdej permutacji wierzchołków p w grafie G_1 - x:
- 9)                 Jeśli grafy G_3 oraz p są izomorficzne:
-10)                 Zwróć G_3 jako wynik.
+ 1) MATRIX - macierz wejściowa z oznaczonymi krawędziami jako 1
+ 2) foreach(punkt A taki, że MATRIX(A) == 1)
+ 3) {
+ 4)     if ( punkt A ma 1 sąsiada albo co najmniej 3 sąsiadów )
+ 5)     { 
+ 6)         // (tzn. jest albo punktem końcowym albo węzłowym)
+ 7)         wstaw punkt A do kolejki wierzchołków L_V
+ 8)         while ( kolejka wierzchołków L_V niepusta )
+ 9)         {
+10)             weź wierzchołek V_1 z kolejki L_V
+11)             usuń V_1 z kolejki L_V
+12)             dodaj wierzchołek V_1 do grafu G
+13)             foreach (punkt B sąsiadujący z V_1 )
+14)             {
+15)                 if ( MATRIX(B) == 1 )
+16)                 {
+17)                     stwórz nową krawędź E.  
+18)                     dodaj B do E 
+19)                     ustaw wierzchołek V_1 jako początek krawędzi E
+20)                     dodaj krawędź E do kolejki przetwarzanych krawędzi L_E
+21)                 }
+22)                 while ( L_E niepusta)
+23)                 {
+24)                     weź krawędź E z L_E
+25)                     usuń E z kolejki
+26)                     stwórz kolejkę potencjalnych punktów krawędzi E, L_P
+27)                     weź punkt C z E
+28)                     usuń C z E
+29)                     dodaj punkt C do kolejki L_P
+30)                     while ( L_P niepusta ) 
+31)                     {
+32)                         weź punkt D z L_P 
+33)                         usuń D z L_P
+34)                         K = liczba sąsiadów D
+35)                         if ( K == 0 lub K > 1 )
+36)                         {
+37)                             stwórz wierzchołek V_2, który znajduje się w D
+38)                             do listy krawędzi wierzchołka V_2 dodaj E
+39)                             do listy krawędzi wierzchołka V_1 dodaj E
+40)                             ustaw wierzchołek V_2 jako koniec krawędzi E
+41)                             dodaj krawędź E do grafu G
+42)                             dodaj wierzchołek V_2 do kolejki L_V
+43)                         }
+44)                         if ( K == 1 )
+45)                         {
+46)                             dodaj punkt D do E
+47)                             foreach ( punkt F sąsiadujący z D )
+48)                             {
+49)                                 if ( MATRIX(F) == 1)
+50)                                 {
+51)                                     dodaj F do L_P
+52)                                 }
+53)                             }
+54)                         }
+55)                         MATRIX(D) = 1
+56)                     }
+57)                 }
+58)             }
+59)         }
+60)     }
+61) }
+62) Zwróć graf G
 \end{verbatim}
+
+Utworzony w ten sposób graf jest grafem nieskierowanym z wagami, gdzie wagi to liczba pikseli, czy też punktów należących do krawędzi. Graf ten może nie być spójny. Ponadto ten graf może nie zawierać wierzchołków, które pokrywają się z punktami wybranymi przez użytkownika.
+
+Graf ten zazwyczaj jest rzadki, ponieważ liczba jego krawędzi jest rzędu liczby jego wierzchołków.  Z uwagi na czasami bardzo dużą liczbę wierzchołków --- nawet do kilkudziesięciu tysięcy --- próba implementacji przy pomocy macierzy sąsiedztwa mogłaby spowodować zużycie całej możliwej pamięci operacyjnej. Dla 50 tysięcy wierzchołków program musiałby zadeklarować macierz sąsiedztwa zawierającą 2,5 miliarda komórek. Z tych powodów graf został zaimplementowany przy pomoc list sąsiedztwa.
+
+W przyjętej implementacji każda krawędź zawiera dodatkowo informację o tym, jakie piksele należą do danej krawędzi w rzeczywistym obrazie.
 
 \subsection {Zapewnienie spójności grafu}
 
+W pierwszym kroku na tym etapie przetwarzania grafu dodajemu punkty wybrane przez użytkownika do grafu.
+
+Graf, który uzyskaliśmy w poprzednim kroku może nie być spójny. Powoduje to fakt, że między punktami wybranymi przez użytkownika mogą nie istnieć ścieżki. W celu zapewnienia spójności grafu należy dodawać sztuczne krawędzie. Zostają one dodawane z większymi wagami, niż wynikałoby to w rzeczywistości z liczebnosci listy pikseli, które reprezentują, ponieważ ma to na celu używanie z większym priorytetem prawdziwych krawędzi, a nie sztucznych. W sytuacji gdy nie istnieje dobre połączenie, to zostaną użyte krawędzie sztuczne. Duże wagi dodatkowo będą zmuszały algorytmy wyszukiwania najkrótszych ścieżek w grafie do minimalizowania długości takich ścieżek. 
+
+Do znajdowania spójnych składowych grafu najczęściej używa się albo algorytmu przeszukiwania grafu w głąb (ang. Depth-first search, w skrócie DFS) lub przeszukiwania grafu wszerz (ang. Breadth-first search, w skrócie BFS) \cite{Algorytmy Sedgewick}. Użyto algorytmu przeszukiwania wszerz, opierając się na przykładowej implementacji w materiałach \cite{AiSD2}. Wykorzystano Queue<T>, a zatem kolejkę, więc jest to przeszukiwanie wszerz. Złożoność obliczeniowa tego algorytmu to $O(|E|)$.  
+
+Po wyznaczeniu spójnych składowych grafu dla każdej pary składowych znajdowano taką parę wierzchołków, że odległość między nimi jest minimalna. Jeśli ta odległość była mniejsza niż maksymalna odległość między dwoma dowolnymi punktami zaznaczonymi przez użytkownika, to była dodawana sztuczna krawędź o wadze 2,5 razy większej niż odległość wynikająca z metryki Manhattan pomiędzy tymi dwoma wierzchołkami. 
+
+Przykład zasady działania tej operacji przedstawia poniższy pseudokod:
+
+\begin{verbatim}
+ 1) foreach (Spójna składowa grafu s1)
+ 2) {
+ 3)     foreach (Spójna składowa grafu s2, różna od s1 i nie przetwarzana 
+        wcześniej jako s1)
+ 4)     {
+ 5)         Wybierz wierzchołek v1 z s1 i v2 z s2 takie, że odległość pomiędzy 
+            nimi jest najmniejsza ze wszystkich takich par
+ 6)         Dodaj sztuczną krawędź pomiędzy v1 i v2
+ 7)     }
+ 8) }
+\end{verbatim}
+
+
+W ten sposób osiągnięto spójny graf, który zawiera punkty dodane przez użytkownika. 
+
 \subsection {Wyszukanie najkrótszych ścieżek w grafie}
 
+Na tym etapie została zapewniona spójność grafu, z całą pewnością istnieje ścieżka pomiędzy punktami wybranymi przez użytkownika, te punkty są osiągalne. Pozostało wybrać najkrótszą ścieżkę łączącą kolejne te punkty. Zakładamy, że jest dana jest lista punktów wybranych przez użytkownika i zawiera ona kolejne punkty, tzn. pierwszy należy połączyć z drugim, drugi z trzeci, \dots, ostatni z pierwszym. 
+
+Warto zaznaczyć, że wyszukiwane były ścieżki o minimalnej wadze, czy też o minimalnym koszcie. Z uwagi na fakt, że wagi w grafie są ściśle związane z odległościami to używane jest sformułowanie szukania najkrótszych ścieżek. Wagi w tym grafie są nieujemne. Może istnieć w tym grafie kilka ścieżek z jednego punktu do drugiego o tym samym koszcie, więc algorytm kończy swoje działanie na typ etapie gdy znajdzie jedną z nich. W tym grafie nie występują krawędzie wielokrotne. Ten graf nie zawiera cykli własnych.
+
+Do wyszukiwania najkrótszych ścieżek w grafie po zgłębieniu literatury \cite{Algorytmy Sedgewick} i \cite{AiSD2} były rozważane do użycia 2 algorytmy. Był to algorytm Dijkstry i A*. Do algorytmu A* była rozważana heurestyka w postaci odległości miejskiej, Manhattan z wierzchołka $v$ do celu $t$, ozn. $h(v)$.
+
+Zgodnie z \cite{AiSD2} ,,Funkcja $h$ musi spełniać następujące warunki:
+
+\begin{itemize}[noitemsep]
+\item musi być oszacowaniem dolnym, czyli dla każdego wierzchołka $v$ $h(v) <=$ odległość $v$ od celu $t$,
+\item musi być monotoniczna, czylid la dowolnej krawędzi $<u,v>$ $h(u) <= waga<u,v> + h(v)$.''
+\end{itemize} 
+
+Heurestyka w postaci metryki Manhattan spełnia te wymagania. Z tego powodu może zostać wykorzystany algorytm A*. Porównując złożoności algorytmu A* i Dijkstry w \cite{AiSD2} możemy zauważyć, że algorytm A* w psymistycznym przypadku ma taką samą złożoność jak algorytm Djikstry, czyli $O(|E|*log(|V|))$ z kolejką priorytetową dla grafów rzadkich, a $O(|V|^2)$ nie wykorzystując kolejki priorytetowej dla grafów gęstych. W praktyce dla grafów rzadkich nie ma potrzeby rozważania znacznej części wierzchołków, co poprawia złożoność średnią. Wynosi ona wtedy $O(|E|)$.
+
+Do implementacji wyszukiwania najkrótszych ścieżek w grafie na podstawie wyżej wymienionych wniosków został wykorzystany algorytm A* z heurestyką w postaci metryki Manhattan. Przykładowy pseudokod tego algorytmie można znaleźć w \cite{AiSD2} i jest on nastepujący: %Także nie powinno tak tego się robić!
+
+\begin{verbatim}
+ 1) CLOSE = 0 // zbiór (z szybkim sprawdzeniem przynależności)
+ 2) OPEN = {s} // kolejka priorytetowa
+ 3) // priorytety - sumy odległości wierzchołków od źródła
+ 4) // i oszacowań odległości tych wierzchołków od celu
+ 5) odległość[s] = 0
+ 6) while ( OPEN niepusty )
+ 7) {
+ 8)     u = wierzchołek należący do OPEN taki, że
+ 9)         odległość[u] + oszacowanie[u,t] <=
+10)         odległość[w] + oszacowanie[w,t]
+11)         dla wszystkich w należących do OPEN
+12)     usuń u z OPEN
+13)     wstaw u do CLOSE
+14)     if ( u == t ) break
+15)     foreach ( wierzchołek w sąsiadujący z u taki, że w należący do CLOSE )
+16)     {
+17)         if ( w należy do OPEN )
+18)         {
+19)             odległość[w] = nieskończoność
+20)             wstaw w do OPEN
+21)         }
+22)         if ( odległość[w] > odległość[u] + waga<u,w> )
+23)         {
+24)             odległość[w] = odległość[u] + waga<u,w>
+25)             aktualizacja priorytetu wierzchołka w (w OPEN)
+26)             poprzedni[w] = u
+27)         }
+28)     }
+29) }
+\end{verbatim}
+
+Aby maksymalnie dobrze wykorzystać niską złożoność obliczeniową algorytmu A* należało wykorzystać dobre struktury danych do tego algorytmu. Zbiór CLOSE,  wymagał szybkiego sprawdzania przynależności. Po przenalizowaniu rekomendowanych struktur danych \cite{Dotnet struktury} został użyty HashSet<T>. 
+
+Zbiór Open oferował zastosowanie znacznie bardziej finezyjnych struktur danych. Wymagane było od niego, aby był kolejką priorytetową, czyli aby był sortowany po priorytetach będącymi sumą odległości wierzchołków od źródła i oszacowań odległości tych wierzchołków od celu. Warto zauważyć, że oprócz sortowania często są wstawiane do niego wierzchołki, pobierane, usuwane i modyfikowane wartości priorytetu. Bardzo często jest sprawdzana przynależność i wyszukujemy według klucza. 
+
+W \cite{C w pigulce} na stronie 317 możemy znaleźć tabelę 7.1. Przedstawia one prównanie czasów różnych operacji dla różnych klas słownikowych zaimplementowanych w technologii .NET. Najlepszą strukturą danych byłoby SortedDictionary<K,V>, która jest implementowane przed drzewo czerowon-czarne gdyby nie fakt, że jest sortowane po kluczu, a nie tak jak nam jest potrzebne sortowanie po wartości. Poszukiwano zatem struktury danych, która sortuje po wartościach i ma łatwy dostęp przez klucz. 
+
+W naszym rozwiązaniu została zaimplementowana struktura danych opierająca się na dwóch podstrukturach - zainplementowanej kolejki priorytetowej poprzez listę, oraz słownik Dictionary<K,V> z technologii .NET, który opiera się o Tablicę skrótów. Zaimplementowana lista miała nastepującą strukturę:
+
+\begin{verbatim}
+public class MySortedListElement
+{
+    public Vertex Key;
+    public double Value;
+    public MySortedListElement next;
+    public MySortedListElement previous;
+}
+\end{verbatim}
+
+Struktura ta miała zaimplementowane sortowanie przez wstawianie, zatem modyfikacja tylko jednego elementu wymagała w pesymistycznym przypadku tylko $O(n)$ porównań. Wstawianie nowego elementu ma złożoność pesymistyczną $O(n)$, usuwanie $O(1)$. Zbadanie przynależności po kluczu to $O(n)$ i nie zaleca się tego robić. 
+
+Niezależnie od tej struktury jest przechowywana druga struktura danych, Dictionary<K,V>, gdzie kluczami są wierzchołki, a wartości to referencje na elementy tej listy. Zmienne odpowiedzialne za przechowanie kolejki priorytetowej OPEN zostały zadeklarowane w sposób nastepujący:
+
+\begin{verbatim}
+Dictionary<Vertex, MySortedListElement> OpenDictionary = 
+   new Dictionary<Vertex, MySortedListElement>();
+MySortedList OpenList = new MySortedList();
+\end{verbatim}
+
+W ten sposób w połaczeniu tych dwóch podstruktur otrzymujemy strukturę danych o następujących własnościach:
+\begin{itemize}[noitemsep]
+\item dodawanie w czasie $O(n)$,
+\item wyszukiwanie po kluczu w czasie $O(1)$,
+\item najmniejszy po wartości w czasie $O(1)$,
+\item usuwanie w czasie $O(1)$
+\item modyfikowanie jednego elementu w czasie $O(n)$.
+\end{itemize}
+
+Algorytm A* jest odpalany dla każdego punktu wybranego przez użytkownika. Wyszukuje on najkrótszą ścieżkę do kolejnego punktu wybranego przez użytkownika. Po wszystkich obliczeniach kontur składa się z poszczególnych ścieżek. Są one konsolidowane i zwracane jako lista pikseli na podstawie danych z krawędzi o listach pikseli, z których jest zbudowana krawędź. W ten sposób jest wykrywany obrys pomiędzy punktami zaznaczonymi przez użytkownika.
+
+W sytuacji, gdy nie istnieją prawdziwe krawędzie lub tylko jej fragmenty, to algorytm w miarę możlwości będzie starał się używać prawdziwych krawędzi, dzięki odpowiedniej wadze krawędzi sztucznych. Dzięki sztucznym krawędziom na pewno istnieje droga między kolejnymi punktami, zatem algorytm z całą pewnością zwróci poprawny wynik. Co najwyżej będzie to wielokąt z punktami wybranymi przez użytkownika. 
+
+Algorytm dla sztucznych krawędzi generuje listę pikseli algorytmem Bresenhama \cite{Bresenham}. Jest to algorytm, który dodaje w najbardziej optymalny sposób krawędzie. W celu zapewnienia łączności 4-krotnej jest przeprowadzana operacja morflologiczna z wykrywaniem 2 pikseli po przekątnej z maską 4-pikselową. Gdy zostaną takie piksele wykryte, to na jednym z rogów jest dodawany piksel w celu zapewnienia łączności 4-krotnej.
+
 \subsection {Optymalizacja}
+
+Większość plików medycznych ma rozdzielczości rzędu kilkaset na kilkaset pikseli, a więc na całym obrazie znajduje się kilkaset tysięcy pikseli. Zdarzają się też pliki w znacznie większej rozdzielczości, a takimi jest między innymi mammografia i zdjęcie rentgenowskie. Na tych obrazach znajduje się do kilkudziesięciu milionów pikseli. W celu sprawnego przetwarzania tych informacji potrzebne były optymalizacje do algorytmu. Zostały dodane następujące usprawnienia:
+\begin{enumerate}
+\item \textbf {Zmniejszenie rozmiaru obrazu roboczego} \\
+W pierwszym kroku zmniejszono rozmiar obrazu roboczego. Wyznaczono najmniejszy prostokąt, w którym mieszczą się wszystkie punkty zaznaczone przez użytkownika. Powiększono ten prostokąt o marginesy w taki sposób, a by wyjściowy prostokąt nadal był w środku, a pole powiększonego było 4-krotnie większe. Innymi słowami --- dodano marginesy po 50\% szerokości / wysokości do każdego wymiaru. Jeśli rozmiar powiększonego jest większy niż obrazu, to nie jest zmieniany obraz roboczy.
+Optymalizując w ten sposób w sytuacji, gdy użytkownik stworzył mały obrys, to rozmiar przetwarzanego obrazu od momentu operatora Sobela jest już najczęściej kilkukrotnie mniejszy, czasami nawet kilkadziesiąt razy. W sytuacji gdy obrys zajmuje prawie cały obraz medyczny, to nadal musi być przetwarzany cały obraz.
+\item \textbf {Sięganie do pamięci zamiast to bitmapy} \\
+W celu przyśpieszenia działania operatora Sobela i liczenia statystyk zamiast sięgać do bitmapy metodą .GetPixel() na platformie .NET bitmapa została zapisana do tablicy bajtów i był z niej bezpośredni dostęp. Została wykorzystana do tego funkcja .LockBits(). Zysk na tej operacji był kilkudziesięcio krotny. Na późniejszch etapach algorytmu pracowano na macierzy, która nie była już bitmapą, więc operacje te wykonywały się znacznie szybciej. 
+\item \textbf {Dzielenie zbyt długich krawędzi} \\
+W sytuacji, gdy wczytane krawędzie do grafu są bardzo długie, to może zdarzyć się taka sytuacja, że punkt zaznaczony przez użytkownika znajduje się bardzo blisko krawędzi, ale daleko od punktu poczatkowego lub końcowego krawędzi. W tym celu jest wprowadzony mechanizm dzielenia zbyt długich krawędzi na kilka krótszych. 
+\item \textbf {Problem z ilością punktów} \\
+Dla każdego punktu jest uruchamiany algorytm A*, zatem w sposób liniowy od ilości punktów zależny liczba wywołań algorytmu A*. Nie można wyznaczyć, czy w złożoności średniej całego algorytmu algorytm jest zależny liniowo od ilości punktów, czy w sposób logarytmiczny, czy też w sposób stały. W przypadku małej liczby punktów (<20) dominującą częścią dla obrazów o średniej rozdzielczości (kilkaset tysięcy pikseli) będą operacje na obrazie, takie jak operator Sobela, histereza. Gdy zostanie wykryta duża liczba wierzchołków i krawędzi, czyli np. na obrazie o wysokiej rozdzielczości, to złożoność całęgo algorytmu będzie zależała liniowo od ilości punktów. Dla dużej liczby punktów będzie zależała liniowo niezależnie od rozdzielczości, ponieważ stanie się to czynnikiem dominującym. Te przypuszczenia zostaną sprawdzone w części o eksperymentach.
+\end{enumerate}
 
 \section {Moduł obliczeń statystyk}
 
@@ -736,7 +917,11 @@ Z wyżej wymienionych powodów zdecydowano się na łączność 4-krotną. Przyg
 \bibitem[9]{KMM} Saeed K., Rybnik M., Tabędzki M., Adamski M.: Algorytm do Ścieniania Obrazów: Implementacja i Zastosowania \emph{Zeszyty Naukowe Politechniki Białostockiej 2002 Informatyka - Zeszyt 1}, Białystok, 2002
 \bibitem[10]{K3M} Saeed K., Tabędzki M., Rybnik M., Adamski M.: K3M: A Universal Algorithm for Image Skeletonization and a Review of Thinning Techniques \emph{International Journal of Applied Mathematics and Computer Science, 2010, 20(2)} Białystok, 2010, 317--335
 \bibitem[11]{Algorytmy Sedgewick} Sedgewick R., Wayne K.: Algorytmy Wydanie IV, \emph{Helion}, Gliwice, 2012, 526--706
-\bibitem[12]{C w pigulce} Albahari J., Albahari B.: C 6.0 w pigułce, \emph{Helion, O'Reilly Media, Inc.},Gliwice, 2016, page--page 
+\bibitem[12]{C w pigulce} Albahari J., Albahari B.: C 6.0 w pigułce, \emph{Helion, O'Reilly Media, Inc.},Gliwice, 2016, page--page
+\bibitem[13]{A*} Hart P. E., Nilsson N. J., Raphael B.: A Formal Basis for the Heurestic Determination of Minimum Cost Paths \emph{IEEE Transactions on Systems Science and Cybernetics 4(2)}, 1968, 100--107
+\bibitem[14]{AiSD2} Bródka J.: Wykłady z przedmiotu Algorytmy i Struktury Danych 2 \emph{Politechnika Warszawska, Wydział Matematyki i Nauk Informacyjnych} Materiały dostepne na stronie: http://mini.pw.edu.pl/~brodka/ASD2.html [Dostęp 22 stycznia 2019]
+\bibitem[15]{Dotnet struktury} Microsoft Corporation: Dokumentacja rekomendowanych struktur danych platformy .NET. Oficjalna strona: https://docs.microsoft.com/pl-pl/dotnet/standard/collections/ [Dostęp 22 stycznia 2019]
+\bibitem[16]{Bresenham} Bresenham J. E.: Algorithm for computer control of a digital plotter. \emph{ICM System Journal 4(1)} 1965
 %\bibitem[1]{Ktos} A. Author, \emph{Title of a book}, Publisher, year, page--page.
 %\bibitem[2]{Innyktos} J. Bobkowski, S. Dobkowski, Jak stworzyć bibliografię w BibTeX-u, \emph{Czasopismo nr}, rok, strona--strona.
 %\bibitem[3]{B} C. Brink, Power structures, \emph{Algebra Universalis 30(2)}, 1993, 177--216.
