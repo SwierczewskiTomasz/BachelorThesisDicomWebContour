@@ -315,33 +315,52 @@ W poniższym rozdziale zostały przestawione istniejące na rynku aplikacje ofer
 Cornerstone Core to biblioteka, która umożliwia wyświetlanie obrazów medycznych z wykożystaniem elementu canvas z języka HTML5. Biblioteka udostępnia interfejs do wyświetlania obrazów medycznych pozwalający na zarządzanie wyświetlaniem zdjęcia. Podstawowe funkcjonalności obsługiwane przez bibliotekę to:
 
 \begin{itemize}[noitemsep]
-\item Przybliżanie i oddalanie obrazu.
-\item Obrót obrazu.
-\item Przesuwanie obrazu w wyświetlanym komponencie.
-\item Zmiana jasności wyświetlanego obrazu.
-\item Mapowanie kolorów.
+\item Przybliżanie i oddalanie obrazu,
+\item Obrót obrazu,
+\item Przesuwanie obrazu w wyświetlanym komponencie,
+\item Zmiana jasności wyświetlanego obrazu,
+\item Mapowanie kolorów,
 \item Interpolacja pikseli w obrazie (dla obrazów o niskiej rozdzielczości).
 \end{itemize}
 
 Ponadto twórcy biblioteki Cornerstone Core stworzyli bibliotekę Cornerstone Tools, która korzysta z biblioteki Cornerstone Core i umożliwia wiele funkcjonalności potrzebnych lekarzom do analizy badań pacjentów. Poza funkcjonalnościami Cornerstone Core umożliwia także:
 
 \begin{itemize}[noitemsep]
-\item Mierzenie odległości w linii prostej na obrazie z podaniem rzeczywistych wartości.
-\item Oznaczanie obszarów przy pomocy prostokątów oraz elips.
-\item oznaczanie niewielkich zmian w postaci małego okręgu.
+\item Mierzenie odległości w linii prostej na obrazie z podaniem rzeczywistych wartości,
+\item Oznaczanie obszarów przy pomocy prostokątów oraz elips,
+\item Oznaczanie niewielkich zmian w postaci małego okręgu,
 \item Mierzenie kątów na podstawie 3 podanych przez użytkownika punktów.
 \end{itemize}
 
-Przykładowym projektem korzystającym z bibliotek Cornerstone jest OHIF\footnote {Open Health Imaging Foundation - http://ohif.org/ } Viewer. Aplikacja pozwala na wykorzystanie większości możliwości udostępnianych przez biblioteki Cornerstone. Przykładowe urzycie aplikacji zostało przedstawione na rysunku \ref{fig:OHIF-example}.
+Przykładowym projektem korzystającym z bibliotek Cornerstone jest OHIF Viewer. Aplikacja pozwala na wykorzystanie większości możliwości udostępnianych przez biblioteki Cornerstone. Przykładowe urzycie aplikacji zostało przedstawione na rysunku \ref{fig:OHIF-example}.
 
 \begin{figure}[h]
 	\includegraphics[width=\textwidth]{OHIF-example}
-	\caption{Przykład użycia aplikacji OGIF Viewer}
+	\caption{Przykład użycia aplikacji OHIF Viewer}
     	\label{fig:OHIF-example}
 \end{figure}
 
 \subsection {DICOM Web Viewer (DWV)}
-\subsection {Dicom-contour}
+
+Aplikacja DWV jest również przykładem aplikacji przeglądarkowej służącej do przeglądania obrazów DICOM z wygodnym interfejsem automatycznego i półautomatycznego obrysowywania interesujących użytkownika obszarów zaznaczonych na obrazie. Przykładowy obrys wykonany przy użyciu aplikacji DWV przedstawiono na rysunku \ref{fig:DWV-interface}.
+
+\begin{figure}[h]
+	\includegraphics[width=\textwidth]{DWV-interface}
+	\caption{Przykład użycia aplikacji DWV - obrys półautomatyczny (Livewire)}
+    	\label{fig:DWV-interface}
+\end{figure}
+
+ Poza tym aplikacja udostępnia:
+\begin{itemize}[noitemsep]
+\item Przybliżanie i oddalanie obrazu,
+\item Przesuwanie obrazu w wyświetlanym komponencie,
+\item Zmiana jasności wyświetlanego obrazu,
+\item Mierzenie odległości w linii prostej na obrazie z podaniem rzeczywistych wartości,
+\item Oznaczanie obszarów przy pomocy prostokątów oraz elips.
+\end{itemize}
+
+Niestety aplikacja nie pozwala na wykonywanie manualnych obrysów poprzez samodzielne poruszanie kursorem po obrazie.
+
 \subsection {Orthanc}
 
 Orthanc to serwer z bazą plików DICOM, który umożliwia łatwe przechowywanie, zarządzanie oraz dostęp do plików medycznych DICOM. Ponadto Orthanc udostępnia REST API, które umożliwia przeglądanie wgranych na serwer plików DICOM podzielonych względem pacjentów, badań i serii. 
@@ -369,8 +388,16 @@ Serwer Orthanc udostępnia również prosty interfejs przeglądarkowy który poz
     	\label{fig:Orthanc-preview}
 \end{figure}
 
+
 \section {Proponowane rozwiązanie}
 
+Istniejące rozwiązania nie zapewniają wygodnego interfejsu użytkownikowi, który dysponuje tabletem graficznym i chciałby obrysowywać interesujące go części obrazów medycznych odręcznie. Ponadto żadne z narzędzi nie przechowuje narysowanych i wygenerowanych wcześniej obrysów.  Rozwiązanie przedstawione w tej pracy udostępnia takie możliwości.
+
+W rozwiązaniu zdecydowano się skorzystać z serwera Orthanc jako bazy przechowującej pliki DICOM. Przy decyzji miały znaczenie przede wszystkim to, że większość ośrodków naukowych oraz medycznych korzysta z tego serwera. Ponadto udostępniane przez API serwera funkcjonalności są wystarczające dla realizowanego systemu. 
+
+Poza serwerem Orthanc stworzono serwer w technologii .NET Core wspomagający interfejs użytkownika, który pozwala na przeprowadzanie czasochłonnych aplikacji poza interfejsem użytkownika. Podstawowymi zadaniami tego serwera było przechowywanie wykonanych przez użytkownika obrysów manualnych, generowanie i przechowywanie obrysów półautomatycznych oraz obliczanie statystyk związanych z zapisanymi obrysami.
+
+Jako interfejs użytkownika wykorzystano narzędzie ReactJS z biblioteką Redux. Wybranie tej technologii pozwaliło na stworzenie eleganckiej aplikacji przeglądarkowej pozwalającej na generowanie obrysów manualnych przy użyciu myszy lub tabletu graficznego, wybieranie punktów, z których generowane będą obrysy półautomatyczne, oglądanie wcześniej wygenerowanych i zapisanych obrysów oraz wyświetlanie statystyk dotczących wykonanego obrysu. Interfejs inspirowany jest podglądem obrazu w aplikacji DWV, ale funkcjonalność automatycznego obrysu została zmieniona --- obrys nie jest generowany na bierząco, lecz na życzenie użytkownika wybrane przez niego punkty wysyłane są do serwera i wyświetlany jest wynik półautomatycznego dopasowania obrysu.
 
 \chapter {Opis autorskiego systemu informatycznego}
 
