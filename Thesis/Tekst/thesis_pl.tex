@@ -21,6 +21,8 @@
 \usepackage{blindtext}
 \usepackage{enumitem}
 
+%Do bawienia się kolorkami w grid
+\usepackage{tikz}
 
 % ---------------- Marginesy, akapity, interlinia ------------------
 
@@ -417,7 +419,9 @@ Algorytm można podzielić na kilka ważnych etapów:
 \item {Wyszukanie najkrótszych ścieżek w grafie.}
 \end{itemize}
 
-Poniżej zostaną przedstawione dokładne rozwiązania dla każdego z tych kroków. 
+Poniżej zostaną przedstawione dokładne rozwiązania dla każdego z tych kroków. Przed rozpoczęciem przetwarzania jest pobierany obraz medyczny o danym wcześniej identyfikatorze ze serweru Orthanc. Jest on podstawą do dalszej pracy algorytmu.
+
+
 \subsection {Wykrycie krawędzi na bitmapie}
 
 Często na obrazach medycznych różnice w charakterystyce poziomów szarości pikseli reprezentujących interesujące nas obiekty są małe, nie są dane dodatkowe informacje o naturze obrazu. Problem opracowania uniwersalnego algorytmu wykrywania krawędzi jest problemem trudnym. Dla wielu algorytmów można znaleźć takie przykłady, że te algorytmy nie wyznaczą poprawnie krawędzi. Ponadto są wymagania dla stwierdzania poprawności działania danego algorytmu, czy też operatora morfologicznego. Zgodnie z \cite{Cyfrowe przetwarzanie obrazów medycznych} ,,dobry detektor krawędzi powinien spełniać następujące warunki:
@@ -429,13 +433,191 @@ Często na obrazach medycznych różnice w charakterystyce poziomów szarości p
 
 Po zapoznaniu się z literaturą związaną z przetwarzaniem obrazów medycznych w algorytmie został użyty operator Canny'ego. Jest on powszechnym i dobrze sprawdzonym rozwiązaniem do wykrywania krawędzi. Jak napisał autor \cite{Cyfrowe przetwarzanie obrazów medycznych} ,,Operator ten (Canny'ego) jest bardzo popularny, chętnie wykorzystywany i adoptowany do wielu zastosowań. (\dots) Stał on się również standardem często używanym do porównań innych metod wykrywania krawędzi.'' Zgodnie z rysunkiem 4.25 ,,Porównanie operatorów wykrywania krawędzi'' w \cite{Cyfrowe przetwarzanie obrazów medycznych} najlepiej wykrywał główne narządy, takie jak wątroba czy też trzustka. Z wyżej wymienionych powodów został on wykorzystany w tym algorytmie.
 
+Operator Canny'ego \cite{Canny} składa się z 3 zasadniczych kroków:
+\begin{enumerate}%[noitemsep]
+\item \textbf {Określenie wartości i kąta gradientu.} \\
+W tym celu został wykorzystany operator gradientu, a estymatorem gradientu w funkcji dyskrentej, jaką jest obraz zastosowano maskę, czy też operator Sobela. Wykorzystując go uzskano dla każdego piksela wielkość oraz kierunek gradientu, co służy do dalszych obliczeń. 
+\item \textbf {Wykrycie miejsc występowania krawędzi.} \\
+W tym celu został wykorzystany algorytm non-max suppression. Polega on na wyborze takich pikseli, które mają największą wartość gradientu na linii o kierunku zgodnym z kątem danego gradientu. Możliwe są 4 kierunki: pionowy, poziomy oraz dwa diagonalne. Jeśli dany piksel miał większą wartość gradientu od dwóch swoich sąsiadów, to zaznaczono go jako potencjalny punkt tworzący krawędzie. W ten sposób otrzymano obraz z potencjalnymi krawędziami.
+\item \textbf {Wyznaczanie krawędzi progowaniem histerezy} \\
+Po poprzednim kroku na obrazie nadal znajdują się nieistotne krawędzie. W tym celu Canny wprowadził ideę progowania histerezy. Metoda ta wymaga 2 wartości progowych $T_1, T_2$ takich, że $T_1 < T_2$. Jeżeli wartość gradientu w danym pikselu jest większa od $T_2$, to zaznaczono ten punkt jako krawędź. Jeśli tak się stało, to zaczęto proces śledzenia krawędzi --- dla każdego sąsiada, którego wartość gradientu jest większa od $T_1$ zaznaczono go jako krawędź. Jest ona wykonywana rekurencyjnie dla każdego zakwalifikowanego punktu. 
+
+Zamiast dokładnych wartości progowych można przekazać do funkcji 2 wartości --- $t_1, t_2$, które są procentem liczby pikseli, które będą niedopuszczone jako krawędzie. Dla $t_1 = 0.7, t_2 = 0.9$ dopuszczono tylko 10\% pikseli jako te, które są większe od $T_2$. Podając $t_1, t_2$ wyznaczono rozkład wartości gradientu w badanym obrazie, obliczono dystrybuantę $F(x)$ i wybrano dla $T_1$ ten argument, dla którego $F(x) = t_1 * liczba pikseli$ i analogicznie dla $T_2$. W ten sposób wyznaczono progi do histerezy.
+
+\end{enumerate}
+
+Operator Sobela \cite{Sobel} to metoda wyznaczania gradientu, a więc zarazem krawędzi zarówno w kierunku poziomym, jak i w pionowym. Dla każdego piksela przeprowadzono operację morflologiczną z następującymi maskami:
+
+\begin{table}[h!]
+\centering
+\begin{tabular} { c c }
+  Maska rzędów & Maska kolumn \\ 
+$
+\begin{matrix}
+-1 & -2 & -1 \\
+0 & 0 & 0 \\
+1 & 2 & 1
+\end{matrix}$
+&
+$\begin{matrix}
+-1 & 0 & 1 \\
+-2 & 0 & 2 \\
+-1 & 0 & 1
+\end{matrix}$
+\end{tabular}
+\end{table}
+
+Po wykonaniu tych operacji otrzymano wartości $s_1$ i $s_2$ odpowiednio dla maski rzędów i kolumn. Na podstawie tych danych otrzymano następujące informacje o gradiencie:
+\begin{table}[h!]
+\centering
+\begin{tabular} { c c }
+  Wielkość gradientu & Kierunek krawędzi \\ 
+$\sqrt{s_1^2 + s_2^2}$ & $\tan^{-1} \Bigg[ {\cfrac{s_1}{s_2}} \Bigg]$
+\end{tabular}
+\end{table}
+
+Detektory krawędzi oparte na gradiencie, w tym operator Canny'ego są często używane. Za ich główne zalety na podstawie \cite{Cyfrowe przetwarzanie obrazów medycznych} są:
+\begin{itemize}[noitemsep]
+\item Dają dobre wyniki dla obrazów o dobrej jakości i bez szumów.
+\item Są wydajne - ich złożoność jest liniowa względem liczby przetwarzanych pikseli.
+\item Nie wymagają skomplikowanej sztucznej inteligencji do działania.
+\end{itemize}
+
+Zgodnie z \cite{Cyfrowe przetwarzanie obrazów medycznych} za ich główne wady można uznać:
+\begin{itemize}[noitemsep]
+\item ,,Konieczność określenia rozmiaru maski i wartości progowej. Rozmiar maski znacząco wpływa na położenie miejsc, w których gradient przecina zera lub osiąga wartości maksymalne.
+\item Pomijanie narożników spowodowane faktem, że wartość 1D gradientu w narożnikach jest zwyczajnie mała.
+\item Operator pierwszej pochodnej wykrywa tylko schodkowe krawędzie.
+\item Duża wrażliwość na szum.''
+\item Na podstawie obserwacji działania algorytmu - rozmyte krawędzie często nie są wykrywane przez małe różnice w wartościach kolejnych sąsiadujących pikseli.
+\end{itemize}
+
+W ten sposób otrzymano macierz, gdzie każde pole w macierzy odpowiada pikselowi w wejściowej bitmapie --- obrazie medycznym. Jeśli w komórce macierzy znajduje się 1, to w tym miejscu na bitmapie znajduje się krawędź, w przeciwnym przypadku 0. W ten sposób algorytm wykrył wszystkie znaczące krawędzie na bitmapie. Kolejnym krokiem przetwarzania było stworzenie grafu na podstawie wyżej wymienionej macierzy.
+
+\cite{Algorytmy Sedgewick}
+\cite{C w pigulce}
 
 
 \subsection {Stworzenie grafu z bitmapy}
 
+Na tym etapie algorytm potrzebuje następujących danych wejściowych:
+\begin{itemize}[noitemsep]
+\item Macierz z wartościami logicznymi prawda/fałsz czy znajduje się danym punkcie krawędź. Może to być także realizowane poprzez macierz wartości liczbowych.
+\item Punkty wybrane przez użytkownika aplikacji.
+\end{itemize}
+
+%Jaki tutaj -? - czy --?
+Przed rozpoczęciem działania algorytmu należy zapewnić łączność 4-krotną (ang. Pixel 4-connectivity) \cite{Pixel connectivity}. Jest ona zwana także sąsiedztwem von Neumanna. Przy łączności 4-krotnej sprawdza się tylko sąsiadów w poziomie lub pionie.
+
+%Opisać te rysunki i wywalić stąd - nie muszą być dokładnie w tym miejscu.
+\begin{center}
+\begin{tikzpicture}
+\draw[step=1cm,gray,very thin] grid (3,3);
+\fill[fill=black!60!white, draw=black] (1,1) rectangle (2,2);
+\fill[fill=gray!60!white, draw=black] (1,0) rectangle (2,1);
+\fill[fill=gray!60!white, draw=black] (0,1) rectangle (1,2);
+\fill[fill=gray!60!white, draw=black] (2,1) rectangle (3,2);
+\fill[fill=gray!60!white, draw=black] (1,2) rectangle (2,3);
+\end{tikzpicture}
+\end{center}
+
+Dla łączności 8-krotnej sprawdza się wszystkich możliwych sąsiadów, także po przekątnej. Jest ona zwana także sąsiedztwem Moore'a lub otoczeniem Moore'a \cite{Moore}.
+
+\begin{center}
+\begin{tikzpicture}
+\draw[step=1cm,gray,very thin] grid (3,3);
+\fill[fill=black!60!white, draw=black] (1,1) rectangle (2,2);
+\fill[fill=gray!60!white, draw=black] (1,0) rectangle (2,1);
+\fill[fill=gray!60!white, draw=black] (0,1) rectangle (1,2);
+\fill[fill=gray!60!white, draw=black] (2,1) rectangle (3,2);
+\fill[fill=gray!60!white, draw=black] (1,2) rectangle (2,3);
+\fill[fill=gray!60!white, draw=black] (0,0) rectangle (1,1);
+\fill[fill=gray!60!white, draw=black] (2,2) rectangle (3,3);
+\fill[fill=gray!60!white, draw=black] (0,2) rectangle (1,3);
+\fill[fill=gray!60!white, draw=black] (2,0) rectangle (3,1);
+\end{tikzpicture}
+\end{center}
+
+%Bibliografia do tego?
+W przypadku zastosowania łączności 8-krotnej przy wyznaczaniu długości krawędzi musiano by zastosować metrykę Czebyszewa, która jest specjalnym przypadkiem odległości Minkowskiego. Jeśli zostanie łączność 4-krotna to długość krawędzi byłaby obliczana zgodnie z metryką miejską, zwaną też metryką Manhattan. 
+
+Metryka Manhattan w kontekście dalszego przetwarzania w celu wyszukiwania najkrótszych ścieżek w grafie jest bardziej adekwatna, ponieważ jest intuicyjna w wyznaczaniu odległości na obrazie płaskim w porównaniu do metryki Czebyszewa. W tym przypadku najlepsza byłbay tutaj metryka Euklidesa, lecz mamy do czynienia nie z kolejnymi punktami oddalonymi od siebie, a z sąsiadującymi pikselami. Ponadto w tym algorytmie istotne jest szybkie szacowanie odległości, czy też długości danej krawędzi.
+
+Wykrywanie wierzchołków przy łączności 4-krotnej jest prostsze. Wystarczy zliczyć liczbę sąsiadów. Poniżej zakładamy, że piksel jest oznaczony jako krawędź w macierzy wejściowej. W zależności od liczby sąsiadów mamy następujące przypadki:
+\begin{itemize}[noitemsep]
+\item 0 --- wierzchołek izolowany,
+\item 1 --- punkty końcowe (ang. endpixels),
+\item 2 --- punkty łączące (ang. linkpixels), czyli fragmenty krawędzi,
+\item 3--4 --- punkty węzłowe (ang. vertices), czyli punkty, od których odchodzą co najmniej 3 krawędzie.
+\end{itemize}
+
+W przypadku łączności 8-krotnej do detekcji wierzchołków należałoby stosować przekształcenia Hit-or-Miss z elementami strukturalnymi. Elementy strukturalne do wykrywania odpowiednich punktów są następujące:
+\begin{itemize}%[noitemsep]
+\item wierzchołek izolowany: \\
+$
+\begin{bmatrix}
+0 & 0 & 0 \\
+0 & 1 & 0 \\
+0 & 0 & 0 
+\end{bmatrix}
+$,
+\item punkty końcowe (ang. endpixels): \\
+$
+\begin{bmatrix}
+0 & 0 & 0 \\
+0 & 1 & 0 \\
+z & z & z 
+\end{bmatrix}
+$,
+\item punkty łączące (ang. linkpixels), czyli fragmenty krawędzi, posiadają dokładnie 2 sąsiadów,
+\item punkty węzłowe (ang. vertices), czyli punkty, od których odchodzą co najmniej 3 krawędzie: \\
+$
+\begin{bmatrix}
+z & 1 & z \\
+z & 1 & z \\
+z & z & 1 
+\end{bmatrix}
+$ lub $
+\begin{bmatrix}
+1 & z & z \\
+z & 1 & z \\
+1 & z & 1 
+\end{bmatrix}
+$,.
+\end{itemize}
+
+Warto zauważyć, że te elementy strukturalne należy obracać o 90, 180, 270 stopni. Za każdym razem potrzeba wielokrotnie sprawdzać te same piksele. Ponadto należy sprawdzać 8, a nie 4 sąsiadów. 
+
+Kolejnym problemem jest fakt, że przy spójności 8-krotnej przekształcenie Hit-or-Miss może w najbliższym otoczeniu punktu krzyżowania się krawędzi oznaczyć kilka otaczających punktów, jako punkty węzłowe. Jest to złe rozwiązanie, ponieważ w ten sposób może nawet kilkukrotnie zwiększyć liczbę wierzchołków w grafie, co przełożyłoby się na niską wydajność algorytmu.
+
+Ostatnim problemem z jakim należałoby się wiązać wybierając łączność 8-krotną jest fakt, że macierz wejściową dla tego etapu algorytmu należałby poddać procesowi szkieletyzacji. Najlepiej byłoby w tym celu skorzystać z algorytmu KMM \cite{KMM} lub K3M \cite{K3M}. Te algorytmy musiałby co namniej raz przejrzeć całą macierz z wykrytymi krawędziami w optymistycznym przypadku.
+
+\bigskip
+
+Z wyżej wymienionych powodów zdecydowano się na łączność 4-krotną. Przygotowano i zaimplementowano algorytm tworzący graf z bitmapy, a jego pseudokod znajduje się poniżej. %Poprawić, nie poniżej!!!
+
+\begin{verbatim}
+ 1) Dla każdego punktu oznaczonego jako krawędź w macierzy wejściowej
+ 2)     Jeśli punkt ma 1 sąsiada albo co najmniej 3 sąsiadów (tzn.
+        jest albo punktem końcowym albo węzłowym)
+ 3)         Dodaj punkt jako nowy wierzchołek do grafu. 
+ 1) Dla każdego k w { 0, 1, ..., |V_2| - 1 }:
+ 2)     Dla każdej kombinacji k wierzchołków v ze zbioru V_2:
+ 3)         Tworzymy graf G_3, który powstaje poprzez usunięcie z G_2
+ 4)             wierzchołków należących do zbioru v (oraz przyległych krawędzi).
+ 5)         Ozn.: G_3 = G_2 - x.
+ 6)         Niech n = |V_1| - |V_3|.
+ 7)         Dla każdej kombinacji n wierzchołków x ze zbioru V_1:
+ 8)             Dla każdej permutacji wierzchołków p w grafie G_1 - x:
+ 9)                 Jeśli grafy G_3 oraz p są izomorficzne:
+10)                 Zwróć G_3 jako wynik.
+\end{verbatim}
+
 \subsection {Zapewnienie spójności grafu}
 
 \subsection {Wyszukanie najkrótszych ścieżek w grafie}
+
+\subsection {Optymalizacja}
 
 \section {Moduł obliczeń statystyk}
 
@@ -475,11 +657,23 @@ Po zapoznaniu się z literaturą związaną z przetwarzaniem obrazów medycznych
 \markboth{}{Bibliografia}
 \addcontentsline{toc}{chapter}{Bibliografia}
 
-\bibitem[1]{Cyfrowe przetwarzanie obrazów medycznych} Cytowski J., Gielecki J., Gola A.: Cyfrowe przetwarzanie obrazów medycznych: Algorytmy. Technologie. Zastosowania. \emph{Akademicka Oficyna Wydawnicza EXIT}, Warszawa, 2008, 88--94. 
-\bibitem[1]{Ktos} A. Author, \emph{Title of a book}, Publisher, year, page--page.
-\bibitem[2]{Innyktos} J. Bobkowski, S. Dobkowski, Jak stworzyć bibliografię w BibTeX-u, \emph{Czasopismo nr}, rok, strona--strona.
-\bibitem[3]{B} C. Brink, Power structures, \emph{Algebra Universalis 30(2)}, 1993, 177--216.
-\bibitem[4]{H} F. Burris, H. P. Sankappanavar, \emph{A Course of Universal Algebra}, Springer-Verlag, Nowy Jork, 1981.
+\bibitem[1]{Dlaczego react} Nowacki R., Plechawska-Wójcik M.: Analiza porównawcza narzędzi do budowania aplikacji Single Page Application --- AngularJS, ReactJS, Ember.js, \emph{Journal of Computer Sciences Institute 2, Politechnika Lubelska, Instytut Informatyki}, Lublin, 2016, 98--103
+\bibitem[2]{Dotnet} Microsoft Corporation: Dokumentacja platformy .NET. Oficjalna strona: https://docs.microsoft.com/pl-pl/dotnet/ [Dostęp 22 stycznia 2019]
+\bibitem[3]{Charakterystyka dotnet} Microsoft Corporation: Informacje o platformie .NET Core. https://docs.microsoft.com/pl-pl/dotnet/core/about [Dostęp 22 stycznia 2019]
+\bibitem[4]{Dlaczego dotnet} Kronis K., Uhanova M.: Performance Comparision of Java EE and ASP.NET Core Technologies for Web API Developmnet. \emph{Applied Computer Systems 23, Riga Technical University}, Ryga, 2018, 37--44
+\bibitem[4]{Cyfrowe przetwarzanie obrazów medycznych} Cytowski J., Gielecki J., Gola A.: Cyfrowe przetwarzanie obrazów medycznych: Algorytmy. Technologie. Zastosowania. \emph{Akademicka Oficyna Wydawnicza EXIT}, Warszawa, 2008, 88--94.
+\bibitem[5]{Canny} Canny J. F.: Finding Edges and Lines in Images. \emph{Technical report no. 720, Massachusetts Institute of Technology (MIT)}, Cambridge, Massachusetts, USA, 1983.
+\bibitem[6]{Sobel} Sobel I., Feldman G.: An 3x3 Isotropic Image Gradient Operator for Image Processing. \emph {Presentation at Stanford Aartificial Intelligence Project (SAIL) in 1968}, 2014 
+\bibitem[7]{Pixel connectivity} Rosenfeld A., Kak A. C.: Digital Picture Processing, \emph{Academic Press, Inc.}, Nowy Jork, 1982
+\bibitem[8]{Moore}  Weisstein, Eric W.: Moore Neighborhood. \emph{From MathWorld--A Wolfram Web Resource.} http://mathworld.wolfram.com/MooreNeighborhood.html  [Dostęp 22 stycznia 2019]
+\bibitem[9]{KMM} Saeed K., Rybnik M., Tabędzki M., Adamski M.: Algorytm do Ścieniania Obrazów: Implementacja i Zastosowania \emph{Zeszyty Naukowe Politechniki Białostockiej 2002 Informatyka - Zeszyt 1}, Białystok, 2002
+\bibitem[10]{K3M} Saeed K., Tabędzki M., Rybnik M., Adamski M.: K3M: A Universal Algorithm for Image Skeletonization and a Review of Thinning Techniques \emph{International Journal of Applied Mathematics and Computer Science, 2010, 20(2)} Białystok, 2010, 317--335
+\bibitem[11]{Algorytmy Sedgewick} Sedgewick R., Wayne K.: Algorytmy Wydanie IV, \emph{Helion}, Gliwice, 2012, 526--706
+\bibitem[12]{C w pigulce} Albahari J., Albahari B.: C 6.0 w pigułce, \emph{Helion, O'Reilly Media, Inc.},Gliwice, 2016, page--page 
+%\bibitem[1]{Ktos} A. Author, \emph{Title of a book}, Publisher, year, page--page.
+%\bibitem[2]{Innyktos} J. Bobkowski, S. Dobkowski, Jak stworzyć bibliografię w BibTeX-u, \emph{Czasopismo nr}, rok, strona--strona.
+%\bibitem[3]{B} C. Brink, Power structures, \emph{Algebra Universalis 30(2)}, 1993, 177--216.
+%\bibitem[4]{H} F. Burris, H. P. Sankappanavar, \emph{A Course of Universal Algebra}, Springer-Verlag, Nowy Jork, 1981.
 \end{thebibliography}
 
 %\thispagestyle{empty}
