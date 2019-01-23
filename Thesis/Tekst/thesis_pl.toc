@@ -1,0 +1,38 @@
+\babel@toc {polish}{}
+\babel@toc {english}{}
+\babel@toc {polish}{}
+\contentsline {chapter}{Wst\IeC {\k e}p}{11}{chapter*.2}% 
+\contentsline {chapter}{\numberline {1}Wprowadzenie}{12}{chapter.1}% 
+\contentsline {section}{\numberline {1.1}Zagdanienia medyczne zwi\IeC {\k a}zane z aplikacj\IeC {\k a}}{12}{section.1.1}% 
+\contentsline {section}{\numberline {1.2}Podzia\IeC {\l } prac}{12}{section.1.2}% 
+\contentsline {chapter}{\numberline {2}Stan wiedzy}{13}{chapter.2}% 
+\contentsline {section}{\numberline {2.1}Przegl\IeC {\k a}d istniej\IeC {\k a}cych rozwi\IeC {\k a}za\IeC {\'n}}{13}{section.2.1}% 
+\contentsline {subsection}{\numberline {2.1.1}Cornerstone}{13}{subsection.2.1.1}% 
+\contentsline {subsection}{\numberline {2.1.2}DICOM Web Viewer (DWV)}{14}{subsection.2.1.2}% 
+\contentsline {subsection}{\numberline {2.1.3}Dicom-contour}{14}{subsection.2.1.3}% 
+\contentsline {subsection}{\numberline {2.1.4}Orthanc}{14}{subsection.2.1.4}% 
+\contentsline {section}{\numberline {2.2}Proponowane rozwi\IeC {\k a}zanie}{15}{section.2.2}% 
+\contentsline {chapter}{\numberline {3}Opis autorskiego systemu informatycznego}{17}{chapter.3}% 
+\contentsline {section}{\numberline {3.1}Specyfikacja wymaga\IeC {\'n}}{17}{section.3.1}% 
+\contentsline {subsection}{\numberline {3.1.1}Opis biznesowy}{17}{subsection.3.1.1}% 
+\contentsline {subsection}{\numberline {3.1.2}Wymagania funkcjonalne}{17}{subsection.3.1.2}% 
+\contentsline {subsection}{\numberline {3.1.3}Wymagania niefunkcjonalne}{19}{subsection.3.1.3}% 
+\contentsline {section}{\numberline {3.2}Architektura rozwi\IeC {\k a}zania}{19}{section.3.2}% 
+\contentsline {section}{\numberline {3.3}Opracowany algorytm p\IeC {\'o}\IeC {\l }automatyczny}{19}{section.3.3}% 
+\contentsline {subsection}{\numberline {3.3.1}Wykrycie kraw\IeC {\k e}dzi na bitmapie}{21}{subsection.3.3.1}% 
+\contentsline {subsection}{\numberline {3.3.2}Stworzenie grafu z bitmapy}{22}{subsection.3.3.2}% 
+\contentsline {subsection}{\numberline {3.3.3}Zapewnienie sp\IeC {\'o}jno\IeC {\'s}ci grafu}{22}{subsection.3.3.3}% 
+\contentsline {subsection}{\numberline {3.3.4}Wyszukanie najkr\IeC {\'o}tszych \IeC {\'s}cie\IeC {\.z}ek w grafie}{22}{subsection.3.3.4}% 
+\contentsline {section}{\numberline {3.4}Modu\IeC {\l } oblicze\IeC {\'n} statystyk}{22}{section.3.4}% 
+\contentsline {chapter}{\numberline {4}Przeprowadzone eksperymenty}{23}{chapter.4}% 
+\contentsline {section}{\numberline {4.1}Zbi\IeC {\'o}r testowy}{23}{section.4.1}% 
+\contentsline {section}{\numberline {4.2}Wydajno\IeC {\'s}\IeC {\'c} algorytmu p\IeC {\'o}\IeC {\l }automatycznego}{23}{section.4.2}% 
+\contentsline {section}{\numberline {4.3}Analiza wynik\IeC {\'o}w i wnioski}{23}{section.4.3}% 
+\contentsline {chapter}{\numberline {5}Podsumowanie}{24}{chapter.5}% 
+\contentsline {section}{\numberline {5.1}Napotkane problemy i ograniczenia}{24}{section.5.1}% 
+\contentsline {section}{\numberline {5.2}Mo\IeC {\.z}liwo\IeC {\'s}ci dalszego rozwoju}{24}{section.5.2}% 
+\contentsline {chapter}{Bibliografia}{25}{section*.4}% 
+\contentsline {chapter}{Instrukcja instalacji}{26}{chapter*.5}% 
+\contentsline {chapter}{Instrukcja u\IeC {\.z}ytkowania}{27}{chapter*.6}% 
+\contentsline {chapter}{Wykaz symboli i skr\IeC {\'o}t\IeC {\'o}w}{28}{chapter*.7}% 
+\contentsline {chapter}{Spis zawarto\IeC {\'s}ci za\IeC {\l }\IeC {\k a}czonej p\IeC {\l }yty CD}{29}{chapter*.8}% 
