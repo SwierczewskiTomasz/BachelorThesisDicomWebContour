@@ -16,3 +16,5 @@ yarn-error.log
 public/
 [d|D]ata/
 contour.db
+*.pdf
+*.synctex.gz

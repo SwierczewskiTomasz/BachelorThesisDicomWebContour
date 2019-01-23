@@ -1,0 +1,560 @@
+\documentclass[a4paper,11pt,twoside]{report}
+% KOMPILOWAĆ ZA POMOCĄ pdfLaTeXa, PRZEZ XeLaTeXa MOŻE NIE BYĆ POLSKICH ZNAKÓW
+
+% -------------- Kodowanie znaków, język polski -------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[MeX]{polski}
+\usepackage[T1]{fontenc}
+\usepackage[english,polish]{babel}
+
+% Do poprawnego odsyłania do bibliografii i \phantomsection
+\usepackage{hyperref}
+
+
+\usepackage{amsmath, amsfonts, amsthm, latexsym} % głównie symbole matematyczne, środowiska twierdzeń
+
+\usepackage[final]{pdfpages} % inputowanie pdfa
+%\usepackage[backend=bibtex, style=verbose-trad2]{biblatex}
+
+%Dla lepszego czytania list
+\usepackage{blindtext}
+\usepackage{enumitem}
+
+
+% ---------------- Marginesy, akapity, interlinia ------------------
+
+\usepackage[inner=20mm, outer=20mm, bindingoffset=10mm, top=25mm, bottom=25mm]{geometry}
+
+
+\linespread{1.5}
+\allowdisplaybreaks
+
+\usepackage{indentfirst} % opcjonalnie; pierwszy akapit z wcięciem
+\setlength{\parindent}{5mm}
+
+
+%--------------------------- ŻYWA PAGINA ------------------------
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+% numery stron: lewa do lewego, prawa do prawego 
+\fancyfoot[LE,RO]{\thepage} 
+% prawa pagina: zawartość \rightmark do lewego, wewnętrznego (marginesu) 
+\fancyhead[LO]{\sc \nouppercase{\rightmark}}
+% lewa pagina: zawartość \leftmark do prawego, wewnętrznego (marginesu) 
+\fancyhead[RE]{\sc \leftmark}
+
+\renewcommand{\chaptermark}[1]{
+\markboth{\thechapter.\ #1}{}}
+
+% kreski oddzielające paginy (górną i dolną):
+\renewcommand{\headrulewidth}{0 pt} % 0 - nie ma, 0.5 - jest linia
+
+
+\fancypagestyle{plain}{% to definiuje wygląd pierwszej strony nowego rozdziału - obecnie tylko numeracja
+  \fancyhf{}%
+  \fancyfoot[LE,RO]{\thepage}%
+  
+  \renewcommand{\headrulewidth}{0pt}% Line at the header invisible
+  \renewcommand{\footrulewidth}{0.0pt}
+}
+
+
+
+% ---------------- Nagłówki rozdziałów ---------------------
+
+\usepackage{titlesec}
+\titleformat{\chapter}%[display]
+  {\normalfont\Large \bfseries}
+  {\thechapter.}{1ex}{\Large}
+
+\titleformat{\section}
+  {\normalfont\large\bfseries}
+  {\thesection.}{1ex}{}
+\titlespacing{\section}{0pt}{30pt}{20pt} 
+%\titlespacing{\co}{akapit}{ile przed}{ile po} 
+    
+\titleformat{\subsection}
+  {\normalfont \bfseries}
+  {\thesubsection.}{1ex}{}
+
+
+% ----------------------- Spis treści ---------------------------
+\def\cleardoublepage{\clearpage\if@twoside
+\ifodd\c@page\else\hbox{}\thispagestyle{empty}\newpage
+\if@twocolumn\hbox{}\newpage\fi\fi\fi}
+
+
+% kropki dla chapterów
+%\usepackage{etoolbox}
+%\makeatletter
+%\patchcmd{\l@chapter}
+%  {\hfil}
+%  {\leaders\hbox{\normalfont$\m@th\mkern \@dotsep mu\hbox{.}\mkern \@dotsep mu$}\hfill}
+%  {}{}
+%\makeatother
+
+%\usepackage{titletoc}
+%\makeatletter
+%\titlecontents{chapter}% <section-type>
+%  [0pt]% <left>
+%  {}% <above-code>
+%  {\bfseries \thecontentslabel.\quad}% <numbered-entry-format>
+%  {\bfseries}% <numberless-entry-format>
+%  {\bfseries\leaders\hbox{\normalfont$\m@th\mkern \@dotsep mu\hbox{.}\mkern \@dotsep mu$}\hfill\contentspage}% <filler-page-format>
+
+%\titlecontents{section}
+%  [1em]
+%  {}
+%  {\thecontentslabel.\quad}
+%  {}
+%  {\leaders\hbox{\normalfont$\m@th\mkern \@dotsep mu\hbox{.}\mkern \@dotsep mu$}\hfill\contentspage}
+
+%\titlecontents{subsection}
+%  [2em]
+%  {}
+%  {\thecontentslabel.\quad}
+%  {}
+%  {\leaders\hbox{\normalfont$\m@th\mkern \@dotsep mu\hbox{.}\mkern \@dotsep mu$}\hfill\contentspage}
+%\makeatother
+
+
+
+% ---------------------- Spisy tabel i obrazków ----------------------
+
+\renewcommand*{\thetable}{\arabic{chapter}.\arabic{table}}
+\renewcommand*{\thefigure}{\arabic{chapter}.\arabic{figure}}
+%\let\c@table\c@figure % jeśli włączone, numeruje tabele i obrazki razem
+
+
+% --------------------- Definicje, twierdzenia etc. ---------------
+
+
+\makeatletter
+\newtheoremstyle{definition}%    % Name
+{3ex}%                          % Space above
+{3ex}%                          % Space below
+{\upshape}%                      % Body font
+{}%                              % Indent amount
+{\bfseries}%                     % Theorem head font
+{.}%                             % Punctuation after theorem head
+{.5em}%                            % Space after theorem head, ' ', or \newline
+{\thmname{#1}\thmnumber{ #2}\thmnote{ (#3)}}%  % Theorem head spec (can be left empty, meaning `normal')
+\makeatother
+
+% ----------------------------- POLSKI --------------------------------
+
+\theoremstyle{definition}
+\newtheorem{theorem}{Twierdzenie}[chapter]
+\newtheorem{lemma}[theorem]{Lemat}
+\newtheorem{example}[theorem]{Przykład}
+\newtheorem{proposition}[theorem]{Stwierdzenie}
+\newtheorem{corollary}[theorem]{Wniosek}
+\newtheorem{definition}[theorem]{Definicja}
+\newtheorem{remark}[theorem]{Uwaga}
+
+
+
+% ----------------------------- Dowód -----------------------------
+
+%\makeatletter
+%\renewenvironment{proof}[1][\proofname]
+%{\par
+%  \vspace{-12pt}% remove the space after the theorem
+%  \pushQED{\qed}%
+%  \normalfont
+%  \topsep0pt \partopsep0pt % no space before
+%  \trivlist
+%  \item[\hskip\labelsep
+%        \sc
+%    #1\@addpunct{:}]\ignorespaces
+%}
+%{%
+%  \popQED\endtrivlist\@endpefalse
+%  \addvspace{20pt} % some space after
+%}
+%
+%\renewcommand{\qedhere}{\hfill \qedsymbol}
+%\makeatother
+
+
+
+
+
+% -------------------------- POCZĄTEK --------------------------
+
+
+% --------------------- Ustawienia użytkownika ------------------
+
+\newcommand{\tytul}{Interfejs użytkownika do manualnego obrysu struktur oraz wybranych anormalności w obrazach medycznych z wykorzystaniem tabletu graficznego}
+\renewcommand{\title}{English title}
+\newcommand{\type}{inżyniers} % magisters, licencjac
+\newcommand{\supervisor}{dr inż. Magdalena Jasionowska}
+
+
+
+\begin{document}
+\sloppy
+
+\includepdf[pages=-]{titlepage}
+
+
+% ---------------------------- ABSTRAKTY -----------------------------
+% W PRACY PO POLSKU, NAPIERW STRESZCZENIE PL, POTEM ABSTRACT EN
+
+{
+\begin{abstract}
+
+\begin{center}
+\tytul
+\end{center}
+
+Przykładowe streszczenie. Do wykonania jako ostatnie.
+
+\noindent \textbf{Słowa kluczowe:} slowo1, slowo2, ...
+\end{abstract}
+}
+
+\null\thispagestyle{empty}\newpage
+
+{
+\selectlanguage{english}
+\begin{abstract}
+
+\begin{center}
+\title
+\end{center}
+
+Sample abstract in english.
+
+\noindent \textbf{Keywords:} keyword1, keyword2, ...
+\end{abstract}
+}
+
+
+% --------------------- OŚWIADCZENIE -----------------------------------------
+
+
+\null\thispagestyle{empty}\newpage
+
+\null \hfill Warszawa, dnia ..................\\
+
+\par\vspace{5cm}
+
+\begin{center}
+Oświadczenie
+\end{center}
+
+\indent Oświadczam, że moją część pracy \type kiej (zgodnie z podziałem zadań opisanym na wstępie) pod
+tytułem ,,\tytul '', której promotorem jest \supervisor , wykonałem
+samodzielnie, co poświadczam własnoręcznym podpisem.
+\vspace{2cm}
+
+
+\begin{flushright}
+  \begin{minipage}{50mm}
+    \begin{center}
+      ..............................................
+
+    \end{center}
+  \end{minipage}
+\end{flushright}
+
+\thispagestyle{empty}
+\newpage
+
+\null\thispagestyle{empty}\newpage
+
+
+% ------------------- 4. Spis treści ---------------------
+\pagenumbering{gobble}
+\tableofcontents
+\thispagestyle{empty}
+
+\newpage % JEŻELI SPIS TREŚCI MA PARZYSTĄ LICZBĘ STRON, ZAKOMENTOWAĆ
+% ALBO JAK KTOŚ WOLI WTEDY DWIE STRONY ODSTĘPU, DODAĆ \null\newpage
+
+% -------------- 5. ZASADNICZA CZĘŚĆ PRACY --------------------
+\null\thispagestyle{empty}\newpage
+\pagestyle{fancy}
+\pagenumbering{arabic}
+\setcounter{page}{12} % JEŻELI Z POWODU DUŻEJ ILOŚCI STRON W SPISIE TREŚCI SIĘ NIE ZGADZA, TRZEBA ZMODYFIKOWAĆ RĘCZNIE
+%oryginalnie było 11
+
+\chapter*{Wstęp}
+\markboth{}{Wstęp}
+\addcontentsline{toc}{chapter}{Wstęp}
+
+O czym jest praca? Co się w niej znajduje? Jaki jest wkład autora?
+
+\chapter {Wprowadzenie}
+
+\section {Zagdanienia medyczne związane z aplikacją}
+
+\section {Podział prac}
+
+
+\chapter {Stan wiedzy}
+
+\section {Przegląd istniejących rozwiązań}
+
+\section {Proponowane rozwiązanie}
+
+
+\chapter {Opis autorskiego systemu informatycznego}
+
+W poniższym rozdziale zawarto dokumentację techniczną i biznesową tworzonego systemu. Przedstawiono w szczególności: wymagania, architekturę, zastosowane metody półautomatycznego obrysu oraz metody obliczania statystyk obrysu.
+
+\section {Specyfikacja wymagań}
+
+\subsection {Opis biznesowy}
+
+Celem projektu jest stworzenie interfejsu przyjaznego użytkownikowi, który umożliwi przeglądanie plików DICOM, a także przeprowadzanie na tych plikach obrysów. Prace obejmują stworzenie aplikacji webowej, która udostępni użytkownikowi interfejs komunikujący się z bazą danych Orthanc oraz serwera odpowiedzialnego za przechowywanie wygenerowanych przez użytkownika obrysów oraz wyznaczanie obrysów półautomatycznych. 
+
+Do podstawowych funkcjonalności systemu zaliczają się:
+\begin{itemize}[noitemsep]
+%O listach wyliczeniowych https://sjp.pwn.pl/poradnia/haslo/listy-wyliczeniowe;4812.html
+\item Generowanie obrysu manualnego.
+\item Generowanie obrysu półautomatycznego na podstawie punktów podanych przez użytkownika.
+\item Zapisywanie wygenerowanych obrysów.
+\item \textbf {Anonimizacja}\footnote {Anonimizacja (ang. anonymization) --- operacja mająca na celu usunięcie z danych informacji o pacjentach, które pozwoliłby na identyfikację danych z tożsamością pacjenta. Są to między innymi: imiona, nazwisko, pesel. Inne tłumaczenia słowa anonymization --- utajnianie, usuwanie danych niejawnych. Z uwagę na fakt, że te tłumaczenia nie oddają dobrze kontekstu zastosowano kalkę językową.} danych zapisanych w strukturze pliku DICOM.
+\end{itemize}
+
+\subsection {Wymagania funkcjonalne}
+
+Poniżej przedstawiono wymagania funkcjonalne w postaci historyjek użytkownika (ang. user stories): 
+\begin{enumerate}
+\item \textbf {Jako użytkownik chcę wczytać obraz DICOM.} \\
+Użytkownik może wybrać obraz w menu bocznym, w którym ma możliwość wyboru pacjenta, badania oraz serii. Wybranie serii skutkuje wyświetleniem pierwszego obrazu DICOM z tej serii.
+
+\item \textbf {Jako użytkownik chcę zmienić obraz w serii przy użyciu rolki myszy.} \\
+Po najechaniu na obraz przewijanie rolką myszy do góry powoduje zmianę wyświetlanego obrazu na kolejny obraz w serii. Gdy przewijamy rolką myszy do góry na ostatnim obrazie w serii wyświetlany obraz nie zmienia się. Analogicznie przewijanie rolką myszy w dół powoduje zmianę wyświetlanego obrazu na poprzedni obraz w serii, a przewijanie w dół rolką myszy na pierwszym obrazie w serii nie powoduje zmiany obrazu.
+
+\item \textbf {Jako użytkownik chcę wykonać obrys przy użyciu tabletu graficznego.} \\
+Po najechaniu na obraz kursorem sterowanym przez tablet graficzny, po wciśnięciu końcówki rysika użytkownik prowadzi kursor po obrazie wykonując obrys bez odrywania końcówki rysika od podkładki. Jeżeli użytkownik nie zakończy obrysu dokładnie w punkcie, w którym go rozpoczął, obrys powinien zakończyć się linią prostą, łączącą punkt końcowy z punktem początkowym.
+
+\item \textbf {Jako użytkownik chcę wygenerować obrys na podstawie wybranych punktów.} \\
+Po najechaniu kursorem na obraz użytkownik może wybierać punkty, na podstawie których zostanie wygenerowany obrys, poprzez wciśnięcie lewego przycisku myszy w miejscach, w których chce, aby znalazły się punkty. Użytkownik może zobaczyć efekt wygenerowanego przez system obrysu
+
+\item \textbf {Jako użytkownik chcę edytować listę punktów, z której wygenerowany zostanie obrys.} \\
+Użytkownik może usunąć wcześniej wybrany punkt po najechaniu na niego kursorem i wciśnięciu lewego przycisku myszy. Użytkownik może dodać nowy punkt do listy punktów poprzez wciśnięcie lewego przycisku myszy w miejscu, w którym chce wstawić punkt.
+
+\item \textbf {Jako użytkownik chcę wybrać kolor obrysu.} \\
+Użytkownik wybiera kolor z palety kolorów lub zdefiniować własny kolor poprzez podanie numeru RGB koloru, który chce wybrać.
+
+\item \textbf {Jako użytkownik chcę zapisać obrys.} \\
+Po wykonaniu obrysu manualnego lub wybraniu listy punktów do wygenerowania obrysu półautomatycznego użytkownik wybiera nazwę obrysu i zapisuje obrys w systemie.
+
+\item \textbf {Jako użytkownik chcę obejrzeć zapisany obrys.} \\
+Użytkownik wybiera z listy po prawej stronie zapisany obrys i przegląda obrys naniesiony na obraz, na którym został wykonany.
+
+\item \textbf {Jako użytkownik chcę zobaczyć statystyki dotyczące obrysu.} \\
+Użytkownik wybiera z listy po prawej stronie zapisany obrys i przegląda statystyki obliczone na podstawie zapisanego obrysu. Do statystyk zalicza się obwód obrysu, pole obrysu, histogram obrazu na obszarze obrysu oraz liczba pikseli wewnątrz obrysu.
+
+\item \textbf {Jako użytkownik chcę zobaczyć jednocześnie dowolną liczbę zapisanych w systemie obrysów na jednym obrazie DICOM.} \\
+Użytkownik wybiera poprzez kliknięcie lewym przyciskiem myszy na nazwie obrysu znajdującej się na liście po prawej stronie. Wybrane obrysy wyświetlane są jednocześnie na przeglądanym przez użytkownika zdjęciu. Użytkownik może wyłączyć podgląd wcześniej wybranego obrysu poprzez ponowne wciśnięcie lewego przycisku myszy na nazwie obrysu na liście po prawej stronie. Na zdjęciu wyświetlane są jedynie obrysy wykonane na tym obrazie.
+
+\item \textbf {Jako użytkownik chcę zanonimizować dane pacjenta zawarte w pliku DICOM.} \\
+Użytkownik może zanonimizować pacjenta, gdy przegląda jego obraz. Użytkownik może anonimizować imię i nazwisko pacjenta, datę urodzenia pacjenta oraz płeć pacjenta poprzez nadanie nowych wartości lub poprzez usunięcie poprzedniej wartości i pozostawienie pustych pól w formularzu.
+
+\end{enumerate}
+
+\subsection {Wymagania niefunkcjonalne}
+
+%\begin{table}[b!]{ c | l | p } % Koniecznie label po caption, inaczej jest zła numeracja
+%\caption[Opis skrócony]{Spis wymagań niefunkcjonalnych}
+%\label{tabela wymagania niefunkcjonalne}
+%\centering
+%\begin{tabular}
+%Obszar wymagań & Nr wymagania & Opis \\ \hline
+%1 & 2 & 3 
+%\end{tabular}
+%\end{table}
+
+\begin{table}
+\caption[Opis skrócony]{Spis wymagań niefunkcjonalnych}
+\label{tabela wymagania niefunkcjonalne}
+\centering
+\begin{tabular}{ | p{0.2\textwidth} | p{0.15\textwidth} | p{0.5\textwidth} | }
+\hline
+  Obszar wymagań & Nr wymagania & Opis \\ \hline
+  Użyteczność (ang. Usability) & 1 & Każda funkcjonalność aplikacji dostępna dla użytkownika musi mieścić się na pojedynczym ekranie przy rozdzielczości 1920x1080 i czcionce nie mniejszej niż 12pt. \\ 
+  \cline{2-3}
+    & 2 & Aplikacja powinna udostępniać pobranie zapisanych obrysów przy użyciu serwisu REST. \\ \hline
+  Niezawodność (ang. Reliability) & 3 & Aplikacja ma być dostępna 24h w ciągu doby. Dopuszczalne jest brak działania aplikacji w dowolnym momencie przez okres nie dłuższy niż przez 12h. Po przerwie w działaniu aplikacja musi być dostępna przez kolejne 24h bez utrudnień. \\ \hline
+  Wydajność (ang. Performance) & 4 & Aplikacja powinna pobierać dane zewnętrzne w postaci pliku DICOM (około 20MB) nie dłużej niż 5 sekund \\ 
+  \cline{2-3}
+  & 5 & Aplikacja powinna generować obrys półautomatyczny i zapisywać obrys do systemu w czasie nie dłuższym niż 30 sekund. \\ 
+  \cline{2-3}
+  & 6 & Aplikacja powinna reagować na działanie użytkownika (z wyłączeniem generowania obrysu półautomatycznego i zapisu obrysu do systemu) w czasie nie dłuższym niż 1 sekunda. \\
+  \hline
+\end{tabular}
+\end{table}
+
+Tabela \ref{tabela wymagania niefunkcjonalne} przedstawia wymagania niefunkcjonalne, które system musi spełnić.
+
+\section {Architektura rozwiązania}
+
+\section {Opracowany algorytm półautomatyczny}
+
+Opracowany algorytm półautomatyczny służy do wykrywania krawędzi na obrazie medycznym. Jest algorytmem półautomatycznym, ponieważ jest wspomagany przez człowieka --- użytkownika, który wybiera punkty na ekranie. Te punkty są interpolowane przez algorytm półautomatyczny, zwany dalej algorytmem.
+
+Jako dane wejściowe do algorytmu uzyskujemy następujące informacje:
+\begin{itemize}[noitemsep]
+\item {Identyfikator obrazu medycznego, na którym był wykonywany obrys.}
+\item {Lista punktów wybranych przez użytkownika. Punkty te zostały wcześniej przeskalowane ze współrzędnych w aplikacji internetowej (aplikacji webowej, ang. web application) na współrzędne odpowiadające rozdzielczości obrazu medycznego.}
+\end{itemize}
+
+
+Algorytm można podzielić na kilka ważnych etapów:
+
+\begin{itemize}[noitemsep]
+\item {Wykrycie krawędzi na bitmapie,}
+\item {Stworzenie grafu z bitmapy,}
+\item {Zapewnienie spójności grafu,}
+\item {Wyszukanie najkrótszych ścieżek w grafie.}
+\end{itemize}
+
+Poniżej zostaną przedstawione dokładne rozwiązania dla każdego z tych kroków. 
+\subsection {Wykrycie krawędzi na bitmapie}
+
+Często na obrazach medycznych różnice w charakterystyce poziomów szarości pikseli reprezentujących interesujące nas obiekty są małe, nie są dane dodatkowe informacje o naturze obrazu. Problem opracowania uniwersalnego algorytmu wykrywania krawędzi jest problemem trudnym. Dla wielu algorytmów można znaleźć takie przykłady, że te algorytmy nie wyznaczą poprawnie krawędzi. Ponadto są wymagania dla stwierdzania poprawności działania danego algorytmu, czy też operatora morfologicznego. Zgodnie z \cite{Cyfrowe przetwarzanie obrazów medycznych} ,,dobry detektor krawędzi powinien spełniać następujące warunki:
+\begin{itemize}[noitemsep]
+\item {niskie prawdopodobieństwo zaznaczenia punktów nienależących do krawędzi oraz niskie prawdopodobieństwo niezaznaczenia punktów należących do krawędzi,}
+\item {zaznaczone pukty krawędzi powinny być możliwie blisko jej osi,}
+\item {wyłącznie jedna odpowiedź na pojedyńczy punkt krawędzi.''}
+\end{itemize}
+
+Po zapoznaniu się z literaturą związaną z przetwarzaniem obrazów medycznych w algorytmie został użyty operator Canny'ego. Jest on powszechnym i dobrze sprawdzonym rozwiązaniem do wykrywania krawędzi. Jak napisał autor \cite{Cyfrowe przetwarzanie obrazów medycznych} ,,Operator ten (Canny'ego) jest bardzo popularny, chętnie wykorzystywany i adoptowany do wielu zastosowań. (\dots) Stał on się również standardem często używanym do porównań innych metod wykrywania krawędzi.'' Zgodnie z rysunkiem 4.25 ,,Porównanie operatorów wykrywania krawędzi'' w \cite{Cyfrowe przetwarzanie obrazów medycznych} najlepiej wykrywał główne narządy, takie jak wątroba czy też trzustka. Z wyżej wymienionych powodów został on wykorzystany w tym algorytmie.
+
+
+
+\subsection {Stworzenie grafu z bitmapy}
+
+\subsection {Zapewnienie spójności grafu}
+
+\subsection {Wyszukanie najkrótszych ścieżek w grafie}
+
+\section {Moduł obliczeń statystyk}
+
+\chapter {Przeprowadzone eksperymenty}
+
+\section {Zbiór testowy}
+
+\section {Wydajność algorytmu półautomatycznego}
+
+\section {Analiza wyników i wnioski}
+
+
+\chapter {Podsumowanie}
+
+\section {Napotkane problemy i ograniczenia}
+
+\section {Możliwości dalszego rozwoju}
+
+
+
+
+%\chapter*{}
+%\markboth{}{}
+%\addcontentsline{toc}{chapter}{}
+
+
+
+% -------------------- 6. Bibliografia -----------------------
+% Bibliografia leksykograficznie wg nazwisk autorów
+% Dla ambitnych - można skorzystać z BibTeX-a
+
+\begin{thebibliography}{20}%jak ktoś ma więcej książek, to niech wpisze większą liczbę
+% \bibitem[numerek]{referencja} Autor, \emph{Tytuł}, Wydawnictwo, rok, strony
+% cytowanie: \cite{referencja1, referencja 2,...}
+%\chapter*{Bibliografia}
+\phantomsection
+\markboth{}{Bibliografia}
+\addcontentsline{toc}{chapter}{Bibliografia}
+
+\bibitem[1]{Cyfrowe przetwarzanie obrazów medycznych} Cytowski J., Gielecki J., Gola A.: Cyfrowe przetwarzanie obrazów medycznych: Algorytmy. Technologie. Zastosowania. \emph{Akademicka Oficyna Wydawnicza EXIT}, Warszawa, 2008, 88--94. 
+\bibitem[1]{Ktos} A. Author, \emph{Title of a book}, Publisher, year, page--page.
+\bibitem[2]{Innyktos} J. Bobkowski, S. Dobkowski, Jak stworzyć bibliografię w BibTeX-u, \emph{Czasopismo nr}, rok, strona--strona.
+\bibitem[3]{B} C. Brink, Power structures, \emph{Algebra Universalis 30(2)}, 1993, 177--216.
+\bibitem[4]{H} F. Burris, H. P. Sankappanavar, \emph{A Course of Universal Algebra}, Springer-Verlag, Nowy Jork, 1981.
+\end{thebibliography}
+
+%\thispagestyle{empty}
+%\pagenumbering{gobble}
+
+
+
+% --- 8. Instrukcja instalacji
+
+\chapter*{Instrukcja instalacji}
+\markboth{}{Instrukcja instalacji}
+\addcontentsline{toc}{chapter}{Instrukcja instalacji}
+
+
+
+% --- 8. Instrukcja użytkowania
+
+
+\chapter*{Instrukcja użytkowania}
+\markboth{}{Instrukcja użytkowania}
+\addcontentsline{toc}{chapter}{Instrukcja użytkowania}
+
+
+
+% --- 9. Wykaz symboli i skrótów - jeśli nie ma, zakomentować
+\chapter*{Wykaz symboli i skrótów}
+\markboth{}{Wykaz symboli i skrótów}
+\addcontentsline{toc}{chapter}{Wykaz symboli i skrótów}
+
+
+\begin{tabular}{cl}
+nzw. & nadzwyczajny \\
+* & operator gwiazdka \\
+$\widetilde{}$ & tylda
+\end{tabular}
+\\
+Jak nie występują, usunąć.
+%\thispagestyle{empty}
+
+
+% ----- 10. Spis rysunków - jeśli nie ma, zakomentować --------
+%\listoffigures
+%\markboth{}{Spis rysunków}
+%\addcontentsline{toc}{chapter}{Spis rysunków}
+%%\thispagestyle{empty}
+%Jak nie występują, usunąć.
+
+
+
+
+% ------------ 11. Spis tabel - jak wyżej ------------------
+%\renewcommand{\listtablename}{Spis tabel}
+%\phantomsection
+%\markboth{}{Spis tabel}
+%\addcontentsline{toc}{chapter}{Spis tabel}
+%\istoftables
+%%\thispagestyle{empty}
+%Jak nie występują, usunąć.
+
+%---- 12. Spis CD
+
+\chapter*{Spis zawartości załączonej płyty CD}
+\markboth{}{Spis zawartości załączonej płyty CD}
+\addcontentsline{toc}{chapter}{Spis zawartości załączonej płyty CD}
+
+
+% 13. Spis załączników - jak nie ma załączników, to zakomentować lub usunąć
+
+\chapter*{Spis załączników}
+\begin{enumerate}
+\item Załącznik 1
+\item Załącznik 2
+\item Jak nie występują, usunąć rozdział.
+\end{enumerate}
+%\thispagestyle{empty}
+
+
+\end{document}

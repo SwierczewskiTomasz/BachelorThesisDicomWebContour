@@ -1,0 +1,83 @@
+\documentclass[12pt,twoside,a4paper]{article}
+% ten dokument należy kompilować za pomocą XeLaTeX-a
+
+\usepackage{fontspec,newunicodechar}
+\defaultfontfeatures{Ligatures=TeX}
+
+\usepackage{graphicx}
+\usepackage[vmargin = 25mm, hmargin = 20mm, bindingoffset=10mm]{geometry}
+
+\newfontfamily\arial{arial.ttf}
+
+\setlength{\parindent}{0mm}
+\linespread{1.5}
+
+% ----------------------------Do wypełnienia ----------------------
+\newcommand{\discipline}{Informatyka}
+\renewcommand{\title}{Interfejs użytkownika do manualnego obrysu struktur oraz wybranych anormalności w obrazach medycznych z wykorzystaniem tabletu graficznego}
+\newcommand{\supervisor}{dr inż. Magdalena Jasionowska}
+\renewcommand{\year}{2019}
+
+\newcommand{\authori}{Łukasz Garstecki}
+\newcommand{\albumi}{276857}
+\newcommand{\authorii}{Tomasz Świerczewski}
+\newcommand{\albumii}{276915}
+
+
+\begin{document}
+\pagestyle{empty}
+
+\begin{center}
+
+\includegraphics[scale=1.]{img/politechnika} 
+\vspace{40pt}
+
+\includegraphics[scale=1.]{img/praca_inz}  % lub praca_lic lub praca_mgr
+
+{ \arial na kierunku \discipline
+
+\vspace{30pt}
+{\arial \large \title}
+
+\vspace{40pt}
+
+{\arial \huge \authori }
+
+\vspace{5pt}
+
+Numer albumu \albumi
+
+\vspace {20pt}
+{\arial \huge \authorii}
+
+\vspace{5pt}
+
+Numer albumu \albumii
+
+\vspace{40pt}
+
+promotor \\
+{\arial \supervisor}
+
+\vspace{15pt}
+
+ \vfill
+WARSZAWA \year \\
+}
+\end{center}
+
+
+\newpage
+\null
+
+\vfill
+
+\begin{center}
+\begin{tabular}[t]{ccc}
+............................................. & \hspace*{100pt} & .............................................\\
+podpis promotora & \hspace*{100pt} & podpisy autorów
+\end{tabular}
+\end{center}
+
+
+\end{document}
