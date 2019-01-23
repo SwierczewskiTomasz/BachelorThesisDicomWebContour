@@ -12,7 +12,7 @@ namespace DataAccess
         TEntity Load(Guid guid);
         void Save(TEntity entity);
         bool Delete(Guid guid);
-        void Edit(TEntity entity);
+        bool Edit(TEntity entity);
     }
 
     public class ManualContourRepository : IFilesRepository<ManualContourDTO>
@@ -56,7 +56,17 @@ namespace DataAccess
             string buffor;
 
             string filename = "../data/manual/" + guid.ToString() + ".csv";
-            StreamReader sr = new StreamReader(filename);
+
+            StreamReader sr = null;
+            try
+            {
+                sr = new StreamReader(filename);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+
             if (sr.EndOfStream)
                 throw new Exception($"Unexpected end of file {filename}");
 
@@ -106,6 +116,10 @@ namespace DataAccess
 
             buffor = sr.ReadLine();
             height = int.Parse(buffor);
+            if (sr.EndOfStream)
+                throw new Exception($"Unexpected end of file {filename}");
+
+            string pixelSpacing = sr.ReadLine();
             if (sr.EndOfStream)
                 throw new Exception($"Unexpected end of file {filename}");
 
@@ -167,7 +181,7 @@ namespace DataAccess
 
             sr.Close();
 
-            ManualContourDTO contour = new ManualContourDTO(guid, DICOMid, tag, lines, width, height, statisticsResult, centralPoints);
+            ManualContourDTO contour = new ManualContourDTO(guid, DICOMid, tag, lines, width, height, statisticsResult, centralPoints, pixelSpacing);
 
             return contour;
         }
@@ -197,6 +211,7 @@ namespace DataAccess
             sw.WriteLine(contour.lines.First().brushColor);
             sw.WriteLine(contour.width);
             sw.WriteLine(contour.height);
+            sw.WriteLine(contour.pixelSpacing);
             sw.WriteLine(contour.statistics.CenterOfMass.x + "," + contour.statistics.CenterOfMass.y);
 
             if (contour.statistics.Histogram == null)
@@ -220,7 +235,17 @@ namespace DataAccess
         {
             using (var db = new ContourContext())
             {
-                ContourEntity ce = db.Contours.Single(c => c.ContourEntityId == guid);
+                ContourEntity ce = null;
+                try
+                {
+                    ce = db.Contours.Single(c => c.ContourEntityId == guid);
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+                if (ce == null)
+                    return false;
                 if (!ce.IsManual)
                     return false;
                 db.Contours.Remove(ce);
@@ -231,10 +256,14 @@ namespace DataAccess
             return true;
         }
 
-        public void Edit(ManualContourDTO contour)
+        public bool Edit(ManualContourDTO contour)
         {
-            Delete(contour.guid);
-            Save(contour);
+            if (Delete(contour.guid))
+            {
+                Save(contour);
+                return true;
+            }
+            return false;
         }
     }
 }

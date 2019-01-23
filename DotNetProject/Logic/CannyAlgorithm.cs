@@ -14,73 +14,182 @@ namespace Logic
         public static List<Point> CannyWithoutStatistics(string dicomId, List<Point> points, int canvasWidth, int canvasHeight)
         {
             System.Drawing.Bitmap bitmap = OrthancConnection.GetBitmapByInstanceId(dicomId);
+            System.Drawing.Rectangle rect = new System.Drawing.Rectangle(0, 0, bitmap.Width, bitmap.Height);
+            System.Drawing.Imaging.BitmapData bmpData = bitmap.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadOnly, bitmap.PixelFormat);
+            IntPtr ptr = bmpData.Scan0;
+            int bytes = Math.Abs(bmpData.Stride) * bitmap.Height;
+            byte[] rgbValues = new byte[bytes];
+            System.Runtime.InteropServices.Marshal.Copy(ptr, rgbValues, 0, bytes);
 
             double[,][] sobel;
             int width, height;
+            width = bitmap.Width;
+            height = bitmap.Height;
 
-            (sobel, width, height) = SobelOperator(bitmap);
-            double[,][] gradient = FindIntensityGradient(sobel, width, height);
-            double[,] edges = NonMaximumSuppression(gradient, width, height);
-            int[] distribution = DistributionFunction(edges, width, height);
+            int xmin, xmax, ymin, ymax;
+            (xmin, xmax, ymin, ymax) = FindPointsMinMaxPositions(points, width, height);
+
+            sobel = SobelOperator(rgbValues, xmin, xmax, ymin, ymax, bmpData.Stride);
+            bitmap.UnlockBits(bmpData);
+
+            double[,][] gradient = FindIntensityGradient(sobel, xmin, xmax, ymin, ymax);
+            double[,] edges = NonMaximumSuppression(gradient, xmin, xmax, ymin, ymax);
+            int[] distribution = DistributionFunction(edges, xmin, xmax, ymin, ymax);
             distribution = CumulativeDistributionFunction(distribution);
 
             int min, max;
             double lowerThreshold = 0.70, higherThreshold = 0.95;
 
             (min, max) = ChooseThreshold(distribution, lowerThreshold, higherThreshold);
-            int[,] foundedEdges = HysteresisThreshold(edges, width, height, min, max);
+            int[,] foundedEdges = HysteresisThreshold(edges, xmin, xmax, ymin, ymax, min, max);
 
-            int[,] foundedEdges2 = Make4ConnectedMatrix(foundedEdges, width, height, 0, width, 0, height);
+            int[,] foundedEdges2 = Make4ConnectedMatrix(foundedEdges, xmin, xmax, ymin, ymax);
 
             double weight = 2.5;
-            List<Point> pixels = new List<Point>(Graph.FindShortestPath(foundedEdges2, width, height, weight, points));
-
-            int[,] matrixWithContour = MakeMatrixFromPoints(width, height, pixels);
+            List<Point> pixels = new List<Point>(Graph.FindShortestPath(foundedEdges2, xmin, xmax, ymin, ymax, weight, points));
 
             return pixels;
         }
 
-        public static (List<Point>, StatisticsResult) Canny(string dicomId, List<Point> points, int canvasWidth, int canvasHeight, List<Point> centralPoints)
+        public static (List<Point>, StatisticsResult) Canny(string dicomId, List<Point> points, int canvasWidth, int canvasHeight,
+            List<Point> centralPoints, string pixelSpacing)
         {
             System.Drawing.Bitmap bitmap = OrthancConnection.GetBitmapByInstanceId(dicomId);
+            System.Drawing.Rectangle rect = new System.Drawing.Rectangle(0, 0, bitmap.Width, bitmap.Height);
+            System.Drawing.Imaging.BitmapData bmpData = bitmap.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadOnly, bitmap.PixelFormat);
+            IntPtr ptr = bmpData.Scan0;
+            int bytes = Math.Abs(bmpData.Stride) * bitmap.Height;
+            byte[] rgbValues = new byte[bytes];
+            System.Runtime.InteropServices.Marshal.Copy(ptr, rgbValues, 0, bytes);
 
             double[,][] sobel;
             int width, height;
+            width = bitmap.Width;
+            height = bitmap.Height;
 
-            (sobel, width, height) = SobelOperator(bitmap);
-            double[,][] gradient = FindIntensityGradient(sobel, width, height);
-            double[,] edges = NonMaximumSuppression(gradient, width, height);
-            int[] distribution = DistributionFunction(edges, width, height);
+            int xmin, xmax, ymin, ymax;
+            (xmin, xmax, ymin, ymax) = FindPointsMinMaxPositions(points, width, height);
+
+            sobel = SobelOperator(rgbValues, xmin, xmax, ymin, ymax, bmpData.Stride);
+            bitmap.UnlockBits(bmpData);
+
+            double[,][] gradient = FindIntensityGradient(sobel, xmin, xmax, ymin, ymax);
+            double[,] edges = NonMaximumSuppression(gradient, xmin, xmax, ymin, ymax);
+            int[] distribution = DistributionFunction(edges, xmin, xmax, ymin, ymax);
             distribution = CumulativeDistributionFunction(distribution);
 
             int min, max;
             double lowerThreshold = 0.70, higherThreshold = 0.95;
 
             (min, max) = ChooseThreshold(distribution, lowerThreshold, higherThreshold);
-            int[,] foundedEdges = HysteresisThreshold(edges, width, height, min, max);
+            int[,] foundedEdges = HysteresisThreshold(edges, xmin, xmax, ymin, ymax, min, max);
 
-            int[,] foundedEdges2 = Make4ConnectedMatrix(foundedEdges, width, height, 0, width, 0, height);
+            int[,] foundedEdges2 = Make4ConnectedMatrix(foundedEdges, xmin, xmax, ymin, ymax);
 
             double weight = 2.5;
-            List<Point> pixels = new List<Point>(Graph.FindShortestPath(foundedEdges2, width, height, weight, points));
+            List<Point> pixels = new List<Point>(Graph.FindShortestPath(foundedEdges2, xmin, xmax, ymin, ymax, weight, points));
 
             int[,] matrixWithContour = MakeMatrixFromPoints(width, height, pixels);
+            int[,] matrix4Connected = Make4ConnectedMatrix(matrixWithContour, 0, 0, width, height);
+            List<Point> shortestPixels = new List<Point>(MakePointsFromMatrix(width, height, matrix4Connected));
+
             int[,] image = ReadMatrixFromBitmap(bitmap);
 
             StatisticsResult statisticsResult = null;
 
-            statisticsResult = Statistics.GenerateStatistics(pixels, matrixWithContour, image, 0, width, 0, height, 0, 0, centralPoints.First());
+            double pixelSizeX = 0;
+            double pixelSizeY = 0;
 
-            return (pixels, statisticsResult);
+            if (pixelSpacing != null)
+            {
+                List<string> splitString = pixelSpacing.Split('\\').ToList();
+                List<double> split = new List<double>();
+                foreach (var s in splitString)
+                {
+                    double d = 0;
+                    if (double.TryParse(s, System.Globalization.NumberStyles.Number, System.Globalization.CultureInfo.InvariantCulture, out d))
+                    {
+                        split.Add(d);
+                    }
+                }
+                if (split.Count >= 2)
+                {
+                    pixelSizeX = split[0];
+                    pixelSizeY = split[1];
+                }
+            }
+
+            double pixelAreaInMms = pixelSizeX * pixelSizeY;
+            double pixelLenghtInMms = pixelSizeX;
+
+            statisticsResult = Statistics.GenerateStatistics(shortestPixels, matrixWithContour, image, 0, width, 0, height, pixelAreaInMms, pixelLenghtInMms, centralPoints.First());
+
+            return (shortestPixels, statisticsResult);
         }
 
-        public static (double[,][], int, int) SobelOperator(System.Drawing.Bitmap bitmap)
+        public static (int, int, int, int) FindPointsMinMaxPositions(List<Point> points, int bitmapWidth, int bitmapHeight)
         {
-            double[,][] result = new double[bitmap.Width, bitmap.Height][];
+            int xmin = int.MaxValue;
+            int xmax = int.MinValue;
+            int ymin = int.MaxValue;
+            int ymax = int.MinValue;
 
-            for (int x = 1; x < bitmap.Width - 1; x++)
+            foreach (var p in points)
             {
-                for (int y = 1; y < bitmap.Height - 1; y++)
+                if (p.x < xmin)
+                {
+                    xmin = p.x;
+                }
+                if (p.x > xmax)
+                {
+                    xmax = p.x;
+                }
+                if (p.y < ymin)
+                {
+                    ymin = p.y;
+                }
+                if (p.y > ymax)
+                {
+                    ymax = p.y;
+                }
+            }
+
+            int width = xmax - xmin;
+            int height = ymax - ymin;
+
+            xmin -= width / 2;
+            xmax += width / 2;
+            ymin -= height / 2;
+            ymax += height / 2;
+
+            if (xmin < 1)
+            {
+                xmin = 1;
+            }
+            if (xmax > bitmapWidth - 1)
+            {
+                xmax = bitmapWidth - 1;
+            }
+            if (ymin < 1)
+            {
+                ymin = 1;
+            }
+            if (ymax > bitmapHeight - 1)
+            {
+                ymax = bitmapHeight - 1;
+            }
+
+
+            return (xmin, xmax, ymin, ymax);
+        }
+
+        public static double[,][] SobelOperator(System.Drawing.Bitmap bitmap, int xmin, int xmax, int ymin, int ymax)
+        {
+            double[,][] result = new double[xmax - xmin, ymax - ymin][];
+
+            for (int x = xmin; x < xmax; x++)
+            {
+                for (int y = ymin; y < ymax; y++)
                 {
                     double s1, s2;
 
@@ -90,20 +199,52 @@ namespace Logic
                     s2 = bitmap.GetPixel(x + 1, y - 1).R + 2 * bitmap.GetPixel(x + 1, y).R + bitmap.GetPixel(x + 1, y + 1).R;
                     s2 -= bitmap.GetPixel(x - 1, y - 1).R + 2 * bitmap.GetPixel(x - 1, y).R + bitmap.GetPixel(x - 1, y + 1).R;
 
-                    result[x, y] = new double[2] { s1, s2 };
+                    result[x - xmin, y - ymin] = new double[2] { s1, s2 };
                 }
             }
 
-            return (result, bitmap.Width, bitmap.Height);
+            return result;
         }
 
-        public static double[,][] FindIntensityGradient(double[,][] sobel, int width, int height)
+        public static double[,][] SobelOperator(byte[] rgbValues, int xmin, int xmax, int ymin, int ymax, int stride)
+        {
+            double[,][] result = new double[xmax - xmin, ymax - ymin][];
+
+            for (int x = xmin; x < xmax; x++)
+            {
+                for (int y = ymin; y < ymax; y++)
+                {
+                    double s1, s2;
+
+                    s1 = GetPixelFromArray(rgbValues, x - 1, y + 1, stride) + 2 * GetPixelFromArray(rgbValues, x, y + 1, stride)
+                        + GetPixelFromArray(rgbValues, x + 1, y + 1, stride);
+                    s1 -= GetPixelFromArray(rgbValues, x - 1, y - 1, stride) + 2 * GetPixelFromArray(rgbValues, x, y - 1, stride)
+                        + GetPixelFromArray(rgbValues, x + 1, y - 1, stride);
+
+                    s2 = GetPixelFromArray(rgbValues, x + 1, y - 1, stride) + 2 * GetPixelFromArray(rgbValues, x + 1, y, stride)
+                        + GetPixelFromArray(rgbValues, x + 1, y + 1, stride);
+                    s2 -= GetPixelFromArray(rgbValues, x - 1, y - 1, stride) + 2 * GetPixelFromArray(rgbValues, x - 1, y, stride)
+                        + GetPixelFromArray(rgbValues, x - 1, y + 1, stride);
+
+                    result[x - xmin, y - ymin] = new double[2] { s1, s2 };
+                }
+            }
+
+            return result;
+        }
+
+        public static byte GetPixelFromArray(byte[] rgbValues, int x, int y, int stride)
+        {
+            return rgbValues[y * stride + 4 * x + 1];
+        }
+
+        public static double[,][] FindIntensityGradient(double[,][] sobel, int xmin, int xmax, int ymin, int ymax)
         {
             double[,][] result = (double[,][])sobel.Clone();
 
-            for (int x = 1; x < width - 1; x++)
+            for (int x = 0; x < xmax - xmin; x++)
             {
-                for (int y = 1; y < height - 1; y++)
+                for (int y = 0; y < ymax - ymin; y++)
                 {
                     double s1 = sobel[x, y][0];
                     double s2 = sobel[x, y][1];
@@ -118,13 +259,13 @@ namespace Logic
             return result;
         }
 
-        public static double[,] NonMaximumSuppression(double[,][] gradient, int width, int height)
+        public static double[,] NonMaximumSuppression(double[,][] gradient, int xmin, int xmax, int ymin, int ymax)
         {
-            double[,] result = new double[width, height];
+            double[,] result = new double[xmax - xmin, ymax - ymin];
 
-            for (int x = 2; x < width - 2; x++)
+            for (int x = 1; x < xmax - xmin - 1; x++)
             {
-                for (int y = 2; y < height - 2; y++)
+                for (int y = 1; y < ymax - ymin - 1; y++)
                 {
                     result[x, y] = gradient[x, y][0];
 
@@ -157,18 +298,18 @@ namespace Logic
             return result;
         }
 
-        public static int[] DistributionFunction(double[,] edges, int width, int height)
+        public static int[] DistributionFunction(double[,] edges, int xmin, int xmax, int ymin, int ymax)
         {
-            int[] result = new int[numberOfColors];
-            for (int x = 0; x < width; x++)
-                for (int y = 0; y < height; y++)
-                    result[(int)edges[x, y] < 256 ? (int)edges[x, y] : 255]++;
+            int[] result = new int[65536];
+            for (int x = 0; x < xmax - xmin; x++)
+                for (int y = 0; y < ymax - ymin; y++)
+                    result[(int)edges[x, y] < 65536 ? (int)edges[x, y] : 65535]++;
             return result;
         }
 
         public static int[] CumulativeDistributionFunction(int[] distribution)
         {
-            for (int i = 1; i < numberOfColors; i++)
+            for (int i = 1; i < 65536; i++)
                 distribution[i] += distribution[i - 1];
             return distribution;
         }
@@ -178,19 +319,21 @@ namespace Logic
             int min = 0;
             int max = 0;
 
-            for (int i = 0; i < numberOfColors; i++)
+            for (int i = 0; i < 65536; i++)
             {
-                if (cumulativeDistribution[i] < cumulativeDistribution[numberOfColors - 1] * lowerThreshold)
+                if (cumulativeDistribution[i] < cumulativeDistribution[65535] * lowerThreshold)
                     min = i;
-                if (cumulativeDistribution[i] < cumulativeDistribution[numberOfColors - 1] * higherThreshold)
+                if (cumulativeDistribution[i] < cumulativeDistribution[65535] * higherThreshold)
                     max = i;
             }
 
             return (min, max);
         }
 
-        public static int[,] HysteresisThreshold(double[,] edges, int width, int height, int min, int max)
+        public static int[,] HysteresisThreshold(double[,] edges, int xmin, int xmax, int ymin, int ymax, int min, int max)
         {
+            int width = xmax - xmin;
+            int height = ymax - ymin;
             int[,] result = new int[width, height];
             Queue<(int, int)> queue = new Queue<(int, int)>();
 
@@ -210,7 +353,7 @@ namespace Logic
 
                     for (int i = x - 1 < 0 ? 0 : x - 1; i < (x + 1 < width ? x + 1 : width); i++)
                         for (int j = y - 1 < 0 ? 0 : y - 1; y < (y + 1 < height ? y + 1 : height); y++)
-                            if (i != x && j != y && result[i, j] != 1)
+                            if (i != x && j != y && result[i, j] == 0)
                             {
                                 queue.Enqueue((i, j));
                                 result[i, j] = 2;
@@ -223,7 +366,7 @@ namespace Logic
 
                     for (int i = x - 1 < 0 ? 0 : x - 1; i < (x + 1 < width ? x + 1 : width); i++)
                         for (int j = y - 1 < 0 ? 0 : y - 1; y < (y + 1 < height ? y + 1 : height); y++)
-                            if (i != x && j != y && result[i, j] != 1)
+                            if (i != x && j != y && result[i, j] == 0)
                             {
                                 queue.Enqueue((i, j));
                                 result[i, j] = 2;
@@ -236,12 +379,12 @@ namespace Logic
             return result;
         }
 
-        public static int[,] Make4ConnectedMatrix(int[,] matrix, int width, int height, int xmin, int xmax, int ymin, int ymax)
+        public static int[,] Make4ConnectedMatrix(int[,] matrix, int xmin, int xmax, int ymin, int ymax)
         {
             int added = 0;
-            for (int i = xmin; i < xmax - 1; i++)
+            for (int i = 1; i < xmax - xmin - 1; i++)
             {
-                for (int j = ymin; j < ymax - 1; j++)
+                for (int j = 1; j < ymax - ymin - 1; j++)
                 {
                     if (matrix[i, j] != 0 && matrix[i + 1, j + 1] != 0 && matrix[i + 1, j] == 0 && matrix[i, j + 1] == 0)
                     {
@@ -286,6 +429,20 @@ namespace Logic
             foreach (var p in points)
                 matrix[p.x, p.y] = 1;
             return matrix;
+        }
+
+        public static List<Point> MakePointsFromMatrix(int width, int height, int[,] matrix)
+        {
+            List<Point> points = new List<Point>();
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    if (matrix[x, y] == 1)
+                        points.Add(new Point(x, y));
+                }
+            }
+            return points;
         }
 
         public static int[,] ReadMatrixFromBitmap(System.Drawing.Bitmap bitmap)

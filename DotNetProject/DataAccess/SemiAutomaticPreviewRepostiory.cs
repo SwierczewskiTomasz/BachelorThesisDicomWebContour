@@ -26,7 +26,17 @@ namespace DataAccess
             string buffor;
 
             string filename = "../data/preview/" + guid.ToString() + ".csv";
-            StreamReader sr = new StreamReader(filename);
+
+            StreamReader sr = null;
+            try
+            {
+                sr = new StreamReader(filename);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+            
             if (sr.EndOfStream)
                 throw new Exception($"Unexpected end of file {filename}");
 
@@ -82,10 +92,14 @@ namespace DataAccess
 
             buffor = sr.ReadLine();
             height = int.Parse(buffor);
+            if (sr.EndOfStream)
+                throw new Exception($"Unexpected end of file {filename}");
+
+            string pixelSpacing = sr.ReadLine();
 
             sr.Close();
 
-            SemiAutomaticPreviewDTO contour = new SemiAutomaticPreviewDTO(guid, DICOMid, tag, lines, width, height);
+            SemiAutomaticPreviewDTO contour = new SemiAutomaticPreviewDTO(guid, DICOMid, tag, lines, width, height, pixelSpacing, true);
 
             return contour;
         }
@@ -117,6 +131,7 @@ namespace DataAccess
             sw.WriteLine(contour.lines.First().brushColor);
             sw.WriteLine(contour.width);
             sw.WriteLine(contour.height);
+            sw.WriteLine(contour.pixelSpacing);
 
             sw.Close();
         }
@@ -125,7 +140,17 @@ namespace DataAccess
         {
             using (var db = new ContourContext())
             {
-                ContourEntity ce = db.Contours.Single(c => c.ContourEntityId == guid);
+                ContourEntity ce = null;
+                try
+                {
+                    ce = db.Contours.Single(c => c.ContourEntityId == guid);
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+                if (ce == null)
+                    return false;
                 if (ce.IsManual)
                     return false;
                 db.Contours.Remove(ce);
@@ -136,10 +161,14 @@ namespace DataAccess
             return true;
         }
 
-        public void Edit(SemiAutomaticPreviewDTO contour)
+        public bool Edit(SemiAutomaticPreviewDTO contour)
         {
-            Delete(contour.guid);
-            Save(contour);
+            if (Delete(contour.guid))
+            {
+                Save(contour);
+                return true;
+            }
+            return false;
         }
     }
 

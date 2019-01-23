@@ -20,13 +20,15 @@ namespace DTOs
         public int width { get; set; }
         public int height { get; set; }
         public List<Point> centralPoints { get; set; }
+        public string pixelSpacing { get; set; }
 
         public SemiAutomaticPointsDTO()
         {
             guid = Guid.NewGuid();
         }
 
-        public SemiAutomaticPointsDTO(Guid _guid, string _dicomid, string _tag, List<LinePoints> _lines, int _width, int _height, List<Point> _centralPoints)
+        public SemiAutomaticPointsDTO(Guid _guid, string _dicomid, string _tag, List<LinePoints> _lines, int _width, int _height, List<Point> _centralPoints,
+            string _pixelSpacing)
         {
             guid = _guid;
             dicomid = _dicomid;
@@ -34,11 +36,15 @@ namespace DTOs
             lines = new List<LinePoints>(_lines);
             width = _width;
             height = _height;
-            if(_centralPoints != null)
-                centralPoints= new List<Point>(_centralPoints);
+            if (_centralPoints != null)
+            {
+                centralPoints = new List<Point>(_centralPoints);
+            }
+            pixelSpacing = _pixelSpacing;
         }
 
-        public SemiAutomaticPointsDTO(string _dicomid, string _tag, List<LinePoints> _lines, int _width, int _height, List<Point> _centralPoints)
+        public SemiAutomaticPointsDTO(string _dicomid, string _tag, List<LinePoints> _lines, int _width, int _height, List<Point> _centralPoints,
+            string _pixelSpacing)
         {
             guid = Guid.NewGuid();
             dicomid = _dicomid;
@@ -46,8 +52,11 @@ namespace DTOs
             lines = new List<LinePoints>(_lines);
             width = _width;
             height = _height;
-            if(_centralPoints != null)
-                centralPoints= new List<Point>(_centralPoints);
+            if (_centralPoints != null)
+            {
+                centralPoints = new List<Point>(_centralPoints);
+            }
+            pixelSpacing = _pixelSpacing;
         }
     }
 }

@@ -48,7 +48,15 @@ namespace DataAccess
             string buffor;
 
             string filename = "../data/semiautomatic/" + guid.ToString() + ".csv";
-            StreamReader sr = new StreamReader(filename);
+            StreamReader sr = null;
+            try
+            {
+                sr = new StreamReader(filename);
+            }
+            catch(Exception)
+            {
+                return null;
+            }
             if (sr.EndOfStream)
                 throw new Exception($"Unexpected end of file {filename}");
 
@@ -108,6 +116,10 @@ namespace DataAccess
             if (sr.EndOfStream)
                 throw new Exception($"Unexpected end of file {filename}");
 
+            string pixelSpacing = sr.ReadLine();
+            if (sr.EndOfStream)
+                throw new Exception($"Unexpected end of file {filename}");
+
             StatisticsResult statisticsResult = new StatisticsResult();
             List<Point> centralPoints = new List<Point>();
 
@@ -162,14 +174,14 @@ namespace DataAccess
                 buffor = sr.ReadLine();
                 points = buffor.Split(',').Select(s => int.Parse(s)).ToList();
                 i = 0;
-                
+
                 while (i + 1 < points.Count)
                     centralPoints.Add(new Point(points[i++], points[i++]));
             }
 
             sr.Close();
 
-            SemiAutomaticContourDTO contour = new SemiAutomaticContourDTO(guid, DICOMid, tag, lines, width, height, statisticsResult, centralPoints);
+            SemiAutomaticContourDTO contour = new SemiAutomaticContourDTO(guid, DICOMid, tag, lines, width, height, statisticsResult, centralPoints, pixelSpacing);
 
             return contour;
         }
@@ -201,6 +213,7 @@ namespace DataAccess
             sw.WriteLine(contour.lines.First().brushColor);
             sw.WriteLine(contour.width);
             sw.WriteLine(contour.height);
+            sw.WriteLine(contour.pixelSpacing);
 
             if (contour.statistics != null)
             {
@@ -237,7 +250,17 @@ namespace DataAccess
         {
             using (var db = new ContourContext())
             {
-                ContourEntity ce = db.Contours.Single(c => c.ContourEntityId == guid);
+                ContourEntity ce = null;
+                try
+                {
+                    ce = db.Contours.Single(c => c.ContourEntityId == guid);
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+                if (ce == null)
+                    return false;
                 if (ce.IsManual)
                     return false;
                 db.Contours.Remove(ce);
@@ -248,10 +271,14 @@ namespace DataAccess
             return true;
         }
 
-        public void Edit(SemiAutomaticContourDTO contour)
+        public bool Edit(SemiAutomaticContourDTO contour)
         {
-            Delete(contour.guid);
-            Save(contour);
+            if(Delete(contour.guid))
+            {
+                Save(contour);
+                return true;
+            }
+            return false;
         }
     }
 

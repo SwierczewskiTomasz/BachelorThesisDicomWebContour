@@ -6,13 +6,16 @@ import ChooseColorDialog from "./ChooseColorDialog";
 import { Dispatch } from "redux";
 import { setCurrentInstanceInd } from "../containers/instances/reducers";
 import SendToApiDialog from "./SendToApiDialog";
-import { sendAutomaticContour, Contour } from "../containers/contours/reducers";
+import { sendAutomaticContour, Contour, sendPreviewContour, deletePreviewRecord } from "../containers/contours/reducers";
 
 export interface DrawAutimaticProps {
     readonly instancesIds: string[];
+    readonly preview: any;
     readonly currentInstanceId: number;
     readonly setCurrentInd: (ind: number) => void;
-    sendAutomaticContour: (contour: Contour, centralPoints: Point[], title: string, canvasSize: Size, imgSize: Size) => void;
+    readonly deletePreview: (guid: string) => void;
+    readonly sendAutomaticContour: (contour: Contour, centralPoints: Point[], title: string, canvasSize: Size, imgSize: Size) => void;
+    readonly sendPreviewContour: (guid: string, points: Point[], color: string, canvasSize: Size, imgSize: Size) => Promise<any>;
 }
 
 export interface DrawAutimaticState {
@@ -56,6 +59,8 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
             chooseColor: false,
             saveContourOpen: false
         };
+
+        this.props.preview !== undefined && this.props.deletePreview(this.props.preview.guid);
         console.warn(this.state);
         const url = props.instancesIds.length > 0 ?
             orthancURL + "instances/" +
@@ -106,6 +111,38 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
             fun(img.naturalWidth, img.naturalHeight);
         };
         img.src = url;
+
+        if (nextProps.preview !== undefined) {
+            console.warn("preview", nextProps.preview);
+            const data = nextProps.preview;
+            this.setState({
+                guid: data.guid,
+                pixels: data.lines[0].pixels.map(p => ({
+                    x: p.x * this.state.size.width / this.state.imgSize.width,
+                    y: p.y * this.state.size.height / this.state.imgSize.height
+                })),
+                points: data.lines[0].points.map(p => ({
+                    x: p.x * this.state.size.width / this.state.imgSize.width,
+                    y: p.y * this.state.size.height / this.state.imgSize.height
+                }))
+                // pixels: data.lines[0].pixels
+            }, () => {
+                // Draw pixels
+                const canvas: any = document.getElementById("canvas");
+
+                const context = canvas.getContext("2d");
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                context.fillStyle = data.brushColor;
+
+                this.state.points.forEach((pixel) => {
+                    context.fillRect(pixel.x, pixel.y, 5, 5);
+                });
+                this.state.pixels.forEach((pixel) => {
+                    context.fillRect(pixel.x, pixel.y, 2, 2);
+                });
+            });
+
+        }
 
     }
 
@@ -180,11 +217,14 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                     statistics: undefined
                 }}
                 onConfirm={(c, cp, t) => {
+                    this.props.deletePreview(this.state.guid);
                     this.props.sendAutomaticContour(c, cp, t, this.state.size, this.state.imgSize);
                     const canvas: any = document.getElementById("canvas");
                     const context = canvas.getContext("2d");
                     context.clearRect(0, 0, canvas.width, canvas.height);
                     this.setState({
+                        guid: null,
+                        pixels: [],
                         points: []
                     });
                 }}
@@ -215,21 +255,13 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                 }}
             />}
             <br />
-            {/* <img style={{ margin: "0 auto" }}
-                src={
-                    this.props.instancesIds.length > 0 ?
-                        orthancURL + "instances/" +
-                        this.props.instancesIds[this.state.currentInstanceId]
-                        + "/preview" :
-                        "https://http.cat/404"
-                }
-            /> */}
             <Button
+                disabled={this.state.points.length < 3}
                 variant="contained"
                 color="primary"
-                onClick={() => {
+                onClick={async () => {
                     console.log("click");
-                    const contour = {
+                    const contour: Contour = {
                         dicomid: this.props.instancesIds[this.props.currentInstanceId],
                         tag: "SemiAutomatic Test",
                         lines: [
@@ -239,7 +271,8 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                             }
                         ],
                         width: this.state.size.width,
-                        height: this.state.size.height
+                        height: this.state.size.height,
+                        statistics: undefined
                     };
 
                     // Send to API
@@ -247,106 +280,21 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                     console.log(this.state);
 
                     // TODO: Refactor => make api call inside reducer
-                    if (this.state.guid != null) {
-                        fetch("https://localhost:5001/" + "api/semiautomaticpreview/delete/" + this.state.guid, {
-                            mode: "cors",
-                            method: "delete",
-                            headers: {
-                                "Accept": "application/json",
-                                "Content-Type": "application/json"
-                            }
-                        });
-                    }
-                    fetch("https://localhost:5001/" + (this.state.guid == null ? "api/semiautomaticpreview/post/" : "api/semiautomaticpreview/put/"), {
-                        mode: "cors",
-                        method: this.state.guid == null ? "post" : "put",
-                        headers: {
-                            "Accept": "application/json",
-                            "Content-Type": "application/json"
-                        },
-                        body: (this.state.guid != null ? JSON.stringify({
-                            guid: this.state.guid,
-                            dicomid: this.props.instancesIds[this.props.currentInstanceId],
-                            tag: "SemiAutomatic Test",
-                            lines: [
-                                {
-                                    points: this.state.points
-                                        .map(p => ({
-                                            x: (p.x * this.state.imgSize.width) / this.state.size.width,
-                                            y: (p.y * this.state.imgSize.height) / this.state.size.height
-                                        }))
-                                        .map(p => ({
-                                            x: parseInt(p.x.toString()),
-                                            y: parseInt(p.y.toString())
-                                        })),
-                                    brushColor: this.state.color
-                                }
-                            ],
-                            width: this.state.size.width,
-                            height: this.state.size.height
-                        }) :
-                            JSON.stringify({
-                                dicomid: this.props.instancesIds[this.props.currentInstanceId],
-                                tag: "SemiAutomatic Test",
-                                lines: [
-                                    {
-                                        points: this.state.points
-                                            .map(p => ({
-                                                x: (p.x * this.state.imgSize.width) / this.state.size.width,
-                                                y: (p.y * this.state.imgSize.height) / this.state.size.height
-                                            }))
-                                            .map(p => ({
-                                                x: parseInt(p.x.toString()),
-                                                y: parseInt(p.y.toString())
-                                            })),
-                                        brushColor: this.state.color
-                                    }
-                                ],
-                                width: parseInt(this.state.size.width.toString()),
-                                height: parseInt(this.state.size.height.toString())
-                            }))
-                    }).then(response => {
-                        console.log(response);
-                        return response.json();
-                    }).then(data => {
-                        console.log(data);
-                        this.setState(prev => ({
-                            guid: data.guid,
-                            pixels: data.lines[0].pixels.map(p => ({
-                                x: p.x * this.state.size.width / this.state.imgSize.width,
-                                y: p.y * this.state.size.height / this.state.imgSize.height
-                            })),
-                            points: data.lines[0].points.map(p => ({
-                                x: p.x * this.state.size.width / this.state.imgSize.width,
-                                y: p.y * this.state.size.height / this.state.imgSize.height
-                            }))
-                            // pixels: data.lines[0].pixels
-                        }));
-                        // Draw pixels
-                        const canvas: any = document.getElementById("canvas");
+                    this.props.sendPreviewContour(this.state.guid, this.state.points, this.state.color, this.state.size, this.state.imgSize);
 
-                        const context = canvas.getContext("2d");
-                        context.clearRect(0, 0, canvas.width, canvas.height);
-                        context.fillStyle = data.brushColor;
-
-                        this.state.points.forEach((pixel) => {
-                            context.fillRect(pixel.x, pixel.y, 5, 5);
-                        });
-                        this.state.pixels.forEach((pixel) => {
-                            context.fillRect(pixel.x, pixel.y, 2, 2);
-                        });
-                    });
                 }}
             >
                 Preview contour
             </Button>
             <Button
+                disabled={this.state.points.length < 3}
                 variant="contained"
                 color="primary"
                 onClick={() => this.setState({ saveContourOpen: true })}
             >
                 Save contour
             </Button>
+            <br />
             <Button
                 variant="flat"
                 color="primary"
@@ -404,7 +352,8 @@ export default connect(
     (state: AppState) => {
         return {
             instancesIds: state.instancesIds,
-            currentInstanceId: state.currentInstanceId
+            currentInstanceId: state.currentInstanceId,
+            preview: state.preview
         };
     },
     (dispatch: Dispatch<any>) => ({
@@ -413,6 +362,12 @@ export default connect(
         },
         sendAutomaticContour: (contour: Contour, centralPoints: Point[], title: string, canvasSize: Size, imgSize: Size) => {
             dispatch(sendAutomaticContour("api/semiautomaticcontour/post/", { ...contour, centralPoints, tag: title }, canvasSize, imgSize));
+        },
+        sendPreviewContour: async (guid: string, points: Point[], color: string, canvasSize: Size, imgSize: Size) => {
+            await dispatch(sendPreviewContour(guid, points, color, canvasSize, imgSize));
+        },
+        deletePreview: (guid: string) => {
+            dispatch(deletePreviewRecord(guid));
         }
     })
 )(DrawAutimatic);

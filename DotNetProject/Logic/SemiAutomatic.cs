@@ -30,7 +30,7 @@ namespace Logic
             lines.Add(line);
 
             SemiAutomaticPreviewDTO contour = new SemiAutomaticPreviewDTO(points.guid,
-                points.dicomid, points.tag, lines, points.width, points.height);
+                points.dicomid, points.tag, lines, points.width, points.height, points.pixelSpacing, false);
             return contour;
         }
 
@@ -40,7 +40,8 @@ namespace Logic
             List<Point> pixels;
             StatisticsResult statisticsResult;
 
-            (pixels, statisticsResult) = CannyAlgorithm.Canny(points.dicomid, points.lines.First().points, points.width, points.height, points.centralPoints);
+            (pixels, statisticsResult) = CannyAlgorithm.Canny(points.dicomid, points.lines.First().points, points.width, points.height, 
+                points.centralPoints, points.pixelSpacing);
 
             List<LinePointsAndPixels> lines = new List<LinePointsAndPixels>();
             LinePointsAndPixels line = new LinePointsAndPixels();
@@ -51,7 +52,7 @@ namespace Logic
             lines.Add(line);
 
             SemiAutomaticContourDTO contour = new SemiAutomaticContourDTO(points.guid,
-                points.dicomid, points.tag, lines, points.width, points.height, statisticsResult, points.centralPoints);
+                points.dicomid, points.tag, lines, points.width, points.height, statisticsResult, points.centralPoints, points.pixelSpacing);
             return contour;
         }
 
@@ -86,7 +87,7 @@ namespace Logic
                 0, 0, points.centralPoints.First());
 
             SemiAutomaticContourDTO contour = new SemiAutomaticContourDTO(points.guid,
-                points.dicomid, points.tag, lines, points.width, points.height, statisticsResult, points.centralPoints);
+                points.dicomid, points.tag, lines, points.width, points.height, statisticsResult, points.centralPoints, points.pixelSpacing);
             return contour;
         }
     }

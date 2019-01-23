@@ -44,11 +44,18 @@ export async function postBuilder<TResult>(
             body: JSON.stringify(requestBody)
         };
 
-        return await fetch(url, requestInit);
+        const result = await fetch(url, requestInit);
+
+        if (result.ok) {
+            return result;
+        }
+        else {
+            return undefined;
+        }
     };
 
     let response = await makeRequest();
-    return response.json();
+    return response === undefined ? undefined : response.json();
 }
 
 export async function deleteBuilder<TResult>(

@@ -44,6 +44,24 @@ namespace API.Controllers
                 return BadRequest(ModelState);
             }
 
+            if (points == null)
+                return BadRequest();
+
+            if (points.lines == null)
+                return BadRequest();
+
+            if (points.lines.Count == 0)
+                return BadRequest();
+
+            foreach (var l in points.lines)
+            {
+                if (l.points == null)
+                    return BadRequest();
+
+                if (l.points.Count < 3)
+                    return BadRequest();
+            }
+
             SemiAutomaticPreviewDTO result = logic.Add(points);
 
             return CreatedAtAction(nameof(Get),
@@ -52,18 +70,28 @@ namespace API.Controllers
 
         [Route("[action]/")]
         [HttpPut]
+        [ProducesResponseType(400)]
         public ActionResult<SemiAutomaticPreviewDTO> Put([FromBody] SemiAutomaticPreviewDTO contour)
         {
-            SemiAutomaticPreviewDTO result = logic.Edit(contour);
+            SemiAutomaticPreviewDTO result;
+            bool boolResult;
+            (boolResult, result) = logic.Edit(contour);
+            if(!boolResult)
+                return BadRequest();
+            if (result == null)
+                return BadRequest();
             return CreatedAtAction(nameof(Get),
                 new { guid = result.guid }, result);
         }
 
         [Route("[action]/{guid}")]
         [HttpDelete]
-        public void Delete(Guid guid)
+        [ProducesResponseType(404)]
+        public ActionResult Delete(Guid guid)
         {
-            logic.Delete(guid);
+            if(logic.Delete(guid))
+                return Ok();
+            return NotFound();
         }
     }
 }

@@ -3,6 +3,10 @@ import { Button, Dialog, DialogContent, DialogActions, DialogTitle, Grid } from 
 import { Contour } from "../containers/contours/reducers";
 import { Size } from "./DrawAutomatic";
 
+const gridStyle = {
+    margin: "2rem"
+};
+
 interface ContourWithStatisticsProps {
     readonly open: boolean;
     readonly contour: Contour;
@@ -45,18 +49,29 @@ export default class ContourWithStatistics extends React.Component<ContourWithSt
         const context = canvas.getContext("2d");
 
         props.contour.lines.forEach(l => {
-            context.fillStyle = l.brushColor;
-            for (let i = 0; i < l.points.length; i++) {
-                context.fillRect(
-                    l.points[0].x * props.size.width / props.contour.width,
-                    l.points[0].y * props.size.height / props.contour.height,
-                    5, 5);
+            if (l.pixels !== undefined) {
+                context.fillStyle = l.brushColor;
+                for (let i = 0; i < l.points.length; i++) {
+                    context.fillRect(
+                        l.points[i].x * props.size.width / props.contour.width,
+                        l.points[i].y * props.size.height / props.contour.height,
+                        5, 5);
+                }
+                for (let i = 0; i < l.pixels.length; i++) {
+                    const p = l.pixels[i];
+                    context.fillRect(p.x * props.size.width / props.contour.width,
+                        p.y * props.size.height / props.contour.height,
+                        2, 2);
+                }
             }
-            for (let i = 0; i < l.pixels.length; i++) {
-                const p = l.pixels[i];
-                context.fillRect(p.x * props.size.width / props.contour.width,
-                    p.y * props.size.height / props.contour.height,
-                    2, 2);
+            else {
+                context.strokeStyle = l.brushColor;
+                context.beginPath();
+                context.moveTo(l.points[0].x * props.size.width / props.contour.width, l.points[0].y * props.size.height / props.contour.height);
+                for (let i = 1; i < l.points.length; i++) {
+                    context.lineTo(l.points[i].x * props.size.width / props.contour.width, l.points[i].y * props.size.height / props.contour.height);
+                }
+                context.stroke();
             }
         });
     }
@@ -75,14 +90,14 @@ export default class ContourWithStatistics extends React.Component<ContourWithSt
                 </DialogTitle>
                 <DialogContent>
                     <Grid container>
-                        <Grid item key="canvas-preview-grid">
+                        <Grid item key="canvas-preview-grid" style={{ ...gridStyle }}>
                             <canvas id="canvas-preview"
                                 width={this.props.size.width + "px"}
                                 height={this.props.size.height + "px"}
                                 style={{ backgroundImage: this.props.imgUrl, backgroundSize: "cover" }}
                             />
                         </Grid>
-                        <Grid item key="stats-grid">
+                        <Grid item key="stats-grid" style={{ ...gridStyle }}>
                             {console.log(this.props.contour)}
                             <p><span style={{ ...strong }}>Area</span>: {this.props.contour.statistics.area}</p>
                             <p><span style={{ ...strong }}>Center Of Mass</span>: {"[" + this.props.contour.statistics.centerOfMass.x +

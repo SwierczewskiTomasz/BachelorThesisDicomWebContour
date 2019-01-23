@@ -16,7 +16,11 @@ namespace Logic
             List<SemiAutomaticContourDTO> contours = new List<SemiAutomaticContourDTO>();
             foreach (Guid guid in repository.FetchAll())
             {
-                contours.Add(repository.Load(guid));
+                SemiAutomaticContourDTO contour = repository.Load(guid);
+                if (contour != null)
+                {
+                    contours.Add(contour);
+                }
             }
             return contours;
         }
@@ -26,7 +30,11 @@ namespace Logic
             List<SemiAutomaticContourDTO> contours = new List<SemiAutomaticContourDTO>();
             foreach (Guid guid in repository.FetchByDicomId(dicomid))
             {
-                contours.Add(repository.Load(guid));
+                SemiAutomaticContourDTO contour = repository.Load(guid);
+                if (contour != null)
+                {
+                    contours.Add(contour);
+                }
             }
             return contours;
         }
@@ -63,13 +71,13 @@ namespace Logic
             return repository.Delete(guid);
         }
 
-        public void Edit(SemiAutomaticContourDTO contour)
+        public bool Edit(SemiAutomaticContourDTO contour)
         {
             SemiAutomaticContourDTO old = repository.Load(contour.guid);
 
-            if(old == null)
+            if (old == null)
             {
-                throw new Exception("This Contour doesn't exist in database");
+                return false;
             }
 
             List<Point> newListOfPoints = new List<Point>();
@@ -134,10 +142,10 @@ namespace Logic
             list.Add(line);
 
             SemiAutomaticPointsDTO contourPointsDTO = new SemiAutomaticPointsDTO(contour.guid, contour.dicomid, contour.tag, list, contour.width, contour.height,
-            contour.centralPoints);
+            contour.centralPoints, contour.pixelSpacing);
             SemiAutomaticContourDTO result = SemiAutomatic.Default(contourPointsDTO);
 
-            repository.Edit(result);
+            return repository.Edit(result);
         }
     }
 }

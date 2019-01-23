@@ -20,8 +20,8 @@ namespace Logic
         public static Bitmap GetBitmapByInstanceId(string instanceId)
         {
             string url = orthancURL + instanceId + "/preview";
+            string tagUrl = orthancURL + instanceId + "/tags";
 
-//            var client = new WebClient();
             Stream stream = client.OpenRead(url);
             Bitmap bitmap = (Bitmap)Image.FromStream(stream);
             stream.Close();

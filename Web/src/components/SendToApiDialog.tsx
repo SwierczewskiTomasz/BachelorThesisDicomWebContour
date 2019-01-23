@@ -36,7 +36,7 @@ export default class SendToApiDialog extends React.Component<SendToApiDialogProp
             open={this.props.open}
             onClose={() => {
                 this.props.onClose();
-                this.setState({ preview: true });
+                this.setState({ preview: true, points: [] });
             }}
         >
             <DialogTitle>
@@ -70,18 +70,27 @@ export default class SendToApiDialog extends React.Component<SendToApiDialogProp
                         console.log(canvas);
                         const context = canvas.getContext("2d");
 
-                        this.props.contour.lines.forEach(l => {
-                            console.warn(l.brushColor);
-                            context.strokeStyle = l.brushColor;
-                            context.beginPath();
-                            context.moveTo(l.points[0].x, l.points[0].y);
-                            for (let i = 1; i < l.points.length; i++) {
-                                const p = l.points[i];
-                                context.lineTo(p.x, p.y);
-                            }
-                            context.lineTo(l.points[0].x, l.points[0].y);
-                            context.stroke();
-                        });
+                        const l = this.props.contour.lines[0];
+                        console.warn(l.brushColor);
+                        context.strokeStyle = l.brushColor;
+                        context.beginPath();
+                        context.moveTo(l.points[0].x, l.points[0].y);
+                        for (let i = 1; i < l.points.length; i++) {
+                            const p = l.points[i];
+                            context.lineTo(p.x, p.y);
+                        }
+                        context.lineTo(l.points[0].x, l.points[0].y);
+                        context.stroke();
+
+
+                        // const l = this.props.contour.lines[0];
+                        // console.warn(l.brushColor);
+                        // context.fillStyle = l.brushColor;
+                        // for (let i = 0; i < l.points.length; i++) {
+                        //     const p = l.points[i];
+                        //     context.fillRect(p.x, p.y, 2, 2);
+                        // }
+
 
                         const addPoint = (x, y) => this.setState(prev => { return { points: [...prev.points, { x, y }] }; });
                         const findOverlapping = (x, y) => {
@@ -122,7 +131,7 @@ export default class SendToApiDialog extends React.Component<SendToApiDialogProp
                     onClick={() => {
                         this.props.onConfirm(this.props.contour, this.state.points, this.state.title);
                         this.props.onClose();
-                        this.setState({ preview: true });
+                        this.setState({ preview: true, points: [] });
                     }}
                 >
                     Send
@@ -132,7 +141,7 @@ export default class SendToApiDialog extends React.Component<SendToApiDialogProp
                     color={"secondary"}
                     onClick={() => {
                         this.props.onClose();
-                        this.setState({ preview: true });
+                        this.setState({ preview: true, points: [] });
                     }}
                 >
                     Cancel

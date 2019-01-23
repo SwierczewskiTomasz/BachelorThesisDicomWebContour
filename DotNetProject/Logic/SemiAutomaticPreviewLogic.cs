@@ -38,13 +38,13 @@ namespace Logic
             return repository.Delete(guid);
         }
 
-        public SemiAutomaticPreviewDTO Edit(SemiAutomaticPreviewDTO contour)
+        public (bool, SemiAutomaticPreviewDTO) Edit(SemiAutomaticPreviewDTO contour)
         {
             SemiAutomaticPreviewDTO old = repository.Load(contour.guid);
 
             if (old == null)
             {
-                throw new Exception("This Contour doesn't exist in database");
+                return (false, null);
             }
 
             List<Point> newListOfPoints = new List<Point>();
@@ -64,6 +64,8 @@ namespace Logic
                 while (currentInOld.x != currentInNew.x || currentInOld.y != currentInNew.y)
                 {
                     i++;
+                    if(i == countOld)
+                        break;
                     currentInOld = old.lines.First().points[i];
                 }
                 newListOfPoints.Add(currentInOld);
@@ -90,7 +92,21 @@ namespace Logic
                     double m = Math.Sqrt(A * A + B * B);
                     double distance = Math.Abs(A * currentInNew.x + B * currentInNew.y + C) / m;
 
-                    if (distance < minDistance)
+                    double dy = Math.Abs(point2.y - point1.y);
+                    double dx = Math.Abs(point2.x - point1.x);
+
+                    bool inside = true;
+
+                    if (currentInNew.x > Math.Max(point1.x, point2.x) + (dx + dy) / 2)
+                        inside = false;
+                    if (currentInNew.x < Math.Min(point1.x, point2.x) - (dx + dy) / 2)
+                        inside = false;
+                    if (currentInNew.y > Math.Max(point1.y, point2.y) + (dy + dx) / 2)
+                        inside = false;
+                    if (currentInNew.y < Math.Min(point1.y, point2.y) - (dy + dx) / 2)
+                        inside = false;
+
+                    if (distance < minDistance && inside)
                     {
                         minDistance = distance;
                         index = k + 1;
@@ -106,16 +122,26 @@ namespace Logic
             List<LinePointsAndPixels> list = new List<LinePointsAndPixels>();
             LinePointsAndPixels line = new LinePointsAndPixels();
             line.points = new List<Point>(newListOfPoints);
-            line.pixels = null;
+            line.pixels = old.lines.First().pixels;
             line.brushColor = contour.lines.First().brushColor;
             list.Add(line);
 
-            SemiAutomaticPreviewDTO contourPointsDTO = new SemiAutomaticPreviewDTO(contour.guid, contour.dicomid, contour.tag, list, contour.width, contour.height);
-            SemiAutomaticPreviewDTO result = SemiAutomatic.Default(contourPointsDTO);
+            SemiAutomaticPreviewDTO contourPointsDTO = new SemiAutomaticPreviewDTO(contour.guid, contour.dicomid, contour.tag, list, contour.width, contour.height,
+                contour.pixelSpacing, contour.disablePreviewCalculations);
+            SemiAutomaticPreviewDTO result = contourPointsDTO;
+            if (!contour.disablePreviewCalculations)
+            {
+                result = SemiAutomatic.Default(contourPointsDTO);
+            }
 
-            repository.Edit(result);
-
-            return result;
+            if (repository.Edit(result))
+            {
+                return (true, result);
+            }
+            else
+            {
+                return (false, result);
+            }
         }
     }
 }

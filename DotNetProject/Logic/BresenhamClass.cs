@@ -13,16 +13,20 @@ namespace Logic
 
         public static List<Point> Bresenham(List<Point> pixels, int x1, int y1, int x2, int y2)
         {
+            bool reverse = false;
             if (x1 > x2)
             {
                 int c = x2;
                 x2 = x1;
                 x1 = c;
+                reverse = true;
 
                 c = y2;
                 y2 = y1;
                 y1 = c;
             }
+
+            //pixels.Add(new Point(x1, y1));
 
             if (y1 > y2)
             {
@@ -38,6 +42,12 @@ namespace Logic
                 else
                     pixels.Concat(BresenhamSSE(pixels, x1, x2, y1, y2));
             }
+
+            if (reverse)
+            {
+                pixels.Reverse();
+            }
+
             return pixels;
         }
 
@@ -50,6 +60,8 @@ namespace Logic
             int incrNE = 2 * (dy - dx); //increment used for move to NE
             int x = x2;
             int y = y2;
+
+            pixels.Add(new Point(x, y));
 
             for (int i = 0; i < radius; i++)
             {
@@ -95,6 +107,8 @@ namespace Logic
             int x = x1;
             int y = y1;
 
+            pixels.Add(new Point(x, y));
+
             for (int i = 0; i < radius; i++)
             {
                 if (d < 0) //choose E
@@ -139,6 +153,8 @@ namespace Logic
             int x = x1;
             int y = y1;
 
+            pixels.Add(new Point(x, y));
+
             for (int i = 0; i < radius; i++)
             {
                 if (d < 0) //choose E
@@ -182,7 +198,9 @@ namespace Logic
             int incrNE = 2 * (dy - dx); //increment used for move to NE
             int x = x1;
             int y = y1;
-         
+
+            pixels.Add(new Point(x, y));
+
             for (int i = 0; i < radius; i++)
             {
                 if (d < 0) //choose E

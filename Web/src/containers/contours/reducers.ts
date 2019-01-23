@@ -3,7 +3,7 @@ import { createAction } from "redux-actions";
 import { startTask, endTask } from "../../helpers/asyncActions";
 import { getBuilder, apiURL, postBuilder } from "../../helpers/requestHelper";
 import { Thunk } from "../../helpers/Thunk";
-import { Size } from "../../components/DrawAutomatic";
+import { Size, Point } from "../../components/DrawAutomatic";
 
 export interface Contour {
     guid?: string;
@@ -44,8 +44,10 @@ export interface ContourWithCenralPoints extends Contour {
     }[];
 }
 
+export const updateSelectedContourGuids = createAction("SELECTED_CONTOURS/UPDATE", (contourGuids: string[]) => ({ selectedContourGuids: contourGuids }));
 export const updateContours = createAction("CONTOURS/UPDATE", (contours: Contour[]) => ({ contours: contours }));
 export const updateContour = createAction("CONTOUR/UPDATE", (contour: Contour) => ({ contour: contour }));
+export const updatePreview = createAction("PREVIEW/UPDATE", (preview: any) => ({ preview: preview }));
 
 export const fetchContours = (getOpts: string, getOpts2: string): Thunk =>
     async (dispatch, getState) => {
@@ -70,19 +72,58 @@ export const fetchContours = (getOpts: string, getOpts2: string): Thunk =>
         }
     };
 
-export const setCurrentContur = (guid: string): Thunk =>
+export const setCurrentContour = (guid: string): Thunk =>
     async (dispatch, getState) => {
         {
             dispatch(updateContour(getState().contours.find(c => c.guid === guid)));
         }
     };
-export const discardCurrentContur = (): Thunk =>
+
+export const discardCurrentContour = (): Thunk =>
     async (dispatch, getState) => {
         {
             dispatch(updateContour(undefined));
         }
     };
 
+export const addSelectedContour = (guid: string): Thunk =>
+    async (dispatch, getState) => {
+        {
+            const contourGuids = getState().selectedContourGuids;
+            dispatch(updateSelectedContourGuids([...contourGuids, guid]));
+        }
+    };
+
+export const removeSelectedContour = (guid: string): Thunk =>
+    async (dispatch, getState) => {
+        {
+            const contourGuids = getState().selectedContourGuids.filter(cg => cg !== guid);
+            dispatch(updateSelectedContourGuids(contourGuids));
+        }
+    };
+
+export const removeAllSelectedContour = (): Thunk =>
+    async (dispatch, getState) => {
+        {
+            dispatch(updateSelectedContourGuids([]));
+        }
+    };
+
+export const discardPreview = (): Thunk =>
+    async (dispatch, getState) => {
+        {
+            dispatch(updatePreview(undefined));
+        }
+    };
+
+function updateSelectedContourGuidsReducer(state: AppState, action) {
+    switch (action.type) {
+        case "SELECTED_CONTOURS/UPDATE":
+            return Object.assign({}, state, { selectedContourGuids: action.payload.selectedContourGuids });
+        default:
+            return state;
+    }
+}
 
 function updateContoursReducer(state: AppState, action) {
     switch (action.type) {
@@ -92,6 +133,7 @@ function updateContoursReducer(state: AppState, action) {
             return state;
     }
 }
+
 function updateContourReducer(state: AppState, action) {
     switch (action.type) {
         case "CONTOUR/UPDATE":
@@ -101,11 +143,104 @@ function updateContourReducer(state: AppState, action) {
     }
 }
 
+
+function updatePreviewReducer(state: AppState, action) {
+    switch (action.type) {
+        case "PREVIEW/UPDATE":
+            return Object.assign({}, state, { preview: action.payload.preview });
+        default:
+            return state;
+    }
+}
+
+export const sendPreviewContour = (guid: string, points: Point[], color: string, canvasSize: Size, imgSize: Size): Thunk =>
+
+    async (dispatch, getState) => {
+        dispatch(startTask());
+        const state = getState();
+        const response = await fetch("https://localhost:5001/" + (guid == null ? "api/semiautomaticpreview/post/" : "api/semiautomaticpreview/put/"), {
+            mode: "cors",
+            method: guid == null ? "post" : "put",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            },
+            body: (guid != null ? JSON.stringify({
+                guid: guid,
+                dicomid: state.instancesIds[state.currentInstanceId],
+                tag: "SemiAutomatic Test",
+                lines: [
+                    {
+                        points: points
+                            .map(p => ({
+                                x: (p.x * imgSize.width) / canvasSize.width,
+                                y: (p.y * imgSize.height) / canvasSize.height
+                            }))
+                            .map(p => ({
+                                x: parseInt(p.x.toString()),
+                                y: parseInt(p.y.toString())
+                            })),
+                        brushColor: color
+                    }
+                ],
+                width: canvasSize.width,
+                height: canvasSize.height,
+                pixelSpacing: state.pixelSpacing
+            }) :
+                JSON.stringify({
+                    dicomid: state.instancesIds[state.currentInstanceId],
+                    tag: "SemiAutomatic Test",
+                    lines: [
+                        {
+                            points: points
+                                .map(p => ({
+                                    x: (p.x * imgSize.width) / canvasSize.width,
+                                    y: (p.y * imgSize.height) / canvasSize.height
+                                }))
+                                .map(p => ({
+                                    x: parseInt(p.x.toString()),
+                                    y: parseInt(p.y.toString())
+                                })),
+                            brushColor: color
+                        }
+                    ],
+                    width: parseInt(canvasSize.width.toString()),
+                    height: parseInt(canvasSize.height.toString()),
+                    pixelSpacing: state.pixelSpacing
+                }))
+        });
+        console.warn(response);
+        const responseDeserialized = await response.json();
+        console.warn(responseDeserialized);
+        dispatch(updatePreview(responseDeserialized));
+        dispatch(endTask());
+    };
+
+export const deletePreviewRecord = (guid: string): Thunk =>
+    async (dispatch, getState) => {
+        dispatch(startTask());
+        fetch("https://localhost:5001/" + "api/semiautomaticpreview/delete/" + guid, {
+            mode: "cors",
+            method: "delete",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            }
+        });
+        dispatch(updatePreview(undefined));
+        dispatch(endTask());
+    };
+
 export const sendAutomaticContour = (getOpts: string, data: ContourWithCenralPoints, canvasSize: Size, imgSize: Size): Thunk =>
     async (dispatch, getState) => {
         {
+            const state = getState();
             dispatch(startTask());
             console.warn(data);
+            const guid = data.guid;
+            if (guid != null) {
+                deletePreviewRecord(guid);
+            }
             const lines = data.lines.map(line => {
                 let next = line;
                 next.points = next.points
@@ -129,7 +264,13 @@ export const sendAutomaticContour = (getOpts: string, data: ContourWithCenralPoi
                     y: parseInt(p.y.toString())
                 }));
             const imgSize2 = { width: parseInt(imgSize.width.toString()), height: parseInt(imgSize.height.toString()) };
-            const body = { ...data, lines, centralPoints, ...imgSize2 };
+            const body = {
+                ...data,
+                lines,
+                centralPoints,
+                ...imgSize2,
+                pixelSpacing: state.pixelSpacing
+            };
             let response = await postBuilder<Contour>(apiURL, getOpts, body);
             if (response !== undefined) {
                 dispatch(updateContour(response));
@@ -141,9 +282,11 @@ export const sendAutomaticContour = (getOpts: string, data: ContourWithCenralPoi
             dispatch(endTask());
         }
     };
+
 export const sendManualContour = (getOpts: string, data: ContourWithCenralPoints, canvasSize: Size, imgSize: Size): Thunk =>
     async (dispatch, getState) => {
         {
+            const state = getState();
             dispatch(startTask());
             console.warn(data);
             const lines = data.lines.map(line => {
@@ -172,7 +315,13 @@ export const sendManualContour = (getOpts: string, data: ContourWithCenralPoints
                     y: parseInt(p.y.toString())
                 }));
             const imgSize2 = { width: parseInt(imgSize.width.toString()), height: parseInt(imgSize.height.toString()) };
-            const body = { ...data, lines, centralPoints, ...imgSize2 };
+            const body = {
+                ...data,
+                lines,
+                centralPoints,
+                ...imgSize2,
+                pixelSpacing: state.pixelSpacing
+            };
             let response = await postBuilder<Contour>(apiURL, getOpts, body);
             if (response !== undefined) {
                 console.log("sendManualContour() succeded");
@@ -186,6 +335,8 @@ export const sendManualContour = (getOpts: string, data: ContourWithCenralPoints
 
 
 export const contoursReducers = {
+    [updateSelectedContourGuids.toString()](state: AppState, action) { return { ...state, ...updateSelectedContourGuidsReducer(state, action) }; },
     [updateContours.toString()](state: AppState, action) { return { ...state, ...updateContoursReducer(state, action) }; },
-    [updateContour.toString()](state: AppState, action) { return { ...state, ...updateContourReducer(state, action) }; }
+    [updateContour.toString()](state: AppState, action) { return { ...state, ...updateContourReducer(state, action) }; },
+    [updatePreview.toString()](state: AppState, action) { return { ...state, ...updatePreviewReducer(state, action) }; }
 };

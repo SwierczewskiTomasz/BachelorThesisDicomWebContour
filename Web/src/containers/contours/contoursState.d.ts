@@ -48,7 +48,9 @@ declare interface ContoursState {
             readonly numberOfPixelsInsideContour: number;
             readonly numberOfPixelsOfContour: number;
         } | undefined;
-    }
+    },
+    readonly preview: any;
+    readonly selectedContourGuids: string[];
 }
 
 declare interface AppState extends ContoursState { }

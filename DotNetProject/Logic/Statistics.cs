@@ -268,8 +268,28 @@ namespace Logic
 
             int[,] image = CannyAlgorithm.ReadMatrixFromBitmap(bitmap);
 
-            double pixelAreaInMms = 0;
-            double pixelLenghtInMms = 0;
+
+            double pixelSizeX = 0;
+            double pixelSizeY = 0;
+
+            List<string> splitString = contour.pixelSpacing.Split('\\').ToList();
+            List<double> split = new List<double>();
+            foreach (var s in splitString)
+            {
+                double d = 0;
+                if (double.TryParse(s, System.Globalization.NumberStyles.Number, System.Globalization.CultureInfo.InvariantCulture, out d))
+                {
+                    split.Add(d);
+                }
+            }
+            if (split.Count >= 2)
+            {
+                pixelSizeX = split[0];
+                pixelSizeY = split[1];
+            }
+
+            double pixelAreaInMms = pixelSizeX * pixelSizeY;
+            double pixelLenghtInMms = pixelSizeX;
 
             return GenerateStatistics(contour.lines.First().points, matrixWithContour, image, 0, width, 0, height, pixelAreaInMms, pixelLenghtInMms, contour.centralPoints.First());
         }
