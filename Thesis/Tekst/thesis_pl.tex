@@ -182,7 +182,12 @@
 %\makeatother
 
 
+% --------------------------Obrazy-----------------------------
 
+%Path relative to the .tex file containing the \includegraphics command
+
+\usepackage{graphicx}
+\graphicspath{ {./images/} }
 
 
 % -------------------------- POCZĄTEK --------------------------
@@ -275,15 +280,16 @@ samodzielnie, co poświadczam własnoręcznym podpisem.
 \tableofcontents
 \thispagestyle{empty}
 
-\newpage % JEŻELI SPIS TREŚCI MA PARZYSTĄ LICZBĘ STRON, ZAKOMENTOWAĆ
+%\newpage % JEŻELI SPIS TREŚCI MA PARZYSTĄ LICZBĘ STRON, ZAKOMENTOWAĆ
 % ALBO JAK KTOŚ WOLI WTEDY DWIE STRONY ODSTĘPU, DODAĆ \null\newpage
 
 % -------------- 5. ZASADNICZA CZĘŚĆ PRACY --------------------
 \null\thispagestyle{empty}\newpage
 \pagestyle{fancy}
 \pagenumbering{arabic}
-\setcounter{page}{12} % JEŻELI Z POWODU DUŻEJ ILOŚCI STRON W SPISIE TREŚCI SIĘ NIE ZGADZA, TRZEBA ZMODYFIKOWAĆ RĘCZNIE
+\setcounter{page}{11} % JEŻELI Z POWODU DUŻEJ ILOŚCI STRON W SPISIE TREŚCI SIĘ NIE ZGADZA, TRZEBA ZMODYFIKOWAĆ RĘCZNIE
 %oryginalnie było 11
+%ustawiam ponownie 11, usunąłem pustą stronę po spisie treści - rodziały powinny zaczynać się na stronach nieparzystych
 
 \chapter*{Wstęp}
 \markboth{}{Wstęp}
@@ -300,7 +306,68 @@ O czym jest praca? Co się w niej znajduje? Jaki jest wkład autora?
 
 \chapter {Stan wiedzy}
 
+W poniższym rozdziale zostały przestawione istniejące na rynku aplikacje oferujące podobne funkcjonalności do wymagań postawionych przed autorskim systemem do obrysów na obrazach DICOM. Przedstawiono również proponowane rozwiązanie postawionych przed systemem wymagań.
+
 \section {Przegląd istniejących rozwiązań}
+
+\subsection {Cornerstone}
+
+Cornerstone Core to biblioteka, która umożliwia wyświetlanie obrazów medycznych z wykożystaniem elementu canvas z języka HTML5. Biblioteka udostępnia interfejs do wyświetlania obrazów medycznych pozwalający na zarządzanie wyświetlaniem zdjęcia. Podstawowe funkcjonalności obsługiwane przez bibliotekę to:
+
+\begin{itemize}[noitemsep]
+\item Przybliżanie i oddalanie obrazu.
+\item Obrót obrazu.
+\item Przesuwanie obrazu w wyświetlanym komponencie.
+\item Zmiana jasności wyświetlanego obrazu.
+\item Mapowanie kolorów.
+\item Interpolacja pikseli w obrazie (dla obrazów o niskiej rozdzielczości).
+\end{itemize}
+
+Ponadto twórcy biblioteki Cornerstone Core stworzyli bibliotekę Cornerstone Tools, która korzysta z biblioteki Cornerstone Core i umożliwia wiele funkcjonalności potrzebnych lekarzom do analizy badań pacjentów. Poza funkcjonalnościami Cornerstone Core umożliwia także:
+
+\begin{itemize}[noitemsep]
+\item Mierzenie odległości w linii prostej na obrazie z podaniem rzeczywistych wartości.
+\item Oznaczanie obszarów przy pomocy prostokątów oraz elips.
+\item oznaczanie niewielkich zmian w postaci małego okręgu.
+\item Mierzenie kątów na podstawie 3 podanych przez użytkownika punktów.
+\end{itemize}
+
+Przykładowym projektem korzystającym z bibliotek Cornerstone jest OHIF\footnote {Open Health Imaging Foundation - http://ohif.org/ } Viewer. Aplikacja pozwala na wykorzystanie większości możliwości udostępnianych przez biblioteki Cornerstone. Przykładowe urzycie aplikacji zostało przedstawione na rysunku \ref{fig:OHIF-example}.
+
+\begin{figure}[h]
+	\includegraphics[width=\textwidth]{OHIF-example}
+	\caption{Przykład użycia aplikacji OGIF Viewer}
+    	\label{fig:OHIF-example}
+\end{figure}
+
+\subsection {DICOM Web Viewer (DWV)}
+\subsection {Dicom-contour}
+\subsection {Orthanc}
+
+Orthanc to serwer z bazą plików DICOM, który umożliwia łatwe przechowywanie, zarządzanie oraz dostęp do plików medycznych DICOM. Ponadto Orthanc udostępnia REST API, które umożliwia przeglądanie wgranych na serwer plików DICOM podzielonych względem pacjentów, badań i serii. 
+
+Serwer Orthanc udostępnia również prosty interfejs przeglądarkowy który pozwala na wgrywanie nowych plików (interfejs wgrywania plików przedstawiono na ryskunku \ref{fig:Orthanc-upload}), przeglądanie zapisanych plików --- w szczególności tagów (rysunek \ref{fig:Orthanc-tags}) oraz podglądu obrazu (rysunek \ref{fig:Orthanc-preview}). Interfejs przeglądarkowy nie zapewnia żadnej metody rysowania na przeglądanym obrazie. Pozwala natomiast na przełączanie obrazu na kolejny lub poprzedni poprzez kliknięcie lewym przyciskiem myszy w prawą lub część podglądu obrazu.
+
+\begin{figure}[h]
+	\center
+	\includegraphics[width=0.8\textwidth]{Orthanc-upload}
+	\caption{Interfejs wgrywania plików DICOM do serwera Orthanc}
+    	\label{fig:Orthanc-upload}
+\end{figure}
+
+\begin{figure}[h]
+	\center
+	\includegraphics[width=0.8\textwidth]{Orthanc-tags}
+	\caption{Podgląd tagów pliku DICOM przez interfejs przeglądarkowy Orthanc}
+    	\label{fig:Orthanc-tags}
+\end{figure}
+
+\begin{figure}[h]
+	\center
+	\includegraphics[width=0.8\textwidth]{Orthanc-preview}
+	\caption{Podgląd obrazu DICOM przez interfejs przeglądarkowy Orthanc}
+    	\label{fig:Orthanc-preview}
+\end{figure}
 
 \section {Proponowane rozwiązanie}
 
@@ -321,7 +388,7 @@ Do podstawowych funkcjonalności systemu zaliczają się:
 \item Generowanie obrysu manualnego.
 \item Generowanie obrysu półautomatycznego na podstawie punktów podanych przez użytkownika.
 \item Zapisywanie wygenerowanych obrysów.
-\item \textbf {Anonimizacja}\footnote {Anonimizacja (ang. anonymization) --- operacja mająca na celu usunięcie z danych informacji o pacjentach, które pozwoliłby na identyfikację danych z tożsamością pacjenta. Są to między innymi: imiona, nazwisko, pesel. Inne tłumaczenia słowa anonymization --- utajnianie, usuwanie danych niejawnych. Z uwagę na fakt, że te tłumaczenia nie oddają dobrze kontekstu zastosowano kalkę językową.} danych zapisanych w strukturze pliku DICOM.
+\item \textbf {Anonimizacja}\footnote {Anonimizacja (ang. anonymization) --- operacja mająca na celu usunięcie z danych informacji o pacjentach, które pozwoliłyby na identyfikację danych z tożsamością pacjenta. Są to między innymi: imiona, nazwisko, pesel. Inne tłumaczenia słowa anonymization --- utajnianie, usuwanie danych niejawnych. Z uwagę na fakt, że te tłumaczenia nie oddają dobrze kontekstu zastosowano kalkę językową.} danych zapisanych w strukturze pliku DICOM.
 \end{itemize}
 
 \subsection {Wymagania funkcjonalne}
