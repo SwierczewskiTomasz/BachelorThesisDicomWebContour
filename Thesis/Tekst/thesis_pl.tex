@@ -397,7 +397,7 @@ W rozwiązaniu zdecydowano się skorzystać z serwera Orthanc jako bazy przechow
 
 Poza serwerem Orthanc stworzono serwer w technologii .NET Core wspomagający interfejs użytkownika, który pozwala na przeprowadzanie czasochłonnych aplikacji poza interfejsem użytkownika. Podstawowymi zadaniami tego serwera było przechowywanie wykonanych przez użytkownika obrysów manualnych, generowanie i przechowywanie obrysów półautomatycznych oraz obliczanie statystyk związanych z zapisanymi obrysami.
 
-Jako interfejs użytkownika wykorzystano narzędzie ReactJS z biblioteką Redux. Wybranie tej technologii pozwaliło na stworzenie eleganckiej aplikacji przeglądarkowej pozwalającej na generowanie obrysów manualnych przy użyciu myszy lub tabletu graficznego, wybieranie punktów, z których generowane będą obrysy półautomatyczne, oglądanie wcześniej wygenerowanych i zapisanych obrysów oraz wyświetlanie statystyk dotczących wykonanego obrysu. Interfejs inspirowany jest podglądem obrazu w aplikacji DWV, ale funkcjonalność automatycznego obrysu została zmieniona --- obrys nie jest generowany na bierząco, lecz na życzenie użytkownika wybrane przez niego punkty wysyłane są do serwera i wyświetlany jest wynik półautomatycznego dopasowania obrysu.
+Jako interfejs użytkownika wykorzystano bibliotekę ReactJS w połączeniu z biblioteką Redux. Wybranie tej technologii pozwaliło na stworzenie eleganckiej aplikacji przeglądarkowej pozwalającej na generowanie obrysów manualnych przy użyciu myszy lub tabletu graficznego, wybieranie punktów, z których generowane będą obrysy półautomatyczne, oglądanie wcześniej wygenerowanych i zapisanych obrysów oraz wyświetlanie statystyk dotczących wykonanego obrysu. Interfejs inspirowany jest podglądem obrazu w aplikacji DWV, ale funkcjonalność automatycznego obrysu została zmieniona --- obrys nie jest generowany na bierząco, lecz na życzenie użytkownika wybrane przez niego punkty wysyłane są do serwera i wyświetlany jest wynik półautomatycznego dopasowania obrysu.
 
 \chapter {Opis autorskiego systemu informatycznego}
 
@@ -492,6 +492,25 @@ Użytkownik może zanonimizować pacjenta, gdy przegląda jego obraz. Użytkowni
 Tabela \ref{tabela wymagania niefunkcjonalne} przedstawia wymagania niefunkcjonalne, które system musi spełnić.
 
 \section {Architektura rozwiązania}
+
+Na rysunku \ref{fig:architektura} przedstawiono architekturę autorskiego systemu.
+
+\begin{figure}[h]
+	\center
+	\includegraphics[width=0.8\textwidth]{architektura}
+	\caption{Diiagram UML przedstawiający architekturę autorskiego systemu}
+    	\label{fig:architektura}
+\end{figure}
+ 
+Architektura pozwala na połączenie z serwerem plików DICOM (Orthanc) oraz serwerem obrysów dowolnej liczby klientów korzystających z przeglądarki. Algorytmy zapisu obrysu, generowania obrysu, obliczania statystyk oraz anonimizacji plików są od siebie niezależne i mogą zostać zrównoleglone --- ograniczeniem jest tutaj moc obliczeniowa maszyny na której uruchomiony jest serwer. Niemożliwe jest zwiększenie wydajności poprzez zwiększenie liczby instancji serwera. Dopuszczalne jest takie rozwiązanie, gdyż planowana liczba użytkowników jednocześnie krzystających z aplikacji to nie więcej niż 20 osób. Możliwości zwiększenia skalowalności w kontekście obliczeniowej zostało opisane w rozdziale 5.2.
+
+\subsection {Interfejs użytkownika}
+
+Kluczowym elementem stworzonego systemu jest interfejs użytkownika napisany w języku skryptowym JavaScript przy użyciu biblioteki ReactJS. Udostępnia ona interfejs nawigujący po zapisanych w serwerze Orthanc plikach DICOM. Ponadto dla wyświetlonego obrazu udostępnia szczegóły dotyczące obrazu, badania i pacjenta. Umożliwia także wykonanie obrysu manualnego zrealizowanego przy uzyciu biblioteki react-canvas-draw. W aplikacji zawarto również autorski interfejs do wyboru punktów do algorymu półautomatycznego. Podgląd zapisanych w systemie obrysów wraz z wyliczonymi dla nich statystykami jest możliwy z poziomu tworzenia obrysów oraz w osobnej zakładce udostępniono widok, w którym użytkownik może ogladać wybrane przez siebie obrysy z listy obrysów jednocześnie na jednym obrazie.
+
+\subsection {Serwer obrysów i obliczeń}
+
+
 
 \section {Opracowany algorytm półautomatyczny}
 
@@ -726,11 +745,45 @@ Z wyżej wymienionych powodów zdecydowano się na łączność 4-krotną. Przyg
 
 \chapter {Podsumowanie}
 
+W tym rozdziale przedstawiono trudności napotane w trakcie tworzenia sytemu jak również omówiono możliwe drogi dalszego rozwoju systemu.
+
 \section {Napotkane problemy i ograniczenia}
+
+\subsection {Problemy związane z interfejsem}
+
+W interfejsie ograniczeniem okazał się dostępny rozmiar ekranu. Projektowanie aplikacji zakładało wykorzystanie ekranu o rozdzielczości 1920x1080, a więc ekranu panoramicznego. Niestety obrazy DICOM mają bardzo zróżnicowane układy --- są obrazy kwadratowe, pionowe oraz poziome. Założenie, że ekran użytkownika jest ekranem 1920x1080 sprawia, że obrazy pionowe będą wyświetlane jedynie w niewielkiej części obszaru przeznaczonego dla obrazów. Jest to niestety ograniczenie, którego nie da się zlikwidować, gdyż przy założeniu rozdzielczości 1080x1920 powoduje analogiczny problem z obrazami poziomymi. Zaleca się skonfigurowanie aplikacji pod wymagania konkretnej grupy lekarzy lub szpitala na podstawie wymiarów zdjęć, które będą częściej występować w systemie.
+
+\subsection {Integracja między modułami}
+
+Podstawowym problemem występującym w trakcie implementacji rozwiązania było ustalanie kontraktów w warstwie komunikacyjnej. Ze względu na niewielką ilość akcji w komunikacji nie zdecydowano się na zastosowanie generatora kontraktów, ale zaleca się wprowadzenie takiego rozwiązania ponownie w trakcie rozwoju systemu. W zależności od złożoności komunikacji generator kontraktów może zdecydowanie usprawnić wprowadzanie zmian w aplikacji. 
+
+\subsection {Wymary rzeczywiste obrazów DICOM a rozmiary obrysów}
+
+Podczas projektowania systemu zdecydowano, że obrazy DICOM będą wyświetlane w największej rozdzielczości umożliwiającej wyświetlenie całego obrazu na ekranie. W związku z tym, większość obrazów wyświetlona jest w rozmiarze różnym od faktycznego rozmiaru obrazu. Rozważano dwie możliwości rozdzielczości wykonywanych obrysów: faktyczne wymiary obrazu oraz rozmiary obrazu wyśiwetlanego na ekranie. Zdecydowano, że obrysy powinne być zapiswane w wymiarach identycznych faktycznym rozmiarom obrazu. Decyzja została uzasadniona potrzebą zapewnienia poprawnego obliczania statytyk. Zapisywanie obrysów w takich wymiarach ułatwia obliczanie liczby pikseli wewnątrz obrysu.
+
+\subsection {Wydajność wyznaczania obrysu półautomatycznego dla obrazów dużej rozdzielczości}
+
+Ze względu na złożoność algorytmu używanego do wyznaczania obrysu półautomatycznego wykonywanie obrysów półautomatycznych w obrazach o dużej rozdzielczości przekracza dwukrotnie dopuszczalny czas ustalony w punkcie 5 wymagań niefunkcjonalnych. Czas obliczeń można poprawić poprzez ograniczenie obszaru w którym wykrywane będą krawędzie, ale nie rozwiąże to problemu z wykonywaniem obrysów o wymiarach zbliżonych do pełnych wymiarów obrazu
 
 \section {Możliwości dalszego rozwoju}
 
+\subsection {Poszerzenie modułu statystyk obrysu}
 
+W obecnej wersji systemu nie zaimplementowano deskryptorów kształtu obrysu. Zaimplementowanie takich deskrptorów mogłoby dostarczyć dodatkowe informacje na temat wykonanych przez użytkownika obrysów. Taka informacja może w przyszłości dostarczyć dodatkową zmienną, którą można by wykorzystywać w celu trenowania sztucznej inteligencji w zautomatyzowanym wykrywaniu organów, jak również wykrywaniu i sugerowaniu niepokojących zmian.
+
+\subsection {Wprowadzenie uwierzytelniania}
+
+W tej wersji w systemie użytkownicy nie są rozróżnialni. Dodanie użytkowników pozwoliłoby na segregowanie tworzonych obrysów i wyświetlanie użytkownikowi obrysów wykonanych jedynie przez niego samego, a nie wszystkich obrysów istniejących w systemie. Z punktu widzenia użyteczności systemu użytkownik nie musiałby szukać swojego obrysu pośród obrysu innych użytkowników systemu. 
+
+Uwierzytelnianie zapobiegłoby również niepowołanemu dostępowi osób postronnych do wykonanych obrysów oraz uniemożliwiłoby ataki typu DoS. W obecnej wersji można poprzez wysyłanie dużej liczby zapytań związanych z generowaniem obrysów półautomatycznych doprowadzić do niedostępności przeprowadzania akcji na serwerze. System jest również podatny na złośliwe działanie mające na celu zapełnienie całej dostępnej serwerowi przestrzeni dyskowej, które może zostać wywołane przez wysłanie dużej liczby zapisów obrysów manualnych.
+
+\subsection {Interfejs eksportowania statystyk dotyczących wykonanych w danej sesji obrysów}
+
+Z punktu widzenia użytkownika interesujące mogą być informacje wyliczone przez system na temat wykonanych przez niego obrysów. W obenej wersji systemu jeśli użykownik chiałby takie informacje zapisać musiałby samodzielnie przepisać dane wyświetlane w widoku szczegółów obrysu. Zautomatyzowanie takiej funkcjonalności mogłoby zaoszczędzić użytkownikowi wiele czasu.
+
+\subsection {Wykrywanie zmian na podstawie obrysów metodami sztucznej inteligencji}
+
+Głównym celem wykonywania obrysów na obrazach medycznym jest generowanie zbioru testowego dla różnych metod sztucznej inteligencji mających na celu sugerowanie lekarzom niepokojących zmian wykrytych automatycznie. W związku z tym użytecznym rozszerzeniem funkcjonalności systemu byłoby zintegrowanie go z modułem sztucznej inteligencji i umożliwienie obrysowywania wgrywanych obrazów metodami sztucznej inteligencji opartych na orysach wykonanych przez użytkownika
 
 
 %\chapter*{}
@@ -781,6 +834,26 @@ Z wyżej wymienionych powodów zdecydowano się na łączność 4-krotną. Przyg
 \markboth{}{Instrukcja instalacji}
 \addcontentsline{toc}{chapter}{Instrukcja instalacji}
 
+W celu instalacji serwera Orthanc należy udać się na stronę \url{https://www.orthanc-server.com/download.php}, pobrać wersję odpowiednią dla używanego systemu operacyjnego, a następnie postępować zgodnie z instrukcjami wyświetlanymi podczas instalacji. W celu uzyskania szczegółowych informacji odnośnie konfiguracji należy zapoznać się z dokumentacją znajdującą się na stronie \url{http://book.orthanc-server.com/users/cookbook.html}
+
+W celu instalacji serwera obrysów i aplikacji przeglądarkowej należy skopiować pliki znajdujące się na płycie w folderach Web oraz DotNetProject na stację na której aplikacje te zostaną uruchomione. 
+
+Do działania serwera obrysów wymagany jest .NET Core w wersji 2.2 lub nowszej. Aby zainstalować .NET Core należy udać się na stronę \url{https://dotnet.microsoft.com/download}, pobrać wersję odpowiednią dla używanego systemu operacyjnego, a następnie postępować zgodnie z informacjami wyświetlanymi w trakcie instalacji.
+
+KONFIGURACJA PORTÓW W SERWERZE
+
+Aby uruchomić serwer obrysów należy przejść do skopiowanego folderu DotNetProject/API i wykonać w konsoli polecenie \texttt{\$ dotnet build \&\& dotnet run}.
+
+Do działania aplikacji przeglądarkowej wymagany jest Node w wersji co najmniej 9.4 oraz yarn w wersji co najmniej 1.10.1. Aby zainstalować Node.js należy udać się na stronę \url{https://nodejs.org/en/download/} i wybrać wersję odpowiadającą systemowi z którego korzystamy. Postępować zgodnie ze wskazówkami instalatora. W celu instalacji yarn należy udać się na stronę https://yarnpkg.com/en/docs/install aby pobrać wersję odpowiadającą systemowi na którym będzie uruchamiana aplikacja i uruchomić instalator.
+
+W celu konfiguracji portu na który będzie wystawiona aplikacja webowa należy ustawić odpowiednią liczbę w 4 linii pliku Web/express.js. Przykładowa poprawna konfiguracja:\\
+\texttt{\$ const portNumber = 3000;}
+
+Ponadto w celu konfiguracji aplikacji należy ustawić adresy do API serwera obrysów i serwera Orthanc w pliku Web/src/helpers/requestHelper.ts poprzez zmianę zawartości cudzysłowów w pierwszych dwóch linijkach pliku. 	Przykładowa poprawna konfiguracja:\\
+\texttt{export const orthancURL = "http://localhost:8042/";}\\
+\texttt{export const apiURL = "https://localhost:5001/";}
+
+W celu uruchomienia aplikacji przeglądarkowej wchodzimy do folderu Web w którym wykonujemy polecenie \texttt{\$ yarn install \&\& yarn prod}. Uwaga, tę komendę należy uruchomić w konsoli obsługującej skrypty w języku bash.
 
 
 % --- 8. Instrukcja użytkowania
