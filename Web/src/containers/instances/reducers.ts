@@ -60,12 +60,11 @@ export const getDetails = (id: string | undefined): Thunk =>
                 let series = await getBuilder<any>(orthancURL, "instances/" + id + "/series");
                 let study = await getBuilder<any>(orthancURL, "instances/" + id + "/study");
                 let patient = await getBuilder<any>(orthancURL, "instances/" + id + "/patient");
-                if (series !== undefined && study && patient) {
-                    const seriesName = series.MainDicomTags.SeriesDescription || "No name";
-                    const studyName = study.MainDicomTags.StudyDescription || "No name";
-                    const patientName = patient.MainDicomTags.PatientName || "No name";
-                    dispatch(updateInstanceTreeDetails(seriesName, studyName, patientName));
-                }
+                const seriesName = series.MainDicomTags.SeriesDescription || "No name";
+                const studyName = study.MainDicomTags.StudyDescription || "No name";
+                const patientName = patient.MainDicomTags.PatientName || "No name";
+                dispatch(updateInstanceTreeDetails(seriesName, studyName, patientName));
+
             }
             dispatch(endTask());
         }
