@@ -43,7 +43,7 @@ class PreviewSavedContours extends React.Component<PreviewSavedContoursProps, Pr
     redraw(props: PreviewSavedContoursProps) {
         const url = this.props.instancesIds.length > 0 ?
             orthancURL + "instances/" + this.props.currentImageId + "/preview" :
-            "https://http.cat/404";
+            "https://imgur.com/t8wK1PH.png";
         let img = new Image();
         const fun = (w, h) => {
             h = h * 1000 / w;
@@ -101,7 +101,7 @@ class PreviewSavedContours extends React.Component<PreviewSavedContoursProps, Pr
     render() {
         const url = this.props.instancesIds.length > 0 ?
             orthancURL + "instances/" + this.props.currentImageId + "/preview" :
-            "https://http.cat/404";
+            "https://imgur.com/t8wK1PH.png";
         return <>
             {this.props.instancesIds.length > 0 ? (this.props.currentInstanceId + 1) + "/" + this.props.instancesIds.length : null}
             <canvas id="canvas-preview"

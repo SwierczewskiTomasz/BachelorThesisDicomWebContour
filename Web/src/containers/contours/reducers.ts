@@ -154,7 +154,6 @@ function updatePreviewReducer(state: AppState, action) {
 }
 
 export const sendPreviewContour = (guid: string, points: Point[], color: string, canvasSize: Size, imgSize: Size): Thunk =>
-
     async (dispatch, getState) => {
         dispatch(startTask());
         const state = getState();
@@ -279,6 +278,8 @@ export const sendAutomaticContour = (getOpts: string, data: ContourWithCenralPoi
             else {
                 console.log("sendAutomaticContour() failed");
             }
+            dispatch(fetchContours("api/semiautomaticcontour/FetchByDicomIdToDTOs/" + data.dicomid,
+                "api/manualcontour/FetchByDicomIdToDTOs/" + data.dicomid));
             dispatch(endTask());
         }
     };
@@ -329,6 +330,8 @@ export const sendManualContour = (getOpts: string, data: ContourWithCenralPoints
             else {
                 console.log("sendManualContour() failed");
             }
+            dispatch(fetchContours("api/semiautomaticcontour/FetchByDicomIdToDTOs/" + data.dicomid,
+                "api/manualcontour/FetchByDicomIdToDTOs/" + data.dicomid));
             dispatch(endTask());
         }
     };

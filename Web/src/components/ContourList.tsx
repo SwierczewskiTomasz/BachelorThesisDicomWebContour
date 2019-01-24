@@ -106,7 +106,7 @@ class ContourListView extends React.Component<ContourListProps, ContourListState
                         { width: 1, height: 1 }}
                     imgUrl={"url(" + (this.props.selectedContour ? orthancURL + "instances/" +
                         this.props.selectedContour.dicomid
-                        + "/preview" : "https://http.cat/404") + ")"}
+                        + "/preview" : "https://imgur.com/t8wK1PH.png") + ")"}
                     onClose={() => this.props.discardCurrentContour()}
                 />
             </>

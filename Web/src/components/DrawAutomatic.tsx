@@ -66,7 +66,7 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
             orthancURL + "instances/" +
             this.props.instancesIds[this.props.currentInstanceId]
             + "/preview" :
-            "https://http.cat/404";
+            "https://imgur.com/t8wK1PH.png";
         let img = new Image();
         const fun = (w, h) => {
             this.setState({ imgSize: { width: w, height: h } });
@@ -92,7 +92,7 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
             orthancURL + "instances/" +
             this.props.instancesIds[this.props.currentInstanceId]
             + "/preview" :
-            "https://http.cat/404";
+            "https://imgur.com/t8wK1PH.png";
         let img = new Image();
         const fun = (w, h) => {
             this.setState({ imgSize: { width: w, height: h } });
@@ -190,7 +190,7 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
             orthancURL + "instances/" +
             this.props.instancesIds[this.props.currentInstanceId]
             + "/preview" :
-            "https://http.cat/404";
+            "https://imgur.com/t8wK1PH.png";
         const bgimg = "url(" + url + ")";
         return <>
             <ChooseColorDialog
