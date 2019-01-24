@@ -30,7 +30,7 @@ namespace API
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowSpecificOrigin",
-                    builder => builder.WithOrigins("http://localhost:8080")
+                    builder => builder.WithOrigins("http://localhost:8080", "http://localhost:3000")
                                       .AllowAnyHeader()
                                       .AllowAnyMethod()
                                       .AllowCredentials());
