@@ -63,7 +63,7 @@ class PatientInfo extends React.Component<PatientInfoProps, PatientInfoState> {
                 <p><span style={{ ...strong }}>Study Date</span>: {this.props.studyDate || "No data"}</p>
                 <p><span style={{ ...strong }}>Study Description</span>: {this.props.studyDescription || "No data"}</p>
                 <p><span style={{ ...strong }}>Pixel Spacing</span>: {this.props.pixelSpacing || "No data"}</p>
-                <p><span style={{ ...strong }}>Study Description</span>: {this.props.spacingBetweenSlices || "No data"}</p>
+                <p><span style={{ ...strong }}>Spacing Between Slices</span>: {this.props.spacingBetweenSlices || "No data"}</p>
                 <Button
                     variant={"contained"}
                     color={"primary"}

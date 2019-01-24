@@ -14,6 +14,9 @@ export interface DrawManuallyProps {
     readonly instancesIds: string[];
     readonly currentInstanceId: number;
     readonly selectedContour: Contour;
+    readonly seriesName: string | undefined;
+    readonly studyName: string | undefined;
+    readonly patientName: string | undefined;
     readonly setCurrentInd: (ind: number) => void;
     readonly sendManualContour: (contour: Contour, centralPoints: Point[], title: string, canvasSize: Size, imgSize: Size) => void;
 }
@@ -129,7 +132,8 @@ class DrawManually extends React.Component<DrawManuallyProps, DrawManuallyState>
             >
                 +
             </Button> */}
-            {this.props.instancesIds.length > 0 ? (this.props.currentInstanceId + 1) + "/" + this.props.instancesIds.length : null}
+            {this.props.instancesIds.length > 0 ?
+                <><p>{this.props.patientName + "/" + this.props.studyName + "/" + this.props.seriesName}</p> <p>{(this.props.currentInstanceId + 1) + "/" + this.props.instancesIds.length}</p></> : null}
             <ChooseColorDialog
                 open={this.state.chooseColor}
                 initialColor={this.state.color}
@@ -271,7 +275,11 @@ export default connect(
         return {
             instancesIds: state.instancesIds,
             currentInstanceId: state.currentInstanceId,
-            selectedContour: state.selectedContour
+            selectedContour: state.selectedContour,
+
+            seriesName: state.seriesName,
+            studyName: state.studyName,
+            patientName: state.patientName
         };
     },
     (dispatch: Dispatch<any>) => ({

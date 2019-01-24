@@ -12,6 +12,9 @@ export interface DrawAutimaticProps {
     readonly instancesIds: string[];
     readonly preview: any;
     readonly currentInstanceId: number;
+    readonly seriesName: string | undefined;
+    readonly studyName: string | undefined;
+    readonly patientName: string | undefined;
     readonly setCurrentInd: (ind: number) => void;
     readonly deletePreview: (guid: string) => void;
     readonly sendAutomaticContour: (contour: Contour, centralPoints: Point[], title: string, canvasSize: Size, imgSize: Size) => void;
@@ -230,7 +233,8 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                 }}
                 onClose={() => this.setState({ saveContourOpen: false })}
             />
-            {this.props.instancesIds.length > 0 ? (this.props.currentInstanceId + 1) + "/" + this.props.instancesIds.length : null}
+            {this.props.instancesIds.length > 0 ?
+                <><p>{this.props.patientName + "/" + this.props.studyName + "/" + this.props.seriesName}</p> <p>{(this.props.currentInstanceId + 1) + "/" + this.props.instancesIds.length}</p></> : null}
             <br />
             {<canvas id="canvas"
                 width={this.state.size.width + "px"}
@@ -353,7 +357,11 @@ export default connect(
         return {
             instancesIds: state.instancesIds,
             currentInstanceId: state.currentInstanceId,
-            preview: state.preview
+            preview: state.preview,
+
+            seriesName: state.seriesName,
+            studyName: state.studyName,
+            patientName: state.patientName
         };
     },
     (dispatch: Dispatch<any>) => ({

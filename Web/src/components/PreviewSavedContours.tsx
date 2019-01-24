@@ -11,6 +11,9 @@ interface PreviewSavedContoursProps {
     readonly contours: Contour[];
     readonly currentImageId: string;
     readonly instancesIds: string[];
+    readonly seriesName: string | undefined;
+    readonly studyName: string | undefined;
+    readonly patientName: string | undefined;
     readonly currentInstanceId: number;
     readonly setCurrentInd: (index: number) => void;
 }
@@ -103,7 +106,8 @@ class PreviewSavedContours extends React.Component<PreviewSavedContoursProps, Pr
             orthancURL + "instances/" + this.props.currentImageId + "/preview" :
             "https://imgur.com/t8wK1PH.png";
         return <>
-            {this.props.instancesIds.length > 0 ? (this.props.currentInstanceId + 1) + "/" + this.props.instancesIds.length : null}
+            {this.props.instancesIds.length > 0 ?
+                <><p>{this.props.patientName + "/" + this.props.studyName + "/" + this.props.seriesName}</p> <p>{(this.props.currentInstanceId + 1) + "/" + this.props.instancesIds.length}</p></> : null}
             <canvas id="canvas-preview"
                 width={this.state.size.width + "px"}
                 height={this.state.size.height + "px"}
@@ -138,7 +142,11 @@ export default connect(
             contours: state.contours.filter(c => state.selectedContourGuids.join().includes(c.guid)),
             currentImageId: state.instancesIds[state.currentInstanceId],
             currentInstanceId: state.currentInstanceId,
-            instancesIds: state.instancesIds
+            instancesIds: state.instancesIds,
+
+            seriesName: state.seriesName,
+            studyName: state.studyName,
+            patientName: state.patientName
         };
     },
     (dispatch: Dispatch<any>) => ({

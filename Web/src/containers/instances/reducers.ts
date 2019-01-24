@@ -10,6 +10,8 @@ import { fetchContours, removeAllSelectedContour } from "../contours/reducers";
 export const updateInstances = createAction("INSTANCES/UPDATE", (instancesIds: string[]) => ({ instancesIds }));
 export const updateInstanceDetails = createAction("INSTANCE_DETAILS/UPDATE",
     (pixelSpacing: string | undefined, spacingBetweenSlices: string | undefined) => ({ pixelSpacing, spacingBetweenSlices }));
+export const updateInstanceTreeDetails = createAction("TREE_DETAILS/UPDATE",
+    (seriesName: string | undefined, studyName: string | undefined, patientName: string | undefined) => ({ seriesName, studyName, patientName }));
 export const updateCurrentInstance = createAction("CURRENT_INSTANCE/UPDATE", (currentInstanceId: number) => ({ currentInstanceId }));
 
 interface FrameInstance {
@@ -54,6 +56,16 @@ export const getDetails = (id: string | undefined): Thunk =>
                     const spacingBetweenSlices: string | undefined = response["0018,0088"] === undefined ? undefined : response["0018,0088"].Value;
                     dispatch(updateInstanceDetails(pixelSpacing, spacingBetweenSlices));
                 }
+
+                let series = await getBuilder<any>(orthancURL, "instances/" + id + "/series");
+                let study = await getBuilder<any>(orthancURL, "instances/" + id + "/study");
+                let patient = await getBuilder<any>(orthancURL, "instances/" + id + "/patient");
+                if (series !== undefined && study && patient) {
+                    const seriesName = series.MainDicomTags.SeriesDescription || "No name";
+                    const studyName = study.MainDicomTags.StudyDescription || "No name";
+                    const patientName = patient.MainDicomTags.PatientName || "No name";
+                    dispatch(updateInstanceTreeDetails(seriesName, studyName, patientName));
+                }
             }
             dispatch(endTask());
         }
@@ -83,6 +95,16 @@ function updateInstancesReducer(state: AppState, action) {
             return state;
     }
 }
+
+function updateInstanceTreeDetailsReducer(state: AppState, action) {
+    switch (action.type) {
+        case "TREE_DETAILS/UPDATE":
+            return Object.assign({}, state, { seriesName: action.payload.seriesName, studyName: action.payload.studyName, patientName: action.payload.patientName });
+        default:
+            return state;
+    }
+}
+
 function updateInstanceDetailsReducer(state: AppState, action) {
     switch (action.type) {
         case "INSTANCE_DETAILS/UPDATE":
@@ -104,5 +126,6 @@ function updateCurentInctanceReducer(state: AppState, action) {
 export const instancesReducers = {
     [updateInstances.toString()](state: AppState, action) { return { ...state, ...updateInstancesReducer(state, action) }; },
     [updateInstanceDetails.toString()](state: AppState, action) { return { ...state, ...updateInstanceDetailsReducer(state, action) }; },
+    [updateInstanceTreeDetails.toString()](state: AppState, action) { return { ...state, ...updateInstanceTreeDetailsReducer(state, action) }; },
     [updateCurrentInstance.toString()](state: AppState, action) { return { ...state, ...updateCurentInctanceReducer(state, action) }; }
 };
