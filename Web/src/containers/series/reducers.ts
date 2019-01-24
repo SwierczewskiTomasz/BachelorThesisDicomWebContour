@@ -16,14 +16,14 @@ export const fetchSeries = (getOpts: string): Thunk =>
         {
             dispatch(startTask());
             const response = await getBuilder<any>(orthancURL, getOpts);
-            console.log(response);
+            // console.log(response);
             const series: Serie[] = response.map(r => { return { id: r.ID, name: r.MainDicomTags.SeriesDescription }; });
             if (series !== undefined) {
                 dispatch(updateSeries(series));
-                console.warn("update");
+                // console.warn("update");
             }
             else {
-                console.log("fetchSeries() failed");
+                console.warn("fetchSeries() failed");
             }
             dispatch(endTask());
         }

@@ -46,7 +46,7 @@ class ContourListView extends React.Component<ContourListProps, ContourListState
                 });
             };
             img.onload = function () {
-                console.warn(img.naturalWidth, img.naturalHeight);
+                // console.warn(img.naturalWidth, img.naturalHeight);
                 fun(img.naturalWidth, img.naturalHeight);
             };
             img.src = orthancURL + "instances/" + props.selectedContour.dicomid + "/preview";

@@ -25,13 +25,13 @@ export const fetchPatients = (): Thunk =>
             dispatch(startTask());
             const response = await getBuilder<any[]>(orthancURL, "patients?expand");
             const patients = response.map(r => ({ id: r.ID, name: r.MainDicomTags.PatientName }));
-            console.log(patients);
+            // console.log(patients);
             if (patients !== undefined) {
                 dispatch(updatePatients(patients));
-                console.warn("update");
+                // console.warn("update");
             }
             else {
-                console.log("fetchPatients() failed");
+                console.warn("fetchPatients() failed");
             }
             dispatch(endTask());
         }
@@ -48,20 +48,20 @@ export const getPatientData = (): Thunk =>
 
                 const response = await getBuilder<any>(orthancURL, "instances/" + instances[0] + "/patient");
 
-                console.warn(response);
+                // console.warn(response);
                 const patientInfo: PatientInfo = {
                     patientId: response.ID,
                     name: response.MainDicomTags.PatientName,
                     birthdate: response.MainDicomTags.PatientBirthDate,
                     sex: response.MainDicomTags.PatientSex
                 };
-                console.log(patientInfo);
+                // console.log(patientInfo);
                 if (patientInfo !== undefined) {
                     dispatch(updatePatient(patientInfo.name, patientInfo.birthdate, patientInfo.sex, patientInfo.patientId));
-                    console.warn("update");
+                    // console.warn("update");
                 }
                 else {
-                    console.log("getPatientData() failed");
+                    console.warn("getPatientData() failed");
                 }
             }
             dispatch(endTask());

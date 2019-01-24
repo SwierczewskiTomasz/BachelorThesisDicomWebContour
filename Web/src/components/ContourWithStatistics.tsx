@@ -45,7 +45,7 @@ export default class ContourWithStatistics extends React.Component<ContourWithSt
         }
 
         if (canvas === null || canvas === undefined || props.contour === undefined || props.contour === null) return;
-        console.log(canvas);
+        // console.log(canvas);
         const context = canvas.getContext("2d");
 
         props.contour.lines.forEach(l => {
@@ -98,7 +98,7 @@ export default class ContourWithStatistics extends React.Component<ContourWithSt
                             />
                         </Grid>
                         <Grid item key="stats-grid" style={{ ...gridStyle }}>
-                            {console.log(this.props.contour)}
+                            {/* {console.log(this.props.contour)} */}
                             <p><span style={{ ...strong }}>Permieter</span>: {this.props.contour.statistics.permieter}</p>
                             <p><span style={{ ...strong }}>Area</span>: {this.props.contour.statistics.area}</p>
                             <p><span style={{ ...strong }}>Center Of Mass</span>: {"[" + this.props.contour.statistics.centerOfMass.x +

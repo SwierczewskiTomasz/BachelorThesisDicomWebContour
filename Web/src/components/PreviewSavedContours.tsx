@@ -55,7 +55,7 @@ class PreviewSavedContours extends React.Component<PreviewSavedContoursProps, Pr
                 w = w * 600 / h;
                 h = 600;
             }
-            console.log(w, h);
+            // console.log(w, h);
             this.setState({
                 size: { width: w, height: h }
             });
@@ -66,7 +66,7 @@ class PreviewSavedContours extends React.Component<PreviewSavedContoursProps, Pr
         img.src = url;
         const canvas: any = document.getElementById("canvas-preview");
         if (canvas === null || canvas === undefined) return;
-        console.log(canvas);
+        // console.log(canvas);
         const context = canvas.getContext("2d");
 
         context.clearRect(0, 0, canvas.width, canvas.height);
@@ -117,7 +117,7 @@ class PreviewSavedContours extends React.Component<PreviewSavedContoursProps, Pr
                 onWheel={(e) => {
                     e.preventDefault();
                     if (e.deltaY < 0) {
-                        console.log("scrolling up");
+                        // console.log("scrolling up");
                         this.props.setCurrentInd(
                             this.props.currentInstanceId + 1 >= this.props.instancesIds.length ?
                                 this.props.instancesIds.length - 1 :
@@ -125,7 +125,7 @@ class PreviewSavedContours extends React.Component<PreviewSavedContoursProps, Pr
                         );
                     }
                     if (e.deltaY > 0) {
-                        console.log("scrolling down");
+                        // console.log("scrolling down");
                         this.props.setCurrentInd(
                             this.props.currentInstanceId - 1 < 0 ? 0 : this.props.currentInstanceId - 1
                         );

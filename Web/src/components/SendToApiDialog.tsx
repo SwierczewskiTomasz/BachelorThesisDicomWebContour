@@ -74,11 +74,11 @@ export default class SendToApiDialog extends React.Component<SendToApiDialogProp
                         this.setState({ preview: false });
                         const canvas: any = document.getElementById("canvas-send");
 
-                        console.log(canvas);
+                        // console.log(canvas);
                         const context = canvas.getContext("2d");
 
                         const l = this.props.contour.lines[0];
-                        console.warn(l.brushColor);
+                        // console.warn(l.brushColor);
                         context.strokeStyle = l.brushColor;
                         context.beginPath();
                         context.moveTo(l.points[0].x, l.points[0].y);

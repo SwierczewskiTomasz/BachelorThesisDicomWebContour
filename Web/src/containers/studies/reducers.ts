@@ -19,15 +19,15 @@ export const fetchStudies = (getOpts: string): Thunk =>
         {
             dispatch(startTask());
             let response = await getBuilder<any>(orthancURL, getOpts);
-            console.warn(response);
+            // console.warn(response);
             const studies: Study[] = response.map(r => ({ id: r.ID, name: r.MainDicomTags.StudyDescription }));
-            console.log(studies);
+            // console.log(studies);
             if (studies !== undefined) {
                 dispatch(updateStudies(studies));
-                console.warn("update");
+                // console.warn("update");
             }
             else {
-                console.log("fetchStudies() failed");
+                console.warn("fetchStudies() failed");
             }
             dispatch(endTask());
         }
@@ -44,20 +44,20 @@ export const getStudyData = (): Thunk =>
             if (instances.length > 0) {
 
                 const response = await getBuilder<any>(orthancURL, "instances/" + instances[0] + "/study");
-                console.warn(response);
+                // console.warn(response);
                 const studyInfo = {
                     institutionName: response.MainDicomTags.InstitutionName,
                     referringPhysicianName: response.MainDicomTags.ReferringPhysicianName,
                     studyDate: response.MainDicomTags.StudyDate,
                     studyDescription: response.MainDicomTags.StudyDescription
                 };
-                console.log(studyInfo);
+                // console.log(studyInfo);
                 if (studyInfo !== undefined) {
                     dispatch(updateStudy(studyInfo.institutionName, studyInfo.referringPhysicianName, studyInfo.studyDate, studyInfo.studyDescription));
-                    console.warn("update");
+                    // console.warn("update");
                 }
                 else {
-                    console.log("getPatientData() failed");
+                    console.warn("getPatientData() failed");
                 }
             }
             dispatch(endTask());

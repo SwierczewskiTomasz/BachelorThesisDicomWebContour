@@ -32,8 +32,8 @@ const initialState: AppState = {
 
 let store: Store<any>;
 
-console.log(asyncActionsReducers);
-console.log(seriesReducers);
+// console.log(asyncActionsReducers);
+// console.log(seriesReducers);
 
 const reducers = handleActions({
     ...asyncActionsReducers,

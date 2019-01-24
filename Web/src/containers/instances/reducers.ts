@@ -24,18 +24,18 @@ export const fetchInstances = (getOpts: string): Thunk =>
         {
             dispatch(startTask());
             let response = await getBuilder<FrameInstance[]>(orthancURL, getOpts);
-            console.warn(response.map(f => f.IndexInSeries));
+            // console.warn(response.map(f => f.IndexInSeries));
             response = response.sort((f1, f2) => f1.IndexInSeries - f2.IndexInSeries);
-            console.error(response.map(f => f.IndexInSeries));
+            // console.error(response.map(f => f.IndexInSeries));
             const instancesIds: string[] = response.map(r => r.ID);
-            console.log(instancesIds);
+            // console.log(instancesIds);
             if (instancesIds !== undefined) {
-                console.warn(instancesIds);
+                // console.warn(instancesIds);
                 await dispatch(updateInstances(instancesIds));
-                console.warn("update");
+                // console.warn("update");
             }
             else {
-                console.log("fetchInstances() failed");
+                console.warn("fetchInstances() failed");
             }
             dispatch(getPatientData());
             dispatch(getStudyData());

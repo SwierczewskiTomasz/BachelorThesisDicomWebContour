@@ -1,5 +1,5 @@
 import * as React from "react";
-import { orthancURL } from "../helpers/requestHelper";
+import { apiURL, orthancURL } from "../helpers/requestHelper";
 import { connect } from "react-redux";
 import { Button } from "@material-ui/core";
 import ChooseColorDialog from "./ChooseColorDialog";
@@ -64,7 +64,7 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
         };
 
         this.props.preview !== undefined && this.props.deletePreview(this.props.preview.guid);
-        console.warn(this.state);
+        // console.warn(this.state);
         const url = props.instancesIds.length > 0 ?
             orthancURL + "instances/" +
             this.props.instancesIds[this.props.currentInstanceId]
@@ -84,7 +84,7 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
             });
         };
         img.onload = function () {
-            console.log(img.naturalWidth, img.naturalHeight);
+            // console.log(img.naturalWidth, img.naturalHeight);
             fun(img.naturalWidth, img.naturalHeight);
         };
         img.src = url;
@@ -110,13 +110,13 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
             });
         };
         img.onload = function () {
-            console.warn(img.naturalWidth, img.naturalHeight);
+            // console.warn(img.naturalWidth, img.naturalHeight);
             fun(img.naturalWidth, img.naturalHeight);
         };
         img.src = url;
 
         if (nextProps.preview !== undefined) {
-            console.warn("preview", nextProps.preview);
+            // console.warn("preview", nextProps.preview);
             const data = nextProps.preview;
             this.setState({
                 guid: data.guid,
@@ -151,7 +151,7 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
 
     componentDidMount() {
         const canvas: any = document.getElementById("canvas");
-        console.log(canvas);
+        // console.log(canvas);
         const context = canvas.getContext("2d");
 
         const addPoint = (x, y) => this.setState(prev => ({ points: [...prev.points, { x, y }] }));
@@ -243,7 +243,7 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                 onWheel={(e) => {
                     e.preventDefault();
                     if (e.deltaY < 0) {
-                        console.log("scrolling up");
+                        // console.log("scrolling up");
                         this.props.setCurrentInd(
                             this.props.currentInstanceId + 1 >= this.props.instancesIds.length ?
                                 this.props.instancesIds.length - 1 :
@@ -251,7 +251,7 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                         );
                     }
                     if (e.deltaY > 0) {
-                        console.log("scrolling down");
+                        // console.log("scrolling down");
                         this.props.setCurrentInd(
                             this.props.currentInstanceId - 1 < 0 ? 0 : this.props.currentInstanceId - 1
                         );
@@ -264,7 +264,7 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                 variant="contained"
                 color="primary"
                 onClick={async () => {
-                    console.log("click");
+                    // console.log("click");
                     const contour: Contour = {
                         dicomid: this.props.instancesIds[this.props.currentInstanceId],
                         tag: "SemiAutomatic Test",
@@ -281,7 +281,7 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
 
                     // Send to API
 
-                    console.log(this.state);
+                    // console.log(this.state);
 
                     // TODO: Refactor => make api call inside reducer
                     this.props.sendPreviewContour(this.state.guid, this.state.points, this.state.color, this.state.size, this.state.imgSize);
@@ -314,7 +314,7 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                     const context = canvas.getContext("2d");
                     context.clearRect(0, 0, canvas.width, canvas.height);
                     if (this.state.guid != null) {
-                        fetch("https://localhost:5001/" + "api/semiautomaticpreview/delete/" + this.state.guid, {
+                        fetch(apiURL + "api/semiautomaticpreview/delete/" + this.state.guid, {
                             mode: "cors",
                             method: "delete",
                             headers: {
