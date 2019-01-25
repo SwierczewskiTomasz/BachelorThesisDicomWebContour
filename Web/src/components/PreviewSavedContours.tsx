@@ -11,6 +11,9 @@ interface PreviewSavedContoursProps {
     readonly contours: Contour[];
     readonly currentImageId: string;
     readonly instancesIds: string[];
+    readonly seriesName: string | undefined;
+    readonly studyName: string | undefined;
+    readonly patientName: string | undefined;
     readonly currentInstanceId: number;
     readonly setCurrentInd: (index: number) => void;
 }
@@ -43,7 +46,7 @@ class PreviewSavedContours extends React.Component<PreviewSavedContoursProps, Pr
     redraw(props: PreviewSavedContoursProps) {
         const url = this.props.instancesIds.length > 0 ?
             orthancURL + "instances/" + this.props.currentImageId + "/preview" :
-            "https://http.cat/404";
+            "https://imgur.com/t8wK1PH.png";
         let img = new Image();
         const fun = (w, h) => {
             h = h * 1000 / w;
@@ -52,7 +55,7 @@ class PreviewSavedContours extends React.Component<PreviewSavedContoursProps, Pr
                 w = w * 600 / h;
                 h = 600;
             }
-            console.log(w, h);
+            // console.log(w, h);
             this.setState({
                 size: { width: w, height: h }
             });
@@ -63,7 +66,7 @@ class PreviewSavedContours extends React.Component<PreviewSavedContoursProps, Pr
         img.src = url;
         const canvas: any = document.getElementById("canvas-preview");
         if (canvas === null || canvas === undefined) return;
-        console.log(canvas);
+        // console.log(canvas);
         const context = canvas.getContext("2d");
 
         context.clearRect(0, 0, canvas.width, canvas.height);
@@ -101,9 +104,10 @@ class PreviewSavedContours extends React.Component<PreviewSavedContoursProps, Pr
     render() {
         const url = this.props.instancesIds.length > 0 ?
             orthancURL + "instances/" + this.props.currentImageId + "/preview" :
-            "https://http.cat/404";
+            "https://imgur.com/t8wK1PH.png";
         return <>
-            {this.props.instancesIds.length > 0 ? (this.props.currentInstanceId + 1) + "/" + this.props.instancesIds.length : null}
+            {this.props.instancesIds.length > 0 ?
+                <><p>{this.props.patientName + "/" + this.props.studyName + "/" + this.props.seriesName}</p> <p>{(this.props.currentInstanceId + 1) + "/" + this.props.instancesIds.length}</p></> : null}
             <canvas id="canvas-preview"
                 width={this.state.size.width + "px"}
                 height={this.state.size.height + "px"}
@@ -113,7 +117,7 @@ class PreviewSavedContours extends React.Component<PreviewSavedContoursProps, Pr
                 onWheel={(e) => {
                     e.preventDefault();
                     if (e.deltaY < 0) {
-                        console.log("scrolling up");
+                        // console.log("scrolling up");
                         this.props.setCurrentInd(
                             this.props.currentInstanceId + 1 >= this.props.instancesIds.length ?
                                 this.props.instancesIds.length - 1 :
@@ -121,7 +125,7 @@ class PreviewSavedContours extends React.Component<PreviewSavedContoursProps, Pr
                         );
                     }
                     if (e.deltaY > 0) {
-                        console.log("scrolling down");
+                        // console.log("scrolling down");
                         this.props.setCurrentInd(
                             this.props.currentInstanceId - 1 < 0 ? 0 : this.props.currentInstanceId - 1
                         );
@@ -138,7 +142,11 @@ export default connect(
             contours: state.contours.filter(c => state.selectedContourGuids.join().includes(c.guid)),
             currentImageId: state.instancesIds[state.currentInstanceId],
             currentInstanceId: state.currentInstanceId,
-            instancesIds: state.instancesIds
+            instancesIds: state.instancesIds,
+
+            seriesName: state.seriesName,
+            studyName: state.studyName,
+            patientName: state.patientName
         };
     },
     (dispatch: Dispatch<any>) => ({

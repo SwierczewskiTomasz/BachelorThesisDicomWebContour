@@ -45,7 +45,7 @@ export default class ContourWithStatistics extends React.Component<ContourWithSt
         }
 
         if (canvas === null || canvas === undefined || props.contour === undefined || props.contour === null) return;
-        console.log(canvas);
+        // console.log(canvas);
         const context = canvas.getContext("2d");
 
         props.contour.lines.forEach(l => {
@@ -98,16 +98,16 @@ export default class ContourWithStatistics extends React.Component<ContourWithSt
                             />
                         </Grid>
                         <Grid item key="stats-grid" style={{ ...gridStyle }}>
-                            {console.log(this.props.contour)}
+                            {/* {console.log(this.props.contour)} */}
+                            <p><span style={{ ...strong }}>Permieter</span>: {this.props.contour.statistics.permieter}</p>
                             <p><span style={{ ...strong }}>Area</span>: {this.props.contour.statistics.area}</p>
                             <p><span style={{ ...strong }}>Center Of Mass</span>: {"[" + this.props.contour.statistics.centerOfMass.x +
                                 "," + this.props.contour.statistics.centerOfMass.x + "]"}</p>
+                            <h1> Histogram </h1>
                             <p><span style={{ ...strong }}>Histogram Max</span>: {this.props.contour.statistics.histogramMax}</p>
                             <p><span style={{ ...strong }}>Histogram Min</span>: {this.props.contour.statistics.histogramMin}</p>
                             <p><span style={{ ...strong }}>Histogram Mean</span>: {this.props.contour.statistics.histogramMean}</p>
                             <p><span style={{ ...strong }}>Number Of Pixels Inside Contour</span>: {this.props.contour.statistics.numberOfPixelsInsideContour}</p>
-                            <p><span style={{ ...strong }}>Permieter</span>: {this.props.contour.statistics.permieter}</p>
-                            <h1> Histogram </h1>
                             <canvas id="canvas-histogram"
                                 width={"256px"}
                                 height={"256px"}

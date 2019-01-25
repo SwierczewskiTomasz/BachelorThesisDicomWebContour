@@ -1,6 +1,5 @@
 import * as React from "react";
 import { Button, Dialog, DialogContent, DialogActions, TextField, DialogTitle } from "@material-ui/core";
-import { CompactPicker } from "react-color";
 import { Contour } from "../containers/contours/reducers";
 import { Point, Size } from "./DrawAutomatic";
 
@@ -25,9 +24,17 @@ export default class SendToApiDialog extends React.Component<SendToApiDialogProp
         super(props);
         this.state = {
             points: [],
-            title: "Contour",
+            title: "",
             preview: true
         };
+    }
+
+    componentWillReceiveProps(props: SendToApiDialogProps) {
+        this.setState({
+            points: [],
+            title: "",
+            preview: true
+        });
     }
 
     render() {
@@ -40,7 +47,7 @@ export default class SendToApiDialog extends React.Component<SendToApiDialogProp
             }}
         >
             <DialogTitle>
-                Insert points inside contour
+                <span style={{ color: "red", fontWeight: 700 }}>Press preview button and insert point inside contour</span>
             </DialogTitle>
             <DialogContent>
                 <canvas id="canvas-send"
@@ -50,7 +57,7 @@ export default class SendToApiDialog extends React.Component<SendToApiDialogProp
                 />
                 <TextField
                     margin="dense"
-                    label={"Title"}
+                    label={"Contour name"}
                     type="text"
                     value={this.state.title}
                     onChange={e => this.setState({ title: e.target.value })}
@@ -67,11 +74,11 @@ export default class SendToApiDialog extends React.Component<SendToApiDialogProp
                         this.setState({ preview: false });
                         const canvas: any = document.getElementById("canvas-send");
 
-                        console.log(canvas);
+                        // console.log(canvas);
                         const context = canvas.getContext("2d");
 
                         const l = this.props.contour.lines[0];
-                        console.warn(l.brushColor);
+                        // console.warn(l.brushColor);
                         context.strokeStyle = l.brushColor;
                         context.beginPath();
                         context.moveTo(l.points[0].x, l.points[0].y);
@@ -92,7 +99,10 @@ export default class SendToApiDialog extends React.Component<SendToApiDialogProp
                         // }
 
 
-                        const addPoint = (x, y) => this.setState(prev => { return { points: [...prev.points, { x, y }] }; });
+                        const addPoint = (x, y) => {
+                            this.state.points.length > 0 && context.clearRect(this.state.points[0].x, this.state.points[0].y, 5, 5);
+                            this.setState({ points: [{ x, y }] });
+                        };
                         const findOverlapping = (x, y) => {
                             const found = this.state.points.filter(p => p.x - 5 < x && x < p.x + 5 && p.y - 5 < y && y < p.y + 5);
                             return found;

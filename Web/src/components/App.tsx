@@ -29,8 +29,8 @@ export default class AppView extends React.Component<AppViewProps, AppViewState>
     }
     handleChange = (event, tab) => {
         this.setState({ tab });
-        console.warn("tab");
-        console.warn(tab);
+        // console.warn("tab");
+        // console.warn(tab);
     }
     render() {
         return (

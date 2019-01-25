@@ -57,7 +57,7 @@ export const fetchContours = (getOpts: string, getOpts2: string): Thunk =>
             let response2 = await getBuilder<Contour[]>(apiURL, getOpts2);
             if (response !== undefined && response2 !== undefined) {
                 dispatch(updateContours([...response, ...response2]));
-                console.warn("update contours");
+                // console.warn("update contours");
             } else if (response !== undefined) {
                 dispatch(updateContours(response));
                 console.warn(getOpts2, "failed");
@@ -66,7 +66,7 @@ export const fetchContours = (getOpts: string, getOpts2: string): Thunk =>
                 console.warn(getOpts, "failed");
             }
             else {
-                console.log("fetchContours() failed");
+                console.warn("fetchContours() failed");
             }
             dispatch(endTask());
         }
@@ -154,11 +154,10 @@ function updatePreviewReducer(state: AppState, action) {
 }
 
 export const sendPreviewContour = (guid: string, points: Point[], color: string, canvasSize: Size, imgSize: Size): Thunk =>
-
     async (dispatch, getState) => {
         dispatch(startTask());
         const state = getState();
-        const response = await fetch("https://localhost:5001/" + (guid == null ? "api/semiautomaticpreview/post/" : "api/semiautomaticpreview/put/"), {
+        const response = await fetch(apiURL + (guid == null ? "api/semiautomaticpreview/post/" : "api/semiautomaticpreview/put/"), {
             mode: "cors",
             method: guid == null ? "post" : "put",
             headers: {
@@ -209,9 +208,9 @@ export const sendPreviewContour = (guid: string, points: Point[], color: string,
                     pixelSpacing: state.pixelSpacing
                 }))
         });
-        console.warn(response);
+        // console.warn(response);
         const responseDeserialized = await response.json();
-        console.warn(responseDeserialized);
+        // console.warn(responseDeserialized);
         dispatch(updatePreview(responseDeserialized));
         dispatch(endTask());
     };
@@ -219,7 +218,7 @@ export const sendPreviewContour = (guid: string, points: Point[], color: string,
 export const deletePreviewRecord = (guid: string): Thunk =>
     async (dispatch, getState) => {
         dispatch(startTask());
-        fetch("https://localhost:5001/" + "api/semiautomaticpreview/delete/" + guid, {
+        fetch(apiURL + "api/semiautomaticpreview/delete/" + guid, {
             mode: "cors",
             method: "delete",
             headers: {
@@ -236,7 +235,7 @@ export const sendAutomaticContour = (getOpts: string, data: ContourWithCenralPoi
         {
             const state = getState();
             dispatch(startTask());
-            console.warn(data);
+            // console.warn(data);
             const guid = data.guid;
             if (guid != null) {
                 deletePreviewRecord(guid);
@@ -274,11 +273,13 @@ export const sendAutomaticContour = (getOpts: string, data: ContourWithCenralPoi
             let response = await postBuilder<Contour>(apiURL, getOpts, body);
             if (response !== undefined) {
                 dispatch(updateContour(response));
-                console.warn("update contour");
+                // console.warn("update contour");
             }
             else {
-                console.log("sendAutomaticContour() failed");
+                console.warn("sendAutomaticContour() failed");
             }
+            dispatch(fetchContours("api/semiautomaticcontour/FetchByDicomIdToDTOs/" + data.dicomid,
+                "api/manualcontour/FetchByDicomIdToDTOs/" + data.dicomid));
             dispatch(endTask());
         }
     };
@@ -288,7 +289,7 @@ export const sendManualContour = (getOpts: string, data: ContourWithCenralPoints
         {
             const state = getState();
             dispatch(startTask());
-            console.warn(data);
+            // console.warn(data);
             const lines = data.lines.map(line => {
                 let next = line;
                 next.points = next.points
@@ -324,11 +325,13 @@ export const sendManualContour = (getOpts: string, data: ContourWithCenralPoints
             };
             let response = await postBuilder<Contour>(apiURL, getOpts, body);
             if (response !== undefined) {
-                console.log("sendManualContour() succeded");
+                // console.log("sendManualContour() succeded");
             }
             else {
-                console.log("sendManualContour() failed");
+                console.warn("sendManualContour() failed");
             }
+            dispatch(fetchContours("api/semiautomaticcontour/FetchByDicomIdToDTOs/" + data.dicomid,
+                "api/manualcontour/FetchByDicomIdToDTOs/" + data.dicomid));
             dispatch(endTask());
         }
     };

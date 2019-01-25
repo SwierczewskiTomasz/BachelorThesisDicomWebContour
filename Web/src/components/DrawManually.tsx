@@ -14,6 +14,9 @@ export interface DrawManuallyProps {
     readonly instancesIds: string[];
     readonly currentInstanceId: number;
     readonly selectedContour: Contour;
+    readonly seriesName: string | undefined;
+    readonly studyName: string | undefined;
+    readonly patientName: string | undefined;
     readonly setCurrentInd: (ind: number) => void;
     readonly sendManualContour: (contour: Contour, centralPoints: Point[], title: string, canvasSize: Size, imgSize: Size) => void;
 }
@@ -47,12 +50,12 @@ class DrawManually extends React.Component<DrawManuallyProps, DrawManuallyState>
             chooseColor: false,
             saveContourOpen: false
         };
-        console.warn("state", this.state);
+        // console.warn("state", this.state);
         const url = props.instancesIds.length > 0 ?
             orthancURL + "instances/" +
             this.props.instancesIds[this.props.currentInstanceId]
             + "/preview" :
-            "https://http.cat/404";
+            "https://imgur.com/t8wK1PH.png";
         let img = new Image();
         const fun = (w, h) => {
             this.setState({ imgSize: { width: w, height: h } });
@@ -66,7 +69,7 @@ class DrawManually extends React.Component<DrawManuallyProps, DrawManuallyState>
         };
 
         img.onload = function () {
-            console.warn(img.naturalWidth, img.naturalHeight);
+            // console.warn(img.naturalWidth, img.naturalHeight);
             fun(img.naturalWidth, img.naturalHeight);
         };
         img.src = url;
@@ -77,7 +80,7 @@ class DrawManually extends React.Component<DrawManuallyProps, DrawManuallyState>
             orthancURL + "instances/" +
             this.props.instancesIds[this.props.currentInstanceId]
             + "/preview" :
-            "https://http.cat/404";
+            "https://imgur.com/t8wK1PH.png";
         let img = new Image();
         const fun = (w, h) => {
             this.setState({ imgSize: { width: w, height: h } });
@@ -91,7 +94,7 @@ class DrawManually extends React.Component<DrawManuallyProps, DrawManuallyState>
         };
 
         img.onload = function () {
-            console.warn(img.naturalWidth, img.naturalHeight);
+            // console.warn(img.naturalWidth, img.naturalHeight);
             fun(img.naturalWidth, img.naturalHeight);
         };
         img.src = url;
@@ -119,7 +122,7 @@ class DrawManually extends React.Component<DrawManuallyProps, DrawManuallyState>
             orthancURL + "instances/" +
             this.props.instancesIds[this.props.currentInstanceId]
             + "/preview" :
-            "https://http.cat/404";
+            "https://imgur.com/t8wK1PH.png";
         const bgimg = "url(" + url + ")";
         return <>
             {/* <Button
@@ -129,7 +132,8 @@ class DrawManually extends React.Component<DrawManuallyProps, DrawManuallyState>
             >
                 +
             </Button> */}
-            {this.props.instancesIds.length > 0 ? (this.props.currentInstanceId + 1) + "/" + this.props.instancesIds.length : null}
+            {this.props.instancesIds.length > 0 ?
+                <><p>{this.props.patientName + "/" + this.props.studyName + "/" + this.props.seriesName}</p> <p>{(this.props.currentInstanceId + 1) + "/" + this.props.instancesIds.length}</p></> : null}
             <ChooseColorDialog
                 open={this.state.chooseColor}
                 initialColor={this.state.color}
@@ -151,7 +155,7 @@ class DrawManually extends React.Component<DrawManuallyProps, DrawManuallyState>
                     if (c.lines.length > 1) {
                         const { dicomid, ...contour } = c;
                         contour.lines = c.lines.filter((l, i) => i > 0);
-                        console.warn(contour);
+                        // console.warn(contour);
                         this.state.reload ?
                             this.saveableCanvas1.loadSaveData(JSON.stringify(contour), true) :
                             this.saveableCanvas2.loadSaveData(JSON.stringify(contour), true);
@@ -163,7 +167,7 @@ class DrawManually extends React.Component<DrawManuallyProps, DrawManuallyState>
                 onWheel={(e) => {
                     e.preventDefault();
                     if (e.deltaY < 0) {
-                        console.log("div1 scrolling up");
+                        // console.log("div1 scrolling up");
                         this.setState(prev => ({
                             reload: !prev.reload
                         }), () => this.props.setCurrentInd(
@@ -173,7 +177,7 @@ class DrawManually extends React.Component<DrawManuallyProps, DrawManuallyState>
                         ));
                     }
                     if (e.deltaY > 0) {
-                        console.log("div scrolling down");
+                        // console.log("div scrolling down");
                         this.setState(prev => ({
                             reload: !prev.reload
                         }), () => this.props.setCurrentInd(
@@ -181,7 +185,7 @@ class DrawManually extends React.Component<DrawManuallyProps, DrawManuallyState>
                         ));
                     }
                 }}
-                onClick={(e) => { console.warn(e); }}
+            // onClick={(e) => { console.warn(e); }}
             >
                 <CanvasDraw
                     ref={canvasDraw => (this.saveableCanvas1 = canvasDraw)}
@@ -197,7 +201,7 @@ class DrawManually extends React.Component<DrawManuallyProps, DrawManuallyState>
                 onWheel={(e) => {
                     e.preventDefault();
                     if (e.deltaY < 0) {
-                        console.log("div scrolling up");
+                        // console.log("div scrolling up");
                         this.setState(prev => ({
                             reload: !prev.reload
                         }), () => this.props.setCurrentInd(
@@ -207,7 +211,7 @@ class DrawManually extends React.Component<DrawManuallyProps, DrawManuallyState>
                         ));
                     }
                     if (e.deltaY > 0) {
-                        console.log("div scrolling down");
+                        // console.log("div scrolling down");
                         this.setState(prev => ({
                             reload: !prev.reload
                         }), () => this.props.setCurrentInd(
@@ -230,10 +234,10 @@ class DrawManually extends React.Component<DrawManuallyProps, DrawManuallyState>
                 variant="contained"
                 color="primary"
                 onClick={() => {
-                    console.log("click");
+                    // console.log("click");
                     const data = JSON.parse(this.state.reload ? this.saveableCanvas1.getSaveData() : this.saveableCanvas2.getSaveData());
                     // localStorage.setItem("savedDrawing", data);
-                    console.warn(data);
+                    // console.warn(data);
                     this.setState({
                         contour: {
                             ...data,
@@ -271,7 +275,11 @@ export default connect(
         return {
             instancesIds: state.instancesIds,
             currentInstanceId: state.currentInstanceId,
-            selectedContour: state.selectedContour
+            selectedContour: state.selectedContour,
+
+            seriesName: state.seriesName,
+            studyName: state.studyName,
+            patientName: state.patientName
         };
     },
     (dispatch: Dispatch<any>) => ({

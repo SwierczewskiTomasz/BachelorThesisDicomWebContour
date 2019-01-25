@@ -24,13 +24,16 @@ const initialState: AppState = {
     currentInstanceId: 0,
     contours: [],
     preview: undefined,
-    selectedContourGuids: []
+    selectedContourGuids: [],
+    seriesName: undefined,
+    studyName: undefined,
+    patientName: undefined
 };
 
 let store: Store<any>;
 
-console.log(asyncActionsReducers);
-console.log(seriesReducers);
+// console.log(asyncActionsReducers);
+// console.log(seriesReducers);
 
 const reducers = handleActions({
     ...asyncActionsReducers,
