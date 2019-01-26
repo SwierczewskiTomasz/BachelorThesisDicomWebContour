@@ -303,7 +303,7 @@ O czym jest praca? Co się w niej znajduje? Jaki jest wkład autora?
 
 \section {Zagdanienia medyczne związane z aplikacją}
 
-\section {Podział prac}	
+\section {Podział prac}
 
 \chapter {Stan wiedzy}
 
@@ -390,7 +390,7 @@ Serwer Orthanc udostępnia również prosty interfejs przeglądarkowy, który po
 \end{figure}
 
 \subsection {Podsumowanie}
-%Napisz co mają tamte aplikacje, czego nie mają. W praktyce wywal trochę tekstu z następnego podrozdziału a włóż tutaj. Aby było płynne przejście. 
+%Napisz co mają tamte aplikacje, czego nie mają. W praktyce wywal trochę tekstu z następnego podrozdziału a włóż tutaj. Aby było płynne przejście.
 
 \section {Proponowane rozwiązanie}
 
@@ -408,7 +408,7 @@ W poniższym rozdziale zawarto dokumentację techniczną i biznesową tworzonego
 
 \section {Specyfikacja wymagań}
 
-Przed stworzeniem systemu zostały zgromadzone dane dotyczące wymagań stawianych przed tworzonym systemem. Zostały one przedstawione w postaci zgodnej z wymaganiami stawianymi w inżynierii oprogramowania w rozdziałach 3.1.1. - 3.1.3. Wymagania były gromadzone na podstawie informacji przekazywanych przez opiekuna naukowego tej pracy dyplomowej i wywiadu wśród lekarzy i studentów Warszawskiego Uniwersytetu Medycznego. 
+Przed stworzeniem systemu zostały zgromadzone dane dotyczące wymagań stawianych przed tworzonym systemem. Zostały one przedstawione w postaci zgodnej z wymaganiami stawianymi w inżynierii oprogramowania w rozdziałach 3.1.1. - 3.1.3. Wymagania były gromadzone na podstawie informacji przekazywanych przez opiekuna naukowego tej pracy dyplomowej i wywiadu wśród lekarzy i studentów Warszawskiego Uniwersytetu Medycznego.
 
 \subsection {Opis biznesowy}
 
@@ -449,15 +449,15 @@ Użytkownik wybiera kolor z palety kolorów lub może zdefiniować własny kolor
 Po wykonaniu obrysu manualnego lub wybraniu listy punktów do wygenerowania obrysu półautomatycznego, użytkownik wybiera nazwę obrysu i zapisuje obrys w systemie.
 
 \item \textbf {Jako użytkownik chcę obejrzeć zapisany obrys.} \\
-Użytkownik wybiera z listy po prawej stronie zapisany obrys i przegląda obrys naniesiony na obraz, na którym został wykonany.
+Użytkownik wybiera z listy obrysów zapisany obrys i przegląda obrys naniesiony na obraz, na którym został wykonany.
 
 %Doprecyzować listę po prawej stronie
 \item \textbf {Jako użytkownik chcę zobaczyć statystyki dotyczące obrysu.} \\
-Użytkownik wybiera z listy po prawej stronie zapisany obrys i przegląda statystyki obliczone na podstawie zapisanego obrysu. Do statystyk zalicza się obwód obrysu, pole obrysu, histogram obrazu na obszarze obrysu oraz liczba pikseli wewnątrz obrysu.
+Użytkownik wybiera z listy obrysów zapisany obrys i przegląda statystyki obliczone na podstawie zapisanego obrysu. Do statystyk zalicza się obwód obrysu, pole obrysu, histogram obrazu na obszarze obrysu oraz liczba pikseli wewnątrz obrysu.
 
 %Doprecyzować listę po prawej stronie
 \item \textbf {Jako użytkownik chcę zobaczyć jednocześnie dowolną liczbę zapisanych w systemie obrysów na jednym obrazie DICOM.} \\
-Użytkownik wybiera poprzez kliknięcie lewym przyciskiem myszy na nazwie obrysu znajdującej się na liście po prawej stronie. Wybrane obrysy wyświetlane są jednocześnie na przeglądanym przez użytkownika zdjęciu. Użytkownik może wyłączyć podgląd wcześniej wybranego obrysu poprzez ponowne wciśnięcie lewego przycisku myszy na nazwie obrysu na liście po prawej stronie. Na zdjęciu wyświetlane są jedynie obrysy wykonane na tym obrazie.
+Użytkownik wybiera poprzez kliknięcie lewym przyciskiem myszy na nazwie obrysu znajdującej się na liście obrysów. Wybrane obrysy wyświetlane są jednocześnie na przeglądanym przez użytkownika zdjęciu. Użytkownik może wyłączyć podgląd wcześniej wybranego obrysu poprzez ponowne wciśnięcie lewego przycisku myszy na nazwie obrysu na liście po prawej stronie. Na zdjęciu wyświetlane są jedynie obrysy wykonane na tym obrazie.
 
 %Doprecyzować listę po prawej stronie
 \item \textbf {Jako użytkownik chcę zanonimizować dane pacjenta zawarte w pliku DICOM.} \\
@@ -504,12 +504,18 @@ Architektura pozwala na połączenie z serwerem plików DICOM (Orthanc) oraz ser
 
 \subsection {Interfejs użytkownika}
 
-Kluczowym elementem stworzonego systemu jest interfejs użytkownika napisany w języku skryptowym JavaScript przy użyciu biblioteki ReactJS. Udostępnia ona interfejs nawigujący po zapisanych w serwerze Orthanc plikach DICOM. Ponadto dla wyświetlonego obrazu udostępnia szczegóły dotyczące obrazu, badania i pacjenta. Umożliwia także wykonanie obrysu manualnego zrealizowanego przy użyciu biblioteki react-canvas-draw. W aplikacji zawarto również autorski interfejs do wyboru punktów do algorytmu półautomatycznego. Podgląd zapisanych w systemie obrysów wraz z wyliczonymi dla nich statystykami jest możliwy z poziomu tworzenia obrysów oraz w osobnej zakładce udostępniono widok, w którym użytkownik może oglądać wybrane przez siebie obrysy z listy obrysów jednocześnie na jednym obrazie.
+Kluczowym elementem stworzonego systemu jest interfejs użytkownika napisany w języku skryptowym JavaScript przy użyciu biblioteki ReactJS. Udostępnia ona interfejs nawigujący po zapisanych w serwerze Orthanc plikach DICOM. Ponadto dla wyświetlonego obrazu udostępnia szczegóły dotyczące obrazu, badania i pacjenta. Umożliwia także wykonanie obrysu manualnego zrealizowanego przy uzyciu biblioteki react-canvas-draw. W aplikacji zawarto również autorski interfejs do wyboru punktów do algorymu półautomatycznego, wykonany z użyciem elementu canvas. Podgląd zapisanych w systemie obrysów wraz z wyliczonymi dla nich statystykami jest możliwy z poziomu tworzenia obrysów oraz w osobnej zakładce, gdzie udostępniono widok, w którym użytkownik może ogladać jednocześnie wybrane przez siebie obrysy z listy obrysów na jednym obrazie.
+
+\subsection {Serwer obrazów Orthanc}
+
+Wyświetlane w interfejsie użytkownika obrazy DICOM oraz związane z nimi informacje przechowyane są przez serwer DICOM. Dostęp do zapisanych na serwerze danych jest możliwy poprzez udostępniane przez serwer API. Interfejs użytkownika wykorzystuje API poprzez protokół HTTP.
+
+API serwera udostępnia dane obrazów posegregowanych względem kolejno: pacjentów, badań oraz serii. Wykorzystano je w interfejsie użykownika do nawigacji pomiędzy obrazami. Dodatkowo dla każdego obrazu serwer udostępnia dane obrazowe, umożliwiając wyświetlenie obrazu w interfejsie użytkownika. Ponadto API udostępnia wszystkie tagi obrazu DICOM, co umożliwia wyświetlanie itrefejsowi użytkownika informacji w nich zawartych.
 
 \subsection {Serwer obrysów i obliczeń}
-
 Kolejny kluczowy element stworzonego systemu to serwer obrysów i obliczeń. Udostępnia on API z obrysami, które zostało wykorzystane przez interfejs użytkownika. API zostało stworzone przy pomocy ASP.NET Core 2.2 \cite{ASPNET} przy wykorzystaniu frameworka .NET Core 2.2 \cite{Charakterystyka dotnet}. API oferuje 4 podstawowe operacje CRUD - utwórz, odczytaj, aktualizuj i usuń. W celu pobrania zdjęć medycznych serwer z API łączy się do bazy danych Orthanc. Informacje o obrysach, takie jak ID obrysu, tag, ID obrazu medycznego i typ obrysu (półautomatyczny lub manualny) są przechowywane w bazie danych Microsoft SQL Server. Pozostałe informacje, takie jak lista pikseli należących do obrysu, lista punktów w przypadku obrysu półautomatycznego i statystyki są przechowywane w plikach CSV. Te pliki są zapisywane w katalogu roboczym obok miejsca przechowywania plików źródłowych dla API.
 
+Poza serwerem Orthanc interfejs korzysta także z serwera przechowującego obrysy, a także wykonującego obliczenia związane z generowaniem obrysów. Serwer ten jest dostępny dla interfejsu użytkownika poprzez API dostępne przez protokół HTTP. Pozwala ono na pobieranie zapisanych obrysów, zapisywanie obrysów manualnych i generowanie podglądu i zapis obrysu półautomatycznego.
 
 \section {Opracowany algorytm półautomatyczny}
 
@@ -1047,7 +1053,9 @@ W celu instalacji serwera obrysów i aplikacji przeglądarkowej należy skopiowa
 
 Do działania serwera obrysów wymagany jest .NET Core w wersji 2.2 lub nowszej. Aby zainstalować .NET Core należy udać się na stronę \url{https://dotnet.microsoft.com/download}, pobrać wersję odpowiednią dla używanego systemu operacyjnego, a następnie postępować zgodnie z informacjami wyświetlanymi w trakcie instalacji.
 
-KONFIGURACJA PORTÓW W SERWERZE
+W celu konfiguracji serwera w pliku DotNetProject/Api/Properties/launchSettings.json należy wipsać w 24 linii  wartość adresu i portu na którym serwer ma zostać udostępniony, jako wartość pola applicationUrl . Przykładowa poprawna wartość linii 24 to\texttt{ "applicationUrl": "https://localhost:5001",}.
+
+Ponadto w pliku DotNetProject/Api/Startup.cs należy podać w linii 33 link pod którym dostępna jest aplikacja przeglądarkowa jako argument metody WithOrigins.  Przykładowa poprawna wartość linii 24 to \texttt{builder => builder.WithOrigins("http://localhost:8080", "http://localhost:3000")}.
 
 Aby uruchomić serwer obrysów należy przejść do skopiowanego folderu DotNetProject/API i wykonać w konsoli polecenie \texttt{\$ dotnet build \&\& dotnet run}.
 
@@ -1070,7 +1078,177 @@ W celu uruchomienia aplikacji przeglądarkowej wchodzimy do folderu Web w który
 \markboth{}{Instrukcja użytkowania}
 \addcontentsline{toc}{chapter}{Instrukcja użytkowania}
 
+Po otwarciu aplikacji użytkownik może przeglądać pacjentów (patients), których badania zostały wgrane do serwera Orthanc --- Rysunek \ref{fig:1}.
 
+\begin{figure}[h]
+	\center
+	\includegraphics[width=1\textwidth]{1}
+	\caption{Widok listy pacjentów}
+    	\label{fig:1}
+\end{figure}
+
+Po wybraniu pacjenta poprzez kliknięcie lewym przyciskiem myszy na jego nazwę, na liście pojawiają się badania (studies) wybranego pacjenta. Użytkownik może wrócić do widoku pacjentów klikając w strzałkę na liście z badaniami--- Rysunek \ref{fig:2}.
+
+
+\begin{figure}[h]
+	\center
+	\includegraphics[width=1\textwidth]{2}
+	\caption{Widok listy badań pacjenta}
+    	\label{fig:2}
+\end{figure}
+
+Po wybraniu badania poprzez kliknięcie lewym przyciskiem myszy na jego nazwę, na liście pojawiają się serie (series) wybranego badania. Użytkownik może wrócić do widoku badań klikając w strzałkę na liście z seriami i--- Rysunek \ref{fig:3}.
+
+\begin{figure}[h]
+	\center
+	\includegraphics[width=1\textwidth]{3}
+	\caption{Widok listy serii w badaniu}
+    	\label{fig:3}
+\end{figure}
+
+Po wyborze serii na ekranie pojawia się pierwszy obraz z serii. Użytkownik może przełączać się pomiędzy obrazami korzystając z listy obrazów po lewej stronie lub używając rolki myszy po najechaniu na obraz. Aby powrócić do wyboru serii należy kliknąć lewym przyciskiem myszy na strzałkę na liście instancji (instances) --- Rysunek \ref{fig:4}.
+
+\begin{figure}[h]
+	\center
+	\includegraphics[width=1\textwidth]{4}
+	\caption{Wybrany obraz w module obrysu manualnego}
+    	\label{fig:4}
+\end{figure}
+
+Przy manualnym obrysie użytkownik może wykonywać obrys poprzez przytrzymanie lewego przycisku myszy na obrazie, przesuwając mysz z wciśniętym przyciskiem. Gdy użytkownik korzysta z tabletu graficznego wystarczy, że będzie przesuwał wciśniętym rysikiem po tablecie --- Rysunek \ref{fig:5}.
+
+\begin{figure}[h]
+	\center
+	\includegraphics[width=1\textwidth]{5}
+	\caption{Przykładowy obrys}
+    	\label{fig:5}
+\end{figure}
+
+Po wciśnięciu przycisku zapisz obrys (Save Contour), użytkownikowi ukazuje się okno dialogowe. Aby usunąć nieudany obrys należy kliknąć lewym przyciskiem myszy w przycisk wyczyść obraz (Clear Image). W celu zapisania obrysu należy wykonać następujące kroki: Wpisać nazwę obrysu w pole tekstowe poniżej obrazu (pod napisem Contour Name)  --- \ref{fig:6}.
+
+\begin{figure}[h]
+	\center
+	\includegraphics[width=1\textwidth]{6}
+	\caption{Okno zapisu obrysu manualnego}
+    	\label{fig:6}
+\end{figure}
+
+ Po wpisaniu nazwy, należy kliknąć przycisk podgląd punktów (Preview Points) lewym przyciskiem myszy. Pozwoli to użytkownikowi zobaczyć wykonany przez niego obrys --- Rysunek \ref{fig:7}.
+
+\begin{figure}[h]
+	\center
+	\includegraphics[width=1\textwidth]{7}
+	\caption{Podgląd wykonanego obrysu}
+    	\label{fig:6}
+\end{figure}
+
+Następną czynnością, którą musi wykonać użytkownik przed zapisaniem to wybranie punktu wewnątrz wykonanego obrysu, poprzez wciśnięcie lewego przycisku myszy w odpowiednim miejscu na obrazie --- Rysunek \ref{fig:8}.
+
+\begin{figure}[h]
+	\center
+	\includegraphics[width=1\textwidth]{8}
+	\caption{Wybór punktu wewnątrz obrysu}
+    	\label{fig:8}
+\end{figure}
+
+Po kliknięciu przycisku wyślij (Send) lewym przyciskiem myszy obrys zostaje zapisany i pojawia się na liście wykonanych obrysów (Avaiable Contours). Lista zawiera jednie obrysy dla oglądanego obrazu --- Rysunek \ref{fig:9}.
+
+\begin{figure}[h]
+	\center
+	\includegraphics[width=1\textwidth]{9}
+	\caption{Widok po zapisaniu obrysu manualnego}
+    	\label{fig:9}
+\end{figure}
+
+Użytkownik może wykonywać obrysy w sposób półautomatyczny. W tym celu musi wybrać kartę z obrysami półautomatycznymi (z Manual do Semi-Automatic) --- Rysunek \ref{fig:10}.
+
+\begin{figure}[h]
+	\center
+	\includegraphics[width=1\textwidth]{10}
+	\caption{Moduł obrysu półauotomatycznego}
+    	\label{fig:10}
+\end{figure}
+
+Aby wybrać punkty do obrysu półautomatycznego użytkownik powinien klikać w interesujące go punkty lewym przyciskiem myszy. Jeśli korzysta z tabletu graficznego, powinien przycisnąć rysik do tabletu w interesujących go punktach. Punkty wprowadzane powinny być w kolejności, w której występują w obrysie, zgodnie albo przeciwnie do ruchu wskazówek zegara ) --- Rysunek \ref{fig:11}.
+
+\begin{figure}[h]
+	\center
+	\includegraphics[width=1\textwidth]{11}
+	\caption{Punkty wybrane do obrysu półauotomatycznego}
+    	\label{fig:11}
+\end{figure}
+
+Po wciśnięciu przycisku podgląd obrysu (Preview Contour) użytkownik może zobaczyć wygenerowany przez algorytm obrys. --- Rysunek \ref{fig:12}.
+
+\begin{figure}[h]
+	\center
+	\includegraphics[width=1\textwidth]{12}
+	\caption{Podgląd obrysu półauotomatycznego}
+    	\label{fig:12}
+\end{figure}
+
+Jeśli algorytm popełnił błąd użytkownik może dodać nowe punkty klikając lewym przyciskiem myszy w interesujących go miejscach lub usunąć nietrafnie umieszczone punkty poprzez klikanie na nich lewego przycisku myszy --- Rysunek \ref{fig:13}.
+
+\begin{figure}[h]
+	\center
+	\includegraphics[width=1\textwidth]{13}
+	\caption{Podgląd obrysu półauotomatycznego po dodaniu nowych punktów}
+    	\label{fig:13}
+\end{figure}
+
+Gdy wygenerowany obrys jest satysfakcjonujący dla użytkownika, może go zapisać klikając zapisz obrys (Save Contour). Okno zapisu jest analogiczne do okna zapisu obrysu manualnego. Jeśli na obrazie pojawią się krzyżujące krawędzie, należy wyczyścić obrys i wykonać go od początku, gdyż algorytm modyfikujący obrys dodał nowe punkty w złym miejscu lub użytkownik wprowadził punkty w złej kolejności --- Rysunek \ref{fig:14}.
+
+\begin{figure}[h]
+	\center
+	\includegraphics[width=1\textwidth]{14}
+	\caption{Widok zapisu obrysu półauotomatycznego}
+    	\label{fig:14}
+\end{figure}
+
+Po zapisaniu użytkownik może obejrzeć statystyki wykonanego obrysu poprzez kliknięcie lewego przycisku myszy na nazwie obrysu --- Rysunek \ref{fig:15}.
+
+\begin{figure}[h]
+	\center
+	\includegraphics[width=1\textwidth]{15}
+	\caption{Podgląd statystyk obrysu}
+    	\label{fig:15}
+\end{figure}
+
+Przed wykonaniem obrysu użytkownik może wybrać kolor wykonywanego obrysu. Po wciśnięciu lewym przyciskiem myszy na przycisk wybierz kolor (Choose Color), pojawia się okno wyboru koloru. Użytkownik może wybrać kolor z przygotowanej wcześniej palety kolorów lub wprowadzić dowolny inny korzystając z pól tekstowych, wprowadzając kod RGB wybranego koloru --- Rysunek \ref{fig:16}.
+
+\begin{figure}[h]
+	\center
+	\includegraphics[width=1\textwidth]{16}
+	\caption{Widok wyboru koloru obrysu}
+    	\label{fig:16}
+\end{figure}
+
+W zakładce z podglądem obrysów użytkownik może wyświetlać wybrane przez niego obrysy z listy wykonanych obrysów. Użytkownik wybiera obrysy, które chce zobaczyć. Obrysy, które nie są aktualnie wyświetlane można dodać do obrazu klikając je lewym przyciskiem myszy na nazwie obrysu, a wyświetlane można wyłączyć również poprzez kliknięcie lewego przycisku myszy na nazwie obrysu --- Rysunek \ref{fig:17}.
+
+\begin{figure}[h]
+	\center
+	\includegraphics[width=1\textwidth]{17}
+	\caption{Widok wielu obrysów}
+    	\label{fig:17}
+\end{figure}
+
+Interfejs wyświetla również informacje dotyczące pacjenta i jego badania oraz wyświetlanego obrazu --- Rysunek \ref{fig:18}.
+
+\begin{figure}[h]
+	\center
+	\includegraphics[width=1\textwidth]{18}
+	\caption{Widok szczegółów obrazu}
+    	\label{fig:18}
+\end{figure}
+
+Poprzez wciśnięcie przycisku anonimizuj (Anonymize) użytkownik może wybrać nazwę pacjenta, datę jego urodzenia oraz płeć po anonimizacji jego danych --- Rysunek \ref{fig:19}.
+
+\begin{figure}[h]
+	\center
+	\includegraphics[width=1\textwidth]{19}
+	\caption{Anonimizacja danych pacjenta}
+    	\label{fig:19}
+\end{figure}
 
 % --- 9. Wykaz symboli i skrótów - jeśli nie ma, zakomentować
 \chapter*{Wykaz symboli i skrótów}
