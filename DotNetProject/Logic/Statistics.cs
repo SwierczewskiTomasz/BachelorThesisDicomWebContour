@@ -242,7 +242,8 @@ namespace Logic
             {
                 e.ToString();
             }
-            statisticsResult.Permieter = Statistics.PerimeterInMmsSecondMethod(pixels, pixelLenghtInMms);
+            // statisticsResult.Permieter = Statistics.PerimeterInMmsSecondMethod(pixels, pixelLenghtInMms);
+            statisticsResult.Permieter = Statistics.PerimeterInMms(pixels, pixelLenghtInMms);
             statisticsResult.NumberOfPixelsOfContour = Statistics.PerimeterInPixels(pixels);
             return statisticsResult;
         }
