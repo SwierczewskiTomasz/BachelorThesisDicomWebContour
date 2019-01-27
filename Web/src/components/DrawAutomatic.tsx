@@ -348,6 +348,7 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                     this.state.points.forEach((pixel) => {
                         context.fillRect(pixel.x, pixel.y, 5, 5);
                     });
+                    this.props.discardPreview();
                 }}
             >
                 Clear generated contour
