@@ -518,6 +518,12 @@ Kolejny kluczowy element stworzonego systemu to serwer obrysów i obliczeń. Udo
 
 Poza serwerem Orthanc interfejs korzysta także z serwera przechowującego obrysy, a także wykonującego obliczenia związane z generowaniem obrysów. Serwer ten jest dostępny dla interfejsu użytkownika poprzez API dostępne przez protokół HTTP. Pozwala ono na pobieranie zapisanych obrysów, zapisywanie obrysów manualnych i generowanie podglądu i zapis obrysu półautomatycznego.
 
+\section {Moduł obrazów manualnych}
+
+Obrysy manualne generowane przez użytkowników zapisywane są przez serwer obrysów i obliczeń w postaci plików CSV na dysku serwera. W momencie zapisu obliczane są również statystyki dotyczące obrysowanej części obrazu.
+
+W związku z tym, że obrazy wyświetlane w interfejsie są w innej rozdzielczości niż rzeczywisty rozmiar obrazu, obrysy przed zapisaniem zostają przeskalowane do faktycznych wymiarów obrazu. W przypadku obrazów o małych rozdzielczościach może spowodować to utratę dokładności obrysu, a w przypadku obrysów bardzo małych obszarów zdegradowanie obrysu do jednego piksela. Tego typu straty mogą wpływać na poprawność obliczanych statystyk jak również błędne wyświetlanie zapisanych obrysóww interfejsie użytkownika.
+
 \section {Opracowany algorytm półautomatyczny}
 
 Opracowany algorytm półautomatyczny służy do wykrywania krawędzi na obrazie medycznym. Jest algorytmem półautomatycznym, ponieważ jest wspomagany przez człowieka --- użytkownika, który wybiera punkty na wyświetlanym obrazie. Te punkty są interpolowane przez algorytm półautomatyczny, zwany dalej algorytmem.
