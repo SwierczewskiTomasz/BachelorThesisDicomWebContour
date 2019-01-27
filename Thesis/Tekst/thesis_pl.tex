@@ -216,13 +216,14 @@
 {
 \begin{abstract}
 
-\begin{center}
-\tytul
-\end{center}
+%\begin{center}
+%\tytul
+%\end{center}
+Niniejszy dokument prezentuje pracę dyplomową inżynierską pod tytułem "\tytul". Celem realizowanym przez autorów pracy jest stworzenie narzędzia informatycznego pozwalającego na manualne oraz półautomatyczne obrysowywanie obrazów medycznych. Zakres pracy obejmuje omówienie: TO CO BĘDZIE WE WSTĘPIE, aktualnego rynku aplikacji pozwalających na przeglądanie i wykonywanie obrysów na obrazach medycznych DICOM, architektury tworzonego systemu i eksperymentów przeprowadzonych w trakcie tworzenia narzędzia. 
 
-Przykładowe streszczenie. Do wykonania jako ostatnie.
+Zastosowana architektura umożliwia jednoczesne korzystanie z narzędzia przez wielu użytkowników. Opracowany na potrzeby generowania obrysów algorym wykorzystuje oprerator Canny'ego oraz algorytm wyszukiwania najkrótszych ścieżek w grafie. Obliczane przez system statystyki dotyczące obrysowanych obszarów mogą posłużyć w przyszłości jako parametry wejściowe do metod automatycznego wykrywania podobnych do struktur, dla których obrysy wykonane.
 
-\noindent \textbf{Słowa kluczowe:} slowo1, slowo2, ...
+\noindent \textbf{Słowa kluczowe:} interfejs użytkownika, tablet graficzny, obrazy medyczne, DICOM, obrys, statystyki danych obrazowych, system informatyczny, interfejs REST API, wykrywanie krawędzi, generowanie obrysów
 \end{abstract}
 }
 
@@ -232,13 +233,11 @@ Przykładowe streszczenie. Do wykonania jako ostatnie.
 \selectlanguage{english}
 \begin{abstract}
 
-\begin{center}
-\title
-\end{center}
+The following document describes bachelor's thesis on "\title". The goal of authors' is to create a digital tool that allows to manually draw and semi-automatically generate contours on medical images. The topics discussed include: TO CO BĘDZIE WE WSTĘPIE, analysis of state-of-the-art systems and tools used to viewing and creating contours on DICOM medical images, system's architectue and experiments conducted simultaneously with the creation of the tool.
 
-Sample abstract in english.
+The architecture used enables simultaneous use of the tool by many users. The algorithm developed for te purpose of generating contourse uses Canny's Operator and the algorithm of searching the shortest path in the graph. The statistics calculated by the system regarding the areas limited by contourcan be used in future as input parameters for methods of automatic detection of similar structures for which contours have been made.
 
-\noindent \textbf{Keywords:} keyword1, keyword2, ...
+\noindent \textbf{Keywords:} user interface, graphics tablet, medical images, DICOM, contour, statistics of image data, IT system, REST API interface, edge detection, contour generation
 \end{abstract}
 }
 
@@ -313,15 +312,15 @@ W poniższym rozdziale zostały przedstawione istniejące na rynku aplikacje ofe
 
 \subsection {Cornerstone}
 
-Cornerstone Core to biblioteka, która umożliwia wyświetlanie obrazów medycznych z wykorzystaniem elementu canvas z języka HTML5. Biblioteka udostępnia interfejs do wyświetlania obrazów medycznych pozwalający na zarządzanie wyświetlaniem zdjęcia. Podstawowe funkcjonalności obsługiwane przez bibliotekę to:
+Cornerstone Core \cite{Cornerstone Core} to biblioteka, która umożliwia wyświetlanie obrazów medycznych z wykorzystaniem elementu canvas z języka HTML5. Biblioteka udostępnia interfejs do wyświetlania obrazów medycznych pozwalający na zarządzanie wyświetlaniem zdjęcia. Podstawowe funkcjonalności obsługiwane przez bibliotekę to:
 
 \begin{itemize}[noitemsep]
-\item Przybliżanie i oddalanie obrazu,
-\item Obrót obrazu,
-\item Przesuwanie obrazu w wyświetlanym komponencie,
-\item Zmiana jasności wyświetlanego obrazu,
-\item Mapowanie kolorów,
-\item Interpolacja pikseli w obrazie (dla obrazów o niskiej rozdzielczości).
+\item przybliżanie i oddalanie obrazu,
+\item obrót obrazu,
+\item przesuwanie obrazu w wyświetlanym komponencie,
+\item zmiana jasności wyświetlanego obrazu,
+\item mapowanie kolorów,
+\item interpolacja pikseli w obrazie (dla obrazów o niskiej rozdzielczości).
 \end{itemize}
 
 Ponadto twórcy biblioteki Cornerstone Core stworzyli bibliotekę Cornerstone Tools, która korzysta z biblioteki Cornerstone Core i umożliwia wiele funkcjonalności potrzebnych lekarzom do analizy badań pacjentów. Poza funkcjonalnościami Cornerstone Core umożliwia także:
@@ -343,7 +342,7 @@ Przykładowym projektem korzystającym z bibliotek Cornerstone jest OHIF Viewer.
 
 \subsection {DICOM Web Viewer (DWV)}
 
-Aplikacja DWV jest również przykładem aplikacji przeglądarkowej służącej do przeglądania obrazów DICOM z wygodnym interfejsem automatycznego i półautomatycznego obrysowywania interesujących użytkownika obszarów zaznaczonych na obrazie. Przykładowy obrys wykonany przy użyciu aplikacji DWV przedstawiono na rysunku \ref{fig:DWV-interface}.
+Aplikacja DICOM Web Viewer (DWV) \cite{DWV} jest również przykładem aplikacji przeglądarkowej służącej do przeglądania obrazów DICOM z wygodnym interfejsem automatycznego i półautomatycznego obrysowywania interesujących użytkownika obszarów zaznaczonych na obrazie. Przykładowy obrys wykonany przy użyciu aplikacji DWV przedstawiono na rysunku \ref{fig:DWV-interface}.
 
 \begin{figure}[h]
 	\includegraphics[width=\textwidth]{DWV-interface}
@@ -353,20 +352,20 @@ Aplikacja DWV jest również przykładem aplikacji przeglądarkowej służącej 
 
  Poza tym aplikacja udostępnia:
 \begin{itemize}[noitemsep]
-\item Przybliżanie i oddalanie obrazu,
-\item Przesuwanie obrazu w wyświetlanym komponencie,
-\item Zmiana jasności wyświetlanego obrazu,
-\item Mierzenie odległości w linii prostej na obrazie z podaniem rzeczywistych wartości,
-\item Oznaczanie obszarów przy pomocy prostokątów oraz elips.
+\item przybliżanie i oddalanie obrazu,
+\item przesuwanie obrazu w wyświetlanym komponencie,
+\item zmiana jasności wyświetlanego obrazu,
+\item mierzenie odległości w linii prostej na obrazie z podaniem rzeczywistych wartości,
+\item oznaczanie obszarów przy pomocy prostokątów oraz elips.
 \end{itemize}
 
-Niestety aplikacja nie pozwala na wykonywanie manualnych obrysów poprzez samodzielne poruszanie kursorem po obrazie.
+Aplikacja nie pozwala na wykonywanie manualnych obrysów poprzez samodzielne poruszanie kursorem po obrazie, więc nie spełnia wymagań postawionych przed realizowanym narzędziem.
 
 \subsection {Orthanc}
 
 Orthanc to serwer z bazą plików DICOM, który umożliwia łatwe przechowywanie, zarządzanie oraz dostęp do plików medycznych DICOM. Ponadto Orthanc udostępnia REST API, które umożliwia przeglądanie wgranych na serwer plików DICOM podzielonych względem pacjentów, badań i serii.
 
-Serwer Orthanc udostępnia również prosty interfejs przeglądarkowy, który pozwala na wgrywanie nowych plików (interfejs wgrywania plików przedstawiono na rysunku \ref{fig:Orthanc-upload}), przeglądanie zapisanych plików --- w szczególności tagów (rysunek \ref{fig:Orthanc-tags}) oraz podglądu obrazu (rysunek \ref{fig:Orthanc-preview}). Interfejs przeglądarkowy nie zapewnia żadnej metody rysowania na przeglądanym obrazie. Pozwala natomiast na przełączanie obrazu na kolejny przez kliknięcie lewym przyciskiem myszy w prawą część podglądu obrazu.
+Serwer Orthanc udostępnia również prosty interfejs webowy, który pozwala na wgrywanie nowych plików (interfejs wgrywania plików przedstawiono na Rysunku \ref{fig:Orthanc-upload}), przeglądanie zapisanych plików --- w szczególności tagów (rysunek \ref{fig:Orthanc-tags}) oraz podglądu obrazu (Rysunek \ref{fig:Orthanc-preview}). Interfejs webowy nie zapewnia żadnej metody rysowania na przeglądanym obrazie. Pozwala natomiast na przełączanie obrazu na kolejny przez kliknięcie lewym przyciskiem myszy w prawą część podglądu obrazu.
 
 \begin{figure}[h]
 	\center
@@ -390,25 +389,26 @@ Serwer Orthanc udostępnia również prosty interfejs przeglądarkowy, który po
 \end{figure}
 
 \subsection {Podsumowanie}
+
+Istniejące rozwiązania nie zapewniają wygodnego interfejsu użytkownikowi, który dysponuje tabletem graficznym i chciałby obrysowywać interesujące go części obrazów medycznych odręcznie. Ponadto żadne z narzędzi nie przechowuje narysowanych manualnie ani wygenerowanych automatycznie obrysów.  Rozwiązanie przedstawione w tej pracy udostępnia takie możliwości.
+
 %Napisz co mają tamte aplikacje, czego nie mają. W praktyce wywal trochę tekstu z następnego podrozdziału a włóż tutaj. Aby było płynne przejście.
 
 \section {Proponowane rozwiązanie}
 
-Istniejące rozwiązania nie zapewniają wygodnego interfejsu użytkownikowi, który dysponuje tabletem graficznym i chciałby obrysowywać interesujące go części obrazów medycznych odręcznie. Ponadto żadne z narzędzi nie przechowuje narysowanych i wygenerowanych wcześniej obrysów.  Rozwiązanie przedstawione w tej pracy udostępnia takie możliwości.
+W rozwiązaniu zdecydowano się skorzystać z serwera Orthanc jako bazy przechowującej pliki DICOM. Przy decyzji miały znaczenie przede wszystkim to, że jest to popularne narzędzie. Ponadto udostępniane przez API serwera funkcjonalności są wystarczające dla realizowanego systemu.
 
-W rozwiązaniu zdecydowano się skorzystać z serwera Orthanc jako bazy przechowującej pliki DICOM. Przy decyzji miały znaczenie przede wszystkim to, że większość ośrodków naukowych oraz medycznych korzysta z tego serwera. Ponadto udostępniane przez API serwera funkcjonalności są wystarczające dla realizowanego systemu.
+Poza serwerem Orthanc stworzono serwer w technologii .NET Core \cite{Dotnet} wspomagający interfejs użytkownika, który pozwala na przeprowadzanie czasochłonnych aplikacji poza interfejsem użytkownika. Podstawowymi zadaniami tego serwera było przechowywanie wykonanych przez użytkownika obrysów manualnych, generowanie i przechowywanie obrysów półautomatycznych oraz obliczanie statystyk związanych z zapisanymi obrysami.
 
-Poza serwerem Orthanc stworzono serwer w technologii .NET Core wspomagający interfejs użytkownika, który pozwala na przeprowadzanie czasochłonnych aplikacji poza interfejsem użytkownika. Podstawowymi zadaniami tego serwera było przechowywanie wykonanych przez użytkownika obrysów manualnych, generowanie i przechowywanie obrysów półautomatycznych oraz obliczanie statystyk związanych z zapisanymi obrysami.
+Jako interfejs użytkownika wykorzystano bibliotekę ReactJS \cite{React} w połączeniu z biblioteką Redux. Wybranie tej technologii pozwoliło na stworzenie aplikacji przeglądarkowej pozwalającej na generowanie obrysów manualnych przy użyciu myszy lub tabletu graficznego, wybieranie punktów, z których generowane będą obrysy półautomatyczne, oglądanie wcześniej wygenerowanych i zapisanych obrysów oraz wyświetlanie statystyk dotyczących wykonanego obrysu. Interfejs inspirowany jest podglądem obrazu w aplikacji DWV, ale funkcjonalność automatycznego obrysu została zmieniona --- obrys nie jest generowany na bieżąco, lecz na życzenie użytkownika wybrane przez niego punkty wysyłane są do serwera i wyświetlany jest wynik półautomatycznego dopasowania obrysu.
 
-Jako interfejs użytkownika wykorzystano bibliotekę ReactJS w połączeniu z biblioteką Redux. Wybranie tej technologii pozwoliło na stworzenie eleganckiej aplikacji przeglądarkowej pozwalającej na generowanie obrysów manualnych przy użyciu myszy lub tabletu graficznego, wybieranie punktów, z których generowane będą obrysy półautomatyczne, oglądanie wcześniej wygenerowanych i zapisanych obrysów oraz wyświetlanie statystyk dotyczących wykonanego obrysu. Interfejs inspirowany jest podglądem obrazu w aplikacji DWV, ale funkcjonalność automatycznego obrysu została zmieniona --- obrys nie jest generowany na bieżąco, lecz na życzenie użytkownika wybrane przez niego punkty wysyłane są do serwera i wyświetlany jest wynik półautomatycznego dopasowania obrysu.
+\chapter {Opis autorskiego narzędzia informatycznego}
 
-\chapter {Opis autorskiego systemu informatycznego}
-
-W poniższym rozdziale zawarto dokumentację techniczną i biznesową tworzonego systemu. Przedstawiono w szczególności: wymagania, architekturę, zastosowane metody półautomatycznego obrysu oraz metody obliczania statystyk obrysu.
+W poniższym rozdziale zawarto dokumentację techniczną i biznesową tworzonego systemu. Przedstawiono w szczególności: wymagania funkcjonalne i niefunkcjonalne, architekturę, zastosowane metody półautomatycznego obrysu oraz metody obliczania statystyk obrysu.
 
 \section {Specyfikacja wymagań}
 
-Przed stworzeniem systemu zostały zgromadzone dane dotyczące wymagań stawianych przed tworzonym systemem. Zostały one przedstawione w postaci zgodnej z wymaganiami stawianymi w inżynierii oprogramowania w rozdziałach 3.1.1. - 3.1.3. Wymagania były gromadzone na podstawie informacji przekazywanych przez opiekuna naukowego tej pracy dyplomowej i wywiadu wśród lekarzy i studentów Warszawskiego Uniwersytetu Medycznego.
+Przed stworzeniem systemu zostały zgromadzone dane dotyczące wymagań stawianych przed tworzonym systemem. Zostały one przedstawione w postaci zgodnej z wymaganiami stawianymi w inżynierii oprogramowania w rozdziałach 3.1.1. - 3.1.3. Wymagania były gromadzone na podstawie wywiadów przeprowadzonych z opiekunem naukowym tej pracy dyplomowej, z lekarzami i ze studentami Warszawskiego Uniwersytetu Medycznego.
 
 \subsection {Opis biznesowy}
 
@@ -417,15 +417,15 @@ Celem projektu jest stworzenie interfejsu przyjaznego użytkownikowi, który umo
 Do podstawowych funkcjonalności systemu zaliczają się:
 \begin{itemize}[noitemsep]
 %O listach wyliczeniowych https://sjp.pwn.pl/poradnia/haslo/listy-wyliczeniowe;4812.html
-\item Generowanie obrysu manualnego.
-\item Generowanie obrysu półautomatycznego na podstawie punktów wybranych przez użytkownika.
-\item Zapisywanie wygenerowanych obrysów.
-\item \textbf {Anonimizacja}\footnote {Anonimizacja (ang. anonymization) --- operacja mająca na celu usunięcie z danych informacji o pacjentach, które pozwoliłyby na identyfikację danych z tożsamością pacjenta. Są to między innymi: imiona, nazwisko, pesel. Inne tłumaczenia słowa anonymization --- utajnianie, usuwanie danych niejawnych. Z uwagę na fakt, że te tłumaczenia nie oddają dobrze kontekstu, zastosowano kalkę językową.} danych zapisanych w strukturze pliku DICOM.
+\item generowanie obrysu manualnego.
+\item generowanie obrysu półautomatycznego na podstawie punktów wybranych przez użytkownika.
+\item zapisywanie wygenerowanych obrysów.
+\item anonimizacja\footnote {Anonimizacja (ang. anonymization) --- operacja mająca na celu usunięcie z danych informacji o pacjentach, które pozwoliłyby na identyfikację danych z tożsamością pacjenta. Są to między innymi: imiona, nazwisko, pesel. Inne tłumaczenia słowa anonymization --- utajnianie, usuwanie danych niejawnych. Z uwagę na fakt, że te tłumaczenia nie oddają dobrze kontekstu, zastosowano kalkę językową.} danych zapisanych w strukturze pliku DICOM.
 \end{itemize}
 
 \subsection {Wymagania funkcjonalne}
 
-Nieodłącznym elementem inżynierii oprogramowania przy próbie dokumentacji określonego produktu lub usługi, są wymagania funkcjonalne i niefunkcjonalne. Te pierwsze opisują funkcje i możliwości, które system powinien realizować. Zostały przygotowane wymagania funkcjonalne dla tworzonego systemu. Zostały one przedstawione w postaci historii użytkownika (ang. user stories), czyli czynności jakie może chcieć wykonać użykownik tego systemu:
+Nieodłącznym elementem inżynierii oprogramowania przy próbie dokumentacji określonego produktu lub usługi, są wymagania funkcjonalne i niefunkcjonalne. Te pierwsze opisują funkcje i możliwości, które system powinien realizować. Zostały przygotowane wymagania funkcjonalne dla tworzonego systemu. Zostały one przedstawione poniżej w postaci historii użytkownika (ang. user stories), czyli czynności jakie może chcieć wykonać użykownik tego systemu.
 \begin{enumerate}
 \item \textbf {Jako użytkownik chcę wczytać obraz DICOM.} \\
 Użytkownik może wybrać obraz w menu bocznym, w którym ma możliwość wyboru pacjenta, badania oraz serii. Wybranie serii skutkuje wyświetleniem pierwszego obrazu DICOM z tej serii.
@@ -466,23 +466,24 @@ Użytkownik może zanonimizować pacjenta, gdy przegląda jego obraz. Użytkowni
 \end{enumerate}
 
 \subsection {Wymagania niefunkcjonalne}
-
+\newcommand{\specialcell}[3][c]{%
+ \begin{tabular}[#1]{@{}#2@{}}#3\end{tabular}}
 \begin{table}
 \caption[Opis skrócony]{Spis wymagań niefunkcjonalnych}
 \label{tabela wymagania niefunkcjonalne}
 \centering
-\begin{tabular}{ | p{0.2\textwidth} | p{0.15\textwidth} | p{0.5\textwidth} | }
+\begin{tabular}{ | p{0.2\textwidth} | p{0.65\textwidth} | }
 \hline
-  Obszar wymagań & Nr wymagania & Opis \\ \hline
-  Użyteczność (ang. Usability) & 1 & Każda funkcjonalność aplikacji dostępna dla użytkownika musi mieścić się na pojedynczym ekranie przy rozdzielczości 1920x1080 i czcionce nie mniejszej niż 12pt. \\
-  \cline{2-3}
-    & 2 & Aplikacja powinna udostępniać pobranie zapisanych obrysów przy użyciu serwisu REST. \\ \hline
-  Niezawodność (ang. Reliability) & 3 & Aplikacja ma być dostępna 24h w ciągu doby. Dopuszczalny jest brak działania aplikacji w dowolnym momencie przez okres nie dłuższy niż przez 12h. Po przerwie w działaniu aplikacja musi być dostępna przez kolejne 24h bez utrudnień. \\ \hline
-  Wydajność (ang. Performance) & 4 & Aplikacja powinna pobierać dane zewnętrzne w postaci pliku DICOM (około 20MB) nie dłużej niż 5 sekund. \\
-  \cline{2-3}
-  & 5 & Aplikacja powinna generować obrys półautomatyczny i zapisywać obrys do systemu w czasie nie dłuższym niż 30 sekund. \\
-  \cline{2-3}
-  & 6 & Aplikacja powinna reagować na działanie użytkownika (z wyłączeniem generowania obrysu półautomatycznego i zapisu obrysu do systemu) w czasie nie dłuższym niż 1 sekunda. \\
+  Obszar wymagań & Opis \\ \hline
+  \specialcell{l}{Użyteczność\\(ang. Usability)} & Każda funkcjonalność aplikacji dostępna dla użytkownika musi mieścić się na pojedynczym ekranie przy rozdzielczości 1920x1080 i czcionce nie mniejszej niż 12pt. \\
+  \cline{2-2}
+   & Aplikacja powinna udostępniać pobranie zapisanych obrysów przy użyciu serwisu REST. \\ \hline
+   \specialcell{l}{Niezawodność\\(ang. Reliability)} & Aplikacja ma być dostępna 24h w ciągu doby. Dopuszczalny jest brak działania aplikacji w dowolnym momencie przez okres nie dłuższy niż przez 12h. Po przerwie w działaniu aplikacja musi być dostępna przez kolejne 24h bez utrudnień. \\ \hline
+   \specialcell{l}{Wydajność\\(ang. Performance)} & Aplikacja powinna pobierać dane zewnętrzne w postaci pliku DICOM (około 20MB) nie dłużej niż 5 sekund. \\
+  \cline{2-2}
+  & Aplikacja powinna generować obrys półautomatyczny i zapisywać obrys do systemu w czasie nie dłuższym niż 30 sekund. \\
+  \cline{2-2}
+  & Aplikacja powinna reagować na działanie użytkownika (z wyłączeniem generowania obrysu półautomatycznego i zapisu obrysu do systemu) w czasie nie dłuższym niż 1 sekunda. \\
   \hline
 \end{tabular}
 \end{table}
@@ -491,20 +492,20 @@ Drugim rodzajem wymagań są wymagania niefunkcjonalne. Opisują one kryteria os
 
 \section {Architektura rozwiązania}
 
-Na rysunku \ref{fig:architektura} przedstawiono architekturę autorskiego systemu.
+Na Rysunku \ref{fig:architektura} przedstawiono architekturę autorskiego systemu.
 
 \begin{figure}[h]
 	\center
-	\includegraphics[width=0.8\textwidth]{architektura}
+	\includegraphics[width=1\textwidth]{architektura}
 	\caption{Diiagram UML przedstawiający architekturę autorskiego systemu}
     	\label{fig:architektura}
 \end{figure}
 
-Architektura pozwala na połączenie z serwerem plików DICOM (Orthanc) oraz serwerem obrysów dowolnej liczby klientów korzystających z przeglądarki. Algorytmy zapisu obrysu, generowania obrysu, obliczania statystyk oraz anonimizacji plików są od siebie niezależne i mogą zostać zrównoleglone --- ograniczeniem jest tutaj moc obliczeniowa maszyny na której uruchomiony jest serwer. Niemożliwe jest zwiększenie wydajności poprzez zwiększenie liczby instancji serwera. Dopuszczalne jest takie rozwiązanie, gdyż planowana liczba użytkowników jednocześnie korzystających z aplikacji to nie więcej niż 20 osób. Możliwości zwiększenia skalowalności w kontekście obliczeniowej zostało opisane w rozdziale 5.2.
+Architektura pozwala na połączenie z serwerem plików DICOM (Orthanc) oraz serwerem obrysów dowolnej liczby klientów korzystających z przeglądarki. Algorytmy zapisu obrysu, generowania obrysu, obliczania statystyk oraz anonimizacji plików są od siebie niezależne i mogą zostać zrównoleglone --- ograniczeniem jest tutaj moc obliczeniowa maszyny na której uruchomiony jest serwer. Niemożliwe jest zwiększenie wydajności poprzez zwiększenie liczby instancji serwera. Dopuszczalne jest takie rozwiązanie, gdyż planowana liczba użytkowników jednocześnie korzystających z aplikacji to nie więcej niż 20 osób. Możliwości zwiększenia skalowalności w~kontekście obliczeniowej zostało opisane w rozdziale 5.2.
 
 \subsection {Interfejs użytkownika}
 
-Kluczowym elementem stworzonego systemu jest interfejs użytkownika napisany w języku skryptowym JavaScript przy użyciu biblioteki ReactJS. Udostępnia ona interfejs nawigujący po zapisanych w serwerze Orthanc plikach DICOM. Ponadto dla wyświetlonego obrazu udostępnia szczegóły dotyczące obrazu, badania i pacjenta. Umożliwia także wykonanie obrysu manualnego zrealizowanego przy uzyciu biblioteki react-canvas-draw. W aplikacji zawarto również autorski interfejs do wyboru punktów do algorymu półautomatycznego, wykonany z użyciem elementu canvas. Podgląd zapisanych w systemie obrysów wraz z wyliczonymi dla nich statystykami jest możliwy z poziomu tworzenia obrysów oraz w osobnej zakładce, gdzie udostępniono widok, w którym użytkownik może ogladać jednocześnie wybrane przez siebie obrysy z listy obrysów na jednym obrazie.
+Kluczowym elementem stworzonego systemu jest interfejs użytkownika napisany w języku skryptowym JavaScript przy użyciu biblioteki ReactJS. Udostępnia ona interfejs nawigujący po zapisanych w serwerze Orthanc plikach DICOM. Ponadto dla wyświetlonego obrazu udostępnia szczegóły dotyczące obrazu, badania i pacjenta. Umożliwia także wykonanie obrysu manualnego zrealizowanego przy uzyciu biblioteki react-canvas-draw. W aplikacji zawarto również autorski interfejs do wyboru punktów do algorymu półautomatycznego, wykonany z użyciem elementu canvas \cite{Canvas}. Podgląd zapisanych w systemie obrysów wraz z wyliczonymi dla nich statystykami jest możliwy z poziomu tworzenia obrysów oraz w osobnej zakładce, gdzie udostępniono widok, w którym użytkownik może ogladać jednocześnie wybrane przez siebie obrysy z listy obrysów na jednym obrazie.
 
 \subsection {Serwer obrazów Orthanc}
 
@@ -519,37 +520,37 @@ Poza serwerem Orthanc interfejs korzysta także z serwera przechowującego obrys
 
 \section {Opracowany algorytm półautomatyczny}
 
-Opracowany algorytm półautomatyczny służy do wykrywania krawędzi na obrazie medycznym. Jest algorytmem półautomatycznym, ponieważ jest wspomagany przez człowieka --- użytkownika, który wybiera punkty na ekranie. Te punkty są interpolowane przez algorytm półautomatyczny, zwany dalej algorytmem.
+Opracowany algorytm półautomatyczny służy do wykrywania krawędzi na obrazie medycznym. Jest algorytmem półautomatycznym, ponieważ jest wspomagany przez człowieka --- użytkownika, który wybiera punkty na wyświetlanym obrazie. Te punkty są interpolowane przez algorytm półautomatyczny, zwany dalej algorytmem.
 
 Jako dane wejściowe do algorytmu uzyskujemy następujące informacje:
 \begin{itemize}[noitemsep]
-\item {Identyfikator obrazu medycznego, na którym był wykonywany obrys.}
-\item {Lista punktów wybranych przez użytkownika. Punkty te zostały wcześniej przeskalowane ze współrzędnych w aplikacji internetowej (aplikacji webowej, ang. web application) na współrzędne odpowiadające rozdzielczości obrazu medycznego.}
+\item {identyfikator obrazu medycznego, na którym był wykonywany obrys.}
+\item {lista punktów wybranych przez użytkownika. Punkty te zostały wcześniej przeskalowane ze współrzędnych w aplikacji internetowej (aplikacji webowej, ang. web application) na współrzędne odpowiadające rozdzielczości obrazu medycznego.}
 \end{itemize}
 
 
 Algorytm można podzielić na kilka ważnych etapów:
 
 \begin{itemize}[noitemsep]
-\item {Wykrycie krawędzi na bitmapie,}
-\item {Stworzenie grafu z bitmapy,}
-\item {Zapewnienie spójności grafu,}
-\item {Wyszukanie najkrótszych ścieżek w grafie.}
+\item {wykrycie krawędzi na bitmapie,}
+\item {stworzenie grafu z bitmapy,}
+\item {zapewnienie spójności grafu,}
+\item {wyszukanie najkrótszych ścieżek w grafie.}
 \end{itemize}
 
-Poniżej zostaną przedstawione dokładne rozwiązania dla każdego z tych kroków. Przed rozpoczęciem przetwarzania jest pobierany obraz medyczny o danym wcześniej identyfikatorze ze serwera Orthanc. Jest on podstawą do dalszej pracy algorytmu.
+Poniżej zostaną przedstawione dokładne rozwiązania dla każdego z tych kroków. Przed rozpoczęciem przetwarzania jest pobierany obraz medyczny o danym wcześniej identyfikatorze z~serwera Orthanc. Jest on podstawą do dalszej pracy algorytmu.
 
 
 \subsection {Wykrycie krawędzi na bitmapie}
 
-Często na obrazach medycznych różnice w charakterystyce poziomów szarości pikseli reprezentujących interesujące nas obiekty są małe, nie są dane dodatkowe informacje o naturze obrazu. Problem opracowania uniwersalnego algorytmu wykrywania krawędzi jest problemem trudnym. Dla wielu algorytmów można znaleźć takie przykłady, że te algorytmy nie wyznaczą poprawnie krawędzi. Te algorytmy muszą spełniać szereg wymagań, które stwierdzają poprawność danego algorytmu, czy też operatora morfologicznego. Zgodnie z \cite{Cyfrowe przetwarzanie obrazów medycznych} ,,dobry detektor krawędzi powinien spełniać następujące warunki:
+Często na obrazach medycznych różnice w charakterystyce poziomów szarości pikseli reprezentujących interesujące nas obiekty są małe, nie są podane dodatkowe informacje o naturze obrazu. Problem opracowania uniwersalnego algorytmu wykrywania krawędzi jest problemem trudnym. Dla wielu algorytmów można znaleźć takie przykłady, że te algorytmy nie wyznaczą poprawnie krawędzi. Te algorytmy muszą spełniać szereg wymagań, które stwierdzają poprawność danego algorytmu, czy też operatora morfologicznego. Zgodnie z Cytowski J. \cite{Cyfrowe przetwarzanie obrazów medycznych} ,,dobry detektor krawędzi powinien spełniać następujące warunki:
 \begin{itemize}[noitemsep]
 \item {niskie prawdopodobieństwo zaznaczenia punktów nienależących do krawędzi oraz niskie prawdopodobieństwo niezaznaczenia punktów należących do krawędzi,}
 \item {zaznaczone punkty krawędzi powinny być możliwie blisko jej osi,}
 \item {wyłącznie jedna odpowiedź na pojedynczy punkt krawędzi.''}
 \end{itemize}
 
-Po zapoznaniu się z literaturą związaną z przetwarzaniem obrazów medycznych w algorytmie został użyty operator Canny'ego. Jest on powszechnym i dobrze sprawdzonym rozwiązaniem do wykrywania krawędzi. Jak napisał autor \cite{Cyfrowe przetwarzanie obrazów medycznych} ,,Operator ten (Canny'ego) jest bardzo popularny, chętnie wykorzystywany i adoptowany do wielu zastosowań. (\dots) Stał on się również standardem często używanym do porównań innych metod wykrywania krawędzi.'' Zgodnie z rysunkiem 4.25 ,,Porównanie operatorów wykrywania krawędzi'' w \cite{Cyfrowe przetwarzanie obrazów medycznych} najlepiej wykrywał główne narządy, takie jak wątroba czy też trzustka. Z wyżej wymienionych powodów został on wykorzystany w tym algorytmie.
+Został użyty operator Canny'ego, bo jest on powszechnym i dobrze sprawdzonym rozwiązaniem do wykrywania krawędzi. Jak napisał autor \cite{Cyfrowe przetwarzanie obrazów medycznych} ,,Operator ten (Canny'ego) jest bardzo popularny, chętnie wykorzystywany i adoptowany do wielu zastosowań. (\dots) Stał on się również standardem często używanym do porównań innych metod wykrywania krawędzi.'' Zgodnie z rysunkiem 4.25 ,,Porównanie operatorów wykrywania krawędzi'' w \cite{Cyfrowe przetwarzanie obrazów medycznych} najlepiej wykrywał główne narządy, takie jak wątroba czy też trzustka. Z wyżej wymienionych powodów został on wykorzystany w tym algorytmie.
 
 Operator Canny'ego \cite{Canny} składa się z 3 zasadniczych kroków:
 \begin{enumerate}%[noitemsep]
@@ -560,11 +561,11 @@ W tym celu został wykorzystany algorytm non-max suppression. Polega on na wybor
 \item \textbf {Wyznaczanie krawędzi progowaniem histerezy} \\
 Po poprzednim kroku na obrazie nadal znajdują się nieistotne krawędzie. W tym celu Canny wprowadził ideę progowania histerezy. Metoda ta wymaga 2 wartości progowych $T_1, T_2$ takich, że $T_1 < T_2$. Jeżeli wartość gradientu w danym pikselu jest większa od $T_2$, to zaznaczono ten punkt jako krawędź. Jeśli tak się stało, to zaczęto proces śledzenia krawędzi --- dla każdego sąsiada, którego wartość gradientu jest większa od $T_1$ zaznaczono go jako krawędź. Jest ona wykonywana rekurencyjnie dla każdego zakwalifikowanego punktu.
 
-Zamiast dokładnych wartości progowych można przekazać do funkcji 2 wartości --- $t_1, t_2$, które są procentem liczby pikseli, które będą niedopuszczone jako krawędzie. Dla $t_1 = 0.7, t_2 = 0.9$ dopuszczono tylko 10\% pikseli jako te, które są większe od $T_2$. Podając $t_1, t_2$ wyznaczono rozkład wartości gradientu w badanym obrazie, obliczono dystrybuantę $F(x)$ i wybrano dla $T_1$ ten argument, dla którego $F(x) = t_1 * liczba pikseli$ i analogicznie dla $T_2$. W ten sposób wyznaczono progi do histerezy.
+Zamiast dokładnych wartości progowych można przekazać do funkcji 2 wartości --- $t_1, t_2$, które są procentem liczby pikseli, które będą niedopuszczone jako krawędzie. Dla $t_1~=~0.7, t_2 = 0.9$ dopuszczono tylko 10\% pikseli jako te, które są większe od $T_2$. Podając $t_1, t_2$ wyznaczono rozkład wartości gradientu w badanym obrazie, obliczono dystrybuantę $F(x)$ i wybrano dla $T_1$ ten argument, dla którego $F(x) = t_1 * p$, gdzie $p$ to liczba pikseli i analogicznie dla $T_2$. W ten sposób wyznaczono progi do histerezy.
 
 \end{enumerate}
 
-Operator Sobela \cite{Sobel} to metoda wyznaczania gradientu, a więc zarazem krawędzi zarówno w kierunku poziomym, jak i w pionowym. Dla każdego piksela przeprowadzono operację morfologiczną z następującymi maskami:
+Operator Sobela \cite{Sobel} to metoda wyznaczania gradientu, a więc zarazem krawędzi zarówno w~kierunku poziomym, jak i w pionowym. Dla każdego piksela przeprowadzono operację morfologiczną z następującymi maskami:
 
 \begin{table}[h!]
 \centering
@@ -596,28 +597,28 @@ $\sqrt{s_1^2 + s_2^2}$ & $\tan^{-1} \Bigg[ {\cfrac{s_1}{s_2}} \Bigg]$
 
 Detektory krawędzi oparte na gradiencie, w tym operator Canny'ego są często używane. Ich główne zalety na podstawie \cite{Cyfrowe przetwarzanie obrazów medycznych} to:
 \begin{itemize}[noitemsep]
-\item Dają dobre wyniki dla obrazów o dobrej jakości i bez szumów.
-\item Są wydajne - ich złożoność jest liniowa względem liczby przetwarzanych pikseli.
-\item Nie wymagają skomplikowanej sztucznej inteligencji do działania.
+\item dają dobre wyniki dla obrazów o dobrej jakości i bez szumów.
+\item są wydajne - ich złożoność jest liniowa względem liczby przetwarzanych pikseli.
+\item nie wymagają skomplikowanej sztucznej inteligencji do działania.
 \end{itemize}
 
 Zgodnie z \cite{Cyfrowe przetwarzanie obrazów medycznych} za ich główne wady można uznać:
 \begin{itemize}[noitemsep]
-\item ,,Konieczność określenia rozmiaru maski i wartości progowej. Rozmiar maski znacząco wpływa na położenie miejsc, w których gradient przecina zera lub osiąga wartości maksymalne.
-\item Pomijanie narożników spowodowane faktem, że wartość 1D gradientu w narożnikach jest zazwyczaj mała.
-\item Operator pierwszej pochodnej wykrywa tylko schodkowe krawędzie.
-\item Duża wrażliwość na szum.''
-\item Na podstawie obserwacji działania algorytmu - rozmyte krawędzie często nie są wykrywane przez małe różnice w wartościach kolejnych sąsiadujących pikseli.
+\item potrzebę określenia rozmiaru maski i wartości progowej, gdyż rozmiar maski znacząco wpływa na rozmieszczenie pozycji, w których gradient osiąga wartości maksymalne lub przecina zera,
+\item pomijanie narożników, które spowodowane jest faktem, że wartość 1D gradientu w narożnikach jest zazwyczaj zbyt mała, aby wykrywać wokół nich,
+\item znajdowanie schodkowych krawędzi, które są wykrywane tylko przez operator pierwszej pochodnej,
+\item dużą wrażliwość na szum,
+\item na podstawie obserwacji działania algorytmu --- rozmyte krawędzie często nie są wykrywane przez małe różnice w wartościach kolejnych sąsiadujących pikseli.
 \end{itemize}
 
 W ten sposób otrzymano macierz, gdzie każde pole w macierzy odpowiada pikselowi w wejściowej bitmapie --- obrazie medycznym. Jeśli w komórce macierzy znajduje się 1, to w tym miejscu na bitmapie znajduje się krawędź, w przeciwnym przypadku 0. W ten sposób algorytm wykrył wszystkie znaczące krawędzie na bitmapie. Kolejnym krokiem przetwarzania było stworzenie grafu na podstawie wyżej wymienionej macierzy.
 
 \subsection {Stworzenie grafu z bitmapy}
 
-Na tym etapie algorytm potrzebuje następujących danych wejściowych:
+Kolejnym etapem jest stworzenie grafu z bitmapy. Na tym etapie algorytm potrzebuje następujących danych wejściowych:
 \begin{itemize}[noitemsep]
-\item Macierz z wartościami logicznymi prawda/fałsz czy znajduje się w danym punkcie krawędź. Może to być także realizowane poprzez macierz wartości liczbowych.
-\item Punkty wybrane przez użytkownika aplikacji.
+\item macierz z wartościami logicznymi prawda/fałsz czy znajduje się w danym punkcie krawędź. Może to być także realizowane poprzez macierz wartości liczbowych.
+\item punkty wybrane przez użytkownika aplikacji.
 \end{itemize}
 
 %Jaki tutaj -? - czy --?
@@ -708,72 +709,7 @@ Ostatnim problemem z jakim należałoby się wiązać wybierając łączność 8
 
 \bigskip
 
-Z wyżej wymienionych powodów zdecydowano się na łączność 4-krotną. Przygotowano i zaimplementowano algorytm tworzący graf z bitmapy, a jego pseudokod znajduje się poniżej. %Poprawić, nie poniżej!!!
-
-\begin{verbatim}
- 1) MATRIX - macierz wejściowa z oznaczonymi krawędziami jako 1
- 2) foreach(punkt A taki, że MATRIX(A) == 1)
- 3) {
- 4)     if ( punkt A ma 1 sąsiada albo co najmniej 3 sąsiadów )
- 5)     {
- 6)         // (tzn. jest albo punktem końcowym albo węzłowym)
- 7)         wstaw punkt A do kolejki wierzchołków L_V
- 8)         while ( kolejka wierzchołków L_V niepusta )
- 9)         {
-10)             weź wierzchołek V_1 z kolejki L_V
-11)             usuń V_1 z kolejki L_V
-12)             dodaj wierzchołek V_1 do grafu G
-13)             foreach (punkt B sąsiadujący z V_1 )
-14)             {
-15)                 if ( MATRIX(B) == 1 )
-16)                 {
-17)                     stwórz nową krawędź E.
-18)                     dodaj B do E
-19)                     ustaw wierzchołek V_1 jako początek krawędzi E
-20)                     dodaj krawędź E do kolejki przetwarzanych krawędzi L_E
-21)                 }
-22)                 while ( L_E niepusta)
-23)                 {
-24)                     weź krawędź E z L_E
-25)                     usuń E z kolejki
-26)                     stwórz kolejkę potencjalnych punktów krawędzi E, L_P
-27)                     weź punkt C z E
-28)                     usuń C z E
-29)                     dodaj punkt C do kolejki L_P
-30)                     while ( L_P niepusta )
-31)                     {
-32)                         weź punkt D z L_P
-33)                         usuń D z L_P
-34)                         K = liczba sąsiadów D
-35)                         if ( K == 0 lub K > 1 )
-36)                         {
-37)                             stwórz wierzchołek V_2, który znajduje się w D
-38)                             do listy krawędzi wierzchołka V_2 dodaj E
-39)                             do listy krawędzi wierzchołka V_1 dodaj E
-40)                             ustaw wierzchołek V_2 jako koniec krawędzi E
-41)                             dodaj krawędź E do grafu G
-42)                             dodaj wierzchołek V_2 do kolejki L_V
-43)                         }
-44)                         if ( K == 1 )
-45)                         {
-46)                             dodaj punkt D do E
-47)                             foreach ( punkt F sąsiadujący z D )
-48)                             {
-49)                                 if ( MATRIX(F) == 1)
-50)                                 {
-51)                                     dodaj F do L_P
-52)                                 }
-53)                             }
-54)                         }
-55)                         MATRIX(D) = 1
-56)                     }
-57)                 }
-58)             }
-59)         }
-60)     }
-61) }
-62) Zwróć graf G
-\end{verbatim}
+Z wyżej wymienionych powodów zdecydowano się na łączność 4-krotną. Przygotowano i zaimplementowano algorytm tworzący graf z bitmapy, a jego pseudokod znajduje się w Załączniku 1. %Poprawić, nie poniżej!!!
 
 Utworzony w ten sposób graf jest grafem nieskierowanym z wagami, gdzie wagi to liczba pikseli, czy też punktów należących do krawędzi. Graf ten może nie być spójny. Ponadto ten graf może nie zawierać wierzchołków, które pokrywają się z punktami wybranymi przez użytkownika.
 
@@ -905,7 +841,7 @@ Algorytm dla sztucznych krawędzi generuje listę pikseli algorytmem Bresenhama 
 
 \subsection {Optymalizacja}
 
-Większość plików medycznych ma rozdzielczości rzędu kilkaset na kilkaset pikseli, a więc na całym obrazie znajduje się kilkaset tysięcy pikseli. Zdarzają się też pliki w znacznie większej rozdzielczości, a takimi jest między innymi mammografia i zdjęcie rentgenowskie. Na tych obrazach znajduje się do kilkudziesięciu milionów pikseli. W celu sprawnego przetwarzania tych informacji potrzebne były optymalizacje do algorytmu. Zostały dodane następujące usprawnienia:
+Większość plików medycznych ma rozdzielczości rzędu kilkaset na kilkaset pikseli, a więc na całym obrazie znajduje się kilkaset tysięcy pikseli. Zdarzają się też pliki w znacznie większej rozdzielczości, a takimi jest między innymi mammografia i zdjęcie rentgenowskie. Na tych obrazach znajduje się do kilkudziesięciu milionów pikseli. W celu sprawnego przetwarzania tych informacji potrzebne były optymalizacje do algorytmu. Zostały dodane usprawnienia, które opisano poniżej.
 \begin{enumerate}
 \item \textbf {Zmniejszenie rozmiaru obrazu roboczego} \\
 W pierwszym kroku zmniejszono rozmiar obrazu roboczego. Wyznaczono najmniejszy prostokąt, w którym mieszczą się wszystkie punkty zaznaczone przez użytkownika. Powiększono ten prostokąt o marginesy w taki sposób, by wyjściowy prostokąt nadal był w środku, a pole powiększonego było 4-krotnie większe. Innymi słowami --- dodano marginesy po 50\% szerokości / wysokości do każdego wymiaru. Jeśli rozmiar powiększonego prostokąta jest większe niż obrazu, to nie jest zmieniany obraz roboczy.
@@ -920,21 +856,20 @@ Dla każdego punktu jest uruchamiany algorytm A*, zatem w sposób liniowy od ilo
 
 \section {Moduł obliczeń statystyk}
 
-Nasz system zapewnia liczenie statystyk dotyczących obrysu. Statystyki są identyczne zarówno dla obrysów manualnych i półautomatycznych.
-Następujące statystyki są prezentowane użytkownikowi:
+System zapewnia liczenie statystyk dotyczących obrysu. Statystyki są identyczne zarówno dla obrysów manualnych i półautomatycznych, do których należą:
 
 \begin{itemize}[noitemsep]
-\item Histogram,
+\item histogram --- wykres pokazujący natężenie kolorów w obrysowanym obszarze (kolor, to liczba w zakresie $[0,255]$, gdzie 0 oznacza najciemniejszy piksel a 255 najjaśniejszy),
 \begin{itemize}[noitemsep]
-\item Wartość maksymalna,
-\item Wartość minimalna,
-\item Wartość średnia,
+\item wartość maksymalna --- maksymalna wartość koloru piksela wewnątrz obrysu,
+\item wartość minimalna --- minimalna wartość koloru piksela wewnątrz obrysu,
+\item wartość średnia --- średnia arytmetyczna wartości kolorów pikseli wewnątrz obrysu,
 \end{itemize}
-\item Środek ciężkości,
-\item Długość obrysu w $mm$,
-\item Długość obrysu w pikselach,
-\item Pole powierzchni w $mm^2$,
-\item Liczba pikseli wewnątrz obrysu.
+\item środek ciężkości --- średnia arytmetyczna pozycji pikseli obrysu,
+\item długość obrysu w $mm$ --- obliczana na podstawie położenia pikseli i wartości pixel spacing odczytywanej z tagu obrazu DICOM,
+\item długość obrysu w pikselach,
+\item pole powierzchni w $mm^2$,
+\item liczba pikseli wewnątrz obrysu.
 \end{itemize}
 
 Do obliczenia histogramu jest wymagany punkt wewnętrzny obrysu. Środek ciężkości obrysu nie zawsze musi znajdować się wewnątrz obrysu. W przypadku zastosowania algorytmu scan-linii dla obrysu manualnego nie jest dana informacja o logicznych wartościach, gdzie jest krawędź, więc nie można wykryć np. krawędzi poziomych. Algorytm scan-linii lepiej nadaje się w przypadku, gdy wypełniamy wielokąt, a nie obrys.
@@ -953,43 +888,30 @@ Z tego powodu wybrano algorytm Flood Fill, czyli rozlewania się rekurencyjnego 
 
 \chapter {Podsumowanie}
 
-W tym rozdziale przedstawiono trudności napotkane w trakcie tworzenia sytemu jak również omówiono możliwe drogi dalszego rozwoju systemu.
+W podsumowaniu omówiono3 aspekty: osiągnięcie celu pracy, napotkane problemy i ograniczenia.
 
-\section {Napotkane problemy i ograniczenia}
+Cel pracy został osiągnięty. Spełniono wszystkie wymagania funkcjonalne i niefunkcjonalne, z wyłączeniem wymagania dotyczącego wydajności generowania obrysu półautomatycznego dla obrazów DICOM o dużej rozdzielczości (ponad 1000000 pikseli).
 
-\subsection {Problemy związane z interfejsem}
+W trakcie pracy nad systemem napotkano różne problemy i ograniczenia. Zostały one opisane poniżej.
 
 W interfejsie ograniczeniem okazał się dostępny rozmiar ekranu. Projektowanie aplikacji zakładało wykorzystanie ekranu o rozdzielczości 1920x1080, a więc ekranu panoramicznego. Niestety obrazy DICOM mają bardzo zróżnicowane układy --- są obrazy kwadratowe, pionowe oraz poziome. Założenie, że ekran użytkownika jest ekranem 1920x1080 sprawia, że obrazy pionowe będą wyświetlane jedynie w niewielkiej części obszaru przeznaczonego dla obrazów. Jest to niestety ograniczenie, którego nie da się zlikwidować, gdyż przy założeniu rozdzielczości 1080x1920 powoduje analogiczny problem z obrazami poziomymi. Zaleca się skonfigurowanie aplikacji pod wymagania konkretnej grupy lekarzy lub szpitala na podstawie wymiarów zdjęć, które będą częściej występować w systemie.
 
-\subsection {Integracja między modułami}
 
 Podstawowym problemem występującym w trakcie implementacji rozwiązania było ustalanie kontraktów w warstwie komunikacyjnej. Ze względu na niewielką ilość akcji w komunikacji nie zdecydowano się na zastosowanie generatora kontraktów, ale zaleca się wprowadzenie takiego rozwiązania ponownie w trakcie rozwoju systemu. W zależności od złożoności komunikacji generator kontraktów może zdecydowanie usprawnić wprowadzanie zmian w aplikacji.
 
-\subsection {Wymary rzeczywiste obrazów DICOM a rozmiary obrysów}
-
 Podczas projektowania systemu zdecydowano, że obrazy DICOM będą wyświetlane w największej rozdzielczości umożliwiającej wyświetlenie całego obrazu na ekranie. W związku z tym, większość obrazów wyświetlona jest w rozmiarze różnym od faktycznego rozmiaru obrazu. Rozważano dwie możliwości rozdzielczości wykonywanych obrysów: faktyczne wymiary obrazu oraz rozmiary obrazu wyświetlanego na ekranie. Zdecydowano, że obrysy powinny być zapisywane w wymiarach identycznych faktycznym rozmiarom obrazu. Decyzja została uzasadniona potrzebą zapewnienia poprawnego obliczania statystyk. Zapisywanie obrysów w takich wymiarach ułatwia obliczanie liczby pikseli wewnątrz obrysu.
 
-\subsection {Wydajność wyznaczania obrysu półautomatycznego dla obrazów dużej rozdzielczości}
+Ze względu na złożoność algorytmu używanego do wyznaczania obrysu półautomatycznego wykonywanie obrysów półautomatycznych w obrazach o dużej rozdzielczości przekracza dwukrotnie dopuszczalny czas ustalony w punkcie 5 wymagań niefunkcjonalnych. Czas obliczeń można poprawić poprzez ograniczenie obszaru, w którym wykrywane będą krawędzie, ale nie rozwiąże to problemu z wykonywaniem obrysów o wymiarach zbliżonych do pełnych wymiarów obrazu.
 
-Ze względu na złożoność algorytmu używanego do wyznaczania obrysu półautomatycznego wykonywanie obrysów półautomatycznych w obrazach o dużej rozdzielczości przekracza dwukrotnie dopuszczalny czas ustalony w punkcie 5 wymagań niefunkcjonalnych. Czas obliczeń można poprawić poprzez ograniczenie obszaru, w którym wykrywane będą krawędzie, ale nie rozwiąże to problemu z wykonywaniem obrysów o wymiarach zbliżonych do pełnych wymiarów obrazu
-
-\section {Możliwości dalszego rozwoju}
-
-\subsection {Poszerzenie modułu statystyk obrysu}
+Podczas pracy nad systemem rozważano dodatkowe funkcjonalności, które nie zostały poruszone w tej pracy. Są one potencjalnymi możliwościami rozwoju stworzonego w ramacch tej pracy systemu. Funkcjonalności opisano szczegółowo poniżej.
 
 W obecnej wersji systemu nie zaimplementowano deskryptorów kształtu obrysu. Zaimplementowanie takich deskryptorów mogłoby dostarczyć dodatkowe informacje na temat wykonanych przez użytkownika obrysów. Taka informacja może w przyszłości dostarczyć dodatkową zmienną, którą można by wykorzystywać w celu trenowania sztucznej inteligencji w zautomatyzowanym wykrywaniu organów, jak również wykrywaniu i sugerowaniu niepokojących zmian.
-
-\subsection {Wprowadzenie uwierzytelniania}
 
 W tej wersji w systemie użytkownicy nie są rozróżnialni. Dodanie użytkowników pozwoliłoby na segregowanie tworzonych obrysów i wyświetlanie użytkownikowi obrysów wykonanych jedynie przez niego samego, a nie wszystkich obrysów istniejących w systemie. Z punktu widzenia użyteczności systemu użytkownik nie musiałby szukać swojego obrysu pośród obrysu innych użytkowników systemu.
 
 Uwierzytelnianie zapobiegłoby również niepowołanemu dostępowi osób postronnych do wykonanych obrysów oraz uniemożliwiłoby ataki typu DoS. W obecnej wersji można poprzez wysyłanie dużej liczby zapytań związanych z generowaniem obrysów półautomatycznych doprowadzić do niedostępności przeprowadzania akcji na serwerze. System jest również podatny na złośliwe działanie mające na celu zapełnienie całej dostępnej serwerowi przestrzeni dyskowej, które może zostać wywołane przez wysłanie dużej liczby zapisów obrysów manualnych.
 
-\subsection {Interfejs eksportowania statystyk dotyczących wykonanych w danej sesji obrysów}
-
 Z punktu widzenia użytkownika interesujące mogą być informacje wyliczone przez system na temat wykonanych przez niego obrysów. W obecnej wersji systemu, jeśli użyktownik chciałby takie informacje zapisać musiałby samodzielnie przepisać dane wyświetlane w widoku szczegółów obrysu. Zautomatyzowanie takiej funkcjonalności mogłoby zaoszczędzić użytkownikowi wiele czasu.
-
-\subsection {Wykrywanie zmian na podstawie obrysów metodami sztucznej inteligencji}
 
 Głównym celem wykonywania obrysów na obrazach medycznym jest generowanie zbioru testowego dla różnych metod sztucznej inteligencji mających na celu sugerowanie lekarzom niepokojących zmian wykrytych automatycznie. W związku z tym użytecznym rozszerzeniem funkcjonalności systemu byłoby zintegrowanie go z modułem sztucznej inteligencji i umożliwienie obrysowywania wgrywanych obrazów metodami sztucznej inteligencji opartych na obrysach wykonanych przez użytkownika.
 
@@ -1012,24 +934,31 @@ Głównym celem wykonywania obrysów na obrazach medycznym jest generowanie zbio
 \markboth{}{Bibliografia}
 \addcontentsline{toc}{chapter}{Bibliografia}
 
-\bibitem[1]{Dlaczego react} Nowacki R., Plechawska-Wójcik M.: Analiza porównawcza narzędzi do budowania aplikacji Single Page Application --- AngularJS, ReactJS, Ember.js, \emph{Journal of Computer Sciences Institute 2, Politechnika Lubelska, Instytut Informatyki}, Lublin, 2016, 98--103
+\bibitem[1]{Dlaczego react} Nowacki R., Plechawska-Wójcik M.: Analiza porównawcza narzędzi do budowania aplikacji Single Page Application --- AngularJS, ReactJS, Ember.js, \emph{Journal of Computer Sciences Institute 2, Politechnika Lubelska, Instytut Informatyki}, Lublin, 98--103, 2016
 \bibitem[2]{Dotnet} Microsoft Corporation: Dokumentacja platformy .NET. Oficjalna strona: https://docs.microsoft.com/pl-pl/dotnet/ [Dostęp 22 stycznia 2019]
 \bibitem[3]{Charakterystyka dotnet} Microsoft Corporation: Informacje o platformie .NET Core. Oficialna strona: https://docs.microsoft.com/pl-pl/dotnet/core/about [Dostęp 22 stycznia 2019]
-\bibitem[4]{Dlaczego dotnet} Kronis K., Uhanova M.: Performance Comparision of Java EE and ASP.NET Core Technologies for Web API Developmnet. \emph{Applied Computer Systems 23, Riga Technical University}, Ryga, 2018, 37--44
-\bibitem[4]{Cyfrowe przetwarzanie obrazów medycznych} Cytowski J., Gielecki J., Gola A.: Cyfrowe przetwarzanie obrazów medycznych: Algorytmy. Technologie. Zastosowania. \emph{Akademicka Oficyna Wydawnicza EXIT}, Warszawa, 2008, 88--94.
+\bibitem[4]{Cyfrowe przetwarzanie obrazów medycznych} Cytowski J., Gielecki J., Gola A.: Cyfrowe przetwarzanie obrazów medycznych: Algorytmy. Technologie. Zastosowania. \emph{Akademicka Oficyna Wydawnicza EXIT}, Warszawa, 88--94, 2008
 \bibitem[5]{Canny} Canny J. F.: Finding Edges and Lines in Images. \emph{Technical report no. 720, Massachusetts Institute of Technology (MIT)}, Cambridge, Massachusetts, USA, 1983.
 \bibitem[6]{Sobel} Sobel I., Feldman G.: An 3x3 Isotropic Image Gradient Operator for Image Processing. \emph {Presentation at Stanford Aartificial Intelligence Project (SAIL) in 1968}, 2014
 \bibitem[7]{Pixel connectivity} Rosenfeld A., Kak A. C.: Digital Picture Processing, \emph{Academic Press, Inc.}, Nowy Jork, 1982
 \bibitem[8]{Moore}  Weisstein, Eric W.: Moore Neighborhood. \emph{From MathWorld--A Wolfram Web Resource.} http://mathworld.wolfram.com/MooreNeighborhood.html  [Dostęp 22 stycznia 2019]
 \bibitem[9]{KMM} Saeed K., Rybnik M., Tabędzki M., Adamski M.: Algorytm do Ścieniania Obrazów: Implementacja i Zastosowania \emph{Zeszyty Naukowe Politechniki Białostockiej 2002 Informatyka - Zeszyt 1}, Białystok, 2002
-\bibitem[10]{K3M} Saeed K., Tabędzki M., Rybnik M., Adamski M.: K3M: A Universal Algorithm for Image Skeletonization and a Review of Thinning Techniques \emph{International Journal of Applied Mathematics and Computer Science, 2010, 20(2)} Białystok, 2010, 317--335
-\bibitem[11]{Algorytmy Sedgewick} Sedgewick R., Wayne K.: Algorytmy Wydanie IV, \emph{Helion}, Gliwice, 2012, 526--706
-\bibitem[12]{C w pigulce} Albahari J., Albahari B.: C 6.0 w pigułce, \emph{Helion, O'Reilly Media, Inc.},Gliwice, 2016, page--page
-\bibitem[13]{A*} Hart P. E., Nilsson N. J., Raphael B.: A Formal Basis for the Heurestic Determination of Minimum Cost Paths \emph{IEEE Transactions on Systems Science and Cybernetics 4(2)}, 1968, 100--107
+\bibitem[10]{K3M} Saeed K., Tabędzki M., Rybnik M., Adamski M.: K3M: A Universal Algorithm for Image Skeletonization and a Review of Thinning Techniques \emph{International Journal of Applied Mathematics and Computer Science, 2010, 20(2)} Białystok, 317--335, 2010
+\bibitem[11]{Algorytmy Sedgewick} Sedgewick R., Wayne K.: Algorytmy Wydanie IV, \emph{Helion}, Gliwice, 526--706, 2012
+\bibitem[12]{C w pigulce} Albahari J., Albahari B.: C 6.0 w pigułce, \emph{Helion, O'Reilly Media, Inc.},Gliwice, page--page, 2016
+\bibitem[13]{A*} Hart P. E., Nilsson N. J., Raphael B.: A Formal Basis for the Heurestic Determination of Minimum Cost Paths \emph{IEEE Transactions on Systems Science and Cybernetics 4(2)}, 100--107, 1968
 \bibitem[14]{AiSD2} Bródka J.: Wykłady z przedmiotu Algorytmy i Struktury Danych 2 \emph{Politechnika Warszawska, Wydział Matematyki i Nauk Informacyjnych} Materiały dostepne na stronie: http://mini.pw.edu.pl/~brodka/ASD2.html [Dostęp 22 stycznia 2019]
 \bibitem[15]{Dotnet struktury} Microsoft Corporation: Dokumentacja rekomendowanych struktur danych platformy .NET. Oficjalna strona: https://docs.microsoft.com/pl-pl/dotnet/standard/collections/ [Dostęp 22 stycznia 2019]
 \bibitem[16]{Bresenham} Bresenham J. E.: Algorithm for computer control of a digital plotter. \emph{ICM System Journal 4(1)} 1965
 \bibitem[17]{ASPNET} Microsoft Corporation: Informacje o platformie ASP.NET Core. Oficialna strona: https://docs.microsoft.com/pl-pl/aspnet/core/?view=aspnetcore-2.2 [Dostęp 22 stycznia 2019]
+\bibitem[18]{Cornerstone Core}  Hafey C.: Dokumentacja projektu Cornerstone Core. Oficjalna strona: https://docs.cornerstonejs.org/ [Dostęp 27 stycznia 2019]
+\bibitem[19]{DWV}  ivmartel: Projekt DICOM Web Viewer. Oficjalna strona: https://ivmartel.github.io/dwv/ [Dostęp 27 stycznia 2019]
+\bibitem[20]{Orthanc}  Osimis S.A.: Projekt Orthanc. Oficjalna strona: https://www.orthanc-server.com/ [Dostęp 27 stycznia 2019]
+\bibitem[21]{DICOM}  National Electrical Manufacturers Association: Standard DICOM. Oficjalna strona: https://www.dicomstandard.org/current/ [Dostęp 27 stycznia 2019]
+\bibitem[22]{React} Facebook Inc.: Informacje o bibliotece ReactJS. Oficjalna strona: https://reactjs.org/ [Dostęp 27 stycznia 2019]
+\bibitem[23]{Canvas} Mozilla and individual contributors: Dokumentacja HTMLCanvasElement. Oficjalna strona: https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/ [Dostęp 27 stycznia 2019]
+\bibitem[24]{Dlaczego dotnet} Kronis K., Uhanova M.: Performance Comparision of Java EE and ASP.NET Core Technologies for Web API Developmnet. \emph{Applied Computer Systems 23, Riga Technical University}, Ryga, 37--44, 2018
+
 %\bibitem[1]{Ktos} A. Author, \emph{Title of a book}, Publisher, year, page--page.
 %\bibitem[2]{Innyktos} J. Bobkowski, S. Dobkowski, Jak stworzyć bibliografię w BibTeX-u, \emph{Czasopismo nr}, rok, strona--strona.
 %\bibitem[3]{B} C. Brink, Power structures, \emph{Algebra Universalis 30(2)}, 1993, 177--216.
@@ -1047,21 +976,21 @@ Głównym celem wykonywania obrysów na obrazach medycznym jest generowanie zbio
 \markboth{}{Instrukcja instalacji}
 \addcontentsline{toc}{chapter}{Instrukcja instalacji}
 
-W celu instalacji serwera Orthanc należy udać się na stronę \url{https://www.orthanc-server.com/download.php}, pobrać wersję odpowiednią dla używanego systemu operacyjnego, a następnie postępować zgodnie z instrukcjami wyświetlanymi podczas instalacji. W celu uzyskania szczegółowych informacji odnośnie konfiguracji należy zapoznać się z dokumentacją znajdującą się na stronie \url{http://book.orthanc-server.com/users/cookbook.html}
+W celu instalacji serwera Orthanc należy otworzyć stronę \url{https://www.orthanc-server.com/download.php}, pobrać wersję odpowiednią dla używanego systemu operacyjnego, a następnie postępować zgodnie z instrukcjami wyświetlanymi podczas instalacji. W celu uzyskania szczegółowych informacji odnośnie konfiguracji należy zapoznać się z dokumentacją znajdującą się na stronie \url{http://book.orthanc-server.com/users/cookbook.html}
 
-W celu instalacji serwera obrysów i aplikacji przeglądarkowej należy skopiować pliki znajdujące się na płycie w folderach Web oraz DotNetProject na stację na której aplikacje te zostaną uruchomione.
+W celu instalacji serwera obrysów i aplikacji webowej należy skopiować pliki znajdujące się na płycie w folderach Web oraz DotNetProject na stację, na której aplikacje te zostaną uruchomione.
 
-Do działania serwera obrysów wymagany jest .NET Core w wersji 2.2 lub nowszej. Aby zainstalować .NET Core należy udać się na stronę \url{https://dotnet.microsoft.com/download}, pobrać wersję odpowiednią dla używanego systemu operacyjnego, a następnie postępować zgodnie z informacjami wyświetlanymi w trakcie instalacji.
+Do działania serwera obrysów wymagany jest .NET Core w wersji 2.2 lub nowszej. W celu instalacji .NET Core należy otworzyć stronę \url{https://dotnet.microsoft.com/download}, pobrać wersję odpowiednią dla używanego systemu operacyjnego, a następnie postępować zgodnie z informacjami wyświetlanymi w trakcie instalacji.
 
 W celu konfiguracji serwera w pliku DotNetProject/Api/Properties/launchSettings.json należy wipsać w 24 linii  wartość adresu i portu na którym serwer ma zostać udostępniony, jako wartość pola applicationUrl . Przykładowa poprawna wartość linii 24 to\texttt{ "applicationUrl": "https://localhost:5001",}.
 
 Ponadto w pliku DotNetProject/Api/Startup.cs należy podać w linii 33 link pod którym dostępna jest aplikacja przeglądarkowa jako argument metody WithOrigins.  Przykładowa poprawna wartość linii 24 to \texttt{builder => builder.WithOrigins("http://localhost:8080", "http://localhost:3000")}.
 
-Aby uruchomić serwer obrysów należy przejść do skopiowanego folderu DotNetProject/API i wykonać w konsoli polecenie \texttt{\$ dotnet build \&\& dotnet run}.
+W celu uruchomienia serwera obrysów należy przejść do skopiowanego folderu DotNetProject/API i wykonać w konsoli polecenie \texttt{\$ dotnet build \&\& dotnet run}.
 
-Do działania aplikacji przeglądarkowej wymagany jest Node w wersji co najmniej 9.4 oraz yarn w wersji co najmniej 1.10.1. Aby zainstalować Node.js należy udać się na stronę \url{https://nodejs.org/en/download/} i wybrać wersję odpowiadającą systemowi z którego korzystamy. Postępować zgodnie ze wskazówkami instalatora. W celu instalacji yarn należy udać się na stronę https://yarnpkg.com/en/docs/install aby pobrać wersję odpowiadającą systemowi na którym będzie uruchamiana aplikacja i uruchomić instalator.
+Do działania aplikacji przeglądarkowej wymagany jest Node w wersji co najmniej 9.4 oraz yarn w wersji co najmniej 1.10.1, aby zainstalować Node.js należy udać się na stronę \url{https://nodejs.org/en/download/} i wybrać wersję odpowiadającą systemowi z którego korzystamy. Postępować zgodnie ze wskazówkami instalatora. W celu instalacji yarn należy udać się na stronę https://yarnpkg.com/en/docs/install aby pobrać wersję odpowiadającą systemowi, na którym będzie uruchamiana aplikacja i uruchomić instalator.
 
-W celu konfiguracji portu na który będzie wystawiona aplikacja webowa należy ustawić odpowiednią liczbę w 4 linii pliku Web/express.js. Przykładowa poprawna konfiguracja:\\
+W celu konfiguracji portu, na który będzie wystawiona aplikacja webowa należy ustawić odpowiednią liczbę w 4 linii pliku Web/express.js. Przykładowa poprawna konfiguracja:\\
 \texttt{\$ const portNumber = 3000;}
 
 Ponadto w celu konfiguracji aplikacji należy ustawić adresy do API serwera obrysów i serwera Orthanc w pliku Web/src/helpers/requestHelper.ts poprzez zmianę zawartości cudzysłowów w pierwszych dwóch linijkach pliku. 	Przykładowa poprawna konfiguracja:\\
@@ -1078,177 +1007,213 @@ W celu uruchomienia aplikacji przeglądarkowej wchodzimy do folderu Web w który
 \markboth{}{Instrukcja użytkowania}
 \addcontentsline{toc}{chapter}{Instrukcja użytkowania}
 
-Po otwarciu aplikacji użytkownik może przeglądać pacjentów (patients), których badania zostały wgrane do serwera Orthanc --- Rysunek \ref{fig:1}.
-
-\begin{figure}[h]
+\begin{figure}[h!]
 	\center
-	\includegraphics[width=1\textwidth]{1}
+	\includegraphics[width=0.8\textwidth]{1}
 	\caption{Widok listy pacjentów}
     	\label{fig:1}
 \end{figure}
 
-Po wybraniu pacjenta poprzez kliknięcie lewym przyciskiem myszy na jego nazwę, na liście pojawiają się badania (studies) wybranego pacjenta. Użytkownik może wrócić do widoku pacjentów klikając w strzałkę na liście z badaniami--- Rysunek \ref{fig:2}.
+Po otwarciu aplikacji użytkownik może przeglądać pacjentów (patients), których badania zostały wgrane do serwera Orthanc --- Rysunek \ref{fig:1}.
+
+\pagebreak
 
 
-\begin{figure}[h]
+\begin{figure}[h!]
 	\center
-	\includegraphics[width=1\textwidth]{2}
+	\includegraphics[width=0.8\textwidth]{2}
 	\caption{Widok listy badań pacjenta}
     	\label{fig:2}
 \end{figure}
 
-Po wybraniu badania poprzez kliknięcie lewym przyciskiem myszy na jego nazwę, na liście pojawiają się serie (series) wybranego badania. Użytkownik może wrócić do widoku badań klikając w strzałkę na liście z seriami i--- Rysunek \ref{fig:3}.
+Po wybraniu pacjenta poprzez kliknięcie lewym przyciskiem myszy na jego nazwę, na liście pojawiają się badania (studies) wybranego pacjenta. Użytkownik może wrócić do widoku pacjentów klikając w strzałkę na liście z badaniami--- Rysunek \ref{fig:2}.
 
-\begin{figure}[h]
+\pagebreak
+
+\begin{figure}[h!]
 	\center
-	\includegraphics[width=1\textwidth]{3}
+	\includegraphics[width=0.8\textwidth]{3}
 	\caption{Widok listy serii w badaniu}
     	\label{fig:3}
 \end{figure}
 
-Po wyborze serii na ekranie pojawia się pierwszy obraz z serii. Użytkownik może przełączać się pomiędzy obrazami korzystając z listy obrazów po lewej stronie lub używając rolki myszy po najechaniu na obraz. Aby powrócić do wyboru serii należy kliknąć lewym przyciskiem myszy na strzałkę na liście instancji (instances) --- Rysunek \ref{fig:4}.
+Po wybraniu badania poprzez kliknięcie lewym przyciskiem myszy na jego nazwę, na liście pojawiają się serie (series) wybranego badania. Użytkownik może wrócić do widoku badań, klikając w strzałkę na liście z seriami --- Rysunek \ref{fig:3}.
 
-\begin{figure}[h]
+\pagebreak
+
+\begin{figure}[h!]
 	\center
-	\includegraphics[width=1\textwidth]{4}
+	\includegraphics[width=0.8\textwidth]{4}
 	\caption{Wybrany obraz w module obrysu manualnego}
     	\label{fig:4}
 \end{figure}
 
-Przy manualnym obrysie użytkownik może wykonywać obrys poprzez przytrzymanie lewego przycisku myszy na obrazie, przesuwając mysz z wciśniętym przyciskiem. Gdy użytkownik korzysta z tabletu graficznego wystarczy, że będzie przesuwał wciśniętym rysikiem po tablecie --- Rysunek \ref{fig:5}.
+Po wyborze serii na ekranie pojawia się pierwszy obraz z serii. Użytkownik może przełączać się pomiędzy obrazami korzystając z listy obrazów po lewej stronie lub używając rolki myszy po najechaniu na obraz. Aby powrócić do wyboru serii należy kliknąć lewym przyciskiem myszy na strzałkę na liście instancji (instances) --- Rysunek \ref{fig:4}.
 
-\begin{figure}[h]
+\pagebreak
+
+\begin{figure}[h!]
 	\center
-	\includegraphics[width=1\textwidth]{5}
+	\includegraphics[width=0.8\textwidth]{5}
 	\caption{Przykładowy obrys}
     	\label{fig:5}
 \end{figure}
 
-Po wciśnięciu przycisku zapisz obrys (Save Contour), użytkownikowi ukazuje się okno dialogowe. Aby usunąć nieudany obrys należy kliknąć lewym przyciskiem myszy w przycisk wyczyść obraz (Clear Image). W celu zapisania obrysu należy wykonać następujące kroki: Wpisać nazwę obrysu w pole tekstowe poniżej obrazu (pod napisem Contour Name)  --- \ref{fig:6}.
+Przy manualnym obrysie użytkownik może wykonywać obrys poprzez przytrzymanie lewego przycisku myszy na obrazie, przesuwając mysz z wciśniętym przyciskiem. Gdy użytkownik korzysta z tabletu graficznego wystarczy, że będzie przesuwał wciśniętym rysikiem po tablecie --- Rysunek \ref{fig:5}.
 
-\begin{figure}[h]
+\pagebreak
+
+\begin{figure}[ht]
 	\center
-	\includegraphics[width=1\textwidth]{6}
+	\includegraphics[width=0.8\textwidth]{6}
 	\caption{Okno zapisu obrysu manualnego}
     	\label{fig:6}
 \end{figure}
 
- Po wpisaniu nazwy, należy kliknąć przycisk podgląd punktów (Preview Points) lewym przyciskiem myszy. Pozwoli to użytkownikowi zobaczyć wykonany przez niego obrys --- Rysunek \ref{fig:7}.
+Po wciśnięciu przycisku zapisz obrys (Save Contour), użytkownikowi ukazuje się okno dialogowe. W celu usunięcia nieudanego obrysu należy kliknąć lewym przyciskiem myszy w przycisk wyczyść obraz (Clear Image). W celu zapisania obrysu należy wykonać następujące kroki: Wpisać nazwę obrysu w pole tekstowe poniżej obrazu (pod napisem Contour Name)  --- \ref{fig:6}.
 
-\begin{figure}[h]
+\pagebreak
+
+\begin{figure}[h!]
 	\center
-	\includegraphics[width=1\textwidth]{7}
+	\includegraphics[width=0.8\textwidth]{7}
 	\caption{Podgląd wykonanego obrysu}
-    	\label{fig:6}
+    	\label{fig:7}
 \end{figure}
 
-Następną czynnością, którą musi wykonać użytkownik przed zapisaniem to wybranie punktu wewnątrz wykonanego obrysu, poprzez wciśnięcie lewego przycisku myszy w odpowiednim miejscu na obrazie --- Rysunek \ref{fig:8}.
+ Po wpisaniu nazwy, należy kliknąć przycisk podgląd punktów (Preview Points) lewym przyciskiem myszy. Pozwoli to użytkownikowi zobaczyć wykonany przez niego obrys --- Rysunek \ref{fig:7}.
 
-\begin{figure}[h]
+\pagebreak
+
+\begin{figure}[h!]
 	\center
-	\includegraphics[width=1\textwidth]{8}
+	\includegraphics[width=0.8\textwidth]{8}
 	\caption{Wybór punktu wewnątrz obrysu}
     	\label{fig:8}
 \end{figure}
 
-Po kliknięciu przycisku wyślij (Send) lewym przyciskiem myszy obrys zostaje zapisany i pojawia się na liście wykonanych obrysów (Avaiable Contours). Lista zawiera jednie obrysy dla oglądanego obrazu --- Rysunek \ref{fig:9}.
+Następną czynnością, którą musi wykonać użytkownik przed zapisaniem to wybranie punktu wewnątrz wykonanego obrysu, poprzez wciśnięcie lewego przycisku myszy w odpowiednim miejscu na obrazie --- Rysunek \ref{fig:8}.
 
-\begin{figure}[h]
+\pagebreak
+
+\begin{figure}[h!]
 	\center
-	\includegraphics[width=1\textwidth]{9}
-	\caption{Widok po zapisaniu obrysu manualnego}
+	\includegraphics[width=0.8\textwidth]{9}
+	\caption{Widok listy obrysów po zapisaniu obrysu manualnego}
     	\label{fig:9}
 \end{figure}
 
-Użytkownik może wykonywać obrysy w sposób półautomatyczny. W tym celu musi wybrać kartę z obrysami półautomatycznymi (z Manual do Semi-Automatic) --- Rysunek \ref{fig:10}.
+Po kliknięciu przycisku wyślij (Send) lewym przyciskiem myszy obrys zostaje zapisany i pojawia się na liście wykonanych obrysów (Avaiable Contours). Lista zawiera jednie obrysy dla oglądanego obrazu --- Rysunek \ref{fig:9}.
 
-\begin{figure}[h]
+\pagebreak
+
+\begin{figure}[h!]
 	\center
-	\includegraphics[width=1\textwidth]{10}
+	\includegraphics[width=0.8\textwidth]{10}
 	\caption{Moduł obrysu półauotomatycznego}
     	\label{fig:10}
 \end{figure}
 
-Aby wybrać punkty do obrysu półautomatycznego użytkownik powinien klikać w interesujące go punkty lewym przyciskiem myszy. Jeśli korzysta z tabletu graficznego, powinien przycisnąć rysik do tabletu w interesujących go punktach. Punkty wprowadzane powinny być w kolejności, w której występują w obrysie, zgodnie albo przeciwnie do ruchu wskazówek zegara ) --- Rysunek \ref{fig:11}.
+Użytkownik może wykonywać obrysy w sposób półautomatyczny. W tym celu musi wybrać kartę z obrysami półautomatycznymi (z Manual do Semi-Automatic) --- Rysunek \ref{fig:10}.
 
-\begin{figure}[h]
+\pagebreak
+
+\begin{figure}[h!]
 	\center
-	\includegraphics[width=1\textwidth]{11}
+	\includegraphics[width=0.8\textwidth]{11}
 	\caption{Punkty wybrane do obrysu półauotomatycznego}
     	\label{fig:11}
 \end{figure}
 
-Po wciśnięciu przycisku podgląd obrysu (Preview Contour) użytkownik może zobaczyć wygenerowany przez algorytm obrys. --- Rysunek \ref{fig:12}.
+Aby wybrać punkty do obrysu półautomatycznego użytkownik powinien klikać w interesujące go punkty lewym przyciskiem myszy. Jeśli korzysta z tabletu graficznego, powinien przycisnąć rysik do tabletu w interesujących go punktach. Punkty wprowadzane powinny być w kolejności, w której występują w obrysie, zgodnie albo przeciwnie do ruchu wskazówek zegara --- Rysunek \ref{fig:11}.
 
-\begin{figure}[h]
+\pagebreak
+
+\begin{figure}[h!]
 	\center
-	\includegraphics[width=1\textwidth]{12}
+	\includegraphics[width=0.8\textwidth]{12}
 	\caption{Podgląd obrysu półauotomatycznego}
     	\label{fig:12}
 \end{figure}
 
-Jeśli algorytm popełnił błąd użytkownik może dodać nowe punkty klikając lewym przyciskiem myszy w interesujących go miejscach lub usunąć nietrafnie umieszczone punkty poprzez klikanie na nich lewego przycisku myszy --- Rysunek \ref{fig:13}.
+Po wciśnięciu przycisku podgląd obrysu (Preview Contour) użytkownik może zobaczyć wygenerowany przez algorytm obrys. --- Rysunek \ref{fig:12}.
 
-\begin{figure}[h]
+\pagebreak
+
+\begin{figure}[h!]
 	\center
-	\includegraphics[width=1\textwidth]{13}
+	\includegraphics[width=0.8\textwidth]{13}
 	\caption{Podgląd obrysu półauotomatycznego po dodaniu nowych punktów}
     	\label{fig:13}
 \end{figure}
 
-Gdy wygenerowany obrys jest satysfakcjonujący dla użytkownika, może go zapisać klikając zapisz obrys (Save Contour). Okno zapisu jest analogiczne do okna zapisu obrysu manualnego. Jeśli na obrazie pojawią się krzyżujące krawędzie, należy wyczyścić obrys i wykonać go od początku, gdyż algorytm modyfikujący obrys dodał nowe punkty w złym miejscu lub użytkownik wprowadził punkty w złej kolejności --- Rysunek \ref{fig:14}.
+Jeśli algorytm popełnił błąd użytkownik może dodać nowe punkty klikając lewym przyciskiem myszy w interesujących go miejscach lub usunąć nietrafnie umieszczone punkty poprzez klikanie na nich lewego przycisku myszy --- Rysunek \ref{fig:13}.
 
-\begin{figure}[h]
+\pagebreak
+
+\begin{figure}[h!]
 	\center
-	\includegraphics[width=1\textwidth]{14}
+	\includegraphics[width=0.8\textwidth]{14}
 	\caption{Widok zapisu obrysu półauotomatycznego}
     	\label{fig:14}
 \end{figure}
 
-Po zapisaniu użytkownik może obejrzeć statystyki wykonanego obrysu poprzez kliknięcie lewego przycisku myszy na nazwie obrysu --- Rysunek \ref{fig:15}.
+Gdy wygenerowany obrys jest satysfakcjonujący dla użytkownika, może go zapisać klikając zapisz obrys (Save Contour). Okno zapisu jest analogiczne do okna zapisu obrysu manualnego. Jeśli na obrazie pojawią się krzyżujące krawędzie, należy wyczyścić obrys i wykonać go od początku, gdyż algorytm modyfikujący obrys dodał nowe punkty w złym miejscu lub użytkownik wprowadził punkty w złej kolejności --- Rysunek \ref{fig:14}.
 
-\begin{figure}[h]
+\pagebreak
+
+\begin{figure}[h!]
 	\center
-	\includegraphics[width=1\textwidth]{15}
+	\includegraphics[width=0.8\textwidth]{15}
 	\caption{Podgląd statystyk obrysu}
     	\label{fig:15}
 \end{figure}
 
-Przed wykonaniem obrysu użytkownik może wybrać kolor wykonywanego obrysu. Po wciśnięciu lewym przyciskiem myszy na przycisk wybierz kolor (Choose Color), pojawia się okno wyboru koloru. Użytkownik może wybrać kolor z przygotowanej wcześniej palety kolorów lub wprowadzić dowolny inny korzystając z pól tekstowych, wprowadzając kod RGB wybranego koloru --- Rysunek \ref{fig:16}.
+Po zapisaniu użytkownik może obejrzeć statystyki wykonanego obrysu poprzez kliknięcie lewego przycisku myszy na nazwie obrysu --- Rysunek \ref{fig:15}.
+
+\pagebreak
 
 \begin{figure}[h]
 	\center
-	\includegraphics[width=1\textwidth]{16}
+	\includegraphics[width=0.8\textwidth]{16}
 	\caption{Widok wyboru koloru obrysu}
     	\label{fig:16}
 \end{figure}
 
-W zakładce z podglądem obrysów użytkownik może wyświetlać wybrane przez niego obrysy z listy wykonanych obrysów. Użytkownik wybiera obrysy, które chce zobaczyć. Obrysy, które nie są aktualnie wyświetlane można dodać do obrazu klikając je lewym przyciskiem myszy na nazwie obrysu, a wyświetlane można wyłączyć również poprzez kliknięcie lewego przycisku myszy na nazwie obrysu --- Rysunek \ref{fig:17}.
+Przed wykonaniem obrysu użytkownik może wybrać kolor wykonywanego obrysu. Po wciśnięciu lewym przyciskiem myszy na przycisk wybierz kolor (Choose Color), pojawia się okno wyboru koloru. Użytkownik może wybrać kolor z przygotowanej wcześniej palety kolorów lub wprowadzić dowolny inny korzystając z pól tekstowych, wprowadzając kod RGB wybranego koloru --- Rysunek \ref{fig:16}.
+
+\pagebreak
 
 \begin{figure}[h]
 	\center
-	\includegraphics[width=1\textwidth]{17}
+	\includegraphics[width=0.8\textwidth]{17}
 	\caption{Widok wielu obrysów}
     	\label{fig:17}
 \end{figure}
 
-Interfejs wyświetla również informacje dotyczące pacjenta i jego badania oraz wyświetlanego obrazu --- Rysunek \ref{fig:18}.
+W zakładce z podglądem obrysów użytkownik może wyświetlać wybrane przez niego obrysy z listy wykonanych obrysów. Użytkownik wybiera obrysy, które chce zobaczyć. Obrysy, które nie są aktualnie wyświetlane można dodać do obrazu klikając je lewym przyciskiem myszy na nazwie obrysu, a wyświetlane można wyłączyć również poprzez kliknięcie lewego przycisku myszy na nazwie obrysu --- Rysunek \ref{fig:17}.
 
+\pagebreak
 \begin{figure}[h]
 	\center
-	\includegraphics[width=1\textwidth]{18}
+	\includegraphics[width=0.8\textwidth]{18}
 	\caption{Widok szczegółów obrazu}
     	\label{fig:18}
 \end{figure}
 
-Poprzez wciśnięcie przycisku anonimizuj (Anonymize) użytkownik może wybrać nazwę pacjenta, datę jego urodzenia oraz płeć po anonimizacji jego danych --- Rysunek \ref{fig:19}.
+Interfejs wyświetla również informacje dotyczące pacjenta i jego badania oraz wyświetlanego obrazu --- Rysunek \ref{fig:18}.
+
+
+\pagebreak
 
 \begin{figure}[h]
 	\center
-	\includegraphics[width=1\textwidth]{19}
+	\includegraphics[width=0.8\textwidth]{19}
 	\caption{Anonimizacja danych pacjenta}
     	\label{fig:19}
 \end{figure}
+
+Poprzez wciśnięcie przycisku anonimizuj (Anonymize) użytkownik może wybrać nazwę pacjenta, datę jego urodzenia oraz płeć po anonimizacji jego danych --- Rysunek \ref{fig:19}.
 
 % --- 9. Wykaz symboli i skrótów - jeśli nie ma, zakomentować
 \chapter*{Wykaz symboli i skrótów}
@@ -1256,42 +1221,42 @@ Poprzez wciśnięcie przycisku anonimizuj (Anonymize) użytkownik może wybrać 
 \addcontentsline{toc}{chapter}{Wykaz symboli i skrótów}
 
 
-\begin{tabular}{cl}
-API & ang. Application Programming Interface \\
-CRUD & ang. Create, Read, Update, Delete \\
-CSV & ang. Comma-Separated Values (w pracy użyte w kontekście formatu pliku) \\
-DoS & ang. Denial of Service \\
-DICOM & ang. Digital Imaging and Communications in Medicine \\
-HTML5 & ang. HyperText Markup Language 5 \\
-HTTP & ang. Hypertext Transfer Protocol \\
-HTTPS & ang. Hypertex Transfer Protocol Secure \\
-ID & ang. User Identifier \\
-JSON & ang. JavaScript Object Notation \\
-REST & ang. Representational State Transfer \\
-RGB & ang. Red, Green, Blue \\
-SDK & ang. Software Development Kit \\
-\end{tabular}
+\begin{itemize}[noitemsep]
+\item API -- ang. Application Programming Interface --- zestaw ściśle określonych regół, poprzez które komunikują się ze sobą programy\\
+\item CRUD --- ang. Create, Read, Update, Delete --- utwórz, odczytaj, aktualizuj i usuń -- cztery podstawowe funkcje w aplikacjach, które umożliwiają zarządzanie nią\\
+\item CSV --- ang. Comma-Separated Values (w pracy użyte w kontekście formatu pliku) \\
+\item DoS --- ang. Denial of Service --- atak na system komputerowy mający na celu uniemożliwienie działania systemu\\
+\item DICOM --- ang. Digital Imaging and Communications in Medicine --- norma ujednolicająca wymianę i interpretację obrazowych danych medycznych\\
+\item HTML5 --- ang. HyperText Markup Language 5 --- język do tworzenia i prezentowania stron internetowych www\\
+\item HTTP --- ang. Hypertext Transfer Protocol --- protokół wymiany danych hipertekstowych\\
+\item HTTPS --- ang. Hypertex Transfer Protocol Secure --- szyfrowana wersja protokołu HTTP\\
+\item ID --- ang. Identifier --- unikalna nazwa przypisana do danego obiektu, pozwalająca rozróżniać obiekty w systemie\\
+\item JSON --- ang. JavaScript Object Notation --- lekki format wymiany danych, bazujący na podzbiorze języka JavaScript\\
+\item REST --- ang. Representational State Transfer --- styl architektury oprogramowania dla systemów rozproszonych\\
+\item RGB --- ang. Red, Green, Blue --- model przestrzeni barw, opisanej współrzędnymi 3 barw podstawowych: czerwonej, zielonej i niebieskiej\\
+\item SDK --- ang. Software Development Kit --- zestaw narzędzi programistycznych niezbędny do tworzenia aplikacji korzystającej z danej biblioteki\\
+\end{itemize}
 
 %\thispagestyle{empty}
 
 
 % ----- 10. Spis rysunków - jeśli nie ma, zakomentować --------
-%\listoffigures
-%\markboth{}{Spis rysunków}
-%\addcontentsline{toc}{chapter}{Spis rysunków}
-%%\thispagestyle{empty}
+\listoffigures
+\markboth{}{Spis rysunków}
+\addcontentsline{toc}{chapter}{Spis rysunków}
+%\thispagestyle{empty}
 %Jak nie występują, usunąć.
 
 
 
 
 % ------------ 11. Spis tabel - jak wyżej ------------------
-%\renewcommand{\listtablename}{Spis tabel}
-%\phantomsection
-%\markboth{}{Spis tabel}
-%\addcontentsline{toc}{chapter}{Spis tabel}
-%\istoftables
-%%\thispagestyle{empty}
+\renewcommand{\listtablename}{Spis tabel}
+\phantomsection
+\markboth{}{Spis tabel}
+\addcontentsline{toc}{chapter}{Spis tabel}
+\listoftables
+%\thispagestyle{empty}
 %Jak nie występują, usunąć.
 
 %---- 12. Spis CD
@@ -1305,11 +1270,74 @@ SDK & ang. Software Development Kit \\
 
 \chapter*{Spis załączników}
 \begin{enumerate}
-\item Załącznik 1
-\item Załącznik 2
-\item Jak nie występują, usunąć rozdział.
+\item Załącznik 1 - Pseudokod generujący graf z bitmapy
+
+\begin{verbatim}
+ 1) MATRIX - macierz wejściowa z oznaczonymi krawędziami jako 1
+ 2) foreach(punkt A taki, że MATRIX(A) == 1)
+ 3) {
+ 4)     if ( punkt A ma 1 sąsiada albo co najmniej 3 sąsiadów )
+ 5)     {
+ 6)         // (tzn. jest albo punktem końcowym albo węzłowym)
+ 7)         wstaw punkt A do kolejki wierzchołków L_V
+ 8)         while ( kolejka wierzchołków L_V niepusta )
+ 9)         {
+10)             weź wierzchołek V_1 z kolejki L_V
+11)             usuń V_1 z kolejki L_V
+12)             dodaj wierzchołek V_1 do grafu G
+13)             foreach (punkt B sąsiadujący z V_1 )
+14)             {
+15)                 if ( MATRIX(B) == 1 )
+16)                 {
+17)                     stwórz nową krawędź E.
+18)                     dodaj B do E
+19)                     ustaw wierzchołek V_1 jako początek krawędzi E
+20)                     dodaj krawędź E do kolejki przetwarzanych krawędzi L_E
+21)                 }
+22)                 while ( L_E niepusta)
+23)                 {
+24)                     weź krawędź E z L_E
+25)                     usuń E z kolejki
+26)                     stwórz kolejkę potencjalnych punktów krawędzi E, L_P
+27)                     weź punkt C z E
+28)                     usuń C z E
+29)                     dodaj punkt C do kolejki L_P
+30)                     while ( L_P niepusta )
+31)                     {
+32)                         weź punkt D z L_P
+33)                         usuń D z L_P
+34)                         K = liczba sąsiadów D
+35)                         if ( K == 0 lub K > 1 )
+36)                         {
+37)                             stwórz wierzchołek V_2, który znajduje się w D
+38)                             do listy krawędzi wierzchołka V_2 dodaj E
+39)                             do listy krawędzi wierzchołka V_1 dodaj E
+40)                             ustaw wierzchołek V_2 jako koniec krawędzi E
+41)                             dodaj krawędź E do grafu G
+42)                             dodaj wierzchołek V_2 do kolejki L_V
+43)                         }
+44)                         if ( K == 1 )
+45)                         {
+46)                             dodaj punkt D do E
+47)                             foreach ( punkt F sąsiadujący z D )
+48)                             {
+49)                                 if ( MATRIX(F) == 1)
+50)                                 {
+51)                                     dodaj F do L_P
+52)                                 }
+53)                             }
+54)                         }
+55)                         MATRIX(D) = 1
+56)                     }
+57)                 }
+58)             }
+59)         }
+60)     }
+61) }
+62) Zwróć graf G
+\end{verbatim}
+
 \end{enumerate}
 %\thispagestyle{empty}
-
 
 \end{document}
