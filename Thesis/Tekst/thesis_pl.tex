@@ -376,14 +376,14 @@ Serwer Orthanc udostępnia również prosty interfejs webowy, który pozwala na 
 
 \begin{figure}[h]
 	\center
-	\includegraphics[width=0.8\textwidth]{Orthanc-tags}
+	\includegraphics[width=1\textwidth]{Orthanc-tags}
 	\caption{Podgląd tagów pliku DICOM przez interfejs przeglądarkowy Orthanc}
     	\label{fig:Orthanc-tags}
 \end{figure}
 
 \begin{figure}[h]
 	\center
-	\includegraphics[width=0.8\textwidth]{Orthanc-preview}
+	\includegraphics[width=0.6\textwidth]{Orthanc-preview}
 	\caption{Podgląd obrazu DICOM przez interfejs przeglądarkowy Orthanc}
     	\label{fig:Orthanc-preview}
 \end{figure}
@@ -883,14 +883,151 @@ Do obliczenia histogramu jest wymagany punkt wewnętrzny obrysu. Środek ciężk
 Z tego powodu wybrano algorytm Flood Fill, czyli rozlewania się rekurencyjnego zliczonych pikseli od punktu wewnętrznego. Właśnie z tego powodu od użytkownika jest wymagane podanie dodatkowej informacji, jaką jest punkt wewnętrzny obrysu. Założono, że użytkownik zaznaczy go poprawnie. W sytuacji, gdy zostanie podany błędny punkt to ten algorytm policzy to co znajduje się na zewnątrz obrysu, a nie to co jest wewnątrz.
 
 
+
 \chapter {Przeprowadzone eksperymenty}
+
+Zostały przeprowadzno eksperymenty na stworzonym narzędziu do tworzenia obrysów. W podrozdziałach 4.1 - 4.4 są przedstawione wyniki tych eksperymentów. 
+
+Testy zostały przeprowadzone na komputerze stacjonarnym o następującej specyfikacji:
+\begin{itemize}[noitemsep]
+\item procesor Intel Core i5-7500 o taktowaniu maksymalnym dla jednego rdzenia 3.8 Ghz,
+\item pamięć RAM Corsair Vengeance DDR4 16GB 3000 Mhz ustawiona w tryb 2140 Mhz o opóźnieniach CL15,
+\item płyta główna ASUS STRIX ROG Z270-I,
+\item procesor jest chłodzony powietrzem przez Noctuę NH-L9i, procesor utrzymuje temperatury około 64 stopni Celsjusza przy temperaturze otoczenia około 21 stopni Celsjusza, nie występuje throttling,
+\item system operacyjny Windows 10.
+\end{itemize}
 
 \section {Zbiór testowy}
 
+Na zbiór testowy składały się najróżniejsze pliki. Po pierwsze - są to pliki, które posiada i do których ma prawo użycia Tomasz Świerczewski - jeden z autorów tego narzędzia do tworzenia obrysów. Są to badania medyczne jego osoby lub Pana Wojciecha Świerczewskiego, ojca Pana Tomasza. 
+
+Do testów zostały wykorzystane nastepujące badania: 
+\begin{enumerate}[noitemsep]
+\item badanie rezonansem magnetycznym barku prawego Pana Tomasza Świerczewskiego około 8 tygodni po zwichnięciu stawu ramiennego typu przedniego podkruczego,
+\item zdjęcie rentgenowskie barku prawego Pana Tomasza Świerczewskiego w momencie zwichnięcia stawu ramiennego,
+\item badanie tomografią komputerową kręgosłupa Pana Wojciecha Świerczewskiego,
+\item badanie rezonansem magnetycznym kręgosłupa Pana Wojciecha Świerczewskiego.
+\end{enumerate}
+
+Kolejno te badania będą nazywane Badaniem 1. i tak dalej. Pliki te były wykonane na różnych maszynach, w różnych szpitalach, różnie były zapisywane pliki DICOM. Są to różne badania, od rezonansu magnetycznego do RTG. 
+
+W ramach testów aplikacji oprócz testowania na tych plikach, zostały przeprowadzone testy również na plikach dostarczonych przez Panią Promotor. Zawierały one badania organów wewnętrznych, takich jak wątroba i trzustka jako badanie rezonansem magnetycznym. Dodatkowo znajdowała się tam mammografia.
+
+\section {Analiza działania aplikacji}
+
+Kolejne badania były otwierane przez stworzoną aplikację. Rysunek \ref{fig:112} przedstawia otworzony obraz medyczny Badania 1. z dowolną serią i dowolną klatką, instancją. Rysunek \ref{fig:113} jest odpowiednikiem Badania 2., Rysunek \ref{fig:114} Badania 3., Rysunek \ref{fig:115} Badania 4. 
+
+\begin{figure}[p]
+	\center
+	\includegraphics[width=0.6\textwidth]{112}
+	\caption{Widok badania rezonansem magnetycznego barku}
+    	\label{fig:112}
+\end{figure}
+
+\begin{figure}[p]
+	\center
+	\includegraphics[width=0.6\textwidth]{113}
+	\caption{Widok zdjęcia rentgenowskiego barku}
+    	\label{fig:113}
+\end{figure}
+
+\begin{figure}[p]
+	\center
+	\includegraphics[width=0.6\textwidth]{114}
+	\caption{Widok badania rezonansem magnetycznego kręgosłupa}
+    	\label{fig:114}
+\end{figure}
+
+\begin{figure}[p]
+	\center
+	\includegraphics[width=0.6\textwidth]{115}
+	\caption{Widok badania tomografią komputerową kręgosłupa}
+    	\label{fig:115}
+\end{figure}
+
+Ten test pozwolił sprawdzić, że aplikacja otwiera różne badania medyczne, od rezonansu magnetycznego, przez tomografię komputerową po zdjęcie rentgenowskie. Pokazano tutaj tylko kilka rodzajów badań, choć aplikacja obsługuje też inne np. mammografię. Na każdym z tych obrazów medycznych w wyniku przeprowadzonych testów można robić obrysy. Przykładowy obrysy ręczne i półautomatyczne znajdują się odpowiednio na Rysunku \ref{fig:105} i Rysunku \ref{fig:107}. Ponadto można dostrzec, że są poprawnie generowane statystyki. 
+
+\begin{figure}[p]
+	\center
+	\includegraphics[width=1\textwidth]{105}
+	\caption{Przykładowy obrys ręczny}
+    	\label{fig:105}
+\end{figure}
+
+\begin{figure}[p]
+	\center
+	\includegraphics[width=1\textwidth]{107}
+	\caption{Przykładowy obrys półautomatyczny}
+    	\label{fig:107}
+\end{figure}
+
+
+ 
 \section {Wydajność algorytmu półautomatycznego}
+
+W celu sprawdzenia wydajności stworzonego algorytmu półautomatycznego posłużono się Badaniem 1., czyli badaniem rezonansu magnetycznego barku prawego. 
+
+W pierwszym teście postanowiono sprawdzić czasy generowania obrysu półautomatycznego kości ramiennej w zależności od ilości punktów. Oczekiwano, że obrys będzie wyglądał podobnie do tych z Rysunku \ref{fig:105} i \ref{fig:107}. Był to obrys średniej wielkości. Rozmiar przetwarzanego obrazu w algorytmie prawdopodobnie się nie zmieniał i był to wycinek z obrazu medycznego zawierającego wszystkie te punkty i dodatkowe marginesy.
+
+W trakcie dostawiania kolejnych punktów starano się poprawiać obrys w każdym kroku, tzn. aby wygenerowany obrys jak najlepiej odwzorowywał kość. Przy okazji dodawania kolejnych punktów do tego samego obrysu przetestowano funkcjonalność dodawania kolejnych punktów do obrysu. 
+
+Dla każdej liczby wierzchołków przeprowadzano 10 kolejnych pomiarów generowania tego samego obrysu. Zostało to wykoanen w celu niwelowania efektu różnego podporządkowania procesowi odpowiadającemu za obliczenia różnych priorytetów przez sam procesor. Ekstremalne wyniki zostały przedstawione w postaci słupków błędów, a średnia z 10 pomiarów jako niebieska kropka na wykresach.
+
+Większość z generowanych niżej obrysów było podglądami, czyli bez użycia modułu statystyk. Gdy będzie inaczej, to zostanie to wyraźnie zaznaczone. Czas mierzono poprzez sprawdzanie czasu potrzebnego na wygenerowanie odpowiedzi przez API na otrzymane zapytanie. 
+
+\begin{figure}[h]
+	\center
+	\includegraphics[width=0.8\textwidth]{testy_1}
+	\caption{Czasy generowania obrysu półautomatycznego kości ramiennej w zależności od ilości punktów}
+    	\label{fig:testy_1}
+\end{figure}
+
+Na Rysunku \ref{fig:testy_1} przedstawiono wyniki przeprowadzonych testów. Wraz z dostawianiem kolejnych punktów zmniejszał się czas potrzebny na wygenerowanie obrysu przez serwer. Warto zauważyć, że te czasy zmniejszyły się o około 150 ms. Nie dodawano kolejnych punktów z uwagi na osiągnięcie zadowalającej jakości wygenerowanego obrysu. 
+
+\begin{figure}[h]
+	\center
+	\includegraphics[width=0.8\textwidth]{testy_2}
+	\caption{Czasy generowania obrysu półautomatycznego barku w zależności od ilości punktów}
+    	\label{fig:testy_2}
+\end{figure}
+
+Na Rysunku \ref{fig:testy_2} przedstawiono wyniki dla drugiego z testów. Starano się obrysować cały brak widoczny na obrazie medycznym. W tym celu stawiano kolejne punkty i obserwowano czasy jakie były potrzebne na wygenerowanie obrysu. Starano się wraz z kolejnymi dostawianymi punktami poprawiać generowany obrys. Czasami wybierano takie punkty, aby znalazły się pomiędzy kolejnymi dwoma najbardziej odległymi. Wygenerowany obrys zaprezentowano na Rysunku \ref{fig:108}. Czasy zmieniły się prawie 2 krotnie, z poziomu około 4s do 2s.
+
+\begin{figure}[h]
+	\center
+	\includegraphics[width=0.6\textwidth]{108}
+	\caption{Jeden z wygenerowanych obrysów w trakcie testów}
+    	\label{fig:108}
+\end{figure}
+
+\begin{figure}[h]
+	\center
+	\includegraphics[width=0.8\textwidth]{testy_3}
+	\caption{Czasy generowania obrysu półautomatycznego barku w zależności od ilości punktów drugą metodą}
+    	\label{fig:testy_3}
+\end{figure}
+
+Na poprzednim wykresie można było zauważyć czasami gwałtowne skoki w zmniejszającym się czasie potrzebnym na obliczenia. Mogło to być spowodowane faktem, że zmieniała się maksymalna odległość miedzy kolejnymi punktami. Bliżej to zjawisko zostanie opisane w podrozdziale 4.4. 
+
+Na Rysunku \ref{fig:testy_3} przedstawiono wyniki dla trzeciego testu. Starano się nie ingerować w wspomnianą wcześniej maksymalną odległość poprzez stawianie gęsto kolejnych punktów koło siebie na łuku. W ten sposób próbowano sprawdzić wpływ liczby wywołań algorytmu A* poprzez zmianę liczby punktów na czas obliczeń. 
+
+Uzyskane wyniki są bardzo podobne do poprzednich, choć bez wyraźnych skoków. Czas potrzebny na wygenerowanie obrysu nie spadł tak drastycznie jak w drugim teście, ale spadek był zauważalny, z około 4,7s do 3,7s.
+
+Wraz z zwiększeniem się przestrzeni roboczej obrazu rośnie czas potrzebny na wygenerowanie obrysu. Na podstawie tych wykresów można wysnuć bardzo ciekawe wnioski, które zostaną zaprezentowane w podrodziale 4.4.
 
 \section {Analiza wyników i wnioski}
 
+Wyniki przeprowadzonych testów okazały się bardzo ciekawe. Po pierwsze, gdy generujemy statystyki, to czas potrzebny na obliczenie statystyk zwiększał czas na realizację zapytania o około 30\%. Wiązało się to z odwiedzeniem wszystkich punktów wewnątrz obrysu.
+
+Po drugie wraz z większaniem rozdzielczości zdjęcia lub obrys stawał się coraz większy na obrazach medycznych o wysokiej rozdzielczości, to wzrastał proporcjonalnie czas potrzebny na wygenerowanie obrysu półautomatycznego. Wiązało się to z faktem, że został wykorzystany operator Sobela i Cannego, które wymagają odwiedzenia pewnej liczby pikseli, która odpowiednio się zwiększa. Dla mammografi średniej wielkości obrys był generowany nawet kilkadziesiąt sekund. Dla większości obrysów czasy obliczeń nie przekraczały zakładanych 5 sekund w wymaganiach niefunkcjonalnych. 
+
+Po trzecie wraz z zwiększaniem liczby punktów zmniejsza się czas potrzebny na wygenerowanie obrysu półautomatycznego. Powodowały to dwa oddzielne zjawiska. Pierwsze z nich, czyli maksymalna odległość pomiędzy kolejnymi dwoma punktami wybranymi przez użytkownika. W celu zapewnienia spójności grafu dodawano sztuczne krawędzie, o maksymalnej długości nieprzekraczającej maksymalnej odległości pomiędzy tymi wcześniej wspomnianymi dwoma punktami. Zatem im krótsza była to odległość, tym mniej było dodawanych sztucznych krawędzi. Liczba dodawanych sztucznych krawędzi spadała nawet kilkunastokrotnie. Dla algorytmu A* oznaczało to kilkukrotnie mniejszą liczbę przetwarzanych krawędzi.
+
+Drugim zjawiskiem odpowiedzialnym za zmniejszanie się czasu potrzbnego na wygenrowanie obrysu półautomatycznego wraz z zwiększającą się liczbą punktów był algorytm A*. Początkowo przypuszczano, że zwiększanie liczby wywołań algorytmu A* wraz ze zwrostem liczby punktów będzie generował dodatkowy koszt obliczeniowy, a nie go redukował. Tak może się stać w pesymistycznym przypadku. W realnych obrysach wraz z dodawaniem kolejnych punktów w celu poprawienia jakości obrysu malała złożoność średnia, ponieważ algorytm A* szybciej znajdował prawidłową ścieżkę, nie oddalał się bardzo daleko od wierzchołka źródłowego. Algorytm A* dzięki heurestyce mógł pomijać bardzo dużą liczbę krawędzi, które na pewno nie polepszyłyby rozwiązania.
+
+W ten sposób te dwa zjawiska powodowały, że wraz ze wzrostem liczby punktów wybranych przez użytkownika najczęściej malał czas potrzebny na wygenerowanie obrysu półautomatycznego. Czas dla większych obrysów maleje w sposób znaczących, dla małych obrysów tylko minimalnie. Dzieje się tak dlatego, że operacje na grafach są tylko elementem obliczeń, a wtedy dominującą częścią obliczeń są operacje na przetwarzanym obrazie. Ponadto te czasy zawierają pewne nakłady czasowe, które były potrzebne na przetwarzanie zapytań. 
+
+Wnioski dla użytkownika powinny być takie, że użytkownik powinien unikać bardzo dużych obrysów na zdjęciach o bardzo dużej rozdzielczości, czyli np. mammografii czy zdjęcia rentgenowskiego. Ponadto użytkownik powinien oczekiwać poprawnego działania dla zdjęć o dobrej jakości, ostrych krawędziach i o niskim szumie. W celu poprawienia zarówno jakości jak i wydajności użytkownik powinien stawiać więcej punktów niż mniej. Oczywiście w granicach rozsądku, czyli do kilkunastu zamiast wybierania tylko kilku punktów.
 
 \chapter {Podsumowanie}
 
