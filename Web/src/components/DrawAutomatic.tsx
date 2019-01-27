@@ -329,6 +329,7 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                         guid: null,
                         points: []
                     });
+                    this.props.discardPreview();
                 }}
             >
                 Clear points
