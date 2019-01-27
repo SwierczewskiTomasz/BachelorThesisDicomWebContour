@@ -26,6 +26,16 @@
 
 \hyphenation{DICOM}
 
+%Dodawanie pustych stron
+
+\usepackage{afterpage}
+
+\newcommand\blankpage{%
+    \null
+    \thispagestyle{empty}%
+    %\addtocounter{page}{-1}%
+    \newpage}
+
 % ---------------- Marginesy, akapity, interlinia ------------------
 
 \usepackage[inner=20mm, outer=20mm, bindingoffset=10mm, top=25mm, bottom=25mm]{geometry}
@@ -221,7 +231,7 @@
 %\end{center}
 Niniejszy dokument prezentuje pracę dyplomową inżynierską pod tytułem "\tytul". Celem realizowanym przez autorów pracy jest stworzenie narzędzia informatycznego pozwalającego na manualne oraz półautomatyczne obrysowywanie obrazów medycznych. Zakres pracy obejmuje omówienie: TO CO BĘDZIE WE WSTĘPIE, aktualnego rynku aplikacji pozwalających na przeglądanie i wykonywanie obrysów na obrazach medycznych DICOM, architektury tworzonego systemu i eksperymentów przeprowadzonych w trakcie tworzenia narzędzia. 
 
-Zastosowana architektura umożliwia jednoczesne korzystanie z narzędzia przez wielu użytkowników. Opracowany na potrzeby generowania obrysów algorym wykorzystuje oprerator Canny'ego oraz algorytm wyszukiwania najkrótszych ścieżek w grafie. Obliczane przez system statystyki dotyczące obrysowanych obszarów mogą posłużyć w przyszłości jako parametry wejściowe do metod automatycznego wykrywania podobnych do struktur, dla których obrysy wykonane.
+Zastosowana architektura umożliwia jednoczesne korzystanie z narzędzia przez wielu użytkowników. Opracowany na potrzeby generowania obrysów algorytm wykorzystuje operator Canny'ego oraz algorytm wyszukiwania najkrótszych ścieżek w grafie. Obliczane przez system statystyki dotyczące obrysowanych obszarów mogą posłużyć w przyszłości jako parametry wejściowe do metod automatycznego wykrywania podobnych do struktur, dla których obrysy wykonane.
 
 \noindent \textbf{Słowa kluczowe:} interfejs użytkownika, tablet graficzny, obrazy medyczne, DICOM, obrys, statystyki danych obrazowych, system informatyczny, interfejs REST API, wykrywanie krawędzi, generowanie obrysów
 \end{abstract}
@@ -296,13 +306,56 @@ samodzielnie, co poświadczam własnoręcznym podpisem.
 \markboth{}{Wstęp}
 \addcontentsline{toc}{chapter}{Wstęp}
 
-O czym jest praca? Co się w niej znajduje? Jaki jest wkład autora?
+W ninejszym rozdziale przedstawiono cel pracy inżynierskiej wraz z motywacją, która kierowała autorami przy wyborze właśnie tego tematu. 
+
+\section*{Cel pracy}
+
+Celem niniejszej pracy inżynierskiej jest stworzenie systemu czy też narzędzia informatycznego umożliwiającego tworzenie obrysów plików medycznych. Użytkownik może otwierać pliki medyczne DICOM i dokonywać obrysów manualnych lub półautomatycznych. W przypadku obrysów manualnych użytkownik może tworzyć obrysy w obrysach w celu zaznaczania anormalności. Użytkownik ma mieć zapewnioną możliwość korzystania z tabletu graficznego w celu wygodniejszego rysowania obrysów.
+
+Ma zostać stworzony algorytm półautomatyczny do tworzenia obrysów półautomatycznych. Jest to metoda półautomatyczna, ponieważ jest wspomagana przez człowieka, który wybiera punkty na obrazie medycznym, które algorytm będzie interpolował. Do tego algorytmu półautomatycznego zostanie zastosowane rozwiązanie inspirowane wieloma algorytmami przetwarzania obrazów medycznych, czyli operator Canny'ego i późniejsze przetwarzanie informacji dzięki zastosowania grafów. Zostanie przeprowadzona walidacja, czy ta metoda sprawdza się w celu usprawnienia rysowania obrysów manualnych.
+
+Zaproponowane przez autorów rozwiązanie opiera się na aplikacji przeglądarkowej i serwera przechowującego obrysy. To rozwiązanie powinno być wygodniejsze do użycia w sieciach lokalnych, gdzie użytkownik lub użytkownicy na dowolnej stacji roboczej mogą wykonywać obrysy, a one mają się zapisywać w wspólnym miejscu.  
+
+\section*{Motywacja}
+
+W czasach gwałtownego rozwoju sztucznej inteligencji jest ona stosowana prawie do każdej dziedziny z szeroko pojętej nauki. Jedną z takich dziedzin jest medycyna. Próba odnajdywania w wczesnym stadium różnych niebezpiecznych zmian może ocalić wiele ludzkich istnień, więc obecnie na całym świecie trwają prace nad automatycznymi sposobami wykrywania takich zmian na obrazach medycznych.
+
+W celu odnajdywania obrazów medycznych potrzebna jest wiedza czego szukać, jak odnajdywać narządy i zmiany wewnątrz nich. Z tego powodu potrzeba stworzyć narzędzie, które w wygodny sposób pozwoli nam klasyfikować obrysy wybranych narządów i anormalności medycznych. Na podstawie tych zebranych danych można w dalszej przyszłości tworzyć zaawansowane narzędzia do automatycznej klasyfikacji.
 
 \chapter {Wprowadzenie}
 
+Rozdział ten stanowi wstęp do medycyny pod kątem przetwarzania obrazów medycznych. Wyjaśniono w nim, co to jest plik DICOM i jakie badania są reprezentowane tym formatem pliku. Ponadto opisano podział prac w ramach tego systemu, czy też narzędzia informatycznego.
+
 \section {Zagdanienia medyczne związane z aplikacją}
 
+DICOM (ang. Digital Imaging and Communications in Medicine) \cite{DICOM} to norma opracowana dla potrzeb wymiany i interpretacji danych medycznych, które są najczęściej obrazami medycznymi. W postaci pliku DICOM mogą być zapisywane obrazy tomografii komputerowej, obrazowania metodą rezonansu magnetycznego, cyfrowej angiografii subtrakcyjnej, zdjęcia rentgenowskie, mammografia. Do wad tego standardu należy brak standardu, czyli czasem nie można wyświetlić pliku na sprzęcie innego producenta i należy ręcznie zmieniać parametry. Ten fakt generuje problemy z ewentualnym zapisem obrysu do pliku DICOM, ponieważ w takim przypadku obecnie tylko stworzony w ramach tej pracy system byłby w stanie poprawnie odczytać taki plik DICOM. Ponadto ten standard ma dosyć wysoki próg wejścia, czyli wiedzy potrzebnej na płynne użytkowanie jego, ponieważ może zawierać do 12 tysięcy wskaźników, zwanych tagami.
+
+Do przeglądania plików w formacie standardu DICOM istnieje różne oprogramowanie. Jak każda aplikacje mają swoje wady, ponieważ wiele z nich jest ukierunkowana na jeden typ badania np. do badania tomografii komputerowej, inne nie wspierają plików wygenerowanych na części urządzeń.
+
+Podsumowując, mimo, że DICOM jest standardem pliku obrazu medycznego, to pojawiają się problemy z jego użytkowaniem. 
+
 \section {Podział prac}
+
+Do obowiązków Łukasza Garsteckiego należeć będą:
+
+\begin{itemize}[noitemsep]
+\item zprojektowanie interfejsu użytkownika w aplikacji przeglądarkowej,
+\item wczytywanie plików medycznych do aplikacji przeglądarkowej,
+\item stworzenie modułu anonimizacji danych pacjenta i zmodyfikowaniu plików medycznych,
+\item stworzenie narzędzia do rysowania obrysu manualnego,
+\item stworzenie narzędzia do wybierania punktów do obrysu półautomatycznego,
+\item stworzenie narzędzia do wizualizacji stworzonych obrysów przez użytkownika.
+\end{itemize}
+
+Zadaniami Tomasza Świerczewskiego będą:
+\begin{itemize}[noitemsep]
+\item stworzenie części serwerowej systemu wraz z bazą danych,
+\item opracowanie algorytmu do generowania obrysów półautomatycznych,
+\item stworzenie API, które będzie udostępniało obrysy,
+\item stworzenie modułu statystyk,
+\item przygotowanie i przeprowadzenie eksperymentów.
+\end{itemize}
+
 
 \chapter {Stan wiedzy}
 
@@ -334,7 +387,7 @@ Ponadto twórcy biblioteki Cornerstone Core stworzyli bibliotekę Cornerstone To
 
 Przykładowym projektem korzystającym z bibliotek Cornerstone jest OHIF Viewer. Aplikacja pozwala na wykorzystanie większości możliwości udostępnianych przez biblioteki Cornerstone. Przykładowe użycie aplikacji zostało przedstawione na rysunku \ref{fig:OHIF-example}.
 
-\begin{figure}[h]
+\begin{figure}[t]
 	\includegraphics[width=\textwidth]{OHIF-example}
 	\caption{Przykład użycia aplikacji OHIF Viewer}
     	\label{fig:OHIF-example}
@@ -343,12 +396,6 @@ Przykładowym projektem korzystającym z bibliotek Cornerstone jest OHIF Viewer.
 \subsection {DICOM Web Viewer (DWV)}
 
 Aplikacja DICOM Web Viewer (DWV) \cite{DWV} jest również przykładem aplikacji przeglądarkowej służącej do przeglądania obrazów DICOM z wygodnym interfejsem automatycznego i półautomatycznego obrysowywania interesujących użytkownika obszarów zaznaczonych na obrazie. Przykładowy obrys wykonany przy użyciu aplikacji DWV przedstawiono na rysunku \ref{fig:DWV-interface}.
-
-\begin{figure}[h]
-	\includegraphics[width=\textwidth]{DWV-interface}
-	\caption{Przykład użycia aplikacji DWV - obrys półautomatyczny (Livewire)}
-    	\label{fig:DWV-interface}
-\end{figure}
 
  Poza tym aplikacja udostępnia:
 \begin{itemize}[noitemsep]
@@ -367,27 +414,6 @@ Orthanc to serwer z bazą plików DICOM, który umożliwia łatwe przechowywanie
 
 Serwer Orthanc udostępnia również prosty interfejs webowy, który pozwala na wgrywanie nowych plików (interfejs wgrywania plików przedstawiono na Rysunku \ref{fig:Orthanc-upload}), przeglądanie zapisanych plików --- w szczególności tagów (rysunek \ref{fig:Orthanc-tags}) oraz podglądu obrazu (Rysunek \ref{fig:Orthanc-preview}). Interfejs webowy nie zapewnia żadnej metody rysowania na przeglądanym obrazie. Pozwala natomiast na przełączanie obrazu na kolejny przez kliknięcie lewym przyciskiem myszy w prawą część podglądu obrazu.
 
-\begin{figure}[h]
-	\center
-	\includegraphics[width=0.8\textwidth]{Orthanc-upload}
-	\caption{Interfejs wgrywania plików DICOM do serwera Orthanc}
-    	\label{fig:Orthanc-upload}
-\end{figure}
-
-\begin{figure}[h]
-	\center
-	\includegraphics[width=1\textwidth]{Orthanc-tags}
-	\caption{Podgląd tagów pliku DICOM przez interfejs przeglądarkowy Orthanc}
-    	\label{fig:Orthanc-tags}
-\end{figure}
-
-\begin{figure}[h]
-	\center
-	\includegraphics[width=0.6\textwidth]{Orthanc-preview}
-	\caption{Podgląd obrazu DICOM przez interfejs przeglądarkowy Orthanc}
-    	\label{fig:Orthanc-preview}
-\end{figure}
-
 \subsection {Podsumowanie}
 
 Istniejące rozwiązania nie zapewniają wygodnego interfejsu użytkownikowi, który dysponuje tabletem graficznym i chciałby obrysowywać interesujące go części obrazów medycznych odręcznie. Ponadto żadne z narzędzi nie przechowuje narysowanych manualnie ani wygenerowanych automatycznie obrysów.  Rozwiązanie przedstawione w tej pracy udostępnia takie możliwości.
@@ -398,9 +424,37 @@ Istniejące rozwiązania nie zapewniają wygodnego interfejsu użytkownikowi, kt
 
 W rozwiązaniu zdecydowano się skorzystać z serwera Orthanc jako bazy przechowującej pliki DICOM. Przy decyzji miały znaczenie przede wszystkim to, że jest to popularne narzędzie. Ponadto udostępniane przez API serwera funkcjonalności są wystarczające dla realizowanego systemu.
 
+\begin{figure}[b!]
+	\center
+	\includegraphics[width=0.55\textwidth]{Orthanc-preview}
+	\caption{Podgląd obrazu DICOM przez interfejs przeglądarkowy Orthanc}
+    	\label{fig:Orthanc-preview}
+\end{figure}
+
 Poza serwerem Orthanc stworzono serwer w technologii .NET Core \cite{Dotnet} wspomagający interfejs użytkownika, który pozwala na przeprowadzanie czasochłonnych aplikacji poza interfejsem użytkownika. Podstawowymi zadaniami tego serwera było przechowywanie wykonanych przez użytkownika obrysów manualnych, generowanie i przechowywanie obrysów półautomatycznych oraz obliczanie statystyk związanych z zapisanymi obrysami.
 
 Jako interfejs użytkownika wykorzystano bibliotekę ReactJS \cite{React} w połączeniu z biblioteką Redux. Wybranie tej technologii pozwoliło na stworzenie aplikacji przeglądarkowej pozwalającej na generowanie obrysów manualnych przy użyciu myszy lub tabletu graficznego, wybieranie punktów, z których generowane będą obrysy półautomatyczne, oglądanie wcześniej wygenerowanych i zapisanych obrysów oraz wyświetlanie statystyk dotyczących wykonanego obrysu. Interfejs inspirowany jest podglądem obrazu w aplikacji DWV, ale funkcjonalność automatycznego obrysu została zmieniona --- obrys nie jest generowany na bieżąco, lecz na życzenie użytkownika wybrane przez niego punkty wysyłane są do serwera i wyświetlany jest wynik półautomatycznego dopasowania obrysu.
+
+\begin{figure}[t]
+	\includegraphics[width=1\textwidth]{DWV-interface}
+	\caption{Przykład użycia aplikacji DWV - obrys półautomatyczny (Livewire)}
+    	\label{fig:DWV-interface}
+\end{figure}
+
+\begin{figure}[b]
+	\center
+	\includegraphics[width=0.8\textwidth]{Orthanc-upload}
+	\caption{Interfejs wgrywania plików DICOM do serwera Orthanc}
+    	\label{fig:Orthanc-upload}
+\end{figure}
+
+\begin{figure}[t]
+	\center
+	\includegraphics[width=1\textwidth]{Orthanc-tags}
+	\caption{Podgląd tagów pliku DICOM przez interfejs przeglądarkowy Orthanc}
+    	\label{fig:Orthanc-tags}
+\end{figure}
+
 
 \chapter {Opis autorskiego narzędzia informatycznego}
 
@@ -425,7 +479,7 @@ Do podstawowych funkcjonalności systemu zaliczają się:
 
 \subsection {Wymagania funkcjonalne}
 
-Nieodłącznym elementem inżynierii oprogramowania przy próbie dokumentacji określonego produktu lub usługi, są wymagania funkcjonalne i niefunkcjonalne. Te pierwsze opisują funkcje i możliwości, które system powinien realizować. Zostały przygotowane wymagania funkcjonalne dla tworzonego systemu. Zostały one przedstawione poniżej w postaci historii użytkownika (ang. user stories), czyli czynności jakie może chcieć wykonać użykownik tego systemu.
+Nieodłącznym elementem inżynierii oprogramowania przy próbie dokumentacji określonego produktu lub usługi, są wymagania funkcjonalne i niefunkcjonalne. Te pierwsze opisują funkcje i możliwości, które system powinien realizować. Zostały przygotowane wymagania funkcjonalne dla tworzonego systemu. Zostały one przedstawione poniżej w postaci historii użytkownika (ang. user stories), czyli czynności jakie może chcieć wykonać użytkownik tego systemu.
 \begin{enumerate}
 \item \textbf {Jako użytkownik chcę wczytać obraz DICOM.} \\
 Użytkownik może wybrać obraz w menu bocznym, w którym ma możliwość wyboru pacjenta, badania oraz serii. Wybranie serii skutkuje wyświetleniem pierwszego obrazu DICOM z tej serii.
@@ -505,13 +559,13 @@ Architektura pozwala na połączenie z serwerem plików DICOM (Orthanc) oraz ser
 
 \subsection {Interfejs użytkownika}
 
-Kluczowym elementem stworzonego systemu jest interfejs użytkownika napisany w języku skryptowym JavaScript przy użyciu biblioteki ReactJS. Udostępnia ona interfejs nawigujący po zapisanych w serwerze Orthanc plikach DICOM. Ponadto dla wyświetlonego obrazu udostępnia szczegóły dotyczące obrazu, badania i pacjenta. Umożliwia także wykonanie obrysu manualnego zrealizowanego przy uzyciu biblioteki react-canvas-draw. W aplikacji zawarto również autorski interfejs do wyboru punktów do algorymu półautomatycznego, wykonany z użyciem elementu canvas \cite{Canvas}. Podgląd zapisanych w systemie obrysów wraz z wyliczonymi dla nich statystykami jest możliwy z poziomu tworzenia obrysów oraz w osobnej zakładce, gdzie udostępniono widok, w którym użytkownik może ogladać jednocześnie wybrane przez siebie obrysy z listy obrysów na jednym obrazie.
+Kluczowym elementem stworzonego systemu jest interfejs użytkownika napisany w języku skryptowym JavaScript przy użyciu biblioteki ReactJS. Udostępnia ona interfejs nawigujący po zapisanych w serwerze Orthanc plikach DICOM. Ponadto dla wyświetlonego obrazu udostępnia szczegóły dotyczące obrazu, badania i pacjenta. Umożliwia także wykonanie obrysu manualnego zrealizowanego przy użyciu biblioteki react-canvas-draw. W aplikacji zawarto również autorski interfejs do wyboru punktów do algorytmu półautomatycznego, wykonany z użyciem elementu canvas \cite{Canvas}. Podgląd zapisanych w systemie obrysów wraz z wyliczonymi dla nich statystykami jest możliwy z poziomu tworzenia obrysów oraz w osobnej zakładce, gdzie udostępniono widok, w którym użytkownik może oglądać jednocześnie wybrane przez siebie obrysy z listy obrysów na jednym obrazie.
 
 \subsection {Serwer obrazów Orthanc}
 
-Wyświetlane w interfejsie użytkownika obrazy DICOM oraz związane z nimi informacje przechowyane są przez serwer DICOM. Dostęp do zapisanych na serwerze danych jest możliwy poprzez udostępniane przez serwer API. Interfejs użytkownika wykorzystuje API poprzez protokół HTTP.
+Wyświetlane w interfejsie użytkownika obrazy DICOM oraz związane z nimi informacje przechowywane są przez serwer DICOM. Dostęp do zapisanych na serwerze danych jest możliwy poprzez udostępniane przez serwer API. Interfejs użytkownika wykorzystuje API poprzez protokół HTTP.
 
-API serwera udostępnia dane obrazów posegregowanych względem kolejno: pacjentów, badań oraz serii. Wykorzystano je w interfejsie użykownika do nawigacji pomiędzy obrazami. Dodatkowo dla każdego obrazu serwer udostępnia dane obrazowe, umożliwiając wyświetlenie obrazu w interfejsie użytkownika. Ponadto API udostępnia wszystkie tagi obrazu DICOM, co umożliwia wyświetlanie itrefejsowi użytkownika informacji w nich zawartych.
+API serwera udostępnia dane obrazów posegregowanych względem kolejno: pacjentów, badań oraz serii. Wykorzystano je w interfejsie użytkownika do nawigacji pomiędzy obrazami. Dodatkowo dla każdego obrazu serwer udostępnia dane obrazowe, umożliwiając wyświetlenie obrazu w interfejsie użytkownika. Ponadto API udostępnia wszystkie tagi obrazu DICOM, co umożliwia wyświetlanie interfejsowi użytkownika informacji w nich zawartych.
 
 \subsection {Serwer obrysów i obliczeń}
 Kolejny kluczowy element stworzonego systemu to serwer obrysów i obliczeń. Udostępnia on API z obrysami, które zostało wykorzystane przez interfejs użytkownika. API zostało stworzone przy pomocy ASP.NET Core 2.2 \cite{ASPNET} przy wykorzystaniu frameworka .NET Core 2.2 \cite{Charakterystyka dotnet}. API oferuje 4 podstawowe operacje CRUD - utwórz, odczytaj, aktualizuj i usuń. W celu pobrania zdjęć medycznych serwer z API łączy się do bazy danych Orthanc. Informacje o obrysach, takie jak ID obrysu, tag, ID obrazu medycznego i typ obrysu (półautomatyczny lub manualny) są przechowywane w bazie danych Microsoft SQL Server. Pozostałe informacje, takie jak lista pikseli należących do obrysu, lista punktów w przypadku obrysu półautomatycznego i statystyki są przechowywane w plikach CSV. Te pliki są zapisywane w katalogu roboczym obok miejsca przechowywania plików źródłowych dla API.
@@ -522,7 +576,7 @@ Poza serwerem Orthanc interfejs korzysta także z serwera przechowującego obrys
 
 Obrysy manualne generowane przez użytkowników zapisywane są przez serwer obrysów i obliczeń w postaci plików CSV na dysku serwera. W momencie zapisu obliczane są również statystyki dotyczące obrysowanej części obrazu.
 
-W związku z tym, że obrazy wyświetlane w interfejsie są w innej rozdzielczości niż rzeczywisty rozmiar obrazu, obrysy przed zapisaniem zostają przeskalowane do faktycznych wymiarów obrazu. W przypadku obrazów o małych rozdzielczościach może spowodować to utratę dokładności obrysu, a w przypadku obrysów bardzo małych obszarów zdegradowanie obrysu do jednego piksela. Tego typu straty mogą wpływać na poprawność obliczanych statystyk jak również błędne wyświetlanie zapisanych obrysóww interfejsie użytkownika.
+W związku z tym, że obrazy wyświetlane w interfejsie są w innej rozdzielczości niż rzeczywisty rozmiar obrazu, obrysy przed zapisaniem zostają przeskalowane do faktycznych wymiarów obrazu. W przypadku obrazów o małych rozdzielczościach może spowodować to utratę dokładności obrysu, a w przypadku obrysów bardzo małych obszarów zdegradowanie obrysu do jednego piksela. Tego typu straty mogą wpływać na poprawność obliczanych statystyk jak również błędne wyświetlanie zapisanych obrysów w interfejsie użytkownika.
 
 \section {Opracowany algorytm półautomatyczny}
 
@@ -882,7 +936,7 @@ Do obliczenia histogramu jest wymagany punkt wewnętrzny obrysu. Środek ciężk
 
 Z tego powodu wybrano algorytm Flood Fill, czyli rozlewania się rekurencyjnego zliczonych pikseli od punktu wewnętrznego. Właśnie z tego powodu od użytkownika jest wymagane podanie dodatkowej informacji, jaką jest punkt wewnętrzny obrysu. Założono, że użytkownik zaznaczy go poprawnie. W sytuacji, gdy zostanie podany błędny punkt to ten algorytm policzy to co znajduje się na zewnątrz obrysu, a nie to co jest wewnątrz.
 
-
+\afterpage{\blankpage}
 
 \chapter {Przeprowadzone eksperymenty}
 
@@ -899,12 +953,12 @@ Testy zostały przeprowadzone na komputerze stacjonarnym o następującej specyf
 
 \section {Zbiór testowy}
 
-Na zbiór testowy składały się najróżniejsze pliki. Po pierwsze - są to pliki, które posiada i do których ma prawo użycia Tomasz Świerczewski - jeden z autorów tego narzędzia do tworzenia obrysów. Są to badania medyczne jego osoby lub Pana Wojciecha Świerczewskiego, ojca Pana Tomasza. 
+Na zbiór testowy składały się najróżniejsze pliki. Po pierwsze - są to pliki, które posiada i do których ma prawo użycia Tomasz Świerczewski - jeden z autorów tego narzędzia do tworzenia obrysów. Są to badania medyczne jego osoby lub Pana Wojciecha Świerczewskiego, ojca Tomasza Świerczewskiego. 
 
-Do testów zostały wykorzystane nastepujące badania: 
+Do testów zostały wykorzystane następujące badania: 
 \begin{enumerate}[noitemsep]
-\item badanie rezonansem magnetycznym barku prawego Pana Tomasza Świerczewskiego około 8 tygodni po zwichnięciu stawu ramiennego typu przedniego podkruczego,
-\item zdjęcie rentgenowskie barku prawego Pana Tomasza Świerczewskiego w momencie zwichnięcia stawu ramiennego,
+\item badanie rezonansem magnetycznym barku prawego Tomasza Świerczewskiego około 8 tygodni po zwichnięciu stawu ramiennego typu przedniego podkruczego,
+\item zdjęcie rentgenowskie barku prawego Tomasza Świerczewskiego w momencie zwichnięcia stawu ramiennego,
 \item badanie tomografią komputerową kręgosłupa Pana Wojciecha Świerczewskiego,
 \item badanie rezonansem magnetycznym kręgosłupa Pana Wojciecha Świerczewskiego.
 \end{enumerate}
@@ -971,11 +1025,11 @@ W pierwszym teście postanowiono sprawdzić czasy generowania obrysu półautoma
 
 W trakcie dostawiania kolejnych punktów starano się poprawiać obrys w każdym kroku, tzn. aby wygenerowany obrys jak najlepiej odwzorowywał kość. Przy okazji dodawania kolejnych punktów do tego samego obrysu przetestowano funkcjonalność dodawania kolejnych punktów do obrysu. 
 
-Dla każdej liczby wierzchołków przeprowadzano 10 kolejnych pomiarów generowania tego samego obrysu. Zostało to wykoanen w celu niwelowania efektu różnego podporządkowania procesowi odpowiadającemu za obliczenia różnych priorytetów przez sam procesor. Ekstremalne wyniki zostały przedstawione w postaci słupków błędów, a średnia z 10 pomiarów jako niebieska kropka na wykresach.
+Dla każdej liczby wierzchołków przeprowadzano 10 kolejnych pomiarów generowania tego samego obrysu. Zostało to wykonane w celu niwelowania efektu różnego podporządkowania procesowi odpowiadającemu za obliczenia różnych priorytetów przez sam procesor. Ekstremalne wyniki zostały przedstawione w postaci słupków błędów, a średnia z 10 pomiarów jako niebieska kropka na wykresach.
 
 Większość z generowanych niżej obrysów było podglądami, czyli bez użycia modułu statystyk. Gdy będzie inaczej, to zostanie to wyraźnie zaznaczone. Czas mierzono poprzez sprawdzanie czasu potrzebnego na wygenerowanie odpowiedzi przez API na otrzymane zapytanie. 
 
-\begin{figure}[h]
+\begin{figure}[h!]
 	\center
 	\includegraphics[width=0.8\textwidth]{testy_1}
 	\caption{Czasy generowania obrysu półautomatycznego kości ramiennej w zależności od ilości punktów}
@@ -984,46 +1038,47 @@ Większość z generowanych niżej obrysów było podglądami, czyli bez użycia
 
 Na Rysunku \ref{fig:testy_1} przedstawiono wyniki przeprowadzonych testów. Wraz z dostawianiem kolejnych punktów zmniejszał się czas potrzebny na wygenerowanie obrysu przez serwer. Warto zauważyć, że te czasy zmniejszyły się o około 150 ms. Nie dodawano kolejnych punktów z uwagi na osiągnięcie zadowalającej jakości wygenerowanego obrysu. 
 
-\begin{figure}[h]
+\begin{figure}[h!]
 	\center
 	\includegraphics[width=0.8\textwidth]{testy_2}
 	\caption{Czasy generowania obrysu półautomatycznego barku w zależności od ilości punktów}
     	\label{fig:testy_2}
 \end{figure}
 
-Na Rysunku \ref{fig:testy_2} przedstawiono wyniki dla drugiego z testów. Starano się obrysować cały brak widoczny na obrazie medycznym. W tym celu stawiano kolejne punkty i obserwowano czasy jakie były potrzebne na wygenerowanie obrysu. Starano się wraz z kolejnymi dostawianymi punktami poprawiać generowany obrys. Czasami wybierano takie punkty, aby znalazły się pomiędzy kolejnymi dwoma najbardziej odległymi. Wygenerowany obrys zaprezentowano na Rysunku \ref{fig:108}. Czasy zmieniły się prawie 2 krotnie, z poziomu około 4s do 2s.
-
-\begin{figure}[h]
-	\center
-	\includegraphics[width=0.6\textwidth]{108}
-	\caption{Jeden z wygenerowanych obrysów w trakcie testów}
-    	\label{fig:108}
-\end{figure}
-
-\begin{figure}[h]
+\begin{figure}[htb!]
 	\center
 	\includegraphics[width=0.8\textwidth]{testy_3}
 	\caption{Czasy generowania obrysu półautomatycznego barku w zależności od ilości punktów drugą metodą}
     	\label{fig:testy_3}
 \end{figure}
 
-Na poprzednim wykresie można było zauważyć czasami gwałtowne skoki w zmniejszającym się czasie potrzebnym na obliczenia. Mogło to być spowodowane faktem, że zmieniała się maksymalna odległość miedzy kolejnymi punktami. Bliżej to zjawisko zostanie opisane w podrozdziale 4.4. 
+Na Rysunku \ref{fig:testy_2} przedstawiono wyniki dla drugiego z testów. Starano się obrysować cały brak widoczny na obrazie medycznym. W tym celu stawiano kolejne punkty i obserwowano czasy jakie były potrzebne na wygenerowanie obrysu. Starano się wraz z kolejnymi dostawianymi punktami poprawiać generowany obrys. Czasami wybierano takie punkty, aby znalazły się pomiędzy kolejnymi dwoma najbardziej odległymi. Wygenerowany obrys zaprezentowano na Rysunku \ref{fig:108}. Czasy zmieniły się prawie 2 krotnie, z poziomu około 4s do 2s.
 
-Na Rysunku \ref{fig:testy_3} przedstawiono wyniki dla trzeciego testu. Starano się nie ingerować w wspomnianą wcześniej maksymalną odległość poprzez stawianie gęsto kolejnych punktów koło siebie na łuku. W ten sposób próbowano sprawdzić wpływ liczby wywołań algorytmu A* poprzez zmianę liczby punktów na czas obliczeń. 
+\begin{figure}[h!]
+	\center
+	\includegraphics[width=0.6\textwidth]{108}
+	\caption{Jeden z wygenerowanych obrysów w trakcie testów}
+    	\label{fig:108}
+\end{figure}
+
+
+Na Rysunku \ref{fig:testy_2} można zauważyć czasami gwałtowne skoki w zmniejszającym się czasie potrzebnym na obliczenia. Mogło to być spowodowane faktem, że zmieniała się maksymalna odległość między kolejnymi punktami. Bliżej to zjawisko zostanie opisane w podrozdziale 4.4. 
+
+Na Rysunku \ref{fig:testy_3} przedstawiono wyniki dla trzeciego testu. Starano się nie ingerować w wspomnianą wcześniej maksymalną odległość poprzez stawianie gęsto kolejnych punktów koło siebie na łuku. W ten sposób próbowano sprawdzić wpływ liczby uruchomień algorytmu A* poprzez zmianę liczby punktów na czas obliczeń. 
 
 Uzyskane wyniki są bardzo podobne do poprzednich, choć bez wyraźnych skoków. Czas potrzebny na wygenerowanie obrysu nie spadł tak drastycznie jak w drugim teście, ale spadek był zauważalny, z około 4,7s do 3,7s.
 
-Wraz z zwiększeniem się przestrzeni roboczej obrazu rośnie czas potrzebny na wygenerowanie obrysu. Na podstawie tych wykresów można wysnuć bardzo ciekawe wnioski, które zostaną zaprezentowane w podrodziale 4.4.
+Wraz z zwiększeniem się przestrzeni roboczej obrazu rośnie czas potrzebny na wygenerowanie obrysu. Na podstawie tych wykresów można wysnuć bardzo ciekawe wnioski, które zostaną zaprezentowane w podrozdziale 4.4.
 
 \section {Analiza wyników i wnioski}
 
 Wyniki przeprowadzonych testów okazały się bardzo ciekawe. Po pierwsze, gdy generujemy statystyki, to czas potrzebny na obliczenie statystyk zwiększał czas na realizację zapytania o około 30\%. Wiązało się to z odwiedzeniem wszystkich punktów wewnątrz obrysu.
 
-Po drugie wraz z większaniem rozdzielczości zdjęcia lub obrys stawał się coraz większy na obrazach medycznych o wysokiej rozdzielczości, to wzrastał proporcjonalnie czas potrzebny na wygenerowanie obrysu półautomatycznego. Wiązało się to z faktem, że został wykorzystany operator Sobela i Cannego, które wymagają odwiedzenia pewnej liczby pikseli, która odpowiednio się zwiększa. Dla mammografi średniej wielkości obrys był generowany nawet kilkadziesiąt sekund. Dla większości obrysów czasy obliczeń nie przekraczały zakładanych 5 sekund w wymaganiach niefunkcjonalnych. 
+Po drugie wraz z zwiększaniem rozdzielczości zdjęcia lub obrys stawał się coraz większy na obrazach medycznych o wysokiej rozdzielczości, to wzrastał proporcjonalnie czas potrzebny na wygenerowanie obrysu półautomatycznego. Wiązało się to z faktem, że został wykorzystany operator Sobela i Canny'ego, które wymagają odwiedzenia pewnej liczby pikseli, która odpowiednio się zwiększa. Dla mammografii średniej wielkości obrys był generowany nawet kilkadziesiąt sekund. Dla większości obrysów czasy obliczeń nie przekraczały zakładanych 5 sekund w wymaganiach niefunkcjonalnych. 
 
 Po trzecie wraz z zwiększaniem liczby punktów zmniejsza się czas potrzebny na wygenerowanie obrysu półautomatycznego. Powodowały to dwa oddzielne zjawiska. Pierwsze z nich, czyli maksymalna odległość pomiędzy kolejnymi dwoma punktami wybranymi przez użytkownika. W celu zapewnienia spójności grafu dodawano sztuczne krawędzie, o maksymalnej długości nieprzekraczającej maksymalnej odległości pomiędzy tymi wcześniej wspomnianymi dwoma punktami. Zatem im krótsza była to odległość, tym mniej było dodawanych sztucznych krawędzi. Liczba dodawanych sztucznych krawędzi spadała nawet kilkunastokrotnie. Dla algorytmu A* oznaczało to kilkukrotnie mniejszą liczbę przetwarzanych krawędzi.
 
-Drugim zjawiskiem odpowiedzialnym za zmniejszanie się czasu potrzbnego na wygenrowanie obrysu półautomatycznego wraz z zwiększającą się liczbą punktów był algorytm A*. Początkowo przypuszczano, że zwiększanie liczby wywołań algorytmu A* wraz ze zwrostem liczby punktów będzie generował dodatkowy koszt obliczeniowy, a nie go redukował. Tak może się stać w pesymistycznym przypadku. W realnych obrysach wraz z dodawaniem kolejnych punktów w celu poprawienia jakości obrysu malała złożoność średnia, ponieważ algorytm A* szybciej znajdował prawidłową ścieżkę, nie oddalał się bardzo daleko od wierzchołka źródłowego. Algorytm A* dzięki heurestyce mógł pomijać bardzo dużą liczbę krawędzi, które na pewno nie polepszyłyby rozwiązania.
+Drugim zjawiskiem odpowiedzialnym za zmniejszanie się czasu potrzebnego na wygenerowanie obrysu półautomatycznego wraz z zwiększającą się liczbą punktów był algorytm A*. Początkowo przypuszczano, że zwiększanie liczby uruchomień algorytmu A* wraz ze wzrostem liczby punktów będzie generował dodatkowy koszt obliczeniowy, a nie go redukował. Tak może się stać w pesymistycznym przypadku. W realnych obrysach wraz z dodawaniem kolejnych punktów w celu poprawienia jakości obrysu malała złożoność średnia, ponieważ algorytm A* szybciej znajdował prawidłową ścieżkę, nie oddalał się bardzo daleko od wierzchołka źródłowego. Algorytm A* dzięki heurystyce mógł pomijać bardzo dużą liczbę krawędzi, które na pewno nie polepszyłyby rozwiązania.
 
 W ten sposób te dwa zjawiska powodowały, że wraz ze wzrostem liczby punktów wybranych przez użytkownika najczęściej malał czas potrzebny na wygenerowanie obrysu półautomatycznego. Czas dla większych obrysów maleje w sposób znaczących, dla małych obrysów tylko minimalnie. Dzieje się tak dlatego, że operacje na grafach są tylko elementem obliczeń, a wtedy dominującą częścią obliczeń są operacje na przetwarzanym obrazie. Ponadto te czasy zawierają pewne nakłady czasowe, które były potrzebne na przetwarzanie zapytań. 
 
@@ -1046,7 +1101,7 @@ Podczas projektowania systemu zdecydowano, że obrazy DICOM będą wyświetlane 
 
 Ze względu na złożoność algorytmu używanego do wyznaczania obrysu półautomatycznego wykonywanie obrysów półautomatycznych w obrazach o dużej rozdzielczości przekracza dwukrotnie dopuszczalny czas ustalony w punkcie 5 wymagań niefunkcjonalnych. Czas obliczeń można poprawić poprzez ograniczenie obszaru, w którym wykrywane będą krawędzie, ale nie rozwiąże to problemu z wykonywaniem obrysów o wymiarach zbliżonych do pełnych wymiarów obrazu.
 
-Podczas pracy nad systemem rozważano dodatkowe funkcjonalności, które nie zostały poruszone w tej pracy. Są one potencjalnymi możliwościami rozwoju stworzonego w ramacch tej pracy systemu. Funkcjonalności opisano szczegółowo poniżej.
+Podczas pracy nad systemem rozważano dodatkowe funkcjonalności, które nie zostały poruszone w tej pracy. Są one potencjalnymi możliwościami rozwoju stworzonego w ramach tej pracy systemu. Funkcjonalności opisano szczegółowo poniżej.
 
 W obecnej wersji systemu nie zaimplementowano deskryptorów kształtu obrysu. Zaimplementowanie takich deskryptorów mogłoby dostarczyć dodatkowe informacje na temat wykonanych przez użytkownika obrysów. Taka informacja może w przyszłości dostarczyć dodatkową zmienną, którą można by wykorzystywać w celu trenowania sztucznej inteligencji w zautomatyzowanym wykrywaniu organów, jak również wykrywaniu i sugerowaniu niepokojących zmian.
 
@@ -1054,7 +1109,7 @@ W tej wersji w systemie użytkownicy nie są rozróżnialni. Dodanie użytkownik
 
 Uwierzytelnianie zapobiegłoby również niepowołanemu dostępowi osób postronnych do wykonanych obrysów oraz uniemożliwiłoby ataki typu DoS. W obecnej wersji można poprzez wysyłanie dużej liczby zapytań związanych z generowaniem obrysów półautomatycznych doprowadzić do niedostępności przeprowadzania akcji na serwerze. System jest również podatny na złośliwe działanie mające na celu zapełnienie całej dostępnej serwerowi przestrzeni dyskowej, które może zostać wywołane przez wysłanie dużej liczby zapisów obrysów manualnych.
 
-Z punktu widzenia użytkownika interesujące mogą być informacje wyliczone przez system na temat wykonanych przez niego obrysów. W obecnej wersji systemu, jeśli użyktownik chciałby takie informacje zapisać musiałby samodzielnie przepisać dane wyświetlane w widoku szczegółów obrysu. Zautomatyzowanie takiej funkcjonalności mogłoby zaoszczędzić użytkownikowi wiele czasu.
+Z punktu widzenia użytkownika interesujące mogą być informacje wyliczone przez system na temat wykonanych przez niego obrysów. W obecnej wersji systemu, jeśli użytkownik chciałby takie informacje zapisać musiałby samodzielnie przepisać dane wyświetlane w widoku szczegółów obrysu. Zautomatyzowanie takiej funkcjonalności mogłoby zaoszczędzić użytkownikowi wiele czasu.
 
 Głównym celem wykonywania obrysów na obrazach medycznym jest generowanie zbioru testowego dla różnych metod sztucznej inteligencji mających na celu sugerowanie lekarzom niepokojących zmian wykrytych automatycznie. W związku z tym użytecznym rozszerzeniem funkcjonalności systemu byłoby zintegrowanie go z modułem sztucznej inteligencji i umożliwienie obrysowywania wgrywanych obrazów metodami sztucznej inteligencji opartych na obrysach wykonanych przez użytkownika.
 
@@ -1073,34 +1128,38 @@ Głównym celem wykonywania obrysów na obrazach medycznym jest generowanie zbio
 % \bibitem[numerek]{referencja} Autor, \emph{Tytuł}, Wydawnictwo, rok, strony
 % cytowanie: \cite{referencja1, referencja 2,...}
 %\chapter*{Bibliografia}
+
+\afterpage{\blankpage}
 \phantomsection
 \markboth{}{Bibliografia}
 \addcontentsline{toc}{chapter}{Bibliografia}
 
-\bibitem[1]{Dlaczego react} Nowacki R., Plechawska-Wójcik M.: Analiza porównawcza narzędzi do budowania aplikacji Single Page Application --- AngularJS, ReactJS, Ember.js, \emph{Journal of Computer Sciences Institute 2, Politechnika Lubelska, Instytut Informatyki}, Lublin, 98--103, 2016
-\bibitem[2]{Dotnet} Microsoft Corporation: Dokumentacja platformy .NET. Oficjalna strona: https://docs.microsoft.com/pl-pl/dotnet/ [Dostęp 22 stycznia 2019]
-\bibitem[3]{Charakterystyka dotnet} Microsoft Corporation: Informacje o platformie .NET Core. Oficialna strona: https://docs.microsoft.com/pl-pl/dotnet/core/about [Dostęp 22 stycznia 2019]
-\bibitem[4]{Cyfrowe przetwarzanie obrazów medycznych} Cytowski J., Gielecki J., Gola A.: Cyfrowe przetwarzanie obrazów medycznych: Algorytmy. Technologie. Zastosowania. \emph{Akademicka Oficyna Wydawnicza EXIT}, Warszawa, 88--94, 2008
-\bibitem[5]{Canny} Canny J. F.: Finding Edges and Lines in Images. \emph{Technical report no. 720, Massachusetts Institute of Technology (MIT)}, Cambridge, Massachusetts, USA, 1983.
-\bibitem[6]{Sobel} Sobel I., Feldman G.: An 3x3 Isotropic Image Gradient Operator for Image Processing. \emph {Presentation at Stanford Aartificial Intelligence Project (SAIL) in 1968}, 2014
-\bibitem[7]{Pixel connectivity} Rosenfeld A., Kak A. C.: Digital Picture Processing, \emph{Academic Press, Inc.}, Nowy Jork, 1982
-\bibitem[8]{Moore}  Weisstein, Eric W.: Moore Neighborhood. \emph{From MathWorld--A Wolfram Web Resource.} http://mathworld.wolfram.com/MooreNeighborhood.html  [Dostęp 22 stycznia 2019]
-\bibitem[9]{KMM} Saeed K., Rybnik M., Tabędzki M., Adamski M.: Algorytm do Ścieniania Obrazów: Implementacja i Zastosowania \emph{Zeszyty Naukowe Politechniki Białostockiej 2002 Informatyka - Zeszyt 1}, Białystok, 2002
-\bibitem[10]{K3M} Saeed K., Tabędzki M., Rybnik M., Adamski M.: K3M: A Universal Algorithm for Image Skeletonization and a Review of Thinning Techniques \emph{International Journal of Applied Mathematics and Computer Science, 2010, 20(2)} Białystok, 317--335, 2010
-\bibitem[11]{Algorytmy Sedgewick} Sedgewick R., Wayne K.: Algorytmy Wydanie IV, \emph{Helion}, Gliwice, 526--706, 2012
-\bibitem[12]{C w pigulce} Albahari J., Albahari B.: C 6.0 w pigułce, \emph{Helion, O'Reilly Media, Inc.},Gliwice, page--page, 2016
-\bibitem[13]{A*} Hart P. E., Nilsson N. J., Raphael B.: A Formal Basis for the Heurestic Determination of Minimum Cost Paths \emph{IEEE Transactions on Systems Science and Cybernetics 4(2)}, 100--107, 1968
-\bibitem[14]{AiSD2} Bródka J.: Wykłady z przedmiotu Algorytmy i Struktury Danych 2 \emph{Politechnika Warszawska, Wydział Matematyki i Nauk Informacyjnych} Materiały dostepne na stronie: http://mini.pw.edu.pl/~brodka/ASD2.html [Dostęp 22 stycznia 2019]
-\bibitem[15]{Dotnet struktury} Microsoft Corporation: Dokumentacja rekomendowanych struktur danych platformy .NET. Oficjalna strona: https://docs.microsoft.com/pl-pl/dotnet/standard/collections/ [Dostęp 22 stycznia 2019]
-\bibitem[16]{Bresenham} Bresenham J. E.: Algorithm for computer control of a digital plotter. \emph{ICM System Journal 4(1)} 1965
-\bibitem[17]{ASPNET} Microsoft Corporation: Informacje o platformie ASP.NET Core. Oficialna strona: https://docs.microsoft.com/pl-pl/aspnet/core/?view=aspnetcore-2.2 [Dostęp 22 stycznia 2019]
-\bibitem[18]{Cornerstone Core}  Hafey C.: Dokumentacja projektu Cornerstone Core. Oficjalna strona: https://docs.cornerstonejs.org/ [Dostęp 27 stycznia 2019]
-\bibitem[19]{DWV}  ivmartel: Projekt DICOM Web Viewer. Oficjalna strona: https://ivmartel.github.io/dwv/ [Dostęp 27 stycznia 2019]
-\bibitem[20]{Orthanc}  Osimis S.A.: Projekt Orthanc. Oficjalna strona: https://www.orthanc-server.com/ [Dostęp 27 stycznia 2019]
-\bibitem[21]{DICOM}  National Electrical Manufacturers Association: Standard DICOM. Oficjalna strona: https://www.dicomstandard.org/current/ [Dostęp 27 stycznia 2019]
-\bibitem[22]{React} Facebook Inc.: Informacje o bibliotece ReactJS. Oficjalna strona: https://reactjs.org/ [Dostęp 27 stycznia 2019]
-\bibitem[23]{Canvas} Mozilla and individual contributors: Dokumentacja HTMLCanvasElement. Oficjalna strona: https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/ [Dostęp 27 stycznia 2019]
-\bibitem[24]{Dlaczego dotnet} Kronis K., Uhanova M.: Performance Comparision of Java EE and ASP.NET Core Technologies for Web API Developmnet. \emph{Applied Computer Systems 23, Riga Technical University}, Ryga, 37--44, 2018
+\bibitem[1]{DICOM} Standard DICOM. Oficjalna strona: https://www.dicomstandard.org/ [Dostęp 22 stycznia 2019]
+\bibitem[2]{Dlaczego react} Nowacki R., Plechawska-Wójcik M.: Analiza porównawcza narzędzi do budowania aplikacji Single Page Application --- AngularJS, ReactJS, Ember.js, \emph{Journal of Computer Sciences Institute 2, Politechnika Lubelska, Instytut Informatyki}, Lublin, 98--103, 2016
+\bibitem[3]{Dlaczego dotnet} Kronis K., Uhanova M.: Performance Comparision of Java EE and ASP.NET Core Technologies for Web API Developmnet. \emph{Applied Computer Systems 23, Riga Technical University}, Ryga, 37--44, 2018
+\bibitem[4]{Cornerstone Core}  Hafey C.: Dokumentacja projektu Cornerstone Core. Oficjalna strona: https://docs.cornerstonejs.org/ [Dostęp 27 stycznia 2019]
+\bibitem[5]{DWV}  ivmartel: Projekt DICOM Web Viewer. Oficjalna strona: https://ivmartel.github.io/dwv/ [Dostęp 27 stycznia 2019]
+\bibitem[6]{Orthanc}  Osimis S.A.: Projekt Orthanc. Oficjalna strona: https://www.orthanc-server.com/ [Dostęp 27 stycznia 2019]
+\bibitem[7]{DICOM}  National Electrical Manufacturers Association: Standard DICOM. Oficjalna strona: https://www.dicomstandard.org/current/ [Dostęp 27 stycznia 2019]
+\bibitem[8]{React} Facebook Inc.: Informacje o bibliotece ReactJS. Oficjalna strona: https://reactjs.org/ [Dostęp 27 stycznia 2019]
+\bibitem[9]{Canvas} Mozilla and individual contributors: Dokumentacja HTMLCanvasElement. Oficjalna strona: https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/ [Dostęp 27 stycznia 2019]
+\bibitem[10]{Dotnet} Microsoft Corporation: Dokumentacja platformy .NET. Oficjalna strona: https://docs.microsoft.com/pl-pl/dotnet/ [Dostęp 22 stycznia 2019]
+\bibitem[11]{Charakterystyka dotnet} Microsoft Corporation: Informacje o platformie .NET Core. Oficialna strona: https://docs.microsoft.com/pl-pl/dotnet/core/about [Dostęp 22 stycznia 2019]
+\bibitem[12]{Cyfrowe przetwarzanie obrazów medycznych} Cytowski J., Gielecki J., Gola A.: Cyfrowe przetwarzanie obrazów medycznych: Algorytmy. Technologie. Zastosowania. \emph{Akademicka Oficyna Wydawnicza EXIT}, Warszawa, 88--94, 2008
+\bibitem[13]{Canny} Canny J. F.: Finding Edges and Lines in Images. \emph{Technical report no. 720, Massachusetts Institute of Technology (MIT)}, Cambridge, Massachusetts, USA, 1983.
+\bibitem[14]{Sobel} Sobel I., Feldman G.: An 3x3 Isotropic Image Gradient Operator for Image Processing. \emph {Presentation at Stanford Aartificial Intelligence Project (SAIL) in 1968}, 2014
+\bibitem[15]{Pixel connectivity} Rosenfeld A., Kak A. C.: Digital Picture Processing, \emph{Academic Press, Inc.}, Nowy Jork, 1982
+\bibitem[16]{Moore}  Weisstein, Eric W.: Moore Neighborhood. \emph{From MathWorld--A Wolfram Web Resource.} http://mathworld.wolfram.com/MooreNeighborhood.html  [Dostęp 22 stycznia 2019]
+\bibitem[17]{KMM} Saeed K., Rybnik M., Tabędzki M., Adamski M.: Algorytm do Ścieniania Obrazów: Implementacja i Zastosowania \emph{Zeszyty Naukowe Politechniki Białostockiej 2002 Informatyka - Zeszyt 1}, Białystok, 2002
+\bibitem[18]{K3M} Saeed K., Tabędzki M., Rybnik M., Adamski M.: K3M: A Universal Algorithm for Image Skeletonization and a Review of Thinning Techniques \emph{International Journal of Applied Mathematics and Computer Science, 2010, 20(2)} Białystok, 317--335, 2010
+\bibitem[19]{Algorytmy Sedgewick} Sedgewick R., Wayne K.: Algorytmy Wydanie IV, \emph{Helion}, Gliwice, 526--706, 2012
+\bibitem[20]{C w pigulce} Albahari J., Albahari B.: C 6.0 w pigułce, \emph{Helion, O'Reilly Media, Inc.},Gliwice, page--page, 2016
+\bibitem[21]{A*} Hart P. E., Nilsson N. J., Raphael B.: A Formal Basis for the Heurestic Determination of Minimum Cost Paths \emph{IEEE Transactions on Systems Science and Cybernetics 4(2)}, 100--107, 1968
+\bibitem[22]{AiSD2} Bródka J.: Wykłady z przedmiotu Algorytmy i Struktury Danych 2 \emph{Politechnika Warszawska, Wydział Matematyki i Nauk Informacyjnych} Materiały dostepne na stronie: http://mini.pw.edu.pl/~brodka/ASD2.html [Dostęp 22 stycznia 2019]
+\bibitem[23]{Dotnet struktury} Microsoft Corporation: Dokumentacja rekomendowanych struktur danych platformy .NET. Oficjalna strona: https://docs.microsoft.com/pl-pl/dotnet/standard/collections/ [Dostęp 22 stycznia 2019]
+\bibitem[24]{Bresenham} Bresenham J. E.: Algorithm for computer control of a digital plotter. \emph{ICM System Journal 4(1)} 1965
+\bibitem[25]{ASPNET} Microsoft Corporation: Informacje o platformie ASP.NET Core. Oficialna strona: https://docs.microsoft.com/pl-pl/aspnet/core/?view=aspnetcore-2.2 [Dostęp 22 stycznia 2019]
+
 
 %\bibitem[1]{Ktos} A. Author, \emph{Title of a book}, Publisher, year, page--page.
 %\bibitem[2]{Innyktos} J. Bobkowski, S. Dobkowski, Jak stworzyć bibliografię w BibTeX-u, \emph{Czasopismo nr}, rok, strona--strona.
@@ -1114,7 +1173,7 @@ Głównym celem wykonywania obrysów na obrazach medycznym jest generowanie zbio
 
 
 % --- 8. Instrukcja instalacji
-
+\afterpage{\blankpage}
 \chapter*{Instrukcja instalacji}
 \markboth{}{Instrukcja instalacji}
 \addcontentsline{toc}{chapter}{Instrukcja instalacji}
@@ -1131,7 +1190,7 @@ Ponadto w pliku DotNetProject/Api/Startup.cs należy podać w linii 33 link pod 
 
 W celu uruchomienia serwera obrysów należy przejść do skopiowanego folderu DotNetProject/API i wykonać w konsoli polecenie \texttt{\$ dotnet build \&\& dotnet run}.
 
-Do działania aplikacji przeglądarkowej wymagany jest Node w wersji co najmniej 9.4 oraz yarn w wersji co najmniej 1.10.1, aby zainstalować Node.js należy udać się na stronę \url{https://nodejs.org/en/download/} i wybrać wersję odpowiadającą systemowi z którego korzystamy. Postępować zgodnie ze wskazówkami instalatora. W celu instalacji yarn należy udać się na stronę https://yarnpkg.com/en/docs/install aby pobrać wersję odpowiadającą systemowi, na którym będzie uruchamiana aplikacja i uruchomić instalator.
+Do działania aplikacji przeglądarkowej wymagany jest Node w wersji co najmniej 9.4 oraz yarn w wersji co najmniej 1.10.1, aby zainstalować Node.js należy udać się na stronę \url{https://nodejs.org/en/download/} i wybrać wersję odpowiadającą systemowi, z którego korzystamy. Postępować zgodnie ze wskazówkami instalatora. W celu instalacji yarn należy udać się na stronę https://yarnpkg.com/en/docs/install aby pobrać wersję odpowiadającą systemowi, na którym będzie uruchamiana aplikacja i uruchomić instalator.
 
 W celu konfiguracji portu, na który będzie wystawiona aplikacja webowa należy ustawić odpowiednią liczbę w 4 linii pliku Web/express.js. Przykładowa poprawna konfiguracja:\\
 \texttt{\$ const portNumber = 3000;}
@@ -1359,13 +1418,14 @@ Interfejs wyświetla również informacje dotyczące pacjenta i jego badania ora
 Poprzez wciśnięcie przycisku anonimizuj (Anonymize) użytkownik może wybrać nazwę pacjenta, datę jego urodzenia oraz płeć po anonimizacji jego danych --- Rysunek \ref{fig:19}.
 
 % --- 9. Wykaz symboli i skrótów - jeśli nie ma, zakomentować
+\afterpage{\blankpage}
 \chapter*{Wykaz symboli i skrótów}
 \markboth{}{Wykaz symboli i skrótów}
 \addcontentsline{toc}{chapter}{Wykaz symboli i skrótów}
 
 
 \begin{itemize}[noitemsep]
-\item API -- ang. Application Programming Interface --- zestaw ściśle określonych regół, poprzez które komunikują się ze sobą programy\\
+\item API -- ang. Application Programming Interface --- zestaw ściśle określonych reguł, poprzez które komunikują się ze sobą programy\\
 \item CRUD --- ang. Create, Read, Update, Delete --- utwórz, odczytaj, aktualizuj i usuń -- cztery podstawowe funkcje w aplikacjach, które umożliwiają zarządzanie nią\\
 \item CSV --- ang. Comma-Separated Values (w pracy użyte w kontekście formatu pliku) \\
 \item DoS --- ang. Denial of Service --- atak na system komputerowy mający na celu uniemożliwienie działania systemu\\
@@ -1412,6 +1472,8 @@ Poprzez wciśnięcie przycisku anonimizuj (Anonymize) użytkownik może wybrać 
 % 13. Spis załączników - jak nie ma załączników, to zakomentować lub usunąć
 
 \chapter*{Spis załączników}
+\markboth{}{Spis załączników}
+\addcontentsline{toc}{chapter}{Spis załączników}
 \begin{enumerate}
 \item Załącznik 1 - Pseudokod generujący graf z bitmapy
 
