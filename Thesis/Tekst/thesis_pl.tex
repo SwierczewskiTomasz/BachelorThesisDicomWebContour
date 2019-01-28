@@ -312,17 +312,17 @@ W ninejszym rozdziale przedstawiono cel pracy inżynierskiej wraz z motywacją, 
 
 \section*{Cel pracy}
 
-Celem niniejszej pracy inżynierskiej było stworzenie narzędzia informatycznego umożliwiającego tworzenie obrysów plików medycznych. Użytkownik może otwierać dane obrazowe w formacie DICOM i dokonywać obrysów manualnych lub półautomatycznych wybranych struktur lub anormalności. W przypadku obrysów manualnych użytkownik może tworzyć obrysy w obrysach w celu zaznaczania anormalności. Użytkownik ma mieć zapewnioną możliwość korzystania z tabletu graficznego w celu wygodniejszego rysowania obrysów.
+Celem niniejszej pracy inżynierskiej było stworzenie narzędzia informatycznego umożliwiającego tworzenie obrysów plików medycznych. Użytkownik może otwierać dane obrazowe w formacie DICOM i dokonywać obrysów manualnych lub półautomatycznych wybranych struktur lub anormalności. W przypadku obrysów manualnych użytkownik może tworzyć obrysy w obrysach w celu zaznaczania anormalności w konkretnej tkance. Użytkownik może korzystać z tabletu graficznego w celu wygodniejszego rysowania obrysów.
 
-Został stworzony algorytm półautomatyczny do tworzenia obrysów półautomatycznych. Jest to metoda półautomatyczna, ponieważ jest wspomagana przez człowieka, który wybiera punkty na obrazie medycznym. Algorytm ma za zadanie interpolować punkty wybrane przez użytkownika. Do tego algorytmu półautomatycznego zostanie zastosowane rozwiązanie inspirowane wieloma algorytmami przetwarzania obrazów medycznych, czyli operator Canny'ego i późniejsze przetwarzanie informacji dzięki zastosowania grafów. Zostanie przeprowadzona walidacja, czy ta metoda sprawdza się w celu usprawnienia rysowania obrysów manualnych.
+Został stworzony algorytm półautomatyczny do tworzenia obrysów półautomatycznych. Jest to metoda półautomatyczna, ponieważ jest wspomagana przez człowieka, który wybiera punkty na obrazie medycznym. Algorytm ma za zadanie interpolować punkty wybrane przez użytkownika.  Do tego algorytmu półautomatycznego zostało zastosowane rozwiązanie inspirowane wieloma algorytmami przetwarzania obrazów medycznych, czyli zastosowanie operatora Canny'ego i późniejsze przetwarzanie informacji dzięki zastosowania grafów.
 
-Zaproponowane przez autorów rozwiązanie opiera się na aplikacji przeglądarkowej i serwera przechowującego obrysy. To rozwiązanie powinno być wygodniejsze do użycia w sieciach lokalnych, gdzie użytkownik lub użytkownicy na dowolnej stacji roboczej mogą wykonywać obrysy, a one mają się zapisywać w wspólnym miejscu.
+Zaproponowane przez autorów rozwiązanie opiera się na aplikacji przeglądarkowej i serwera przechowującego obrysy. To rozwiązanie powinno być wygodniejsze do użycia w sieciach lokalnych, gdzie użytkownik lub użytkownicy na dowolnej stacji roboczej mogą wykonywać obrysy, a~one mają się zapisywać we wspólnym miejscu.
 
 \section*{Motywacja}
 
-W czasach gwałtownego rozwoju sztucznej inteligencji jest ona stosowana prawie do każdej dziedziny z szeroko pojętej nauki. Jedną z takich dziedzin jest medycyna. Próba odnajdywania w wczesnym stadium różnych niebezpiecznych zmian może ocalić wiele ludzkich istnień, więc obecnie na całym świecie trwają prace nad automatycznymi sposobami wykrywania takich zmian na obrazach medycznych.
+%W czasach gwałtownego rozwoju sztucznej inteligencji jest ona stosowana prawie do każdej dziedziny z szeroko pojętej nauki. Jedną z takich dziedzin jest medycyna. Próba odnajdywania we wczesnym stadium różnych niebezpiecznych zmian może ocalić wiele ludzkich istnień, więc obecnie na całym świecie trwają prace nad automatycznymi sposobami wykrywania takich zmian na obrazach medycznych.
 
-W celu odnajdywania obrazów medycznych potrzebna jest wiedza czego szukać, jak odnajdywać narządy i zmiany wewnątrz nich. Z tego powodu potrzeba stworzyć narzędzie, które w wygodny sposób pozwoli nam klasyfikować obrysy wybranych narządów i anormalności medycznych. Na podstawie tych zebranych danych można w dalszej przyszłości tworzyć zaawansowane narzędzia do automatycznej klasyfikacji.
+%W celu interpretowania obrazów medycznych potrzebna jest wiedza anatomiczna, jaki i radiologiczna. Z tego powodu potrzeba stworzyć narzędzie, które w wygodny sposób pozwoli nam klasyfikować obrysy wybranych narządów i anormalności medycznych. Na podstawie tych zebranych danych można w dalszej przyszłości tworzyć zaawansowane narzędzia do automatycznej klasyfikacji.
 
 \chapter {Wprowadzenie}
 
