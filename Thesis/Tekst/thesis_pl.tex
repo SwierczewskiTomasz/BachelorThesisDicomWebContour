@@ -229,10 +229,11 @@
 %\begin{center}
 %\tytul
 %\end{center}
-Niniejszy dokument prezentuje pracę dyplomową inżynierską pod tytułem "\tytul". Celem realizowanym przez autorów pracy jest stworzenie narzędzia informatycznego pozwalającego na manualne oraz półautomatyczne obrysowywanie obrazów medycznych. Zakres pracy obejmuje omówienie: omówienie standardu DICOM, aktualnego rynku aplikacji pozwalających na przeglądanie i wykonywanie obrysów na obrazach medycznych DICOM, architektury tworzonego systemu i eksperymentów przeprowadzonych w trakcie tworzenia narzędzia.
+Niniejszy dokument prezentuje pracę dyplomową inżynierską pod tytułem "\tytul". Celem realizowanym przez autorów pracy jest stworzenie narzędzia informatycznego pozwalającego na manualne oraz półautomatyczne obrysowywanie obrazów medycznych. Zakres pracy obejmuje omówienie: omówienie standardu DICOM, przegląd aplikacji dostępnych na rynku, pozwalających na przeglądanie i wykonywanie obrysów na obrazach medycznych DICOM, architektury tworzonego systemu i eksperymentów przeprowadzonych w trakcie tworzenia narzędzia.
 
-Zastosowana architektura umożliwia jednoczesne korzystanie z narzędzia przez wielu użytkowników. Opracowany na potrzeby generowania obrysów algorytm wykorzystuje operator Canny'ego oraz algorytm wyszukiwania najkrótszych ścieżek w grafie. Obliczane przez system statystyki dotyczące obrysowanych obszarów mogą posłużyć w przyszłości jako parametry wejściowe do metod automatycznego wykrywania podobnych do struktur, dla których obrysy wykonane.
-
+Zastosowana architektura umożliwia jednoczesne korzystanie z narzędzia przez wielu użytkowników. Opracowany na potrzeby generowania obrysów algorytm wykorzystuje operator Canny'ego oraz algorytm wyszukiwania najkrótszych ścieżek w grafie. Obliczane przez system statystyki dotyczące obrysowanych obszarów mogą posłużyć w przyszłości jako parametry wejściowe do metod automatycznego wykrywania podobnych do struktur, dla których obrysy są wykonane.
+\\
+\\
 \noindent \textbf{Słowa kluczowe:} interfejs użytkownika, tablet graficzny, obrazy medyczne, DICOM, obrys, statystyki danych obrazowych, system informatyczny, interfejs REST API, wykrywanie krawędzi, generowanie obrysów
 \end{abstract}
 }
@@ -246,7 +247,8 @@ Zastosowana architektura umożliwia jednoczesne korzystanie z narzędzia przez w
 The following document describes bachelor's thesis on "\title". The goal of authors' is to create a digital tool that allows to manually draw and semi-automatically generate contours on medical images. The topics discussed include: discussion of DICOM standard, analysis of state-of-the-art systems and tools used to viewing and creating contours on DICOM medical images, system's architectue and experiments conducted simultaneously with the creation of the tool.
 
 The architecture used enables simultaneous use of the tool by many users. The algorithm developed for te purpose of generating contourse uses Canny's Operator and the algorithm of searching the shortest path in the graph. The statistics calculated by the system regarding the areas limited by contourcan be used in future as input parameters for methods of automatic detection of similar structures for which contours have been made.
-
+\\
+\\
 \noindent \textbf{Keywords:} user interface, graphics tablet, medical images, DICOM, contour, statistics of image data, IT system, REST API interface, edge detection, contour generation
 \end{abstract}
 }
@@ -310,9 +312,9 @@ W ninejszym rozdziale przedstawiono cel pracy inżynierskiej wraz z motywacją, 
 
 \section*{Cel pracy}
 
-Celem niniejszej pracy inżynierskiej jest stworzenie systemu czy też narzędzia informatycznego umożliwiającego tworzenie obrysów plików medycznych. Użytkownik może otwierać pliki medyczne DICOM i dokonywać obrysów manualnych lub półautomatycznych. W przypadku obrysów manualnych użytkownik może tworzyć obrysy w obrysach w celu zaznaczania anormalności. Użytkownik ma mieć zapewnioną możliwość korzystania z tabletu graficznego w celu wygodniejszego rysowania obrysów.
+Celem niniejszej pracy inżynierskiej było stworzenie narzędzia informatycznego umożliwiającego tworzenie obrysów plików medycznych. Użytkownik może otwierać dane obrazowe w formacie DICOM i dokonywać obrysów manualnych lub półautomatycznych wybranych struktur lub anormalności. W przypadku obrysów manualnych użytkownik może tworzyć obrysy w obrysach w celu zaznaczania anormalności. Użytkownik ma mieć zapewnioną możliwość korzystania z tabletu graficznego w celu wygodniejszego rysowania obrysów.
 
-Ma zostać stworzony algorytm półautomatyczny do tworzenia obrysów półautomatycznych. Jest to metoda półautomatyczna, ponieważ jest wspomagana przez człowieka, który wybiera punkty na obrazie medycznym, które algorytm będzie interpolował. Do tego algorytmu półautomatycznego zostanie zastosowane rozwiązanie inspirowane wieloma algorytmami przetwarzania obrazów medycznych, czyli operator Canny'ego i późniejsze przetwarzanie informacji dzięki zastosowania grafów. Zostanie przeprowadzona walidacja, czy ta metoda sprawdza się w celu usprawnienia rysowania obrysów manualnych.
+Został stworzony algorytm półautomatyczny do tworzenia obrysów półautomatycznych. Jest to metoda półautomatyczna, ponieważ jest wspomagana przez człowieka, który wybiera punkty na obrazie medycznym. Algorytm ma za zadanie interpolować punkty wybrane przez użytkownika. Do tego algorytmu półautomatycznego zostanie zastosowane rozwiązanie inspirowane wieloma algorytmami przetwarzania obrazów medycznych, czyli operator Canny'ego i późniejsze przetwarzanie informacji dzięki zastosowania grafów. Zostanie przeprowadzona walidacja, czy ta metoda sprawdza się w celu usprawnienia rysowania obrysów manualnych.
 
 Zaproponowane przez autorów rozwiązanie opiera się na aplikacji przeglądarkowej i serwera przechowującego obrysy. To rozwiązanie powinno być wygodniejsze do użycia w sieciach lokalnych, gdzie użytkownik lub użytkownicy na dowolnej stacji roboczej mogą wykonywać obrysy, a one mają się zapisywać w wspólnym miejscu.
 
