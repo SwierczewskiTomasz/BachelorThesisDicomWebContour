@@ -36,6 +36,7 @@
     %\addtocounter{page}{-1}%
     \newpage}
 
+\usepackage{mathtools}
 % ---------------- Marginesy, akapity, interlinia ------------------
 
 \usepackage[inner=20mm, outer=20mm, bindingoffset=10mm, top=25mm, bottom=25mm]{geometry}
@@ -231,7 +232,7 @@
 %\end{center}
 Niniejszy dokument prezentuje pracę dyplomową inżynierską pod tytułem "\tytul". Celem realizowanym przez autorów pracy jest stworzenie narzędzia informatycznego pozwalającego na manualne oraz półautomatyczne obrysowywanie obrazów medycznych. Zakres pracy obejmuje omówienie: omówienie standardu DICOM, przegląd aplikacji dostępnych na rynku, pozwalających na przeglądanie i wykonywanie obrysów na obrazach medycznych DICOM, architektury tworzonego systemu i eksperymentów przeprowadzonych w trakcie tworzenia narzędzia.
 
-Zastosowana architektura umożliwia jednoczesne korzystanie z narzędzia przez wielu użytkowników. Opracowany na potrzeby generowania obrysów algorytm wykorzystuje operator Canny'ego oraz algorytm wyszukiwania najkrótszych ścieżek w grafie. Obliczane przez system statystyki dotyczące obrysowanych obszarów mogą posłużyć w przyszłości jako parametry wejściowe do metod automatycznego wykrywania podobnych do struktur, dla których obrysy są wykonane.
+Zastosowana architektura umożliwia jednoczesne korzystanie z narzędzia przez wielu użytkowników. Opracowany na potrzeby generowania obrysów algorytm wykorzystuje operator Canny'ego oraz algorytm wyszukiwania najkrótszych ścieżek w grafie. Obliczane przez system statystyki dotyczące obrysowanych obszarów mogą posłużyć w przyszłości jako parametry wejściowe do metod automatycznego wykrywania podobnych struktur, dla których obrysy są wykonane.
 \\
 \\
 \noindent \textbf{Słowa kluczowe:} interfejs użytkownika, tablet graficzny, obrazy medyczne, DICOM, obrys, statystyki danych obrazowych, system informatyczny, interfejs REST API, wykrywanie krawędzi, generowanie obrysów
@@ -312,7 +313,7 @@ W ninejszym rozdziale przedstawiono cel pracy inżynierskiej wraz z motywacją, 
 
 \section*{Cel pracy}
 
-Celem niniejszej pracy inżynierskiej było stworzenie narzędzia informatycznego umożliwiającego tworzenie obrysów plików medycznych. Użytkownik może otwierać dane obrazowe w formacie DICOM i dokonywać obrysów manualnych lub półautomatycznych wybranych struktur lub anormalności. W przypadku obrysów manualnych użytkownik może tworzyć obrysy w obrysach w celu zaznaczania anormalności w konkretnej tkance. Użytkownik może korzystać z tabletu graficznego w celu wygodniejszego rysowania obrysów.
+Celem niniejszej pracy inżynierskiej było stworzenie narzędzia informatycznego umożliwiającego tworzenie obrysów plików medycznych. Użytkownik może otwierać dane obrazowe w formacie DICOM i dokonywać obrysów manualnych lub półautomatycznych wybranych struktur lub anormalności. W przypadku obrysów manualnych użytkownik może tworzyć obrysy w obrysach w celu zaznaczenia anormalności w konkretnej tkance. Użytkownik może korzystać z tabletu graficznego w celu wygodniejszego rysowania obrysów.
 
 Został stworzony algorytm półautomatyczny do tworzenia obrysów półautomatycznych. Jest to metoda półautomatyczna, ponieważ jest wspomagana przez człowieka, który wybiera punkty na obrazie medycznym. Algorytm ma za zadanie interpolować punkty wybrane przez użytkownika.  Do tego algorytmu półautomatycznego zostało zastosowane rozwiązanie inspirowane wieloma algorytmami przetwarzania obrazów medycznych, czyli zastosowanie operatora Canny'ego i późniejsze przetwarzanie informacji dzięki zastosowania grafów.
 
@@ -330,26 +331,24 @@ Rozdział ten stanowi wstęp do medycyny pod kątem przetwarzania obrazów medyc
 
 \section {Zagdanienia medyczne związane z aplikacją}
 
-DICOM (ang. Digital Imaging and Communications in Medicine) \cite{DICOM} to norma opracowana dla potrzeb wymiany i interpretacji danych medycznych, które są najczęściej obrazami medycznymi. W postaci pliku DICOM mogą być zapisywane obrazy tomografii komputerowej, obrazowania metodą rezonansu magnetycznego, cyfrowej angiografii subtrakcyjnej, zdjęcia rentgenowskie, mammografia. Do wad tego standardu należy brak standardu, czyli czasem nie można wyświetlić pliku na sprzęcie innego producenta i należy ręcznie zmieniać parametry. Ten fakt generuje problemy z ewentualnym zapisem obrysu do pliku DICOM, ponieważ w takim przypadku obecnie tylko stworzony w ramach tej pracy system byłby w stanie poprawnie odczytać taki plik DICOM. Ponadto ten standard ma dosyć wysoki próg wejścia, czyli wiedzy potrzebnej na płynne użytkowanie jego, ponieważ może zawierać do 12 tysięcy wskaźników, zwanych tagami.
+DICOM (ang. Digital Imaging and Communications in Medicine) \cite{DICOM} to norma opracowana dla potrzeb wymiany i interpretacji danych medycznych, które są najczęściej obrazami medycznymi. W postaci pliku DICOM mogą być zapisywane obrazy tomografii komputerowej, obrazowania metodą rezonansu magnetycznego, cyfrowej angiografii subtrakcyjnej, zdjęcia rentgenowskie, mammografia. Do wad tego rozwiązania należy brak standaryzacji dla urządzeń różnych producentów. Plik DICOM zapisany przez jednego producenta może nie być możliwy do odtworzenia w oprogramowaniu innego producenta. Ten fakt generuje problemy z ewentualnym zapisem obrysu do pliku DICOM, ponieważ w takim przypadku obecnie tylko stworzony w ramach tej pracy system byłby w stanie poprawnie odczytać taki plik DICOM. Ponadto ten standard ma dosyć wysoki próg wejścia, czyli wiedzy potrzebnej na płynne jego użytkowanie, ponieważ może zawierać do 12 tysięcy wskaźników, zwanych tagami.
 
-Do przeglądania plików w formacie standardu DICOM istnieje różne oprogramowanie. Jak każda aplikacje mają swoje wady, ponieważ wiele z nich jest ukierunkowana na jeden typ badania np. do badania tomografii komputerowej, inne nie wspierają plików wygenerowanych na części urządzeń.
-
-Podsumowując, mimo, że DICOM jest standardem pliku obrazu medycznego, to pojawiają się problemy z jego użytkowaniem.
+Do przeglądania plików w formacie standardu DICOM istnieje różne oprogramowanie, które mają jednak swoje wady, ponieważ wiele z nich jest ukierunkowana na jeden typ badania np. do badania tomografii komputerowej, inne nie wspierają plików wygenerowanych na części urządzeń. Podsumowując, mimo, że DICOM jest standardem pliku obrazu medycznego, to pojawiają się problemy z jego użytkowaniem.
 
 \section {Podział prac}
 
-Do obowiązków Łukasza Garsteckiego należeć będą:
+Do obowiązków Łukasza Garsteckiego należało:
 
 \begin{itemize}[noitemsep]
-\item zprojektowanie interfejsu użytkownika w aplikacji przeglądarkowej,
+\item zaprojektowanie interfejsu użytkownika w aplikacji przeglądarkowej,
 \item wczytywanie plików medycznych do aplikacji przeglądarkowej,
-\item stworzenie modułu anonimizacji danych pacjenta i zmodyfikowaniu plików medycznych,
+\item stworzenie modułu anonimizacji danych pacjenta i zmodyfikowanie plików medycznych,
 \item stworzenie narzędzia do rysowania obrysu manualnego,
 \item stworzenie narzędzia do wybierania punktów do obrysu półautomatycznego,
 \item stworzenie narzędzia do wizualizacji stworzonych obrysów przez użytkownika.
 \end{itemize}
 
-Zadaniami Tomasza Świerczewskiego będą:
+Zadaniami Tomasza Świerczewskiego było:
 \begin{itemize}[noitemsep]
 \item stworzenie części serwerowej systemu wraz z bazą danych,
 \item opracowanie algorytmu do generowania obrysów półautomatycznych,
@@ -397,7 +396,7 @@ Przykładowym projektem korzystającym z bibliotek Cornerstone jest OHIF Viewer.
 
 \subsection {DICOM Web Viewer (DWV)}
 
-Aplikacja DICOM Web Viewer (DWV) \cite{DWV} jest również przykładem aplikacji przeglądarkowej służącej do przeglądania obrazów DICOM z wygodnym interfejsem automatycznego i półautomatycznego obrysowywania interesujących użytkownika obszarów zaznaczonych na obrazie. Przykładowy obrys wykonany przy użyciu aplikacji DWV przedstawiono na rysunku \ref{fig:DWV-interface}.
+Aplikacja DICOM Web Viewer (DWV) \cite{DWV} jest również przykładem aplikacji przeglądarkowej służącej do przeglądania obrazów DICOM, z wygodnym interfejsem automatycznego i półautomatycznego obrysowywania interesujących użytkownika obszarów zaznaczonych na obrazie. Przykładowy obrys wykonany przy użyciu aplikacji DWV przedstawiono na rysunku \ref{fig:DWV-interface}.
 
  Poza tym aplikacja udostępnia:
 \begin{itemize}[noitemsep]
@@ -424,7 +423,7 @@ Istniejące rozwiązania nie zapewniają wygodnego interfejsu użytkownikowi, kt
 
 \section {Proponowane rozwiązanie}
 
-W rozwiązaniu zdecydowano się skorzystać z serwera Orthanc jako bazy przechowującej pliki DICOM. Przy decyzji miały znaczenie przede wszystkim to, że jest to popularne narzędzie. Ponadto udostępniane przez API serwera funkcjonalności są wystarczające dla realizowanego systemu.
+W rozwiązaniu zdecydowano się skorzystać z serwera Orthanc jako bazy przechowującej pliki DICOM. Przy decyzji miało znaczenie przede wszystkim to, że jest to narzędzie popularne. Ponadto udostępniane przez API serwera funkcjonalności są wystarczające dla realizowanego systemu.
 
 \begin{figure}[b!]
 	\center
@@ -467,8 +466,9 @@ W poniższym rozdziale zawarto dokumentację techniczną i biznesową tworzonego
 Przed stworzeniem systemu zostały zgromadzone dane dotyczące wymagań stawianych przed tworzonym systemem. Zostały one przedstawione w postaci zgodnej z wymaganiami stawianymi w inżynierii oprogramowania w rozdziałach 3.1.1. - 3.1.3. Wymagania były gromadzone na podstawie wywiadów przeprowadzonych z opiekunem naukowym tej pracy dyplomowej, z lekarzami i ze studentami Warszawskiego Uniwersytetu Medycznego.
 
 \subsection {Opis biznesowy}
+\interfootnotelinepenalty=10000
 
-Celem projektu jest stworzenie interfejsu przyjaznego użytkownikowi, który umożliwi przeglądanie plików DICOM, a także przeprowadzanie na tych plikach obrysów. Prace obejmują stworzenie aplikacji webowej, która udostępni użytkownikowi interfejs komunikujący się z bazą danych Orthanc oraz serwera odpowiedzialnego za przechowywanie wygenerowanych przez użytkownika obrysów oraz wyznaczanie obrysów półautomatycznych.
+Celem projektu jest stworzenie interfejsu przyjaznego użytkownikowi, który umożliwi przeglądanie plików DICOM, a także przeprowadzanie na tych plikach obrysów. Prace obejmują stworzenie aplikacji webowej, która udostępni użytkownikowi interfejs komunikujący się z bazą danych Orthanc. Ponadto prace obejmują stworzenie serwera odpowiedzialnego za przechowywanie wygenerowanych przez użytkownika obrysów oraz wyznaczanie obrysów półautomatycznych.
 
 Do podstawowych funkcjonalności systemu zaliczają się:
 \begin{itemize}[noitemsep]
@@ -476,27 +476,27 @@ Do podstawowych funkcjonalności systemu zaliczają się:
 \item generowanie obrysu manualnego.
 \item generowanie obrysu półautomatycznego na podstawie punktów wybranych przez użytkownika.
 \item zapisywanie wygenerowanych obrysów.
-\item anonimizacja\footnote {Anonimizacja (ang. anonymization) --- operacja mająca na celu usunięcie z danych informacji o pacjentach, które pozwoliłyby na identyfikację danych z tożsamością pacjenta. Są to między innymi: imiona, nazwisko, pesel. Inne tłumaczenia słowa anonymization --- utajnianie, usuwanie danych niejawnych. Z uwagę na fakt, że te tłumaczenia nie oddają dobrze kontekstu, zastosowano kalkę językową.} danych zapisanych w strukturze pliku DICOM.
+\item anonimizacja\footnote {Anonimizacja (ang. anonymization) --- operacja mająca na celu usunięcie z danych informacji o pacjentach, które pozwoliłyby na identyfikację danych z tożsamością pacjenta. Są to między innymi: imiona, nazwisko, pesel. Inne tłumaczenia słowa anonymization --- utajnianie, usuwanie danych niejawnych. Z uwagi na fakt, że te tłumaczenia nie oddają dobrze kontekstu, zastosowano kalkę językową.} danych zapisanych w strukturze pliku DICOM.
 \end{itemize}
 
 \subsection {Wymagania funkcjonalne}
 
-Nieodłącznym elementem inżynierii oprogramowania przy próbie dokumentacji określonego produktu lub usługi, są wymagania funkcjonalne i niefunkcjonalne. Te pierwsze opisują funkcje i możliwości, które system powinien realizować. Zostały przygotowane wymagania funkcjonalne dla tworzonego systemu. Zostały one przedstawione poniżej w postaci historii użytkownika (ang. user stories), czyli czynności jakie może chcieć wykonać użytkownik tego systemu.
+Nieodłącznym elementem inżynierii oprogramowania przy próbie dokumentacji określonego produktu lub usługi, są wymagania funkcjonalne i niefunkcjonalne. Te pierwsze opisują funkcje i możliwości, które system powinien realizować. Zostały przygotowane wymagania funkcjonalne dla tworzonego systemu. Przedstawiono je poniżej w postaci historii użytkownika (ang. user stories), czyli czynności jakie może chcieć wykonać użytkownik tego systemu.
 \begin{enumerate}
 \item \textbf {Jako użytkownik chcę wczytać obraz DICOM.} \\
 Użytkownik może wybrać obraz w menu bocznym, w którym ma możliwość wyboru pacjenta, badania oraz serii. Wybranie serii skutkuje wyświetleniem pierwszego obrazu DICOM z tej serii.
 
 \item \textbf {Jako użytkownik chcę zmienić obraz w serii przy użyciu rolki myszy.} \\
-Po umieszczenie kursora na obrazie przewijanie rolką myszy do góry powoduje zmianę wyświetlanego obrazu na kolejny obraz w serii. Gdy przewijamy rolką myszy do góry na ostatnim obrazie w serii wyświetlany obraz nie zmienia się. Analogicznie przewijanie rolką myszy w dół powoduje zmianę wyświetlanego obrazu na poprzedni obraz w serii, a przewijanie w dół rolką myszy na pierwszym obrazie w serii nie powoduje zmiany obrazu.
+Po umieszczeniu kursora na obrazie, przewijanie rolką myszy do góry powoduje zmianę wyświetlanego obrazu na kolejny obraz w serii. Gdy przewijamy rolką myszy do góry na ostatnim obrazie w serii wyświetlany obraz nie zmienia się. Analogicznie przewijanie rolką myszy w dół powoduje zmianę wyświetlanego obrazu na poprzedni obraz w serii, a przewijanie w dół rolką myszy na pierwszym obrazie w serii nie powoduje zmiany obrazu.
 
 \item \textbf {Jako użytkownik chcę wykonać obrys przy użyciu tabletu graficznego.} \\
-Po umieszczenie kursora na obrazie sterowanym przez tablet graficzny, użytkownik prowadzi kursor po obrazie wykonując obrys bez odrywania końcówki rysika od podkładki. Jeżeli użytkownik nie zakończy obrysu dokładnie w punkcie, w którym go rozpoczął, obrys powinien zakończyć się linią prostą, łączącą punkt końcowy z punktem początkowym.
+Po umieszczeniu kursora na obrazie sterowanym przez tablet graficzny, użytkownik prowadzi kursor po obrazie wykonując obrys bez odrywania końcówki rysika od podkładki. Jeżeli użytkownik nie zakończy obrysu dokładnie w punkcie, w którym go rozpoczął, obrys powinien zakończyć się linią prostą, łączącą punkt końcowy z punktem początkowym.
 
 \item \textbf {Jako użytkownik chcę wygenerować obrys na podstawie wybranych punktów.} \\
-Po umieszczenie kursora na obrazie użytkownik może wybierać punkty, na podstawie których zostanie wygenerowany obrys, poprzez wciśnięcie lewego przycisku myszy w miejscach, w których chce, aby znalazły się punkty. Użytkownik może zobaczyć efekt wygenerowanego przez system obrysu.
+Po umieszczeniu kursora na obrazie użytkownik może wybierać punkty, na podstawie których zostanie wygenerowany obrys, poprzez wciśnięcie lewego przycisku myszy w miejscach, w których chce, aby znalazły się punkty. Użytkownik może zobaczyć efekt wygenerowanego przez system obrysu.
 
 \item \textbf {Jako użytkownik chcę edytować listę punktów, z której wygenerowany zostanie obrys.} \\
-Użytkownik może usunąć wcześniej wybrany punkt po umieszczając nad nim kursor i wciśnięciu lewego przycisku myszy. Użytkownik może dodać nowy punkt do listy punktów poprzez wciśnięcie lewego przycisku myszy w miejscu, w którym chce wstawić punkt.
+Użytkownik może usunąć wcześniej wybrany punkt po umieszczeniu nad nim kursora i wciśnięciu lewego przycisku myszy. Użytkownik może dodać nowy punkt do listy punktów poprzez wciśnięcie lewego przycisku myszy w miejscu, w którym chce wstawić punkt.
 
 \item \textbf {Jako użytkownik chcę wybrać kolor obrysu.} \\
 Użytkownik wybiera kolor z palety kolorów lub może zdefiniować własny kolor poprzez podanie kodu RGB koloru, który chce wybrać.
@@ -553,7 +553,7 @@ Na Rysunku \ref{fig:architektura} przedstawiono architekturę autorskiego system
 \begin{figure}[h]
 	\center
 	\includegraphics[width=1\textwidth]{architektura}
-	\caption{Diiagram UML przedstawiający architekturę autorskiego systemu}
+	\caption{Diagram UML przedstawiający architekturę autorskiego systemu}
     	\label{fig:architektura}
 \end{figure}
 
@@ -600,12 +600,12 @@ Algorytm można podzielić na kilka ważnych etapów:
 \item {wyszukanie najkrótszych ścieżek w grafie.}
 \end{itemize}
 
-Poniżej zostaną przedstawione dokładne rozwiązania dla każdego z tych kroków. Przed rozpoczęciem przetwarzania jest pobierany obraz medyczny o danym wcześniej identyfikatorze z~serwera Orthanc. Jest on podstawą do dalszej pracy algorytmu.
+Poniżej zostaną przedstawione dokładne rozwiązania dla każdego z tych kroków. Przed rozpoczęciem przetwarzania jest pobierany obraz medyczny o danym wcześniej identyfikatorze z~serwera Orthanc. Stawi on podstawę do dalszej pracy algorytmu.
 
 
 \subsection {Wykrycie krawędzi na bitmapie}
 
-Często na obrazach medycznych różnice w charakterystyce poziomów szarości pikseli reprezentujących interesujące nas obiekty są małe, nie są podane dodatkowe informacje o naturze obrazu. Problem opracowania uniwersalnego algorytmu wykrywania krawędzi jest problemem trudnym. Dla wielu algorytmów można znaleźć takie przykłady, że te algorytmy nie wyznaczą poprawnie krawędzi. Te algorytmy muszą spełniać szereg wymagań, które stwierdzają poprawność danego algorytmu, czy też operatora morfologicznego. Zgodnie z Cytowski J. \cite{Cyfrowe przetwarzanie obrazów medycznych} ,,dobry detektor krawędzi powinien spełniać następujące warunki:
+Często na obrazach medycznych różnice w charakterystyce poziomów szarości pikseli reprezentujących interesujące nas obiekty są małe, nie są podane dodatkowe informacje o naturze obrazu. Problem opracowania uniwersalnego algorytmu wykrywania krawędzi jest problemem trudnym. Dla wielu algorytmów można znaleźć odpowiednie przykłady, dla których te algorytmy nie wyznaczą poprawnie krawędzi. Algorytmy wykrywania krawędzi muszą spełniać szereg wymagań, które stwierdzają poprawność danego algorytmu, czy też operatora morfologicznego. Zgodnie z Cytowski J. \cite{Cyfrowe przetwarzanie obrazów medycznych} ,,dobry detektor krawędzi powinien spełniać następujące warunki:
 \begin{itemize}[noitemsep]
 \item {niskie prawdopodobieństwo zaznaczenia punktów nienależących do krawędzi oraz niskie prawdopodobieństwo niezaznaczenia punktów należących do krawędzi,}
 \item {zaznaczone punkty krawędzi powinny być możliwie blisko jej osi,}
@@ -634,11 +634,11 @@ Operator Sobela \cite{Sobel} to metoda wyznaczania gradientu, a więc zarazem kr
 \begin{tabular} { c c }
   Maska rzędów & Maska kolumn \\
 $
-\begin{matrix}
+\begin{matrix*}[r]
 -1 & -2 & -1 \\
 0 & 0 & 0 \\
 1 & 2 & 1
-\end{matrix}$
+\end{matrix*}$
 &
 $\begin{matrix}
 -1 & 0 & 1 \\
@@ -653,7 +653,7 @@ Po wykonaniu tych operacji otrzymano wartości $s_1$ i $s_2$ odpowiednio dla mas
 \centering
 \begin{tabular} { c c }
   Wielkość gradientu & Kierunek krawędzi \\
-$\sqrt{s_1^2 + s_2^2}$ & $\tan^{-1} \Bigg[ {\cfrac{s_1}{s_2}} \Bigg]$
+$\sqrt{s_1^2 + s_2^2}$ & $tg^{-1} \Bigg[ {\cfrac{s_1}{s_2}} \Bigg]$
 \end{tabular}
 \end{table}
 
@@ -763,17 +763,17 @@ z & 1 & z \\
 $,.
 \end{itemize}
 
-Warto zauważyć, że te elementy strukturalne należy obracać o 90, 180 i 270 stopni. Za każdym razem potrzeba wielokrotnie sprawdzać te same piksele. Ponadto należy sprawdzać 8, a nie 4 sąsiadów.
+Warto zauważyć, że te elementy strukturalne należy obracać o 90, 180 i 270 stopni. Za każdym razem trzeba by wielokrotnie sprawdzać te same piksele. Ponadto należy sprawdzać 8, a nie 4 sąsiadów.
 
 Kolejnym problemem jest fakt, że przy spójności 8-krotnej przekształcenie Hit-or-Miss może w najbliższym otoczeniu punktu krzyżowania się krawędzi oznaczyć kilka otaczających punktów, jako punkty węzłowe. Jest to złe rozwiązanie, ponieważ w ten sposób może nawet kilkukrotnie zwiększyć liczbę wierzchołków w grafie, co przełożyłoby się na niską wydajność algorytmu.
 
-Ostatnim problemem z jakim należałoby się wiązać wybierając łączność 8-krotną jest fakt, że macierz wejściową dla tego etapu algorytmu należałby poddać procesowi szkieletyzacji. Najlepiej byłoby w tym celu skorzystać z algorytmu KMM \cite{KMM} lub K3M \cite{K3M}. Te algorytmy musiałyby co najmniej raz przejrzeć całą macierz z wykrytymi krawędziami w optymistycznym przypadku.
+Ostatnim problemem z jakim należałoby się liczyć wybierając łączność 8-krotną jest fakt, że macierz wejściową dla tego etapu algorytmu trzeba by poddać procesowi szkieletyzacji. Najlepiej byłoby w tym celu skorzystać z algorytmu KMM \cite{KMM} lub K3M \cite{K3M}. Te algorytmy musiałyby co najmniej raz przejrzeć całą macierz z wykrytymi krawędziami w optymistycznym przypadku.
 
 \bigskip
 
 Z wyżej wymienionych powodów zdecydowano się na łączność 4-krotną. Przygotowano i zaimplementowano algorytm tworzący graf z bitmapy, a jego pseudokod znajduje się w Załączniku 1. %Poprawić, nie poniżej!!!
 
-Utworzony w ten sposób graf jest grafem nieskierowanym z wagami, gdzie wagi to liczba pikseli, czy też punktów należących do krawędzi. Graf ten może nie być spójny. Ponadto ten graf może nie zawierać wierzchołków, które pokrywają się z punktami wybranymi przez użytkownika.
+Utworzony w ten sposób graf jest grafem nieskierowanym z wagami, gdzie wagi to liczba pikseli, czy też punktów należących do krawędzi. Graf ten może nie być spójny. Ponadto może nie zawierać wierzchołków, które pokrywają się z punktami wybranymi przez użytkownika.
 
 Graf ten zazwyczaj jest rzadki, ponieważ liczba jego krawędzi jest rzędu liczby jego wierzchołków.  Z uwagi na czasami bardzo dużą liczbę wierzchołków --- nawet do kilkudziesięciu tysięcy --- próba implementacji przy pomocy macierzy sąsiedztwa mogłaby spowodować zużycie całej możliwej pamięci operacyjnej. Dla 50 tysięcy wierzchołków program musiałby zadeklarować macierz sąsiedztwa zawierającą 2,5 miliarda komórek. Z tych powodów graf został zaimplementowany przy pomocy list sąsiedztwa.
 
@@ -783,11 +783,11 @@ W przyjętej implementacji każda krawędź zawiera dodatkowo informację o tym,
 
 W pierwszym kroku na tym etapie przetwarzania grafu są dodawane punkty wybrane przez użytkownika do grafu.
 
-Graf, który uzyskano w poprzednim kroku może nie być spójny. Powoduje to fakt, że między punktami wybranymi przez użytkownika mogą nie istnieć ścieżki. W celu zapewnienia spójności grafu należy dodawać sztuczne krawędzie. Zostają one dodawane z większymi wagami, niż wynikałoby to w rzeczywistości z liczebności listy pikseli, które reprezentują, ponieważ ma to na celu używanie z większym priorytetem prawdziwych krawędzi, a nie sztucznych. W sytuacji gdy nie istnieje dobra ścieżka z prawdziwych krawędzi, to zostaną użyte krawędzie sztuczne. Duże wagi dodatkowo będą zmuszały algorytmy wyszukiwania najkrótszych ścieżek w grafie do minimalizowania długości takich fragmentów zawierających sztuczne krawędzie.
+Graf, który uzyskano w poprzednim kroku może nie być spójny. Powoduje to fakt, że między punktami wybranymi przez użytkownika mogą nie istnieć ścieżki. W celu zapewnienia spójności grafu należy dodawać sztuczne krawędzie. Zostają one dodawane z większymi wagami, niż wynikałoby to w rzeczywistości z liczebności listy pikseli, które reprezentują, ponieważ ma to na celu używanie z większym priorytetem prawdziwych krawędzi, a nie sztucznych. W sytuacji gdy nie istnieje dobra ścieżka z prawdziwych krawędzi, zostaną użyte krawędzie sztuczne. Duże wagi dodatkowo będą zmuszały algorytmy wyszukiwania najkrótszych ścieżek w grafie do minimalizowania długości takich fragmentów zawierających sztuczne krawędzie.
 
-Do znajdowania spójnych składowych grafu najczęściej używa się albo algorytmu przeszukiwania grafu w głąb (ang. Depth-first search, w skrócie DFS) lub przeszukiwania grafu wszerz (ang. Breadth-first search, w skrócie BFS) \cite{Algorytmy Sedgewick}. Użyto algorytmu przeszukiwania wszerz, opierając się na przykładowej implementacji w materiałach \cite{AiSD2}. Wykorzystano Queue<T>, a zatem kolejkę, więc jest to przeszukiwanie wszerz. Złożoność obliczeniowa tego algorytmu to $O(|E|)$.
+Do znajdowania spójnych składowych grafu najczęściej używa się algorytmu przeszukiwania grafu w głąb (ang. Depth-first search, w skrócie DFS) lub przeszukiwania grafu wszerz (ang. Breadth-first search, w skrócie BFS) \cite{Algorytmy Sedgewick}. Użyto algorytmu przeszukiwania wszerz, opierając się na przykładowej implementacji w materiałach \cite{AiSD2}. Wykorzystano Queue<T>, a zatem kolejkę, więc jest to przeszukiwanie wszerz. Złożoność obliczeniowa tego algorytmu to $O(|E|)$.
 
-Po wyznaczeniu spójnych składowych grafu dla każdej pary składowych znajdowano taką parę wierzchołków, że odległość między nimi jest minimalna. Jeśli ta odległość była mniejsza niż maksymalna odległość między dwoma dowolnymi punktami zaznaczonymi przez użytkownika, to była dodawana sztuczna krawędź o wadze 2,5 razy większej niż odległość wynikająca z metryki Manhattan pomiędzy tymi dwoma wierzchołkami.
+Po wyznaczeniu spójnych składowych grafu dla każdej pary składowych znajdowano taką parę wierzchołków, żeby odległość między nimi jest minimalna. Jeśli odległość była mniejsza niż maksymalna odległość między dwoma dowolnymi punktami zaznaczonymi przez użytkownika, to była dodawana sztuczna krawędź o wadze 2,5 razy większej niż odległość wynikająca z metryki Manhattan pomiędzy tymi dwoma wierzchołkami.
 
 Przykład zasady działania tej operacji przedstawia poniższy pseudokod:
 
@@ -809,11 +809,11 @@ W ten sposób osiągnięto spójny graf, który zawiera punkty dodane przez uży
 
 \subsection {Wyszukanie najkrótszych ścieżek w grafie}
 
-Na tym etapie została zapewniona spójność grafu. Z całą pewnością istnieje ścieżka pomiędzy punktami wybranymi przez użytkownika, te punkty są osiągalne. Pozostało wybrać najkrótszą ścieżkę łączącą kolejne te punkty. Założono, że jest dana lista punktów wybranych przez użytkownika i zawiera ona kolejne punkty, tzn. pierwszy należy połączyć z drugim, drugi z trzecim, \dots, ostatni z pierwszym.
+Na tym etapie została zapewniona spójność grafu. Z całą pewnością istnieje ścieżka pomiędzy punktami wybranymi przez użytkownika, te punkty są osiągalne. Pozostało wybrać najkrótszą ścieżkę łączącą kolejne punkty. Założono, że jest dana lista punktów wybranych przez użytkownika i zawiera ona kolejne punkty, tzn. pierwszy należy połączyć z drugim, drugi z trzecim, \dots, ostatni z pierwszym.
 
-Warto zaznaczyć, że wyszukiwano ścieżki o minimalnej wadze, czy też o minimalnym koszcie. Z uwagi na fakt, że wagi w grafie są ściśle związane z odległościami to używane jest sformułowanie szukania najkrótszych ścieżek. Wagi w tym grafie są nieujemne. Może istnieć w tym grafie kilka ścieżek z jednego punktu do drugiego o tym samym koszcie, więc algorytm kończy swoje działanie na tym etapie, gdy znajdzie jedną z nich. W tym grafie nie występują krawędzie wielokrotne. Ten graf nie zawiera cykli własnych.
+Warto zaznaczyć, że wyszukiwano ścieżki o minimalnej wadze, czy też o minimalnym koszcie. Z uwagi na fakt, że wagi w grafie są ściśle związane z odległościami to używane jest sformułowanie szukania najkrótszych ścieżek. Wagi w tym grafie są nieujemne. Może w nim istnieć kilka ścieżek z jednego punktu do drugiego o tym samym koszcie, więc algorytm kończy swoje działanie na tym etapie, gdy znajdzie jedną z nich. W tym grafie nie występują krawędzie wielokrotne i nie zawiera cykli własnych.
 
-Do wyszukiwania najkrótszych ścieżek w grafie po zgłębieniu literatury \cite{Algorytmy Sedgewick} i \cite{AiSD2} były rozważane do użycia 2 algorytmy. Był to algorytm Dijkstry i A*. Do algorytmu A* była rozważana heurystyka w postaci odległości miejskiej, Manhattan z wierzchołka $v$ do celu $t$, ozn. $h(v)$.
+Do wyszukiwania najkrótszych ścieżek w grafie, po zgłębieniu literatury \cite{Algorytmy Sedgewick} i \cite{AiSD2} były rozważane do użycia 2 algorytmy. Był to algorytm Dijkstry i A*. Do algorytmu A* była rozważana heurystyka w postaci odległości miejskiej, Manhattan z wierzchołka $v$ do celu $t$, ozn. $h(v)$.
 
 Zgodnie z \cite{AiSD2} ,,Funkcja $h$ musi spełniać następujące warunki:
 
@@ -860,7 +860,7 @@ Do implementacji wyszukiwania najkrótszych ścieżek w grafie na podstawie wyż
 
 Aby maksymalnie dobrze wykorzystać niską złożoność obliczeniową algorytmu A* należało wykorzystać dobre struktury danych do tego algorytmu. Zbiór CLOSE  wymagał szybkiego sprawdzania przynależności. Po przenalizowaniu rekomendowanych struktur danych \cite{Dotnet struktury} został użyty HashSet<T>.
 
-Zbiór Open oferował zastosowanie znacznie bardziej finezyjnych struktur danych. Wymagane było od niego, aby był kolejką priorytetową, czyli aby był sortowany po priorytetach będącymi sumą odległości wierzchołków od źródła i oszacowań odległości tych wierzchołków od celu. Warto zauważyć, że oprócz sortowania często są wstawiane do niego wierzchołki, pobierane, usuwane i modyfikowane wartości priorytetu. Bardzo często jest sprawdzana przynależność i jest wyszukiwanie według klucza.
+Zbiór Open oferował zastosowanie znacznie bardziej finezyjnych struktur danych. Wymagane było od niego, aby był kolejką priorytetową, czyli aby był sortowany po priorytetach będącymi sumą odległości wierzchołków od źródła i oszacowań odległości tych wierzchołków od celu. Warto zauważyć, że oprócz sortowania często są wstawiane do niego wierzchołki, pobierane, usuwane i modyfikowane wartości priorytetu. Bardzo często jest sprawdzana przynależność i wyszukiwanie według klucza.
 
 W \cite{C w pigulce} na stronie 317 znajduje się tabela 7.1. Przedstawia ona porównanie czasów różnych operacji dla różnych klas słownikowych zaimplementowanych w technologii .NET. Najlepszą strukturą danych byłoby SortedDictionary<K,V>, która jest implementowana przez drzewo czerwono-czarne gdyby nie fakt, że jest sortowane po kluczu, a nie tak jak jest potrzebne w tym przypadku sortowanie po wartości. Poszukiwano zatem struktury danych, która sortuje po wartościach i ma łatwy dostęp przez klucz.
 
@@ -890,28 +890,28 @@ W ten sposób w połączeniu tych dwóch podstruktur otrzymujemy strukturę dany
 \begin{itemize}[noitemsep]
 \item dodawanie w czasie $O(n)$,
 \item wyszukiwanie po kluczu w czasie $O(1)$,
-\item wybierz najmniejszy element według wartości w czasie $O(1)$,
+\item wybieranie najmniejszy element według wartości w czasie $O(1)$,
 \item usuwanie w czasie $O(1)$
 \item modyfikowanie jednego elementu w czasie $O(n)$.
 \end{itemize}
 
 Algorytm A* jest uruchamiany dla każdego punktu wybranego przez użytkownika. Wyszukuje on najkrótszą ścieżkę do kolejnego punktu wybranego przez użytkownika. Po wszystkich obliczeniach obrys składa się z poszczególnych ścieżek. Są one konsolidowane i zwracane jako lista pikseli na podstawie danych z krawędzi o listach pikseli, z których jest zbudowana krawędź. W ten sposób jest wykrywany obrys pomiędzy punktami zaznaczonymi przez użytkownika.
 
-W sytuacji, gdy pomiędzy różnymi wierzchołkami nie istnieją prawdziwe krawędzie, albo istnieją tylko w wybranym fragmencie ścieżki łączącej te dwa wierzchołki, to algorytm w miarę możliwości będzie starał się używać prawdziwych krawędzi, dzięki odpowiedniej wadze krawędzi sztucznych. Dzięki sztucznym krawędziom na pewno istnieje droga między kolejnymi punktami, zatem algorytm z całą pewnością zwróci poprawny wynik. Co najwyżej będzie to wielokąt z punktami wybranymi przez użytkownika.
+W sytuacji, gdy pomiędzy różnymi wierzchołkami nie istnieją prawdziwe krawędzie, albo istnieją tylko w wybranym fragmencie ścieżki łączącej te dwa wierzchołki, algorytm w miarę możliwości będzie starał się używać prawdziwych krawędzi, dzięki odpowiedniej wadze krawędzi sztucznych. Dzięki sztucznym krawędziom na pewno istnieje droga między kolejnymi punktami, zatem algorytm z całą pewnością zwróci poprawny wynik. Co najwyżej będzie to wielokąt z punktami wybranymi przez użytkownika.
 
-Algorytm dla sztucznych krawędzi generuje listę pikseli algorytmem Bresenhama \cite{Bresenham}. Jest to algorytm, który dodaje w najbardziej optymalny sposób krawędzie. W celu zapewnienia łączności 4-krotnej jest przeprowadzana operacja morfologiczna z wykrywaniem 2 pikseli po przekątnej z maską 4-pikselową. Gdy zostaną takie piksele wykryte, to na jednym z rogów jest dodawany piksel w celu zapewnienia łączności 4-krotnej.
+Algorytm dla sztucznych krawędzi generuje listę pikseli algorytmem Bresenhama \cite{Bresenham}. Jest to algorytm, który dodaje w najbardziej optymalny sposób krawędzie. W celu zapewnienia łączności 4-krotnej jest przeprowadzana operacja morfologiczna z wykrywaniem 2 pikseli po przekątnej z maską 4-pikselową. Gdy takie piksele zostaną wykryte, to na jednym z rogów jest dodawany piksel w celu zapewnienia łączności 4-krotnej.
 
 \subsection {Optymalizacja}
 
-Większość plików medycznych ma rozdzielczości rzędu kilkaset na kilkaset pikseli, a więc na całym obrazie znajduje się kilkaset tysięcy pikseli. Zdarzają się też pliki w znacznie większej rozdzielczości, a takimi jest między innymi mammografia i zdjęcie rentgenowskie. Na tych obrazach znajduje się do kilkudziesięciu milionów pikseli. W celu sprawnego przetwarzania tych informacji potrzebne były optymalizacje do algorytmu. Zostały dodane usprawnienia, które opisano poniżej.
+Większość plików medycznych ma rozdzielczości rzędu kilkaset na kilkaset pikseli, a więc na całym obrazie znajduje się kilkaset tysięcy pikseli. Zdarzają się też pliki w znacznie większej rozdzielczości, takimi są między innymi mammografia i zdjęcie rentgenowskie. Na tych obrazach znajduje się do kilkudziesięciu milionów pikseli. W celu sprawnego przetwarzania tych informacji potrzebne były optymalizacje do algorytmu. Zostały dodane usprawnienia, które opisano poniżej.
 \begin{enumerate}
 \item \textbf {Zmniejszenie rozmiaru obrazu roboczego} \\
-W pierwszym kroku zmniejszono rozmiar obrazu roboczego. Wyznaczono najmniejszy prostokąt, w którym mieszczą się wszystkie punkty zaznaczone przez użytkownika. Powiększono ten prostokąt o marginesy w taki sposób, by wyjściowy prostokąt nadal był w środku, a pole powiększonego było 4-krotnie większe. Innymi słowami --- dodano marginesy po 50\% szerokości / wysokości do każdego wymiaru. Jeśli rozmiar powiększonego prostokąta jest większe niż obrazu, to nie jest zmieniany obraz roboczy.
-Optymalizując w ten sposób w sytuacji, gdy użytkownik stworzył mały obrys, to rozmiar przetwarzanego obrazu od momentu operatora Sobela jest już najczęściej kilkukrotnie mniejszy, czasami nawet kilkadziesiąt razy. W sytuacji, gdy obrys zajmuje prawie cały obraz medyczny, to nadal musi być przetwarzany cały obraz.
+W pierwszym kroku zmniejszono rozmiar obrazu roboczego. Wyznaczono najmniejszy prostokąt, w którym mieszczą się wszystkie punkty zaznaczone przez użytkownika. Powiększono ten prostokąt o marginesy w taki sposób, by wyjściowy prostokąt nadal był w środku, a pole powiększonego było 4-krotnie większe. Innymi słowami --- dodano marginesy po 50\% szerokości / wysokości do każdego wymiaru. Jeśli rozmiar powiększonego prostokąta jest większy niż obrazu, to nie jest zmieniany obraz roboczy.
+Gdy użytkownik stworzył mały obrys, to rozmiar przetwrzanego obrazu jest także mały. W sytuacji, gdy obrys zajmuje prawie cały obraz medyczny, to nadal musi być przetwarzany cały obraz.
 \item \textbf {Sięganie do pamięci zamiast to bitmapy} \\
-W celu przyśpieszenia działania operatora Sobela i liczenia statystyk zamiast sięgać do bitmapy metodą .GetPixel() na platformie .NET bitmapa została zapisana do tablicy bajtów i był z niej bezpośredni dostęp. Została wykorzystana do tego funkcja .LockBits(). Zysk na tej operacji był kilkudziesięciokrotny. Na późniejszych etapach algorytmu pracowano na macierzy, która nie była już bitmapą, więc operacje te wykonywały się znacznie szybciej.
+W celu przyśpieszenia działania operatora Sobela i liczenia statystyk, zamiast sięgać do bitmapy metodą .GetPixel() na platformie .NET, bitmapa została zapisana do tablicy bajtów i był z niej bezpośredni dostęp. Została wykorzystana do tego funkcja .LockBits(). Zysk na tej operacji był kilkudziesięciokrotny. Na późniejszych etapach algorytmu pracowano na macierzy, która nie była już bitmapą, więc operacje te wykonywały się znacznie szybciej.
 \item \textbf {Dzielenie zbyt długich krawędzi} \\
-W sytuacji, gdy wczytane krawędzie do grafu są bardzo długie, to może zdarzyć się taka sytuacja, że punkt zaznaczony przez użytkownika znajduje się bardzo blisko krawędzi, ale daleko od punktu początkowego lub końcowego krawędzi. W tym celu jest wprowadzony mechanizm dzielenia zbyt długich krawędzi na kilka krótszych.
+W sytuacji, gdy wczytane krawędzie do grafu są bardzo długie, może zdarzyć się taka sytuacja, że punkt zaznaczony przez użytkownika znajduje się bardzo blisko krawędzi, ale daleko od punktu początkowego lub końcowego krawędzi. W tym celu jest wprowadzony mechanizm dzielenia zbyt długich krawędzi na kilka krótszych.
 \item \textbf {Problem z ilością punktów} \\
 Dla każdego punktu jest uruchamiany algorytm A*, zatem w sposób liniowy od ilości punktów zależy liczba uruchomień algorytmu A*. Nie można wyznaczyć, czy w złożoności średniej całego algorytmu algorytm jest zależny liniowo od ilości punktów, czy w sposób logarytmiczny, czy też w sposób stały.
 \end{enumerate}
