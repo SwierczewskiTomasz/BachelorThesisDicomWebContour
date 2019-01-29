@@ -6,7 +6,7 @@ import ChooseColorDialog from "./ChooseColorDialog";
 import { Dispatch } from "redux";
 import { setCurrentInstanceInd } from "../containers/instances/reducers";
 import SendToApiDialog from "./SendToApiDialog";
-import { sendAutomaticContour, Contour, sendPreviewContour, deletePreviewRecord } from "../containers/contours/reducers";
+import { sendAutomaticContour, Contour, sendPreviewContour, deletePreviewRecord, discardPreview } from "../containers/contours/reducers";
 
 export interface DrawAutimaticProps {
     readonly instancesIds: string[];
@@ -15,6 +15,7 @@ export interface DrawAutimaticProps {
     readonly seriesName: string | undefined;
     readonly studyName: string | undefined;
     readonly patientName: string | undefined;
+    readonly discardPreview: () => void;
     readonly setCurrentInd: (ind: number) => void;
     readonly deletePreview: (guid: string) => void;
     readonly sendAutomaticContour: (contour: Contour, centralPoints: Point[], title: string, canvasSize: Size, imgSize: Size) => void;
@@ -150,6 +151,7 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
     }
 
     componentDidMount() {
+        this.props.discardPreview();
         const canvas: any = document.getElementById("canvas");
         // console.log(canvas);
         const context = canvas.getContext("2d");
@@ -327,6 +329,7 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                         guid: null,
                         points: []
                     });
+                    this.props.discardPreview();
                 }}
             >
                 Clear points
@@ -345,6 +348,7 @@ class DrawAutimatic extends React.Component<DrawAutimaticProps, DrawAutimaticSta
                     this.state.points.forEach((pixel) => {
                         context.fillRect(pixel.x, pixel.y, 5, 5);
                     });
+                    this.props.discardPreview();
                 }}
             >
                 Clear generated contour
@@ -376,6 +380,9 @@ export default connect(
         },
         deletePreview: (guid: string) => {
             dispatch(deletePreviewRecord(guid));
+        },
+        discardPreview: () => {
+            dispatch(discardPreview());
         }
     })
 )(DrawAutimatic);
