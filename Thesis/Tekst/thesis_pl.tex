@@ -230,7 +230,7 @@
 %\begin{center}
 %\tytul
 %\end{center}
-Niniejszy dokument prezentuje pracę dyplomową inżynierską pod tytułem "\tytul". Celem realizowanym przez autorów pracy jest stworzenie narzędzia informatycznego pozwalającego na manualne oraz półautomatyczne obrysowywanie obrazów medycznych. Zakres pracy obejmuje omówienie: omówienie standardu DICOM, przegląd aplikacji dostępnych na rynku, pozwalających na przeglądanie i wykonywanie obrysów na obrazach medycznych DICOM, architektury tworzonego systemu i eksperymentów przeprowadzonych w trakcie tworzenia narzędzia.
+Niniejszy dokument prezentuje pracę dyplomową inżynierską pod tytułem "\tytul". Celem realizowanym przez autorów pracy jest stworzenie narzędzia informatycznego pozwalającego na manualne oraz półautomatyczne obrysowywanie obrazów medycznych. Zakres pracy obejmuje omówienie: standardu DICOM, przegląd aplikacji dostępnych na rynku, pozwalających na przeglądanie i wykonywanie obrysów na obrazach medycznych DICOM, architektury tworzonego systemu i eksperymentów przeprowadzonych w trakcie tworzenia narzędzia.
 
 Zastosowana architektura umożliwia jednoczesne korzystanie z narzędzia przez wielu użytkowników. Opracowany na potrzeby generowania obrysów algorytm wykorzystuje operator Canny'ego oraz algorytm wyszukiwania najkrótszych ścieżek w grafie. Obliczane przez system statystyki dotyczące obrysowanych obszarów mogą posłużyć w przyszłości jako parametry wejściowe do metod automatycznego wykrywania podobnych struktur, dla których obrysy są wykonane.
 \\
@@ -313,48 +313,53 @@ W ninejszym rozdziale przedstawiono cel pracy inżynierskiej wraz z motywacją, 
 
 \section*{Cel pracy}
 
-Celem niniejszej pracy inżynierskiej było stworzenie narzędzia informatycznego umożliwiającego tworzenie obrysów plików medycznych. Użytkownik może otwierać dane obrazowe w formacie DICOM i dokonywać obrysów manualnych lub półautomatycznych wybranych struktur lub anormalności. W przypadku obrysów manualnych użytkownik może tworzyć obrysy w obrysach w celu zaznaczenia anormalności w konkretnej tkance. Użytkownik może korzystać z tabletu graficznego w celu wygodniejszego rysowania obrysów.
+Celem niniejszej pracy inżynierskiej było stworzenie narzędzia informatycznego umożliwiającego tworzenie obrysów plików medycznych. Użytkownik może otwierać dane obrazowe w formacie DICOM i dokonywać obrysów manualnych lub półautomatycznych wybranych struktur lub anormalności. W przypadku obrysów manualnych użytkownik może tworzyć obrysy w obrysach w celu zaznaczania anormalności w konkretnej tkance. Użytkownik może korzystać z tabletu graficznego w celu wygodniejszego rysowania obrysów.
 
-Został stworzony algorytm półautomatyczny do tworzenia obrysów półautomatycznych. Jest to metoda półautomatyczna, ponieważ jest wspomagana przez człowieka, który wybiera punkty na obrazie medycznym. Algorytm ma za zadanie interpolować punkty wybrane przez użytkownika.  Do tego algorytmu półautomatycznego zostało zastosowane rozwiązanie inspirowane wieloma algorytmami przetwarzania obrazów medycznych, czyli zastosowanie operatora Canny'ego i późniejsze przetwarzanie informacji dzięki zastosowania grafów.
+Został stworzony algorytm półautomatyczny do tworzenia obrysów półautomatycznych. Jest to metoda półautomatyczna, ponieważ jest wspomagana przez człowieka, który wybiera punkty na obrazie medycznym. Algorytm ma za zadanie interpolować punkty wybrane przez użytkownika. Do algorytmu półautomatycznego generowania obrysu zostało zastosowane rozwiązanie inspirowane wieloma algorytmami przetwarzania obrazów medycznych. W szczególności został użyty operator Canny'ego, a następnie dane przetwarzanie są poprzez algrtymty grafowe. Została przeprowadzona walidacja, czy ta metoda sprawdza się w celu usprawnienia rysowania obrysów manualnych.
 
-Zaproponowane przez autorów rozwiązanie opiera się na aplikacji przeglądarkowej i serwera przechowującego obrysy. To rozwiązanie powinno być wygodniejsze do użycia w sieciach lokalnych, gdzie użytkownik lub użytkownicy na dowolnej stacji roboczej mogą wykonywać obrysy, a~one mają się zapisywać we wspólnym miejscu.
+Zaproponowane przez autorów rozwiązanie opiera się na aplikacji przeglądarkowej i serwera przechowującego obrysy. To rozwiązanie pozwala na użycie go sieciach lokalnych, gdzie użytkownik lub użytkownicy na dowolnej stacji roboczej mogą wykonywać obrysy, które zapisywane są na wspólnym dla wszystkich użytkowników serwerze.
 
 \section*{Motywacja}
 
-%W czasach gwałtownego rozwoju sztucznej inteligencji jest ona stosowana prawie do każdej dziedziny z szeroko pojętej nauki. Jedną z takich dziedzin jest medycyna. Próba odnajdywania we wczesnym stadium różnych niebezpiecznych zmian może ocalić wiele ludzkich istnień, więc obecnie na całym świecie trwają prace nad automatycznymi sposobami wykrywania takich zmian na obrazach medycznych.
+W czasach gwałtownego rozwoju sztucznej inteligencji jest ona stosowana prawie do każdej dziedziny z szeroko pojętej nauki. Jedną z takich dziedzin jest medycyna. Próba odnajdywania we wczesnym stadium różnych niebezpiecznych zmian może ocalić wiele ludzkich istnień. Obecnie na całym świecie trwają prace nad automatycznymi sposobami wykrywania takich zmian na obrazach medycznych.
 
-%W celu interpretowania obrazów medycznych potrzebna jest wiedza anatomiczna, jaki i radiologiczna. Z tego powodu potrzeba stworzyć narzędzie, które w wygodny sposób pozwoli nam klasyfikować obrysy wybranych narządów i anormalności medycznych. Na podstawie tych zebranych danych można w dalszej przyszłości tworzyć zaawansowane narzędzia do automatycznej klasyfikacji.
+W celu interpretowania obrazów medycznych potrzebna jest wiedza anatomiczna, jak i radiologiczna. Z tego powodu potrzeba stworzyć narzędzie, które w wygodny sposób pozwoli nam wykonywać obrysy wybranych narządów i anormalności medycznych. Na podstawie wykonanych obrysów będzie można w przyszłości tworzyć zaawansowane narzędzia do automatycznej klasyfikacji.
 
 \chapter {Wprowadzenie}
 
-Rozdział ten stanowi wstęp do medycyny pod kątem przetwarzania obrazów medycznych. Wyjaśniono w nim, co to jest plik DICOM i jakie badania są reprezentowane tym formatem pliku. Ponadto opisano podział prac w ramach tego systemu, czy też narzędzia informatycznego.
+Rozdział ten stanowi wstęp do medycyny pod kątem przetwarzania obrazów medycznych. Wyjaśniono w nim, co to jest plik DICOM i jakie badania są reprezentowane tym formatem pliku. Ponadto opisano podział prac wykonanych w trakcie tworzenia narzędzia informatycznego.
 
 \section {Zagdanienia medyczne związane z aplikacją}
 
-DICOM (ang. Digital Imaging and Communications in Medicine) \cite{DICOM} to norma opracowana dla potrzeb wymiany i interpretacji danych medycznych, które są najczęściej obrazami medycznymi. W postaci pliku DICOM mogą być zapisywane obrazy tomografii komputerowej, obrazowania metodą rezonansu magnetycznego, cyfrowej angiografii subtrakcyjnej, zdjęcia rentgenowskie, mammografia. Do wad tego rozwiązania należy brak standaryzacji dla urządzeń różnych producentów. Plik DICOM zapisany przez jednego producenta może nie być możliwy do odtworzenia w oprogramowaniu innego producenta. Ten fakt generuje problemy z ewentualnym zapisem obrysu do pliku DICOM, ponieważ w takim przypadku obecnie tylko stworzony w ramach tej pracy system byłby w stanie poprawnie odczytać taki plik DICOM. Ponadto ten standard ma dosyć wysoki próg wejścia, czyli wiedzy potrzebnej na płynne jego użytkowanie, ponieważ może zawierać do 12 tysięcy wskaźników, zwanych tagami.
+DICOM (ang. Digital Imaging and Communications in Medicine) \cite{DICOM} to norma opracowana dla potrzeb wymiany i interpretacji danych medycznych, które są najczęściej obrazami medycznymi. W postaci pliku DICOM mogą być zapisywane obrazy tomografii komputerowej, obrazowania metodą rezonansu magnetycznego, cyfrowej angiografii subtrakcyjnej, zdjęcia rentgenowskie, mammografia i wiele innych badań. Do wad tego standardu należy różnorodność metod implementacji. Powoduje to czasem sytuacje, w których nie można wyświetlić pliku na sprzęcie innego producenta, ze względu na różnice w sposobie implementacji. W takich sytuacjach należy ręcznie modyfikować pliki DICOM, aby mogły być poprawnie obsłużone. Z tego powodu zapis obrysu do pliku DICOM jest utrudniony --- nie istnieją obecnie narzędzia umożliwiające odczytanie zapisanego obrysu. Ponadto ilość tagów zawartych w pliku DICOM stanowi barierę w sprawnym korzystaniu z tak zapisanych wyników badań.
 
-Do przeglądania plików w formacie standardu DICOM istnieje różne oprogramowanie, które mają jednak swoje wady, ponieważ wiele z nich jest ukierunkowana na jeden typ badania np. do badania tomografii komputerowej, inne nie wspierają plików wygenerowanych na części urządzeń. Podsumowując, mimo, że DICOM jest standardem pliku obrazu medycznego, to pojawiają się problemy z jego użytkowaniem.
+Obecnie na rynku istnieje wiele aplikacji pozwalających na przeglądanie plików DICOM. Wśród nich nie istnieje aplikacja uniwersalna, w pełni obsługująca wszystkie badania diagnostyczne.
+
+ DICOM jest standardem pliku obrazu medycznego, jednakże pojawiają się istotne problemy z jego użytkowaniem.
 
 \section {Podział prac}
 
-Do obowiązków Łukasza Garsteckiego należało:
+Ze względu na złożoność realiowanego narzędzia dokonano podziału zdań pomiędzy członków zespołu.
+
+Łukasz Garstecki wykonał:
 
 \begin{itemize}[noitemsep]
-\item zaprojektowanie interfejsu użytkownika w aplikacji przeglądarkowej,
-\item wczytywanie plików medycznych do aplikacji przeglądarkowej,
-\item stworzenie modułu anonimizacji danych pacjenta i zmodyfikowanie plików medycznych,
-\item stworzenie narzędzia do rysowania obrysu manualnego,
-\item stworzenie narzędzia do wybierania punktów do obrysu półautomatycznego,
-\item stworzenie narzędzia do wizualizacji stworzonych obrysów przez użytkownika.
+\item interfejs użytkownika w aplikacji przeglądarkowej,
+\item obsługę wczytywania plików medycznych do aplikacji przeglądarkowej,
+\item moduł anonimizacji danych pacjenta i modyfikacji plików medycznych,
+\item narzędzie do rysowania obrysu manualnego,
+\item narzędzie do wybierania punktów obrysu półautomatycznego,
+\item narzędzie do wizualizacji stworzonych obrysów przez użytkownika.
 \end{itemize}
 
-Zadaniami Tomasza Świerczewskiego było:
+Tomasz Świerczewski wykonał:
+
 \begin{itemize}[noitemsep]
-\item stworzenie części serwerowej systemu wraz z bazą danych,
-\item opracowanie algorytmu do generowania obrysów półautomatycznych,
-\item stworzenie API, które będzie udostępniało obrysy,
-\item stworzenie modułu statystyk,
-\item przygotowanie i przeprowadzenie eksperymentów.
+\item serwer zapisujący i generujący obrysy wraz z bazą danych,
+\item algorytm germerujący obrysy półautomatyczne,
+\item REST API, udostępniające obrysy,
+\item moduł statystyk,
+\item testy aplikacji.
 \end{itemize}
 
 
@@ -942,9 +947,9 @@ Z tego powodu wybrano algorytm Flood Fill, czyli rozlewania się rekurencyjnego 
 
 \chapter {Przeprowadzone eksperymenty}
 
-Zostały przeprowadzno eksperymenty na stworzonym narzędziu do tworzenia obrysów. W podrozdziałach 4.1 - 4.4 są przedstawione wyniki tych eksperymentów.
+Zostały przeprowadzne eksperymenty na autorskim narzędziu do tworzenia obrysów. W podrozdziałach 4.1 - 4.4 przedstawiono wyniki tych eksperymentów.
 
-Testy zostały przeprowadzone na komputerze stacjonarnym o następującej specyfikacji:
+Testy wykonano na komputerze stacjonarnym o następującej specyfikacji:
 \begin{itemize}[noitemsep]
 \item procesor Intel Core i5-7500 o taktowaniu maksymalnym dla jednego rdzenia 3.8 Ghz,
 \item pamięć RAM Corsair Vengeance DDR4 16GB 3000 Mhz ustawiona w tryb 2140 Mhz o opóźnieniach CL15,
@@ -955,23 +960,23 @@ Testy zostały przeprowadzone na komputerze stacjonarnym o następującej specyf
 
 \section {Zbiór testowy}
 
-Na zbiór testowy składały się najróżniejsze pliki. Po pierwsze - są to pliki, które posiada i do których ma prawo użycia Tomasz Świerczewski - jeden z autorów tego narzędzia do tworzenia obrysów. Są to badania medyczne jego osoby lub Pana Wojciecha Świerczewskiego, ojca Tomasza Świerczewskiego.
+Na zbiór plików testowych składają się prywatne badania autora i jego najbliższej rodziny.
 
 Do testów zostały wykorzystane następujące badania:
 \begin{enumerate}[noitemsep]
-\item badanie rezonansem magnetycznym barku prawego Tomasza Świerczewskiego około 8 tygodni po zwichnięciu stawu ramiennego typu przedniego podkruczego,
-\item zdjęcie rentgenowskie barku prawego Tomasza Świerczewskiego w momencie zwichnięcia stawu ramiennego,
-\item badanie tomografią komputerową kręgosłupa Pana Wojciecha Świerczewskiego,
-\item badanie rezonansem magnetycznym kręgosłupa Pana Wojciecha Świerczewskiego.
+\item badanie rezonansem magnetycznym barku prawego Tomasza Świerczewskiego około 8 tygodni po zwichnięciu stawu ramiennego typu przedniego podkruczego --- Badanie 1,
+\item zdjęcie rentgenowskie barku prawego Tomasza Świerczewskiego w momencie zwichnięcia stawu ramiennego --- Badanie 2,
+\item badanie tomografią komputerową kręgosłupa Wojciecha Świerczewskiego --- Badanie 3,
+\item badanie rezonansem magnetycznym kręgosłupa Wojciecha Świerczewskiego --- Badanie 4.
 \end{enumerate}
 
-Kolejno te badania będą nazywane Badaniem 1. i tak dalej. Pliki te były wykonane na różnych maszynach, w różnych szpitalach, różnie były zapisywane pliki DICOM. Są to różne badania, od rezonansu magnetycznego do RTG.
+Pliki te były wykonane na różnych urządzeniach, w różnych szpitalach.
 
-W ramach testów aplikacji oprócz testowania na tych plikach, zostały przeprowadzone testy również na plikach dostarczonych przez Panią Promotor. Zawierały one badania organów wewnętrznych, takich jak wątroba i trzustka jako badanie rezonansem magnetycznym. Dodatkowo znajdowała się tam mammografia.
+Dodatkowo wykorzystano wyniki badań udostępnione Politechnice Warszawskiej  do celów dydaktycznio badawczych. Zawierały one badania organów wewnętrznych, takich jak wątroba i trzustka wykonane przy użyciu rezonansu magnetycznego oraz badanie mammograficzne.
 
 \section {Analiza działania aplikacji}
 
-Kolejne badania były otwierane przez stworzoną aplikację. Rysunek \ref{fig:112} przedstawia otworzony obraz medyczny Badania 1. z dowolną serią i dowolną klatką, instancją. Rysunek \ref{fig:113} jest odpowiednikiem Badania 2., Rysunek \ref{fig:114} Badania 3., Rysunek \ref{fig:115} Badania 4.
+W autorskiej aplikacji otwierano kolejne badania. Rysunek \ref{fig:112} przedstawia jedną klatkę obrazu medycznego Badania 1, z pewnej serii. Rysunek \ref{fig:113} przedstawia Badanie 2, natomiast Rysunek \ref{fig:114} predstawia Badanie 3, a Rysunek \ref{fig:115} Badanie 4.
 
 \begin{figure}[p]
 	\center
@@ -1001,12 +1006,12 @@ Kolejne badania były otwierane przez stworzoną aplikację. Rysunek \ref{fig:11
     	\label{fig:115}
 \end{figure}
 
-Ten test pozwolił sprawdzić, że aplikacja otwiera różne badania medyczne, od rezonansu magnetycznego, przez tomografię komputerową po zdjęcie rentgenowskie. Pokazano tutaj tylko kilka rodzajów badań, choć aplikacja obsługuje też inne np. mammografię. Na każdym z tych obrazów medycznych w wyniku przeprowadzonych testów można robić obrysy. Przykładowy obrysy ręczne i półautomatyczne znajdują się odpowiednio na Rysunku \ref{fig:105} i Rysunku \ref{fig:107}. Ponadto można dostrzec, że są poprawnie generowane statystyki.
+Ten test wykazał, że aplikacja otwiera różne badania medyczne, od rezonansu magnetycznego, przez tomografię komputerową po zdjęcie rentgenowskie. Na każdym z obrazów medycznych można wykonywać obrysy. Przykładowe obrysy ręczne i półautomatyczne znajdują się odpowiednio na Rysunku \ref{fig:105} i Rysunku \ref{fig:107}. Wyniki testów potwierdzają, że statystyki są obliczane poprawnie.
 
 \begin{figure}[p]
 	\center
 	\includegraphics[width=1\textwidth]{105}
-	\caption{Przykładowy obrys ręczny}
+	\caption{Przykładowy obrys manualny}
     	\label{fig:105}
 \end{figure}
 
@@ -1021,15 +1026,15 @@ Ten test pozwolił sprawdzić, że aplikacja otwiera różne badania medyczne, o
 
 \section {Wydajność algorytmu półautomatycznego}
 
-W celu sprawdzenia wydajności stworzonego algorytmu półautomatycznego posłużono się Badaniem 1., czyli badaniem rezonansu magnetycznego barku prawego.
+W celu sprawdzenia wydajności stworzonego algorytmu półautomatycznego posłużono się Badaniem 1, o rozdzielczości 512 na 512 pikseli.
 
-W pierwszym teście postanowiono sprawdzić czasy generowania obrysu półautomatycznego kości ramiennej w zależności od ilości punktów. Oczekiwano, że obrys będzie wyglądał podobnie do tych z Rysunku \ref{fig:105} i \ref{fig:107}. Był to obrys średniej wielkości. Rozmiar przetwarzanego obrazu w algorytmie prawdopodobnie się nie zmieniał i był to wycinek z obrazu medycznego zawierającego wszystkie te punkty i dodatkowe marginesy.
+W pierwszym teście sprawdzono czasy generowania obrysu półautomatycznego kości ramiennej, w zależności od ilości punktów wybranych przez użytkownika. Oczekiwano, że obrys będzie wyglądał podobnie do tych na Rysunkach \ref{fig:105} i \ref{fig:107}. Rozmiary przetwarzanych wycinków obrazu w algorytmie były porównywalne. Algorymt wykorzystywał wycinki obrazu medycznego zawierające wszystkie punkty wybrane przez użytkownika z uwzględnieniem marginesów.
 
-W trakcie dostawiania kolejnych punktów starano się poprawiać obrys w każdym kroku, tzn. aby wygenerowany obrys jak najlepiej odwzorowywał kość. Przy okazji dodawania kolejnych punktów do tego samego obrysu przetestowano funkcjonalność dodawania kolejnych punktów do obrysu.
+W trakcie dodawania kolejnych punktów starano się poprawiać obrys, tzn. aby wygenerowany obrys jak najlepiej odwzorowywał kość. Przy okazji dodawania kolejnych punktów do tego samego obrysu przetestowano funkcjonalność dodawania kolejnych punktów do obrysu.
 
-Dla każdej liczby wierzchołków przeprowadzano 10 kolejnych pomiarów generowania tego samego obrysu. Zostało to wykonane w celu niwelowania efektu różnego podporządkowania procesowi odpowiadającemu za obliczenia różnych priorytetów przez sam procesor. Ekstremalne wyniki zostały przedstawione w postaci słupków błędów, a średnia z 10 pomiarów jako niebieska kropka na wykresach.
+Dla każdej liczby wierzchołków przeprowadzano 10 kolejnych pomiarów generowania tego samego obrysu. Pozwoliło to na wyznaczenie średniego czasu generowania obrysu, niezależnie od chwilowego wykorzystania procesora.
 
-Większość z generowanych niżej obrysów było podglądami, czyli bez użycia modułu statystyk. Gdy będzie inaczej, to zostanie to wyraźnie zaznaczone. Czas mierzono poprzez sprawdzanie czasu potrzebnego na wygenerowanie odpowiedzi przez API na otrzymane zapytanie.
+Większość z generowanych obrysów było podglądami, czyli nie obliczano dla nich statystyk. Czas mierzono poprzez sprawdzanie czasu potrzebnego na wygenerowanie odpowiedzi przez API na otrzymane zapytanie.
 
 \begin{figure}[h!]
 	\center
@@ -1038,7 +1043,7 @@ Większość z generowanych niżej obrysów było podglądami, czyli bez użycia
     	\label{fig:testy_1}
 \end{figure}
 
-Na Rysunku \ref{fig:testy_1} przedstawiono wyniki przeprowadzonych testów. Wraz z dostawianiem kolejnych punktów zmniejszał się czas potrzebny na wygenerowanie obrysu przez serwer. Warto zauważyć, że te czasy zmniejszyły się o około 150 ms. Nie dodawano kolejnych punktów z uwagi na osiągnięcie zadowalającej jakości wygenerowanego obrysu.
+Na Rysunku \ref{fig:testy_1} przedstawiono wyniki przeprowadzonych testów. Wraz z dodawaniem kolejnych punktów zmniejszał się czas potrzebny na wygenerowanie obrysu przez serwer. Warto zauważyć, że wartości zmniejszyły się o około 150 ms. Nie dodawano kolejnych punktów z uwagi na osiągnięcie zadowalającej jakości wygenerowanego obrysu.
 
 \begin{figure}[h!]
 	\center
@@ -1054,7 +1059,7 @@ Na Rysunku \ref{fig:testy_1} przedstawiono wyniki przeprowadzonych testów. Wraz
     	\label{fig:testy_3}
 \end{figure}
 
-Na Rysunku \ref{fig:testy_2} przedstawiono wyniki dla drugiego z testów. Starano się obrysować cały brak widoczny na obrazie medycznym. W tym celu stawiano kolejne punkty i obserwowano czasy jakie były potrzebne na wygenerowanie obrysu. Starano się wraz z kolejnymi dostawianymi punktami poprawiać generowany obrys. Czasami wybierano takie punkty, aby znalazły się pomiędzy kolejnymi dwoma najbardziej odległymi. Wygenerowany obrys zaprezentowano na Rysunku \ref{fig:108}. Czasy zmieniły się prawie 2 krotnie, z poziomu około 4s do 2s.
+Na Rysunku \ref{fig:testy_2} przedstawiono wyniki dla drugiego z testów. Starano się obrysować cały brak widoczny na obrazie medycznym. W tym celu wstawiano kolejne punkty i obserwowano czasy, jakie były potrzebne na wygenerowanie obrysu. Wraz z kolejnymi punktami poprawiano generowany obrys. Wygenerowany obrys zaprezentowano na Rysunku \ref{fig:108}. Czasy generowania zmalały prawie 2 krotnie, z poziomu około 4 s do około 2 s.
 
 \begin{figure}[h!]
 	\center
@@ -1064,27 +1069,27 @@ Na Rysunku \ref{fig:testy_2} przedstawiono wyniki dla drugiego z testów. Staran
 \end{figure}
 
 
-Na Rysunku \ref{fig:testy_2} można zauważyć czasami gwałtowne skoki w zmniejszającym się czasie potrzebnym na obliczenia. Mogło to być spowodowane faktem, że zmieniała się maksymalna odległość między kolejnymi punktami. Bliżej to zjawisko zostanie opisane w podrozdziale 4.4.
+Na Rysunku \ref{fig:testy_2} można zauważyć czasami gwałtowne skoki w zmniejszającym się czasie potrzebnym na obliczenia. Mogło to być spowodowane faktem, że zmieniała się maksymalna odległość między kolejnymi punktami. Bliżej to zjawisko zostało opisane w podrozdziale 4.4.
 
-Na Rysunku \ref{fig:testy_3} przedstawiono wyniki dla trzeciego testu. Starano się nie ingerować w wspomnianą wcześniej maksymalną odległość poprzez stawianie gęsto kolejnych punktów koło siebie na łuku. W ten sposób próbowano sprawdzić wpływ liczby uruchomień algorytmu A* poprzez zmianę liczby punktów na czas obliczeń.
+Na Rysunku \ref{fig:testy_3} przedstawiono wyniki trzeciego testu. Nie ingerowano we wspomnianą w podrozdziale 4.4 maksymalną odległość --- tawianino gęsto kolejne punkty obok siebie na łuku. W ten sposób sprawdzano wpływ liczby uruchomień algorytmu A*, poprzez zmianę liczby punktów, na czas obliczeń.
 
-Uzyskane wyniki są bardzo podobne do poprzednich, choć bez wyraźnych skoków. Czas potrzebny na wygenerowanie obrysu nie spadł tak drastycznie jak w drugim teście, ale spadek był zauważalny, z około 4,7s do 3,7s.
+Uzyskane wyniki są bardzo podobne do poprzednich, choć bez wyraźnych skoków. Czas potrzebny na wygenerowanie obrysu nie spadł tak bardzo jak w drugim teście, ale spadek był zauważalny, z około 4,7 s do 3,7 s.
 
-Wraz z zwiększeniem się przestrzeni roboczej obrazu rośnie czas potrzebny na wygenerowanie obrysu. Na podstawie tych wykresów można wysnuć bardzo ciekawe wnioski, które zostaną zaprezentowane w podrozdziale 4.4.
+Wraz ze zwiększeniem się przestrzeni roboczej obrazu rośnie czas potrzebny na wygenerowanie obrysu. Na podstawie wykresów zależności czasu od liczby punktów można wysnuć wnioski, które zostaną zaprezentowane w podrozdziale 4.4.
 
 \section {Analiza wyników i wnioski}
 
-Wyniki przeprowadzonych testów okazały się bardzo ciekawe. Po pierwsze, gdy generujemy statystyki, to czas potrzebny na obliczenie statystyk zwiększał czas na realizację zapytania o około 30\%. Wiązało się to z odwiedzeniem wszystkich punktów wewnątrz obrysu.
+Poniżej przedstawiono analizę wyników oraz wnioski z przeprowadzonych testów.
 
-Po drugie wraz z zwiększaniem rozdzielczości zdjęcia lub obrys stawał się coraz większy na obrazach medycznych o wysokiej rozdzielczości, to wzrastał proporcjonalnie czas potrzebny na wygenerowanie obrysu półautomatycznego. Wiązało się to z faktem, że został wykorzystany operator Sobela i Canny'ego, które wymagają odwiedzenia pewnej liczby pikseli, która odpowiednio się zwiększa. Dla mammografii średniej wielkości obrys był generowany nawet kilkadziesiąt sekund. Dla większości obrysów czasy obliczeń nie przekraczały zakładanych 5 sekund w wymaganiach niefunkcjonalnych.
+Zauważono, że gdy generujemy statystyki, to czas potrzebny na obliczenie statystyk zwiększał czas na realizację zapytania o około 30\%. Wiązało się to z odwiedzeniem wszystkich punktów wewnątrz obrysu, co powodowało wydłużenie obliczeń.
 
-Po trzecie wraz z zwiększaniem liczby punktów zmniejsza się czas potrzebny na wygenerowanie obrysu półautomatycznego. Powodowały to dwa oddzielne zjawiska. Pierwsze z nich, czyli maksymalna odległość pomiędzy kolejnymi dwoma punktami wybranymi przez użytkownika. W celu zapewnienia spójności grafu dodawano sztuczne krawędzie, o maksymalnej długości nieprzekraczającej maksymalnej odległości pomiędzy tymi wcześniej wspomnianymi dwoma punktami. Zatem im krótsza była to odległość, tym mniej było dodawanych sztucznych krawędzi. Liczba dodawanych sztucznych krawędzi spadała nawet kilkunastokrotnie. Dla algorytmu A* oznaczało to kilkukrotnie mniejszą liczbę przetwarzanych krawędzi.
+Wraz ze zwiększaniem rozdzielczości zdjęcia, jak również ze zwiększeniem się obrysu na obrazach medycznych o wysokiej rozdzielczości, wzrastał proporcjonalnie czas potrzebny na wygenerowanie obrysu półautomatycznego. Dzieje się tak dlatego, że w algorytmie wykorzystano operator Sobela i Canny'ego, które wymagają odwiedzenia pewnej liczby pikseli, która odpowiednio się zwiększa. Dla mammografii średniej wielkości obrys był generowany nawet kilkadziesiąt sekund. Dla większości obrysów czasy obliczeń nie przekraczały zakładanych 30 sekund w wymaganiach niefunkcjonalnych.
 
-Drugim zjawiskiem odpowiedzialnym za zmniejszanie się czasu potrzebnego na wygenerowanie obrysu półautomatycznego wraz z zwiększającą się liczbą punktów był algorytm A*. Początkowo przypuszczano, że zwiększanie liczby uruchomień algorytmu A* wraz ze wzrostem liczby punktów będzie generował dodatkowy koszt obliczeniowy, a nie go redukował. Tak może się stać w pesymistycznym przypadku. W realnych obrysach wraz z dodawaniem kolejnych punktów w celu poprawienia jakości obrysu malała złożoność średnia, ponieważ algorytm A* szybciej znajdował prawidłową ścieżkę, nie oddalał się bardzo daleko od wierzchołka źródłowego. Algorytm A* dzięki heurystyce mógł pomijać bardzo dużą liczbę krawędzi, które na pewno nie polepszyłyby rozwiązania.
+Wraz ze zwiększaniem liczby punktów zmniejszał się czas potrzebny na wygenerowanie obrysu półautomatycznego. Powodowały to dwa oddzielne zjawiska. Pierwsze z nich, to  maksymalna odległość pomiędzy kolejnymi dwoma punktami wybranymi przez użytkownika. W celu zapewnienia spójności grafu dodawano sztuczne krawędzie, o maksymalnej długości nieprzekraczającej maksymalnej odległości pomiędzy wcześniej wspomnianymi punktami. Im krótsza była to odległość, tym mniej było dodawanych sztucznych krawędzi. Dodawanie nowych krawędzi pomiędzy oddalonymi od siebie punktami oznaczało kilkukrotnie mniejszą liczbę przetwarzanych krawędzi przetwarzanych przez algorytm A*. Drugim zjawiskiem odpowiedzialnym za zmniejszanie się czasu potrzebnego na wygenerowanie obrysu półautomatycznego, wraz z zwiększającą się liczbą punktów, był algorytm A*. Początkowo przypuszczano, że zwiększanie liczby uruchomień algorytmu A* wraz ze wzrostem liczby punktów będzie generował dodatkowy koszt obliczeniowy, a nie go redukował. Tak może się stać w pesymistycznym przypadku. W realnych obrysach wraz z dodawaniem kolejnych punktów w celu poprawienia jakości obrysu malała złożoność średnia, ponieważ algorytm A* szybciej znajdował prawidłową ścieżkę. Algorytm A* dzięki heurystyce pomijał bardzo dużą liczbę krawędzi, które na pewno nie polepszyłyby rozwiązania.
 
-W ten sposób te dwa zjawiska powodowały, że wraz ze wzrostem liczby punktów wybranych przez użytkownika najczęściej malał czas potrzebny na wygenerowanie obrysu półautomatycznego. Czas dla większych obrysów maleje w sposób znaczących, dla małych obrysów tylko minimalnie. Dzieje się tak dlatego, że operacje na grafach są tylko elementem obliczeń, a wtedy dominującą częścią obliczeń są operacje na przetwarzanym obrazie. Ponadto te czasy zawierają pewne nakłady czasowe, które były potrzebne na przetwarzanie zapytań.
+Wraz ze wzrostem liczby punktów wybranych przez użytkownika najczęściej malał czas potrzebny na wygenerowanie obrysu półautomatycznego. Czas dla większych obrysów maleje w sposób znaczący, dla małych obrysów w sposób niezauważalny. Dzieje się tak dlatego, że operacje na grafach są tylko elementem obliczeń. W przypadku małych obrysów, dominującą częścią obliczeń są operacje na przetwarzanym obrazie. Ponadto czasy obliczeń zawierają narzut czasowy wywołany przez przetwarzanie zapytań.
 
-Wnioski dla użytkownika powinny być takie, że użytkownik powinien unikać bardzo dużych obrysów na zdjęciach o bardzo dużej rozdzielczości, czyli np. mammografii czy zdjęcia rentgenowskiego. Ponadto użytkownik powinien oczekiwać poprawnego działania dla zdjęć o dobrej jakości, ostrych krawędziach i o niskim szumie. W celu poprawienia zarówno jakości jak i wydajności użytkownik powinien stawiać więcej punktów niż mniej. Oczywiście w granicach rozsądku, czyli do kilkunastu zamiast wybierania tylko kilku punktów.
+Na podstawie przeprowadzonych obserwacji zaleca się, aby użytkownikcyunikali dużych obrysów, szczególnie na zdjęciach o wysokiej rozdzielczości rozdzielczości, czyli np. mammografiach ablo zdjęciach rentgenowskich. Ponadto generowanie obrysów półautomatycznych działa zauważalnie lepiej dla zdjęć o ostrych krawędziach i o niskim szumie. W celu poprawienia zarówno jakości wykrywanego obrysu jak i wydajności czasowej przeprowadzanych w trakcie generowania obrysu obliczeń użytkownik powinien wybierać liczbę punktów rzędu kilkunastu punktów, co może mieć zauważalnie lepszą wydajność niż wybranie kilku punktów.
 
 \chapter {Podsumowanie}
 
