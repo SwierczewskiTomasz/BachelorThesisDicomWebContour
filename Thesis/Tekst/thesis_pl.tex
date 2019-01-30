@@ -1091,9 +1091,10 @@ Wraz ze wzrostem liczby punktów wybranych przez użytkownika najczęściej mala
 
 Na podstawie przeprowadzonych obserwacji zaleca się, aby użytkownikcyunikali dużych obrysów, szczególnie na zdjęciach o wysokiej rozdzielczości rozdzielczości, czyli np. mammografiach ablo zdjęciach rentgenowskich. Ponadto generowanie obrysów półautomatycznych działa zauważalnie lepiej dla zdjęć o ostrych krawędziach i o niskim szumie. W celu poprawienia zarówno jakości wykrywanego obrysu jak i wydajności czasowej przeprowadzanych w trakcie generowania obrysu obliczeń użytkownik powinien wybierać liczbę punktów rzędu kilkunastu punktów, co może mieć zauważalnie lepszą wydajność niż wybranie kilku punktów.
 
+\afterpage{\blankpage}
 \chapter {Podsumowanie}
 
-W podsumowaniu omówiono3 aspekty: osiągnięcie celu pracy, napotkane problemy i ograniczenia.
+W podsumowaniu omówiono 3 aspekty: osiągnięcie celu pracy, napotkane problemy i ograniczenia.
 
 Cel pracy został osiągnięty. Spełniono wszystkie wymagania funkcjonalne i niefunkcjonalne, z wyłączeniem wymagania dotyczącego wydajności generowania obrysu półautomatycznego dla obrazów DICOM o dużej rozdzielczości (ponad 1000000 pikseli).
 
@@ -1474,6 +1475,18 @@ Poprzez wciśnięcie przycisku anonimizuj (Anonymize) użytkownik może wybrać 
 \markboth{}{Spis zawartości załączonej płyty CD}
 \addcontentsline{toc}{chapter}{Spis zawartości załączonej płyty CD}
 
+Do niniejszej pracy dyplomowej inżynierskiej została załączona płyta CD. W jej skład wchodzą:
+\begin{itemize}[noitemsep]
+\item wesja elektroniczna pracy, której treść jest identyczna z powyższą w pliku \verb+garsteckil-swierczewskit-praca-inzynierska.pdf+,
+\item strona tytułowa pracy w pliku \verb+garsteckil-swierczewskit-strona-tytulowa.pdf+,
+\item streszczenie w języku polskim i angielskim w plikach o nazwach odpowiednio \verb+garsteckil-swierczewskit-stresczenie.pdf+ i \verb+garsteckil-swierczewski-abstract.pdf+.
+\end{itemize}
+
+Kod źródłowy, który został podzielony na kilka katalogów:
+\begin{itemize}
+\item \verb+DotNetProject/+ - zawierający kod źródłowy głównego serwera aplikacji. Główne algorytmy odpowiedzialne za generowanie obrysów półautomatycznych znajdują się w podkatalogu \verb+Logic/+,
+\item \verb+Web/+ - zawierający kod źródłowy aplikacji przeglądarkowej.
+\end{itemize}
 
 % 13. Spis załączników - jak nie ma załączników, to zakomentować lub usunąć
 
