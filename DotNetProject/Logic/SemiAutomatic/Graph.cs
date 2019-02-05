@@ -9,28 +9,72 @@ namespace Logic
 {
     public class Vertex
     {
-        public Point point;
-        public List<Edge> Edges;
-        //public List<(Vertex, int)> Vertices;
-        public Dictionary<Vertex, int> Vertices;
+        public Point Point { get; }
+        public List<Edge> Edges { get; }
+        public Dictionary<Vertex, int> Vertices { get; }
+
+        public Vertex(Point point)
+        {
+            Point = point;
+            Edges = new List<Edge>();
+            Vertices = new Dictionary<Vertex, int>();
+        }
     }
 
-    public class Edge
+    public abstract class Edge
     {
-        public bool Artificial;
-        public Vertex vertex1, vertex2;
-        public List<Point> points;
-        public double weight;
-        public int Lenght
+        public Vertex Vertex1 { get; }
+        public Vertex Vertex2 { get; }
+
+        public Edge(Vertex vertex1, Vertex vertex2)
         {
-            get
-            {
-                if (Artificial)
-                    return (int)(Graph.ManhattanDistance(vertex1.point, vertex2.point) * weight);
-                else
-                    return points.Count + 1;
-            }
+            Vertex1 = vertex1;
+            Vertex2 = vertex2;
         }
+
+        public abstract int GetLenght();
+        public abstract List<Point> GetPoints();
+    }
+
+    public class ArtificialEdge : Edge
+    {
+        public double Weight { get; }
+
+        public ArtificialEdge(Vertex vertex1, Vertex vertex2, double weight) : base(vertex1, vertex2)
+        {
+            Weight = weight;
+        }
+
+        public override int GetLenght()
+        {
+            return (int)(Graph.ManhattanDistance(Vertex1.Point, Vertex2.Point) * Weight);
+        }
+
+        public override List<Point> GetPoints()
+        {
+            return BresenhamClass.Bresenham(new List<Point>(), Vertex1.Point.x, Vertex1.Point.y, Vertex2.Point.x, Vertex2.Point.y);
+        }
+    }
+
+    public class RealEdge : Edge
+    {
+        public List<Point> Points { get; }
+
+        public RealEdge(Vertex vertex1, Vertex vertex2) : base(vertex1, vertex2)
+        {
+            Points = new List<Point>();
+        }
+        public RealEdge(Vertex vertex1, Vertex vertex2, List<Point> points) : base(vertex1, vertex2)
+        {
+            Points = new List<Point>(points);
+        }
+
+        public override int GetLenght()
+        {
+            return Points.Count + 1;
+        }
+
+        public override List<Point> GetPoints() => Points;
     }
 
     public class Graph
@@ -50,7 +94,7 @@ namespace Logic
             Distance.Add(startVertex, 0);
             Previous.Add(startVertex, null);
 
-            MySortedListElement element = OpenList.Add(startVertex, heuristicFunction(startVertex.point, endVertex.point));
+            MySortedListElement element = OpenList.Add(startVertex, heuristicFunction(startVertex.Point, endVertex.Point));
             OpenDictionary.Add(startVertex, element);
 
             while (OpenDictionary.Count != 0)
@@ -82,7 +126,7 @@ namespace Logic
 
                             MySortedListElement currentElement = OpenDictionary[w];
                             OpenList.Remove(currentElement);
-                            OpenList.Add(currentElement.Key, Distance[w] + heuristicFunction(w.point, endVertex.point));
+                            OpenList.Add(currentElement.Key, Distance[w] + heuristicFunction(w.Point, endVertex.Point));
 
                             if (Previous.ContainsKey(w))
                                 Previous[w] = u;
@@ -176,7 +220,7 @@ namespace Logic
                     {
                         foreach (var v2 in list2)
                         {
-                            int manhattanDistance = ManhattanDistance(v1.point, v2.point);
+                            int manhattanDistance = ManhattanDistance(v1.Point, v2.Point);
                             if (manhattanDistance < distance)
                             {
                                 distance = manhattanDistance;
@@ -189,11 +233,7 @@ namespace Logic
                     if (distance < maxDistance)
                     {
                         int weightedDistance = (int)(weight * distance);
-                        Edge edge = new Edge();
-                        edge.Artificial = true;
-                        edge.weight = weight;
-                        edge.vertex1 = vertex1;
-                        edge.vertex2 = vertex2;
+                        ArtificialEdge edge = new ArtificialEdge(vertex1, vertex2, weight);
 
                         vertex1.Edges.Add(edge);
                         vertex2.Edges.Add(edge);
@@ -227,10 +267,8 @@ namespace Logic
 
             foreach (var point in points)
             {
-                Vertex vertex = new Vertex();
-                vertex.point = point;
-                vertex.Vertices = new Dictionary<Vertex, int>();
-                vertex.Edges = new List<Edge>();
+                Vertex vertex = new Vertex(point);
+
                 Vertices.Add(vertex);
                 pointsVertices.Add(vertex);
                 result.Add(point);
@@ -248,20 +286,7 @@ namespace Logic
                     maxDistance = distance;
             }
 
-            //PrepareGraph(pointsVertices, weight, maxDistance * 2);
             PrepareGraph(pointsVertices, weight, maxDistance * 1.2);
-
-            // foreach (var e in Edges)
-            // {
-            //     // if (e.Artificial)
-            //     //     result.AddRange(BresenhamClass.Bresenham(new List<Point>(), e.vertex1.point.x, e.vertex1.point.y, e.vertex2.point.x, e.vertex2.point.y));
-            //     // else
-            //     //     result.AddRange(e.points);
-            //     if(!e.Artificial)
-            //         result.AddRange(e.points);
-            //     //result.Add(e.vertex1.point);
-            //     //result.Add(e.vertex2.point);
-            // }
 
             for (int i = 0; i < points.Count; i++)
             {
@@ -271,7 +296,7 @@ namespace Logic
                 Dictionary<Vertex, Vertex> previous = AStarAlgotihm(startVertex, endVertex, ManhattanDistance);
 
                 Vertex currentVertex = endVertex;
-                result.Add(currentVertex.point);
+                result.Add(currentVertex.Point);
 
                 Vertex exists = previous[currentVertex];
                 int count = 0;
@@ -280,19 +305,12 @@ namespace Logic
                 {
                     count++;
                     Vertex previousVertex = previous[currentVertex];
-                    Edge e = previousVertex.Edges.First(f => ((f.vertex1 == currentVertex && f.vertex2 == previousVertex) || (f.vertex2 == currentVertex && f.vertex1 == previousVertex)));
+                    Edge e = previousVertex.Edges.First(f => ((f.Vertex1 == currentVertex && f.Vertex2 == previousVertex) || (f.Vertex2 == currentVertex && f.Vertex1 == previousVertex)));
                     if (e == null)
                         throw new Exception("Censored - don't searched edge after A* algorithm");
 
-                    if (e.points == null)
-                    {
-                        result.AddRange(BresenhamClass.Bresenham(new List<Point>(), previousVertex.point.x, previousVertex.point.y, currentVertex.point.x, currentVertex.point.y));
-                    }
-                    else
-                    {
-                        result.AddRange(e.points);
-                    }
-                    result.Add(currentVertex.point);
+                    result.AddRange(e.GetPoints());
+                    result.Add(currentVertex.Point);
                     currentVertex = previousVertex;
                 }
             }
@@ -306,7 +324,7 @@ namespace Logic
             {
                 if (!v.Vertices.ContainsKey(startVertex))
                 {
-                    int distance = ManhattanDistance(startVertex.point, v.point);
+                    int distance = ManhattanDistance(startVertex.Point, v.Point);
                     int weightDistance = (int)(weight * distance);
                     v.Vertices.Add(startVertex, weightDistance);
                 }
@@ -345,10 +363,7 @@ namespace Logic
 
                         if (!(count == 1 || count == 3))
                         {
-                            Vertex vertex = new Vertex();
-                            vertex.point = new Point(x + xmin, y + ymin);
-                            vertex.Vertices = new Dictionary<Vertex, int>();
-                            vertex.Edges = new List<Edge>();
+                            Vertex vertex = new Vertex(new Point(x + xmin, y + ymin));
 
                             Queue<Vertex> queueVertices = new Queue<Vertex>();
                             queueVertices.Enqueue(vertex);
@@ -361,30 +376,23 @@ namespace Logic
                                 Vertex currentVertex = queueVertices.Dequeue();
                                 graph.Vertices.Add(currentVertex);
 
-                                Queue<Edge> queueEdges = new Queue<Edge>();
+                                Queue<Point> queueFirstPointsOfEdges = new Queue<Point>();
 
                                 foreach (Point n in Neighbours(width, height, x, y))
                                 {
                                     if (matrix[n.x, n.y] != 0)
                                     {
-                                        Edge e = new Edge();
-                                        e.vertex1 = currentVertex;
-                                        e.Artificial = false;
-                                        e.points = new List<Point>();
-                                        e.points.Add(new Point(n.x + xmin, n.y + ymin));
-                                        queueEdges.Enqueue(e);
+                                        queueFirstPointsOfEdges.Enqueue(new Point(n.x + xmin, n.y + ymin));
                                     }
                                 }
 
-                                while (queueEdges.Count != 0)
+                                while (queueFirstPointsOfEdges.Any())
                                 {
-                                    Edge currentEdge = queueEdges.Dequeue();
-                                    //graph.Edges.Add(currentEdge);
+                                    Point currentPoint = queueFirstPointsOfEdges.Dequeue();
+                                    List<Point> listOfPointsForEdge = new List<Point>();
 
                                     Queue<Point> queueOfPotentialPoints = new Queue<Point>();
 
-                                    Point currentPoint = currentEdge.points.First();
-                                    currentEdge.points.RemoveAt(0);
                                     queueOfPotentialPoints.Enqueue(currentPoint);
 
                                     while (queueOfPotentialPoints.Count != 0)
@@ -395,48 +403,40 @@ namespace Logic
                                         if (countPointNeighbours == 0 || countPointNeighbours > 1)
                                         {
                                             //new Vertex!!!
-                                            Vertex secondVertex = new Vertex();
-                                            secondVertex.point = potentialPoint;
-                                            secondVertex.Edges = new List<Edge>();
-                                            secondVertex.Edges.Add(currentEdge);
-                                            secondVertex.Vertices = new Dictionary<Vertex, int>();
-
-                                            currentEdge.vertex2 = secondVertex;
-                                            graph.Edges.Add(currentEdge);
-
-                                            secondVertex.Vertices.Add(currentVertex, currentEdge.Lenght);
-                                            currentVertex.Vertices.Add(secondVertex, currentEdge.Lenght);
+                                            Vertex secondVertex = new Vertex(potentialPoint);
+                                            Edge currentEdge = new RealEdge(currentVertex, secondVertex, listOfPointsForEdge);
 
                                             currentVertex.Edges.Add(currentEdge);
+                                            secondVertex.Edges.Add(currentEdge);
+                                            graph.Edges.Add(currentEdge);
+
+                                            secondVertex.Vertices.Add(currentVertex, currentEdge.GetLenght());
+                                            currentVertex.Vertices.Add(secondVertex, currentEdge.GetLenght());
+
                                             queueVertices.Enqueue(secondVertex);
 
                                             if (queueOfPotentialPoints.Count != 0)
                                                 throw new Exception("Unexpected situation - not all points in list of potential points for edge has been reviewed");
-                                            // listOfPotentialPoints.Clear();
                                         }
                                         else if (countPointNeighbours == 1)
                                         {
-
-                                            if (currentEdge.Lenght >= 15)
+                                            if (listOfPointsForEdge.Count >= 15)
                                             {
-                                                Vertex secondVertex = new Vertex();
-                                                secondVertex.point = potentialPoint;
-                                                secondVertex.Edges = new List<Edge>();
-                                                secondVertex.Edges.Add(currentEdge);
-                                                secondVertex.Vertices = new Dictionary<Vertex, int>();
-
-                                                currentEdge.vertex2 = secondVertex;
-                                                graph.Edges.Add(currentEdge);
-
-                                                secondVertex.Vertices.Add(currentVertex, currentEdge.Lenght);
-                                                currentVertex.Vertices.Add(secondVertex, currentEdge.Lenght);
+                                                Vertex secondVertex = new Vertex(potentialPoint);
+                                                Edge currentEdge = new RealEdge(currentVertex, secondVertex, listOfPointsForEdge);
 
                                                 currentVertex.Edges.Add(currentEdge);
+                                                secondVertex.Edges.Add(currentEdge);
+                                                graph.Edges.Add(currentEdge);
+
+                                                secondVertex.Vertices.Add(currentVertex, currentEdge.GetLenght());
+                                                currentVertex.Vertices.Add(secondVertex, currentEdge.GetLenght());
+
                                                 queueVertices.Enqueue(secondVertex);
                                             }
                                             else
                                             {
-                                                currentEdge.points.Add(potentialPoint);
+                                                listOfPointsForEdge.Add(potentialPoint);
 
                                                 foreach (Point p in Neighbours(width, height, potentialPoint.x - xmin, potentialPoint.y - ymin))
                                                 {
@@ -444,10 +444,6 @@ namespace Logic
                                                         queueOfPotentialPoints.Enqueue(new Point(p.x + xmin, p.y + ymin));
                                                 }
                                             }
-                                        }
-                                        else
-                                        {
-                                            throw new Exception("This fragment of code shouldn't be reached");
                                         }
 
                                         //Cleaning visited points
