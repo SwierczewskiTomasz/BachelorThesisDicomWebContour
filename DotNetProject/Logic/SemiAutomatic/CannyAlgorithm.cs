@@ -1,19 +1,36 @@
 using System;
-using DTOs;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Diagnostics;
 using DataAccess;
+using DTOs;
 
 namespace Logic
 {
     public static class CannyAlgorithm
     {
         public static int numberOfColors = 256;
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         public static List<Point> CannyWithoutStatistics(string dicomId, List<Point> points, int canvasWidth, int canvasHeight)
         {
+            logger.Info("Begin of Canny function. Starting the watch.");
+            Stopwatch stopwatch = new Stopwatch();
+            TimeSpan ts;
+
+            stopwatch.Start();
+            
             System.Drawing.Bitmap bitmap = OrthancConnection.GetBitmapByInstanceId(dicomId);
+            
+            stopwatch.Stop();
+            ts = stopwatch.Elapsed;
+            string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+                ts.Hours, ts.Minutes, ts.Seconds,
+                ts.Milliseconds / 10);
+            logger.Info("Getted bitmap from Orthanc - RunTime " + ts);
+            stopwatch.Start();
+
             System.Drawing.Rectangle rect = new System.Drawing.Rectangle(0, 0, bitmap.Width, bitmap.Height);
             System.Drawing.Imaging.BitmapData bmpData = bitmap.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadOnly, bitmap.PixelFormat);
             IntPtr ptr = bmpData.Scan0;
@@ -32,8 +49,25 @@ namespace Logic
             sobel = SobelOperator(rgbValues, xmin, xmax, ymin, ymax, bmpData.Stride);
             bitmap.UnlockBits(bmpData);
 
+            stopwatch.Stop();
+            ts = stopwatch.Elapsed;
+            elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+                ts.Hours, ts.Minutes, ts.Seconds,
+                ts.Milliseconds / 10);
+            logger.Info("Ended Sobel Operator - RunTime " + ts);
+            stopwatch.Start();
+            
             double[,][] gradient = FindIntensityGradient(sobel, xmin, xmax, ymin, ymax);
             double[,] edges = NonMaximumSuppression(gradient, xmin, xmax, ymin, ymax);
+            
+            stopwatch.Stop();
+            ts = stopwatch.Elapsed;
+            elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+                ts.Hours, ts.Minutes, ts.Seconds,
+                ts.Milliseconds / 10);
+            logger.Info("Ended Non Maximum Suppression - RunTime " + ts);
+            stopwatch.Start();
+
             int[] distribution = DistributionFunction(edges, xmin, xmax, ymin, ymax);
             distribution = CumulativeDistributionFunction(distribution);
 
@@ -43,10 +77,26 @@ namespace Logic
             (min, max) = ChooseThreshold(distribution, lowerThreshold, higherThreshold);
             int[,] foundedEdges = HysteresisThreshold(edges, xmin, xmax, ymin, ymax, min, max);
 
+            stopwatch.Stop();
+            ts = stopwatch.Elapsed;
+            elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+                ts.Hours, ts.Minutes, ts.Seconds,
+                ts.Milliseconds / 10);
+            logger.Info("Ended Hysteresis Threshold - RunTime " + ts);
+            stopwatch.Start();
+
             int[,] foundedEdges2 = Make4ConnectedMatrix(foundedEdges, xmin, xmax, ymin, ymax);
 
             double weight = 2.5;
             List<Point> pixels = new List<Point>(FindShortestPathInGraph.FindShortestPath(foundedEdges2, xmin, xmax, ymin, ymax, weight, points));
+
+            stopwatch.Stop();
+            ts = stopwatch.Elapsed;
+            elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+                ts.Hours, ts.Minutes, ts.Seconds,
+                ts.Milliseconds / 10);
+            logger.Info("Ended Graphs - RunTime " + ts);
+            stopwatch.Start();
 
             return pixels;
         }

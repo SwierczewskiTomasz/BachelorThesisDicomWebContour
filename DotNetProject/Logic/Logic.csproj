@@ -11,6 +11,10 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Windows.Compatibility" Version="2.0.1" />
+    <PackageReference Include="nlog" Version="4.5.11" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="nlog.config" CopyToOutputDirectory="Always" />
+  </ItemGroup>
 </Project>
