@@ -46,7 +46,7 @@ namespace Logic
             int[,] foundedEdges2 = Make4ConnectedMatrix(foundedEdges, xmin, xmax, ymin, ymax);
 
             double weight = 2.5;
-            List<Point> pixels = new List<Point>(Graph.FindShortestPath(foundedEdges2, xmin, xmax, ymin, ymax, weight, points));
+            List<Point> pixels = new List<Point>(FindShortestPathInGraph.FindShortestPath(foundedEdges2, xmin, xmax, ymin, ymax, weight, points));
 
             return pixels;
         }
@@ -87,7 +87,7 @@ namespace Logic
             int[,] foundedEdges2 = Make4ConnectedMatrix(foundedEdges, xmin, xmax, ymin, ymax);
 
             double weight = 2.5;
-            List<Point> pixels = new List<Point>(Graph.FindShortestPath(foundedEdges2, xmin, xmax, ymin, ymax, weight, points));
+            List<Point> pixels = new List<Point>(FindShortestPathInGraph.FindShortestPath(foundedEdges2, xmin, xmax, ymin, ymax, weight, points));
 
             int[,] matrixWithContour = MakeMatrixFromPoints(width, height, pixels);
             int[,] matrix4Connected = Make4ConnectedMatrix(matrixWithContour, 0, 0, width, height);
