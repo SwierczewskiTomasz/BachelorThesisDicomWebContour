@@ -11,22 +11,22 @@ namespace Logic
     {
         public static int[,] KMM(int[,] tab, int xLength, int yLength)
         {
-            int usuniete;
+            int numberOfDeleted;
             do
             {
-                usuniete = 0;
-                tab = Ustaw2(tab, xLength, yLength);
-                tab = Ustaw3(tab, xLength, yLength);
-                tab = Ustaw4(tab, xLength, yLength);
-                tab = Usun4(tab, xLength, yLength, ref usuniete);
-                tab = Petla(2, tab, xLength, yLength, ref usuniete);
-                tab = Petla(3, tab, xLength, yLength, ref usuniete);
-            } while (usuniete != 0);
+                numberOfDeleted = 0;
+                tab = Set2(tab, xLength, yLength);
+                tab = Set3(tab, xLength, yLength);
+                tab = Set4(tab, xLength, yLength);
+                tab = Delete4(tab, xLength, yLength, ref numberOfDeleted);
+                tab = Loop(2, tab, xLength, yLength, ref numberOfDeleted);
+                tab = Loop(3, tab, xLength, yLength, ref numberOfDeleted);
+            } while (numberOfDeleted != 0);
 
             return tab;
         }
 
-        private static int[,] Ustaw2(int[,] tab, int xLength, int yLength)
+        private static int[,] Set2(int[,] tab, int xLength, int yLength)
         {
             for(int x = 0; x < xLength; x++)
             {
@@ -52,7 +52,7 @@ namespace Logic
             return tab;
         }
 
-        private static int[,] Ustaw3(int[,] tab, int xLength, int yLength)
+        private static int[,] Set3(int[,] tab, int xLength, int yLength)
         {
             for (int x = 0; x < xLength; x++)
             {
@@ -78,7 +78,7 @@ namespace Logic
             return tab;
         }
 
-        private static int[,] Ustaw4(int[,] tab, int xLength, int yLength)
+        private static int[,] Set4(int[,] tab, int xLength, int yLength)
         {
             int[] tab2 = new int[]
             {
@@ -128,7 +128,7 @@ namespace Logic
             return tab;
         }
 
-        private static int[,] Usun4(int[,] tab, int xLength, int yLength, ref int usuniete)
+        private static int[,] Delete4(int[,] tab, int xLength, int yLength, ref int numberOfDeleted)
         {
             for (int x = 0; x < xLength; x++)
             {
@@ -137,14 +137,14 @@ namespace Logic
                     if (tab[x, y] == 4)
                     {
                         tab[x, y] = 0;
-                        usuniete++;
+                        numberOfDeleted++;
                     }
                 }
             }
             return tab;
         }
 
-        private static int[,] Petla(int N, int[,] tab, int xLength, int yLength, ref int usuniete)
+        private static int[,] Loop(int N, int[,] tab, int xLength, int yLength, ref int numberOfDeleted)
         {
             int[] tab2 = new int[] { 3, 5, 7, 12, 13, 14, 15, 20,
                                     21, 22, 23, 28, 29, 30, 31, 48,
@@ -196,7 +196,7 @@ namespace Logic
                         if (tab2.Any(t => t == sum))
                         {
                             tab[x, y] = 0;
-                            usuniete++;
+                            numberOfDeleted++;
                         }
                     }
                 }
