@@ -1622,15 +1622,13 @@ lepszą wydajność niż wybranie kilku punktów.
 \afterpage{\blankpage}
 \chapter {Podsumowanie}
 
-W podsumowaniu omówiono 3 aspekty: osiągnięcie celu pracy, napotkane problemy i
-ograniczenia.
 
 Cel pracy został osiągnięty. Spełniono wszystkie wymagania funkcjonalne i niefunkcjonalne,
 z wyłączeniem wymagania dotyczącego wydajności generowania obrysu półautomatycznego
 dla obrazów DICOM o dużej rozdzielczości (ponad 1000000 pikseli).
 
-W trakcie pracy nad systemem napotkano różne problemy i ograniczenia. Zostały one
-opisane poniżej.
+W trakcie pracy nad systemem napotkano różne problemy i ograniczenia, przede wszystkim
+związane ze specyfikacją obrazowych badań medycznych.
 
 W interfejsie ograniczeniem okazał się dostępny rozmiar ekranu. Projektowanie
 aplikacji zakładało wykorzystanie ekranu o rozdzielczości 1920x1080, a więc ekranu
@@ -1640,14 +1638,13 @@ kwadratowe, pionowe oraz poziome. Założenie, że ekran użytkownika jest ekran
 części obszaru przeznaczonego dla obrazów. Jest to niestety ograniczenie, którego
 nie da się zlikwidować, gdyż przy założeniu rozdzielczości 1080x1920 powoduje
 analogiczny problem z obrazami poziomymi. Zaleca się skonfigurowanie aplikacji
-pod wymagania konkretnej grupy lekarzy lub szpitala na podstawie wymiarów zdjęć,
-które będą częściej występować w systemie.
+ze względu na rodzaj badań jakie będą występowały w systemie (MRI, RTG, MMG, itd.).
 
 
 Podstawowym problemem występującym w trakcie implementacji rozwiązania było
 ustalanie kontraktów w warstwie komunikacyjnej. Ze względu na niewielką ilość
 akcji w komunikacji nie zdecydowano się na zastosowanie generatora kontraktów,
-ale zaleca się wprowadzenie takiego rozwiązania ponownie w trakcie rozwoju systemu.
+ale zaleca się wprowadzenie takiego rozwiązania ponownie w trakcie dalszego rozwoju narzędzia.
 W zależności od złożoności komunikacji generator kontraktów może zdecydowanie
 usprawnić wprowadzanie zmian w aplikacji.
 
@@ -1655,20 +1652,20 @@ Podczas projektowania systemu zdecydowano, że obrazy DICOM będą wyświetlane 
 największej rozdzielczości umożliwiającej wyświetlenie całego obrazu na ekranie.
 W związku z tym, większość obrazów wyświetlona jest w rozmiarze różnym od
 faktycznego rozmiaru obrazu. Rozważano dwie możliwości rozdzielczości wykonywanych
-obrysów: faktyczne wymiary obrazu oraz rozmiary obrazu wyświetlanego na ekranie.
-Zdecydowano, że obrysy powinny być zapisywane w wymiarach identycznych faktycznym
+obrysów: realne wymiary obrazu oraz rozmiary obrazu wyświetlanego na ekranie.
+Zdecydowano, że obrysy powinny być zapisywane w~wymiarach identycznych realnym
 rozmiarom obrazu. Decyzja została uzasadniona potrzebą zapewnienia poprawnego
 obliczania statystyk. Zapisywanie obrysów w takich wymiarach ułatwia obliczanie
 liczby pikseli wewnątrz obrysu.
 
 Ze względu na złożoność algorytmu używanego do wyznaczania obrysu półautomatycznego
 wykonywanie obrysów półautomatycznych w obrazach o dużej rozdzielczości przekracza
-dwukrotnie dopuszczalny czas ustalony w punkcie 5 wymagań niefunkcjonalnych. Czas
-obliczeń można poprawić poprzez ograniczenie obszaru, w którym wykrywane będą
+dwukrotnie dopuszczalny czas 30 sekund. Czas
+obliczeń można poprawić poprzez ograniczenie obszaru, w~którym wykrywane będą
 krawędzie, ale nie rozwiąże to problemu z wykonywaniem obrysów o wymiarach
 zbliżonych do pełnych wymiarów obrazu.
 
-Podczas pracy nad systemem rozważano dodatkowe funkcjonalności, które nie zostały
+Podczas pracy nad narzędziem rozważano dodatkowe funkcjonalności, które nie zostały
 poruszone w tej pracy. Są one potencjalnymi możliwościami rozwoju narzędzia
 stworzonego w ramach tej pracy. Funkcjonalności opisano szczegółowo poniżej.
 
