@@ -585,6 +585,7 @@ wynik półautomatycznego dopasowania obrysu.
     	\label{fig:Orthanc-tags}
 \end{figure}
 
+\afterpage{\blankpage}
 
 \chapter {Opis autorskiego narzędzia informatycznego}
 
@@ -818,45 +819,21 @@ obszarów zdegradowanie obrysu do jednego piksela. Tego typu straty mogą wpływ
 na poprawność obliczanych statystyk jak również błędne wyświetlanie zapisanych
 obrysów w interfejsie użytkownika.
 
-\section {Opracowany algorytm półautomatyczny}
+\section {Moduł obrysów półautomatycznych}
 
-Opracowany algorytm półautomatyczny służy do wykrywania krawędzi na obrazie
-medycznym. Jest algorytmem półautomatycznym, ponieważ jest wspomagany przez
-człowieka --- użytkownika, który wybiera punkty na wyświetlanym obrazie. Te punkty
-są interpolowane przez algorytm półautomatyczny, zwany dalej algorytmem.
+Moduł półautomatycznego generowania obrysów pozwala użytkownikom na generowanie
+obrysów poprzez wybieranie punktów na obrazie DICOM. Wybrane punkty łączone są
+ze sobą na podstawie autorskiego algorytmu opisanego w tym podrozdziale.
 
-Jako dane wejściowe do algorytmu uzyskujemy następujące informacje:
-\begin{itemize}[noitemsep]
-\item {identyfikator obrazu medycznego, na którym był wykonywany obrys.}
-\item {lista punktów wybranych przez użytkownika. Punkty te zostały wcześniej
-przeskalowane ze współrzędnych w aplikacji internetowej (aplikacji webowej, ang.
-web application) na współrzędne odpowiadające rozdzielczości obrazu medycznego.}
-\end{itemize}
-
-
-Algorytm można podzielić na kilka ważnych etapów:
-
-\begin{itemize}[noitemsep]
-\item {wykrycie krawędzi na bitmapie,}
-\item {stworzenie grafu z bitmapy,}
-\item {zapewnienie spójności grafu,}
-\item {wyszukanie najkrótszych ścieżek w grafie.}
-\end{itemize}
-
-Poniżej zostaną przedstawione dokładne rozwiązania dla każdego z tych kroków.
-Przed rozpoczęciem przetwarzania jest pobierany obraz medyczny o danym wcześniej
-identyfikatorze z~serwera Orthanc. Stawi on podstawę do dalszej pracy algorytmu.
-
-
-\subsection {Wykrycie krawędzi na bitmapie}
+\subsection {Przegląd literatury}
 
 Często na obrazach medycznych różnice w charakterystyce poziomów szarości pikseli
-reprezentujących interesujące nas obiekty są małe, nie są podane dodatkowe informacje
-o naturze obrazu. Problem opracowania uniwersalnego algorytmu wykrywania krawędzi
-jest problemem trudnym. Dla wielu algorytmów można znaleźć odpowiednie przykłady,
-dla których te algorytmy nie wyznaczą poprawnie krawędzi. Algorytmy wykrywania
-krawędzi muszą spełniać szereg wymagań, które stwierdzają poprawność danego algorytmu,
-czy też operatora morfologicznego. Zgodnie z Cytowski J. \cite{Cyfrowe przetwarzanie
+reprezentujących interesujące nas obiekty są nieznaczne, nie są podane dodatkowe informacje
+o pochodzeniu obrazu. Problem opracowania uniwersalnego algorytmu wykrywania krawędzi
+na obrazach medycznych jest problemem trudnym. Muszą spełniać szereg wymagań,
+które stwierdzają poprawność danego algorytmu, jak również operatora morfologicznego.
+Dla wielu takich algorytmów można znaleźć odpowiednie przykłady,
+dla których krawędzie nie zostaną wyznaczone poprawnie. Zgodnie z J. Cytowski \cite{Cyfrowe przetwarzanie
 obrazów medycznych} ,,dobry detektor krawędzi powinien spełniać następujące warunki:
 \begin{itemize}[noitemsep]
 \item {niskie prawdopodobieństwo zaznaczenia punktów nienależących do krawędzi
@@ -865,14 +842,26 @@ oraz niskie prawdopodobieństwo niezaznaczenia punktów należących do krawędz
 \item {wyłącznie jedna odpowiedź na pojedynczy punkt krawędzi.''}
 \end{itemize}
 
-Został użyty operator Canny'ego, bo jest on powszechnym i dobrze sprawdzonym
-rozwiązaniem do wykrywania krawędzi. Jak napisał autor \cite{Cyfrowe przetwarzanie obrazów medycznych}
-,,Operator ten (Canny'ego) jest bardzo popularny, chętnie wykorzystywany i adoptowany
-do wielu zastosowań. (\dots) Stał on się również standardem często używanym do
-porównań innych metod wykrywania krawędzi.'' Zgodnie z rysunkiem 4.25
-,,Porównanie operatorów wykrywania krawędzi'' w \cite{Cyfrowe przetwarzanie obrazów medycznych}
-najlepiej wykrywał główne narządy, takie jak wątroba czy też trzustka. Z wyżej
-wymienionych powodów został on wykorzystany w tym algorytmie.
+Detektory krawędzi oparte na gradiencie, w tym operator Canny'ego są często używane.
+Ich główne zalety na podstawie \cite{Cyfrowe przetwarzanie obrazów medycznych} to:
+\begin{itemize}[noitemsep]
+\item dają dobre wyniki dla obrazów o dobrej jakości i bez szumów.
+\item są wydajne - ich złożoność jest liniowa względem liczby przetwarzanych pikseli.
+\item nie wymagają skomplikowanej sztucznej inteligencji do działania.
+\end{itemize}
+
+Zgodnie z \cite{Cyfrowe przetwarzanie obrazów medycznych} za ich główne wady można uznać:
+\begin{itemize}[noitemsep]
+\item potrzebę określenia rozmiaru maski i wartości progowej, gdyż rozmiar maski
+znacząco wpływa na rozmieszczenie pozycji, w których gradient osiąga wartości
+maksymalne lub przecina zera,
+\item pomijanie narożników, które spowodowane jest faktem, że wartość 1D gradientu
+w narożnikach jest zazwyczaj zbyt mała, aby wykrywać wokół nich,
+\item znajdowanie schodkowych krawędzi, które są wykrywane tylko przez operator pierwszej pochodnej,
+\item dużą wrażliwość na szum,
+\item na podstawie obserwacji działania algorytmu --- rozmyte krawędzie często
+nie są wykrywane przez małe różnice w wartościach kolejnych sąsiadujących pikseli.
+\end{itemize}
 
 Operator Canny'ego \cite{Canny} składa się z 3 zasadniczych kroków:
 \begin{enumerate}%[noitemsep]
@@ -880,17 +869,17 @@ Operator Canny'ego \cite{Canny} składa się z 3 zasadniczych kroków:
 W tym celu został wykorzystany operator gradientu, a estymatorem gradientu w
 funkcji dyskretnej, jaką jest obraz, zastosowano maskę, czy też operator Sobela.
 Wykorzystując go uzyskano dla każdego piksela wielkość oraz kierunek gradientu,
-co służy do dalszych obliczeń.
+co służy do dalszych obliczeń,
 \item \textbf {Wykrycie miejsc występowania krawędzi.} \\
-W tym celu został wykorzystany algorytm non-max suppression. Polega on na wyborze
+W tym celu został wykorzystany algorytm \textit{non-max suppression}. Polega on na wyborze
 takich pikseli, które mają największą wartość gradientu na linii o kierunku
-zgodnym z kątem danego gradientu. Możliwe są 4 kierunki: pionowy, poziomy oraz
+zgodnym z kątem danego gradientu. Możliwe są cztery kierunki: pionowy, poziomy oraz
 dwa diagonalne. Jeśli dany piksel miał większą wartość gradientu od dwóch swoich
 sąsiadów, to zaznaczono go jako potencjalny punkt tworzący krawędzie. W ten sposób
-otrzymano obraz z potencjalnymi krawędziami.
+otrzymano obraz z potencjalnymi krawędziami,
 \item \textbf {Wyznaczanie krawędzi progowaniem histerezy} \\
-Po poprzednim kroku na obrazie nadal znajdują się nieistotne krawędzie. W tym celu
-Canny wprowadził ideę progowania histerezy. Metoda ta wymaga 2 wartości progowych
+Po poprzednim kroku na obrazie nadal znajdują się nieistotne krawędzie. W~tym celu
+Canny wprowadził ideę progowania histerezy. Metoda ta wymaga dwóch wartości progowych
 $T_1, T_2$ takich, że $T_1 < T_2$. Jeżeli wartość gradientu w danym pikselu jest
 większa od $T_2$, to zaznaczono ten punkt jako krawędź. Jeśli tak się stało, to
 zaczęto proces śledzenia krawędzi --- dla każdego sąsiada, którego wartość gradientu
@@ -908,7 +897,7 @@ dla $T_2$. W ten sposób wyznaczono progi do histerezy.
 \end{enumerate}
 
 Operator Sobela \cite{Sobel} to metoda wyznaczania gradientu, a więc zarazem
-krawędzi zarówno w~kierunku poziomym, jak i w pionowym. Dla każdego piksela
+krawędzi w~kierunku poziomym, jak i w pionowym. Dla każdego piksela
 przeprowadzono operację morfologiczną z następującymi maskami:
 
 \begin{table}[h!]
@@ -940,28 +929,51 @@ $\sqrt{s_1^2 + s_2^2}$ & $tg^{-1} \Bigg[ {\cfrac{s_1}{s_2}} \Bigg]$
 \end{tabular}
 \end{table}
 
-Detektory krawędzi oparte na gradiencie, w tym operator Canny'ego są często używane.
-Ich główne zalety na podstawie \cite{Cyfrowe przetwarzanie obrazów medycznych} to:
+\subsection {Opracowany algorytm obrysu półauotomatycznego}
+
+Opracowany algorytm służy do półautomatycznego tworzenia obrysów na podstawie wybranych punktów,
+które są interpolowane przez algorytm bazujący na operatorze Cany'ego, operatorze Sobela i algorytmie A*.
+Powyższe rozwiązania pozwalają na uzyskanie najlepszych efektów na przetwarzanych
+przez narzędzie obrazach medycznych.
+% screen z aplikacji i schemat
+
+Danymi wejściowymi są:
 \begin{itemize}[noitemsep]
-\item dają dobre wyniki dla obrazów o dobrej jakości i bez szumów.
-\item są wydajne - ich złożoność jest liniowa względem liczby przetwarzanych pikseli.
-\item nie wymagają skomplikowanej sztucznej inteligencji do działania.
+\item {identyfikator obrazu medycznego, na którym był wykonywany obrys,}
+\item {lista punktów wybranych przez użytkownika; punkty te zostały wcześniej
+przeskalowane ze współrzędnych w internetowej aplikacji webowej
+na współrzędne odpowiadające rozdzielczości oryginalnego obrazu.}
 \end{itemize}
 
-Zgodnie z \cite{Cyfrowe przetwarzanie obrazów medycznych} za ich główne wady można uznać:
+
+Algorytm można podzielić na kilka ważnych etapów:
+
 \begin{itemize}[noitemsep]
-\item potrzebę określenia rozmiaru maski i wartości progowej, gdyż rozmiar maski
-znacząco wpływa na rozmieszczenie pozycji, w których gradient osiąga wartości
-maksymalne lub przecina zera,
-\item pomijanie narożników, które spowodowane jest faktem, że wartość 1D gradientu
-w narożnikach jest zazwyczaj zbyt mała, aby wykrywać wokół nich,
-\item znajdowanie schodkowych krawędzi, które są wykrywane tylko przez operator pierwszej pochodnej,
-\item dużą wrażliwość na szum,
-\item na podstawie obserwacji działania algorytmu --- rozmyte krawędzie często
-nie są wykrywane przez małe różnice w wartościach kolejnych sąsiadujących pikseli.
+\item {wygenerowanie bitmapy}
+\item {wykrycie krawędzi na bitmapie,}
+\item {stworzenie grafu z bitmapy,}
+\item {zapewnienie spójności grafu,}
+\item {wyszukanie najkrótszych ścieżek w grafie.}
 \end{itemize}
 
-W ten sposób otrzymano macierz, gdzie każde pole w macierzy odpowiada pikselowi
+Poniżej zostaną przedstawione dokładne rozwiązania dla każdego z tych kroków.
+
+\subsection {Wygenerowanie bitmapy}
+
+Przed rozpoczęciem przetwarzania jest pobierany obraz medyczny o danym wcześniej
+identyfikatorze z~serwera Orthanc. Bitmapa tworzona jest na podstawie obrazu DICOM poprzez
+zapisanie w odpowiednich komórkach wartości kolorów z oryginalnego obrazu.
+Stawi ona podstawę do dalszej pracy algorytmu.
+
+\subsection {Wykrycie krawędzi na bitmapie}
+
+W pracy został użyty operator Canny'ego, ze względu na możliwość dostosowania go
+do bardzo różnorodnych problemów. Zgodnie z Rysunkiem 4.25 %sprawdzić numer
+,,Porównanie operatorów wykrywania krawędzi'' w \cite{Cyfrowe przetwarzanie obrazów medycznych}
+najlepiej wykrywał główne narządy, takie jak wątroba czy też trzustka. Z wyżej
+wymienionych powodów został on wykorzystany w tym algorytmie.
+
+Stosując operator Canny'ego otrzymano macierz, gdzie każde pole w macierzy odpowiada pikselowi
 w wejściowej bitmapie --- obrazie medycznym. Jeśli w komórce macierzy znajduje
 się 1, to w tym miejscu na bitmapie znajduje się krawędź, w przeciwnym przypadku
 0. W ten sposób algorytm wykrył wszystkie znaczące krawędzie na bitmapie. Kolejnym
@@ -969,19 +981,18 @@ krokiem przetwarzania było stworzenie grafu na podstawie wyżej wymienionej mac
 
 \subsection {Stworzenie grafu z bitmapy}
 
-Kolejnym etapem jest stworzenie grafu z bitmapy. Na tym etapie algorytm potrzebuje
-następujących danych wejściowych:
+Kolejnym etapem było stworzenie grafu z bitmapy. Na tym etapie danymi wejściowymi były:
 \begin{itemize}[noitemsep]
-\item macierz z wartościami logicznymi prawda/fałsz czy znajduje się w danym
-punkcie krawędź. Może to być także realizowane poprzez macierz wartości liczbowych.
+\item macierz z wartościami logicznymi prawda/fałsz określającymi czy znajduje się w danym
+punkcie krawędź,
 \item punkty wybrane przez użytkownika aplikacji.
 \end{itemize}
 
 %Jaki tutaj -? - czy --?
 Przed rozpoczęciem działania algorytmu należy zapewnić łączność 4-krotną
-(ang. Pixel 4-connectivity) \cite{Pixel connectivity}. Jest ona zwana także
+(ang. \textit{pixel 4-connectivity}) \cite{Pixel connectivity}, zwaną także
 sąsiedztwem von Neumanna. Przy łączności 4-krotnej sprawdza się tylko sąsiadów
-w poziomie lub pionie.
+w poziomie lub pionie zgodnie ze schematem na rysunku poniżej.
 
 %Opisać te rysunki i wywalić stąd - nie muszą być dokładnie w tym miejscu.
 \begin{center}
@@ -1015,9 +1026,9 @@ przekątnej. Jest ona zwana także sąsiedztwem Moore'a lub otoczeniem Moore'a \
 
 %Bibliografia do tego?
 W przypadku zastosowania łączności 8-krotnej przy wyznaczaniu długości krawędzi
-musiano by zastosować metrykę Czebyszewa, która jest specjalnym przypadkiem
-odległości Minkowskiego. Jeśli zostanie łączność 4-krotna to długość krawędzi
-byłaby obliczana zgodnie z metryką miejską, zwaną też metryką Manhattan.
+trzeba zastosować metrykę Czebyszewa, która jest specjalnym przypadkiem
+odległości Minkowskiego. Przy zastosowaniu łączności 4-krotnej długość krawędzi
+jest obliczana zgodnie z metryką miejską, zwaną też metryką Manhattan.
 
 Metryka Manhattan w kontekście dalszego przetwarzania w celu wyszukiwania
 najkrótszych ścieżek w grafie jest bardziej adekwatna, ponieważ jest intuicyjna
@@ -1032,10 +1043,10 @@ liczbę sąsiadów. Poniżej zakładamy, że piksel jest oznaczony jako krawęd�
 wejściowej. W zależności od liczby sąsiadów mamy następujące przypadki:
 \begin{itemize}[noitemsep]
 \item 0 --- wierzchołek izolowany,
-\item 1 --- punkty końcowe (ang. endpixels),
-\item 2 --- punkty łączące (ang. linkpixels), czyli fragmenty krawędzi,
-\item 3--4 --- punkty węzłowe (ang. vertices), czyli punkty, od których odchodzą
-co najmniej 3 krawędzie.
+\item 1 --- punkty końcowe (ang. \textit{endpixels}),
+\item 2 --- punkty łączące (ang. \textit{linkpixels}), czyli fragmenty krawędzi,
+\item 3--4 --- punkty węzłowe (ang. \textit{vertices}), czyli punkty, od których odchodzą
+co najmniej trzy krawędzie.
 \end{itemize}
 
 W przypadku łączności 8-krotnej do detekcji wierzchołków należałoby stosować
@@ -1058,9 +1069,9 @@ $
 z & z & z
 \end{bmatrix}
 $,
-\item punkty łączące (ang. linkpixels), czyli fragmenty krawędzi, posiadają
-dokładnie 2 sąsiadów, nie używamy przekształcenia Hit-or-Miss a tylko liczymy sąsiadów
-\item punkty węzłowe (ang. vertices), czyli punkty, od których odchodzą co najmniej 3 krawędzie: \\
+\item punkty łączące (ang. \textit{linkpixels}), czyli fragmenty krawędzi, posiadają
+dokładnie dwóch sąsiadów, nie używamy przekształcenia Hit-or-Miss a tylko liczymy sąsiadów
+\item punkty węzłowe (ang. \textit{vertices}), czyli punkty, od których odchodzą co najmniej trzy krawędzie: \\
 $
 \begin{bmatrix}
 z & 1 & z \\
@@ -1078,7 +1089,7 @@ $,.
 
 Warto zauważyć, że te elementy strukturalne należy obracać o 90, 180 i 270 stopni.
 Za każdym razem trzeba by wielokrotnie sprawdzać te same piksele. Ponadto należy
-sprawdzać 8, a nie 4 sąsiadów.
+sprawdzać~8, a nie 4~sąsiadów.
 
 Kolejnym problemem jest fakt, że przy spójności 8-krotnej przekształcenie
 Hit-or-Miss może w najbliższym otoczeniu punktu krzyżowania się krawędzi oznaczyć
@@ -1094,7 +1105,8 @@ z wykrytymi krawędziami w optymistycznym przypadku.
 
 \bigskip
 
-Z wyżej wymienionych powodów zdecydowano się na łączność 4-krotną. Przygotowano
+W pracy zdecydowano się na metrykę 4-krotną ze względu na prostotę obliczeń,
+która skróci czas pracy algorytmu. Przygotowano
 i zaimplementowano algorytm tworzący graf z bitmapy, a jego pseudokod znajduje
 się w Załączniku 1. %Poprawić, nie poniżej!!!
 
@@ -1145,16 +1157,16 @@ niż odległość wynikająca z metryki Manhattan pomiędzy tymi dwoma wierzcho�
 Przykład zasady działania tej operacji przedstawia poniższy pseudokod:
 
 \begin{verbatim}
- 1) foreach (Spójna składowa grafu s1)
- 2) {
- 3)     foreach (Spójna składowa grafu s2, różna od s1 i nie przetwarzana
-        wcześniej jako s1)
- 4)     {
- 5)         Wybierz wierzchołek v1 z s1 i v2 z s2 takie, że odległość pomiędzy
-            nimi jest najmniejsza ze wszystkich takich par
- 6)         Dodaj sztuczną krawędź pomiędzy v1 i v2
- 7)     }
- 8) }
+foreach (Spójna składowa grafu s1)
+{
+    foreach (Spójna składowa grafu s2, różna od s1 i nie przetwarzana
+      wcześniej jako s1)
+    {
+        Wybierz wierzchołek v1 z s1 i v2 z s2 takie, że odległość pomiędzy
+          nimi jest najmniejsza ze wszystkich takich par
+        Dodaj sztuczną krawędź pomiędzy v1 i v2
+    }
+}
 \end{verbatim}
 
 
@@ -1202,35 +1214,35 @@ metryki Manhattan. Przykładowy pseudokod tego algorytmie można znaleźć w
 \cite{AiSD2} i jest on następujący: %Także nie powinno tak tego się robić!
 
 \begin{verbatim}
- 1) CLOSE = 0 // zbiór (z szybkim sprawdzeniem przynależności)
- 2) OPEN = {s} // kolejka priorytetowa
- 3) // priorytety - sumy odległości wierzchołków od źródła
- 4) // i oszacowań odległości tych wierzchołków od celu
- 5) odległość[s] = 0
- 6) while ( OPEN niepusty )
- 7) {
- 8)     u = wierzchołek należący do OPEN taki, że
- 9)         odległość[u] + oszacowanie[u,t] <=
-10)         odległość[w] + oszacowanie[w,t]
-11)         dla wszystkich w należących do OPEN
-12)     usuń u z OPEN
-13)     wstaw u do CLOSE
-14)     if ( u == t ) break
-15)     foreach ( wierzchołek w sąsiadujący z u taki, że w należący do CLOSE )
-16)     {
-17)         if ( w należy do OPEN )
-18)         {
-19)             odległość[w] = nieskończoność
-20)             wstaw w do OPEN
-21)         }
-22)         if ( odległość[w] > odległość[u] + waga<u,w> )
-23)         {
-24)             odległość[w] = odległość[u] + waga<u,w>
-25)             aktualizacja priorytetu wierzchołka w (w OPEN)
-26)             poprzedni[w] = u
-27)         }
-28)     }
-29) }
+CLOSE = 0 // zbiór (z szybkim sprawdzeniem przynależności)
+OPEN = {s} // kolejka priorytetowa
+// priorytety - sumy odległości wierzchołków od źródła
+// i oszacowań odległości tych wierzchołków od celu
+odległość[s] = 0
+while ( OPEN niepusty )
+{
+    u = wierzchołek należący do OPEN taki, że
+        odległość[u] + oszacowanie[u,t] <=
+        odległość[w] + oszacowanie[w,t]
+        dla wszystkich w należących do OPEN
+    usuń u z OPEN
+    wstaw u do CLOSE
+    if ( u == t ) break
+    foreach ( wierzchołek w sąsiadujący z u taki, że w należący do CLOSE )
+    {
+        if ( w należy do OPEN )
+        {
+            odległość[w] = nieskończoność
+            wstaw w do OPEN
+        }
+        if ( odległość[w] > odległość[u] + waga<u,w> )
+        {
+            odległość[w] = odległość[u] + waga<u,w>
+            aktualizacja priorytetu wierzchołka w (w OPEN)
+            poprzedni[w] = u
+        }
+    }
+}
 \end{verbatim}
 
 Aby maksymalnie dobrze wykorzystać niską złożoność obliczeniową algorytmu A*
@@ -1245,11 +1257,11 @@ tych wierzchołków od celu. Warto zauważyć, że oprócz sortowania często s�
 do niego wierzchołki, pobierane, usuwane i modyfikowane wartości priorytetu.
 Bardzo często jest sprawdzana przynależność i wyszukiwanie według klucza.
 
-W \cite{C w pigulce} na stronie 317 znajduje się tabela 7.1. Przedstawia ona
-porównanie czasów różnych operacji dla różnych klas słownikowych zaimplementowanych
-w technologii .NET. Najlepszą strukturą danych byłoby SortedDictionary<K,V>,
-która jest implementowana przez drzewo czerwono-czarne gdyby nie fakt, że jest
-sortowane po kluczu, a nie tak jak jest potrzebne w tym przypadku sortowanie
+Porównanie czasów różnych operacji dla różnych klas słownikowych zaimplementowanych
+w technologii .NET można znaleźć w \cite{C w pigulce}.
+Najlepszym rozwiązaniem byłoby użycie SortedDictionary<K,V>,
+która jest implementowana przez drzewo czerwono-czarne. Niestety, jest
+sortowana po kluczu, a nie tak jak jest potrzebne w tym przypadku sortowanie
 po wartości. Poszukiwano zatem struktury danych, która sortuje po wartościach
 i ma łatwy dostęp przez klucz.
 
@@ -1297,7 +1309,7 @@ o następujących własnościach:
 Algorytm A* jest uruchamiany dla każdego punktu wybranego przez użytkownika.
 Wyszukuje on najkrótszą ścieżkę do kolejnego punktu wybranego przez użytkownika.
 Po wszystkich obliczeniach obrys składa się z poszczególnych ścieżek. Są one
-konsolidowane i zwracane jako lista pikseli na podstawie danych z krawędzi o
+konsolidowane i zwracane jako lista pikseli na podstawie danych z~krawędzi o
 listach pikseli, z których jest zbudowana krawędź. W ten sposób jest wykrywany
 obrys pomiędzy punktami zaznaczonymi przez użytkownika.
 
@@ -1306,39 +1318,40 @@ albo istnieją tylko w wybranym fragmencie ścieżki łączącej te dwa wierzcho
 algorytm w miarę możliwości będzie starał się używać prawdziwych krawędzi, dzięki
 odpowiedniej wadze krawędzi sztucznych. Dzięki sztucznym krawędziom na pewno
 istnieje droga między kolejnymi punktami, zatem algorytm z całą pewnością zwróci
-poprawny wynik. Co najwyżej będzie to wielokąt z punktami wybranymi przez użytkownika.
+poprawny wynik. Co najwyżej będzie to wielokąt z~punktami wybranymi przez użytkownika.
 
 Algorytm dla sztucznych krawędzi generuje listę pikseli algorytmem Bresenhama
 \cite{Bresenham}. Jest to algorytm, który dodaje w najbardziej optymalny sposób
 krawędzie. W celu zapewnienia łączności 4-krotnej jest przeprowadzana operacja
-morfologiczna z wykrywaniem 2 pikseli po przekątnej z maską 4-pikselową. Gdy takie
+morfologiczna z wykrywaniem 2 pikseli po przekątnej z~maską 4-pikselową. Gdy takie
 piksele zostaną wykryte, to na jednym z rogów jest dodawany piksel w celu
 zapewnienia łączności 4-krotnej.
 
-\subsection {Optymalizacja}
+\subsection {Optymalizacja algorytmu obrysu półautomatycznego}
 
-Większość plików medycznych ma rozdzielczości rzędu kilkaset na kilkaset pikseli,
+Większość obrazów medycznych ma rozdzielczość rzędu kilkaset na kilkaset pikseli,
 a więc na całym obrazie znajduje się kilkaset tysięcy pikseli. Zdarzają się też
 pliki w znacznie większej rozdzielczości, takimi są między innymi mammografia i
-zdjęcie rentgenowskie. Na tych obrazach znajduje się do kilkudziesięciu milionów
-pikseli. W celu sprawnego przetwarzania tych informacji potrzebne były optymalizacje
-do algorytmu. Zostały dodane usprawnienia, które opisano poniżej.
+zdjęcie rentgenowskie rzędu kilku tysięcy na kilka tysięcy pikseli.
+Na tych obrazach znajduje się do kilkudziesięciu milionów
+pikseli. W celu sprawnego przetwarzania tych obrazów potrzebne było przeprowadzenie optymalizacji
+algorytmu. Zostały dodane usprawnienia, które opisano poniżej.
 \begin{enumerate}
 \item \textbf {Zmniejszenie rozmiaru obrazu roboczego} \\
-W pierwszym kroku zmniejszono rozmiar obrazu roboczego. Wyznaczono najmniejszy
-prostokąt, w którym mieszczą się wszystkie punkty zaznaczone przez użytkownika.
-Powiększono ten prostokąt o marginesy w taki sposób, by wyjściowy prostokąt nadal
+W pierwszym kroku zmniejszono rozmiar obrazu roboczego. Wyznaczono najmniejszy obszar zainteresowania w kształcie
+prostokąta, w którym mieszczą się wszystkie punkty zaznaczone przez użytkownika.
+Powiększono ten obszar o marginesy w taki sposób, by wyjściowy prostokąt nadal
 był w środku, a pole powiększonego było 4-krotnie większe. Innymi słowami ---
-dodano marginesy po 50\% szerokości / wysokości do każdego wymiaru. Jeśli rozmiar
+dodano marginesy po 50\% szerokości/wysokości do każdego wymiaru. Jeśli rozmiar
 powiększonego prostokąta jest większy niż obrazu, to nie jest zmieniany obraz roboczy.
-Gdy użytkownik stworzył mały obrys, to rozmiar przetwrzanego obrazu jest także mały.
+Gdy użytkownik stworzył niewielki obrys, to rozmiar obrazu jest także niewielki.
 W sytuacji, gdy obrys zajmuje prawie cały obraz medyczny, to nadal musi być
 przetwarzany cały obraz.
 \item \textbf {Sięganie do pamięci zamiast to bitmapy} \\
 W celu przyśpieszenia działania operatora Sobela i liczenia statystyk, zamiast
-sięgać do bitmapy metodą .GetPixel() na platformie .NET, bitmapa została zapisana
-do tablicy bajtów i był z niej bezpośredni dostęp. Została wykorzystana do tego
-funkcja .LockBits(). Zysk na tej operacji był kilkudziesięciokrotny. Na późniejszych
+sięgać do bitmapy metodą \textbf{.GetPixel()} na platformie .NET, bitmapa została zapisana
+do tablicy bajtów w celu uzyskania bezpośredniego dostępu. Została wykorzystana do tego
+funkcja \textbf{.LockBits()}. Zysk na tej operacji był kilkudziesięciokrotny. Na późniejszych
 etapach algorytmu pracowano na macierzy, która nie była już bitmapą, więc operacje
 te wykonywały się znacznie szybciej.
 \item \textbf {Dzielenie zbyt długich krawędzi} \\
@@ -1368,7 +1381,7 @@ a 255 najjaśniejszy),
 \item wartość średnia --- średnia arytmetyczna wartości kolorów pikseli wewnątrz obrysu,
 \end{itemize}
 \item środek ciężkości --- średnia arytmetyczna pozycji pikseli obrysu,
-\item długość obrysu w $mm$ --- obliczana na podstawie położenia pikseli i
+\item długość obrysu w $mm$ --- obliczana na podstawie położenia pikseli i % doprecyzuj, bo ja nie wiem
 wartości pixel spacing odczytywanej z tagu obrazu DICOM,
 \item długość obrysu w pikselach,
 \item pole powierzchni w $mm^2$,
@@ -1377,17 +1390,26 @@ wartości pixel spacing odczytywanej z tagu obrazu DICOM,
 
 Do obliczenia histogramu jest wymagany punkt wewnętrzny obrysu. Środek ciężkości
 obrysu nie zawsze musi znajdować się wewnątrz obrysu. W przypadku zastosowania
-algorytmu scan-linii dla obrysu manualnego nie jest dana informacja o logicznych
+algorytmu scan-linii dla obrysu manualnego nie jest podana informacja o logicznych
 wartościach, gdzie jest krawędź, więc nie można wykryć np. krawędzi poziomych.
-Algorytm scan-linii lepiej nadaje się w przypadku, gdy wypełniamy wielokąt,
-a nie obrys.
+%Algorytm scan-linii lepiej nadaje się w przypadku, gdy wypełniamy wielokąt,
+%a nie obrys.
+% pani dr chciała to inaczej
 
-Z tego powodu wybrano algorytm Flood Fill, czyli rozlewania się rekurencyjnego
+Z tego powodu wybrano algorytm Flood Fill, czyli rozlewania się rekurencyjnego % cytacja
 zliczonych pikseli od punktu wewnętrznego. Właśnie z tego powodu od użytkownika
 jest wymagane podanie dodatkowej informacji, jaką jest punkt wewnętrzny obrysu.
 Założono, że użytkownik zaznaczy go poprawnie. W sytuacji, gdy zostanie podany
 błędny punkt to ten algorytm policzy to co znajduje się na zewnątrz obrysu, a
 nie to co jest wewnątrz.
+
+\section {Moduł anonimizacji danych}
+
+W celu umożliwienia anonimizacji danych pacjentów zawartych w plikach DICOM skorzystano
+z REST API serwera Orthanc. Umożliwia ono wykonanie kopii badania wgranego do serwera
+z nowymi danymi pacjenta. Po wykonaniu kopii z podanymi przez użytkownika danymi
+oryginalny obraz DICOM jest usuwany z serwera obrazów Orthanc.
+
 
 \afterpage{\blankpage}
 
@@ -1709,8 +1731,6 @@ inteligencji opartych na obrysach wykonanych przez użytkownika.
 
 
 
-\afterpage{\blankpage}
-
 % -------------------- 6. Bibliografia -----------------------
 % Bibliografia leksykograficznie wg nazwisk autorów
 % Dla ambitnych - można skorzystać z BibTeX-a
@@ -1762,11 +1782,153 @@ inteligencji opartych na obrysach wykonanych przez użytkownika.
 
 
 
-% --- 8. Instrukcja instalacji
+% --- 9. Wykaz symboli i skrótów - jeśli nie ma, zakomentować
 \afterpage{\blankpage}
-\chapter*{Instrukcja instalacji}
-\markboth{}{Instrukcja instalacji}
-\addcontentsline{toc}{chapter}{Instrukcja instalacji}
+\chapter*{Wykaz symboli i skrótów}
+\markboth{}{Wykaz symboli i skrótów}
+\addcontentsline{toc}{chapter}{Wykaz symboli i skrótów}
+
+
+\begin{itemize}[noitemsep]
+\item API -- ang. Application Programming Interface --- zestaw ściśle określonych reguł, poprzez które komunikują się ze sobą programy\\
+\item CRUD --- ang. Create, Read, Update, Delete --- utwórz, odczytaj, aktualizuj i usuń -- cztery podstawowe funkcje w aplikacjach, które umożliwiają zarządzanie nią\\
+\item CSV --- ang. Comma-Separated Values (w pracy użyte w kontekście formatu pliku) \\
+\item DoS --- ang. Denial of Service --- atak na system komputerowy mający na celu uniemożliwienie działania systemu\\
+\item DICOM --- ang. Digital Imaging and Communications in Medicine --- norma ujednolicająca wymianę i interpretację obrazowych danych medycznych\\
+\item HTML5 --- ang. HyperText Markup Language 5 --- język do tworzenia i prezentowania stron internetowych www\\
+\item HTTP --- ang. Hypertext Transfer Protocol --- protokół wymiany danych hipertekstowych\\
+\item HTTPS --- ang. Hypertex Transfer Protocol Secure --- szyfrowana wersja protokołu HTTP\\
+\item ID --- ang. Identifier --- unikalna nazwa przypisana do danego obiektu, pozwalająca rozróżniać obiekty w systemie\\
+\item JSON --- ang. JavaScript Object Notation --- lekki format wymiany danych, bazujący na podzbiorze języka JavaScript\\
+\item REST --- ang. Representational State Transfer --- styl architektury oprogramowania dla systemów rozproszonych\\
+\item RGB --- ang. Red, Green, Blue --- model przestrzeni barw, opisanej współrzędnymi 3 barw podstawowych: czerwonej, zielonej i niebieskiej\\
+\item SDK --- ang. Software Development Kit --- zestaw narzędzi programistycznych niezbędny do tworzenia aplikacji korzystającej z danej biblioteki\\
+\end{itemize}
+
+%\thispagestyle{empty}
+
+
+\afterpage{\blankpage}
+
+% ----- 10. Spis rysunków - jeśli nie ma, zakomentować --------
+\listoffigures
+\markboth{}{Spis rysunków}
+\addcontentsline{toc}{chapter}{Spis rysunków}
+%\thispagestyle{empty}
+%Jak nie występują, usunąć.
+
+
+\afterpage{\blankpage}
+
+
+% ------------ 11. Spis tabel - jak wyżej ------------------
+%\renewcommand{\listtablename}{Spis tabel}
+%\phantomsection
+%\markboth{}{Spis tabel}
+%\addcontentsline{toc}{chapter}{Spis tabel}
+%\listoftables
+%\thispagestyle{empty}
+%Jak nie występują, usunąć.
+
+%---- 12. Spis CD
+
+\chapter*{Spis zawartości załączonej płyty CD}
+\markboth{}{Spis zawartości załączonej płyty CD}
+\addcontentsline{toc}{chapter}{Spis zawartości załączonej płyty CD}
+
+Do niniejszej pracy dyplomowej inżynierskiej została załączona płyta CD. W jej skład wchodzą:
+\begin{itemize}[noitemsep]
+\item wesja elektroniczna pracy, której treść jest identyczna z powyższą w
+pliku \verb+garsteckil-swierczewskit-praca-inzynierska.pdf+,
+\item strona tytułowa pracy w pliku \verb+garsteckil-swierczewskit-strona-tytulowa.pdf+,
+\item streszczenie w języku polskim i angielskim w plikach o nazwach odpowiednio
+\verb+garsteckil-swierczewskit-stresczenie.pdf+ i \verb+garsteckil-swierczewski-abstract.pdf+.
+\end{itemize}
+
+Kod źródłowy, który został podzielony na kilka katalogów:
+\begin{itemize}
+\item \verb+DotNetProject/+ - zawierający kod źródłowy głównego serwera aplikacji.
+Główne algorytmy odpowiedzialne za generowanie obrysów półautomatycznych znajdują się w podkatalogu \verb+Logic/+,
+\item \verb+Web/+ - zawierający kod źródłowy aplikacji przeglądarkowej.
+\end{itemize}
+
+\afterpage{\blankpage}
+
+% 13. Spis załączników - jak nie ma załączników, to zakomentować lub usunąć
+
+\chapter*{Spis załączników}
+\markboth{}{Spis załączników}
+\addcontentsline{toc}{chapter}{Spis załączników}
+\begin{enumerate}
+\item Załącznik 1 - Pseudokod generujący graf z bitmapy
+
+\begin{verbatim}
+MATRIX - macierz wejściowa z oznaczonymi krawędziami jako 1
+foreach(punkt A taki, że MATRIX(A) == 1)
+{
+    if ( punkt A ma 1 sąsiada albo co najmniej 3 sąsiadów )
+    {
+        // (tzn. jest albo punktem końcowym albo węzłowym)
+        wstaw punkt A do kolejki wierzchołków L_V
+        while ( kolejka wierzchołków L_V niepusta )
+        {
+             weź wierzchołek V_1 z kolejki L_V
+            usuń V_1 z kolejki L_V
+            dodaj wierzchołek V_1 do grafu G
+            foreach (punkt B sąsiadujący z V_1 )
+             {
+                if ( MATRIX(B) == 1 )
+                 {
+                    stwórz nową krawędź E.
+                    dodaj B do E
+                    ustaw wierzchołek V_1 jako początek krawędzi E
+                    dodaj krawędź E do kolejki przetwarzanych krawędzi L_E
+                }
+                while ( L_E niepusta)
+                 {
+                    weź krawędź E z L_E
+                    usuń E z kolejki
+                    stwórz kolejkę potencjalnych punktów krawędzi E, L_P
+                    weź punkt C z E
+                    usuń C z E
+                    dodaj punkt C do kolejki L_P
+                    while ( L_P niepusta )
+                    {
+                        weź punkt D z L_P
+                        usuń D z L_P
+                        K = liczba sąsiadów D
+                        if ( K == 0 lub K > 1 )
+                        {
+                            stwórz wierzchołek V_2, który znajduje się w D
+                            do listy krawędzi wierzchołka V_2 dodaj E
+                            do listy krawędzi wierzchołka V_1 dodaj E
+                            ustaw wierzchołek V_2 jako koniec krawędzi E
+                            dodaj krawędź E do grafu G
+                            dodaj wierzchołek V_2 do kolejki L_V
+                        }
+                        if ( K == 1 )
+                        {
+                            dodaj punkt D do E
+                            foreach ( punkt F sąsiadujący z D )
+                            {
+                                if ( MATRIX(F) == 1)
+                                {
+                                    dodaj F do L_P
+                                }
+                            }
+                        }
+                        MATRIX(D) = 1
+                    }
+                }
+            }
+        }
+    }
+}
+Zwróć graf G
+\end{verbatim}
+
+% --- 8. Instrukcja instalacji
+\item Załącznik 2 - Instrukcja instalacji
 
 W celu instalacji serwera Orthanc należy otworzyć stronę
 \url{https://www.orthanc-server.com/download.php}, pobrać wersję odpowiednią dla
@@ -1824,9 +1986,8 @@ należy uruchomić w konsoli obsługującej skrypty w języku bash.
 % --- 8. Instrukcja użytkowania
 
 
-\chapter*{Instrukcja użytkowania}
-\markboth{}{Instrukcja użytkowania}
-\addcontentsline{toc}{chapter}{Instrukcja użytkowania}
+
+\item Załącznik 2 - Instrukcja użytkowania
 
 \begin{figure}[h!]
 	\center
@@ -2083,145 +2244,6 @@ wyświetlanego obrazu --- Rysunek \ref{fig:18}.
 Poprzez wciśnięcie przycisku anonimizuj (Anonymize) użytkownik może wybrać nazwę
 pacjenta, datę jego urodzenia oraz płeć po anonimizacji jego danych --- Rysunek \ref{fig:19}.
 
-% --- 9. Wykaz symboli i skrótów - jeśli nie ma, zakomentować
-\afterpage{\blankpage}
-\chapter*{Wykaz symboli i skrótów}
-\markboth{}{Wykaz symboli i skrótów}
-\addcontentsline{toc}{chapter}{Wykaz symboli i skrótów}
-
-
-\begin{itemize}[noitemsep]
-\item API -- ang. Application Programming Interface --- zestaw ściśle określonych reguł, poprzez które komunikują się ze sobą programy\\
-\item CRUD --- ang. Create, Read, Update, Delete --- utwórz, odczytaj, aktualizuj i usuń -- cztery podstawowe funkcje w aplikacjach, które umożliwiają zarządzanie nią\\
-\item CSV --- ang. Comma-Separated Values (w pracy użyte w kontekście formatu pliku) \\
-\item DoS --- ang. Denial of Service --- atak na system komputerowy mający na celu uniemożliwienie działania systemu\\
-\item DICOM --- ang. Digital Imaging and Communications in Medicine --- norma ujednolicająca wymianę i interpretację obrazowych danych medycznych\\
-\item HTML5 --- ang. HyperText Markup Language 5 --- język do tworzenia i prezentowania stron internetowych www\\
-\item HTTP --- ang. Hypertext Transfer Protocol --- protokół wymiany danych hipertekstowych\\
-\item HTTPS --- ang. Hypertex Transfer Protocol Secure --- szyfrowana wersja protokołu HTTP\\
-\item ID --- ang. Identifier --- unikalna nazwa przypisana do danego obiektu, pozwalająca rozróżniać obiekty w systemie\\
-\item JSON --- ang. JavaScript Object Notation --- lekki format wymiany danych, bazujący na podzbiorze języka JavaScript\\
-\item REST --- ang. Representational State Transfer --- styl architektury oprogramowania dla systemów rozproszonych\\
-\item RGB --- ang. Red, Green, Blue --- model przestrzeni barw, opisanej współrzędnymi 3 barw podstawowych: czerwonej, zielonej i niebieskiej\\
-\item SDK --- ang. Software Development Kit --- zestaw narzędzi programistycznych niezbędny do tworzenia aplikacji korzystającej z danej biblioteki\\
-\end{itemize}
-
-%\thispagestyle{empty}
-
-
-% ----- 10. Spis rysunków - jeśli nie ma, zakomentować --------
-\listoffigures
-\markboth{}{Spis rysunków}
-\addcontentsline{toc}{chapter}{Spis rysunków}
-%\thispagestyle{empty}
-%Jak nie występują, usunąć.
-
-
-
-
-% ------------ 11. Spis tabel - jak wyżej ------------------
-\renewcommand{\listtablename}{Spis tabel}
-\phantomsection
-\markboth{}{Spis tabel}
-\addcontentsline{toc}{chapter}{Spis tabel}
-\listoftables
-%\thispagestyle{empty}
-%Jak nie występują, usunąć.
-
-%---- 12. Spis CD
-
-\chapter*{Spis zawartości załączonej płyty CD}
-\markboth{}{Spis zawartości załączonej płyty CD}
-\addcontentsline{toc}{chapter}{Spis zawartości załączonej płyty CD}
-
-Do niniejszej pracy dyplomowej inżynierskiej została załączona płyta CD. W jej skład wchodzą:
-\begin{itemize}[noitemsep]
-\item wesja elektroniczna pracy, której treść jest identyczna z powyższą w
-pliku \verb+garsteckil-swierczewskit-praca-inzynierska.pdf+,
-\item strona tytułowa pracy w pliku \verb+garsteckil-swierczewskit-strona-tytulowa.pdf+,
-\item streszczenie w języku polskim i angielskim w plikach o nazwach odpowiednio
-\verb+garsteckil-swierczewskit-stresczenie.pdf+ i \verb+garsteckil-swierczewski-abstract.pdf+.
-\end{itemize}
-
-Kod źródłowy, który został podzielony na kilka katalogów:
-\begin{itemize}
-\item \verb+DotNetProject/+ - zawierający kod źródłowy głównego serwera aplikacji.
-Główne algorytmy odpowiedzialne za generowanie obrysów półautomatycznych znajdują się w podkatalogu \verb+Logic/+,
-\item \verb+Web/+ - zawierający kod źródłowy aplikacji przeglądarkowej.
-\end{itemize}
-
-% 13. Spis załączników - jak nie ma załączników, to zakomentować lub usunąć
-
-\chapter*{Spis załączników}
-\markboth{}{Spis załączników}
-\addcontentsline{toc}{chapter}{Spis załączników}
-\begin{enumerate}
-\item Załącznik 1 - Pseudokod generujący graf z bitmapy
-
-\begin{verbatim}
- 1) MATRIX - macierz wejściowa z oznaczonymi krawędziami jako 1
- 2) foreach(punkt A taki, że MATRIX(A) == 1)
- 3) {
- 4)     if ( punkt A ma 1 sąsiada albo co najmniej 3 sąsiadów )
- 5)     {
- 6)         // (tzn. jest albo punktem końcowym albo węzłowym)
- 7)         wstaw punkt A do kolejki wierzchołków L_V
- 8)         while ( kolejka wierzchołków L_V niepusta )
- 9)         {
-10)             weź wierzchołek V_1 z kolejki L_V
-11)             usuń V_1 z kolejki L_V
-12)             dodaj wierzchołek V_1 do grafu G
-13)             foreach (punkt B sąsiadujący z V_1 )
-14)             {
-15)                 if ( MATRIX(B) == 1 )
-16)                 {
-17)                     stwórz nową krawędź E.
-18)                     dodaj B do E
-19)                     ustaw wierzchołek V_1 jako początek krawędzi E
-20)                     dodaj krawędź E do kolejki przetwarzanych krawędzi L_E
-21)                 }
-22)                 while ( L_E niepusta)
-23)                 {
-24)                     weź krawędź E z L_E
-25)                     usuń E z kolejki
-26)                     stwórz kolejkę potencjalnych punktów krawędzi E, L_P
-27)                     weź punkt C z E
-28)                     usuń C z E
-29)                     dodaj punkt C do kolejki L_P
-30)                     while ( L_P niepusta )
-31)                     {
-32)                         weź punkt D z L_P
-33)                         usuń D z L_P
-34)                         K = liczba sąsiadów D
-35)                         if ( K == 0 lub K > 1 )
-36)                         {
-37)                             stwórz wierzchołek V_2, który znajduje się w D
-38)                             do listy krawędzi wierzchołka V_2 dodaj E
-39)                             do listy krawędzi wierzchołka V_1 dodaj E
-40)                             ustaw wierzchołek V_2 jako koniec krawędzi E
-41)                             dodaj krawędź E do grafu G
-42)                             dodaj wierzchołek V_2 do kolejki L_V
-43)                         }
-44)                         if ( K == 1 )
-45)                         {
-46)                             dodaj punkt D do E
-47)                             foreach ( punkt F sąsiadujący z D )
-48)                             {
-49)                                 if ( MATRIX(F) == 1)
-50)                                 {
-51)                                     dodaj F do L_P
-52)                                 }
-53)                             }
-54)                         }
-55)                         MATRIX(D) = 1
-56)                     }
-57)                 }
-58)             }
-59)         }
-60)     }
-61) }
-62) Zwróć graf G
-\end{verbatim}
 
 \end{enumerate}
 %\thispagestyle{empty}
