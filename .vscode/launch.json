@@ -41,7 +41,7 @@
                 }
             },
             "env": {
-                "ASPNETCORE_ENVIRONMENT": "Release"
+                "ASPNETCORE_ENVIRONMENT": "Debug"
             },
             "sourceFileMap": {
                 "/Views": "${workspaceFolder}/Views"

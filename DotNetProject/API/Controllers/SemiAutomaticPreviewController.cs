@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.Extensions.Logging;
 using DTOs;
 using Logic;
-using Microsoft.AspNetCore.Cors;
 
 namespace API.Controllers
 {
@@ -16,8 +17,12 @@ namespace API.Controllers
     {
         readonly private SemiAutomaticPreviewLogic logic;
 
-        public SemiAutomaticPreviewController()
+        private readonly ILogger<SemiAutomaticPreviewController> _logger;
+
+
+        public SemiAutomaticPreviewController(ILogger<SemiAutomaticPreviewController> logger)
         {
+            _logger = logger;
             logic = new SemiAutomaticPreviewLogic();
         }
 
@@ -39,6 +44,7 @@ namespace API.Controllers
         [ProducesResponseType(400)]
         public ActionResult<SemiAutomaticPreviewDTO> Post([FromBody] SemiAutomaticPreviewDTO points)
         {
+            _logger.LogInformation("Post");
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -76,7 +82,7 @@ namespace API.Controllers
             SemiAutomaticPreviewDTO result;
             bool boolResult;
             (boolResult, result) = logic.Edit(contour);
-            if(!boolResult)
+            if (!boolResult)
                 return BadRequest();
             if (result == null)
                 return BadRequest();
@@ -89,7 +95,7 @@ namespace API.Controllers
         [ProducesResponseType(404)]
         public ActionResult Delete(Guid guid)
         {
-            if(logic.Delete(guid))
+            if (logic.Delete(guid))
                 return Ok();
             return NotFound();
         }
