@@ -6,11 +6,10 @@
 \usepackage[utf8]{inputenc}
 \usepackage[MeX]{polski}
 \usepackage[T1]{fontenc}
-\usepackage[english,polish]{babel}
+\usepackage[english, polish]{babel}
 
 % Do poprawnego odsyłania do bibliografii i \phantomsection
 \usepackage{hyperref}
-
 
 \usepackage{amsmath, amsfonts, amsthm, latexsym} % głównie symbole matematyczne, środowiska twierdzeń
 
@@ -37,6 +36,7 @@
     \newpage}
 
 \usepackage{mathtools}
+
 % ---------------- Marginesy, akapity, interlinia ------------------
 
 \usepackage[inner=20mm, outer=20mm, bindingoffset=10mm, top=25mm, bottom=25mm]{geometry}
@@ -80,7 +80,7 @@
 
 % ---------------- Nagłówki rozdziałów ---------------------
 
-\usepackage{titlesec}
+\usepackage{titlesec}  
 \titleformat{\chapter}%[display]
   {\normalfont\Large \bfseries}
   {\thechapter.}{1ex}{\Large}
@@ -321,7 +321,7 @@ samodzielnie, co poświadczam własnoręcznym podpisem.
 \markboth{}{Wstęp}
 \addcontentsline{toc}{chapter}{Wstęp}
 
-W ninejszym rozdziale przedstawiono cel pracy inżynierskiej wraz z motywacją,
+W niniejszym rozdziale przedstawiono cel pracy inżynierskiej wraz z motywacją,
 która kierowała autorami przy wyborze właśnie tego tematu.
 
 \section*{Cel pracy}
@@ -339,7 +339,7 @@ wybiera punkty na obrazie medycznym. Algorytm ma za zadanie interpolować punkty
 wybrane przez użytkownika. Do algorytmu półautomatycznego generowania obrys
 u zostało zastosowane rozwiązanie inspirowane wieloma algorytmami przetwarzania
 obrazów medycznych. W szczególności został użyty operator Canny'ego, a następnie
-dane przetwarzanie są poprzez algrtymty grafowe. Została przeprowadzona walidacja,
+dane przetwarzanie są poprzez algorytmy grafowe. Została przeprowadzona walidacja,
 czy ta metoda sprawdza się w celu usprawnienia rysowania obrysów manualnych.
 
 Zaproponowane przez autorów rozwiązanie opiera się na aplikacji przeglądarkowej
@@ -368,7 +368,7 @@ Wyjaśniono w nim, co to jest plik DICOM i jakie badania są reprezentowane tym
 formatem pliku. Ponadto opisano podział prac wykonanych w trakcie tworzenia
 narzędzia informatycznego.
 
-\section {Zagdanienia medyczne związane z aplikacją}
+\section {Zagadnienia medyczne związane z aplikacją}
 
 DICOM (ang. Digital Imaging and Communications in Medicine) \cite{DICOM} to norma
 opracowana dla potrzeb wymiany i interpretacji danych medycznych, które są
@@ -391,7 +391,7 @@ Wśród nich nie istnieje aplikacja uniwersalna, w pełni obsługująca wszystki
 
 \section {Podział prac}
 
-Ze względu na złożoność realiowanego narzędzia dokonano podziału zdań pomiędzy
+Ze względu na złożoność realizowanego narzędzia dokonano podziału zdań pomiędzy
 członków zespołu.
 
 Łukasz Garstecki wykonał:
@@ -409,7 +409,7 @@ Tomasz Świerczewski wykonał:
 
 \begin{itemize}[noitemsep]
 \item serwer zapisujący i generujący obrysy wraz z bazą danych,
-\item algorytm germerujący obrysy półautomatyczne,
+\item algorytm generujący obrysy półautomatyczne,
 \item REST API, udostępniające obrysy,
 \item moduł statystyk,
 \item testy aplikacji.
@@ -419,7 +419,7 @@ Tomasz Świerczewski wykonał:
 \chapter {Stan wiedzy}
 
 W poniższym rozdziale zostały przedstawione istniejące na rynku aplikacje o
-funkcjonalnościach określonych w celu pracy. Opisano wymagania zrówno funkcjonalne
+funkcjonalnościach określonych w celu pracy. Opisano wymagania zarówno funkcjonalne
 jak i niefunkcjonalne jakie powinien spełniać. Autorski system do tworzenia obrysów
 na obrazach w formacie DICOM struktur anatomicznych czy zmian patologicznych
 powinien spełniać wymagania zarówno lekarzy jak i inżynierów medycznych, wykorzystujących
@@ -428,7 +428,7 @@ postawionych przed systemem wymagań.
 
 \section {Przegląd istniejących rozwiązań}
 
-Obrysy to krzywe zamknięte naniesione na obraz, w celu oznaczenia wewnęrznej części.
+Obrysy to krzywe zamknięte naniesione na obraz, w celu oznaczenia wewnętrznej części.
 Obrysy można tworzyć manualnie (użytkownik wybiera wszystkie punkty obrysu), lub
 półautomatycznie (użytkownik wybiera kilka punktów, a algorytm łączy je na podstawie
 analizy obrazu). Obie metody są niedoskonałe, gdyż często to użytkownik musi skorygować
@@ -438,7 +438,7 @@ obrazowania, czy też różnorodnej tekstury tkanki obrazowanej.
 \subsection {Przeglądarki DICOM}
 
 Istnieje wiele rozwiązań umożliwiających wykonywanie obrysów przy użyciu przeglądarki.
-W tej pracy opisano szcegółowo dwie wybrane aplikacje.
+W tej pracy opisano szczegółowo dwie wybrane aplikacje.
 
 Pierwsze z nich to aplikacja OHIF Viewer oparta o biblioteki Cornerstone.
 
@@ -473,17 +473,18 @@ Aplikacja pozwala na wykorzystanie większości możliwości udostępnianych prz
 biblioteki Cornerstone. Przykładowe użycie aplikacji zostało przedstawione na
 Rysunku \ref{fig:OHIF-example}.
 
-Niestety aplikacja nie umożliwa wykonywania obrysów manualnych, ani półautomatycznych,
-jak również nie pozwala na zapisanie naniesionych na obraz oznaczeń.
-
-\begin{figure}[t]
-	\includegraphics[width=\textwidth]{OHIF-example}
-	\caption{Przykład użycia aplikacji OHIF Viewer --- oznazono: prostokątny obszar,
+\begin{figure}[tbh!]
+	\center
+	\includegraphics[width=0.7\textwidth]{OHIF-example}
+	\caption{Przykład użycia aplikacji OHIF Viewer --- oznaczono: prostokątny obszar,
 	dla którego obliczone zostały wybrane statystyki; odcinek, dla którego otrzymano
 	odległość jednostkach rzeczywistych; wskaźnik, wskazujący na zmianę, posiadający
 	etykietę tekstową}
     	\label{fig:OHIF-example}
 \end{figure}
+
+Niestety aplikacja nie umożliwia wykonywania obrysów manualnych, ani półautomatycznych,
+jak również nie pozwala na zapisanie naniesionych na obraz oznaczeń.
 
 Drugim rozwiązaniem działającym pozwalającym na pracę z plikami DICOM w przeglądarce
 internetowej to DICOM Web Viewer.
@@ -493,6 +494,13 @@ przeglądarkowej służącej do przetwarzania obrazów DICOM, z wygodnym interfe
 automatycznego i półautomatycznego obrysowywania obszarów zaznaczonych
 przez użytkownika na obrazie. Przykładowy obrys wykonany przy użyciu aplikacji
 DWV przedstawiono na Rysunku \ref{fig:DWV-interface}.
+
+\begin{figure}[tb!]
+	\center
+	\includegraphics[width=0.7\textwidth]{DWV-interface}
+	\caption{Przykład użycia aplikacji DWV - obrys półautomatyczny (Livewire)}
+    	\label{fig:DWV-interface}
+\end{figure}
 
  Poza tym aplikacja udostępnia:
 \begin{itemize}[noitemsep]
@@ -506,6 +514,21 @@ DWV przedstawiono na Rysunku \ref{fig:DWV-interface}.
 Aplikacja nie pozwala na wykonywanie manualnych obrysów poprzez samodzielne
 poruszanie kursorem po obrazie.
 
+
+\begin{figure}[tb!]
+	\center
+	\includegraphics[width=0.8\textwidth]{Orthanc-upload}
+	\caption{Interfejs wgrywania plików DICOM do serwera Orthanc}
+    	\label{fig:Orthanc-upload}
+\end{figure}
+
+\begin{figure}[tbh!]
+	\center
+	\includegraphics[width=1\textwidth]{Orthanc-tags}
+	\caption{Podgląd tagów pliku DICOM przy użyciu interfejsu przeglądarkowego Orthanc}
+    	\label{fig:Orthanc-tags}
+\end{figure}
+
 \subsection {Serwer z bazą plików DICOM}
 
 Orthanc \cite{Orthanc} to serwer plików DICOM, który umożliwia łatwe przechowywanie,
@@ -518,8 +541,15 @@ wgrywanie nowych plików (interfejs wgrywania plików przedstawiono na Rysunku
 \ref{fig:Orthanc-upload}), przeglądanie zapisanych plików w szczególności
 tagów (Rysunek \ref{fig:Orthanc-tags}) oraz podglądanie obrazów (Rysunek \ref{fig:Orthanc-preview}).
 Interfejs webowy nie zapewnia żadnej metody tworzenia na wybranym obrazie, ale
-pozwala na przełączanie pomiędzy kolejnymi obrazami za pomocą klinięcia lewym
+pozwala na przełączanie pomiędzy kolejnymi obrazami za pomocą kliknięcia lewym
 przyciskiem myszy w prawą część podglądu obrazu.
+
+\begin{figure}[tb!]
+	\center
+	\includegraphics[width=0.55\textwidth]{Orthanc-preview}
+	\caption{Podgląd obrazu DICOM przy użyciu interfejsu przeglądarkowego Orthanc}
+    	\label{fig:Orthanc-preview}
+\end{figure}
 
 %SONIC DICOM
 
@@ -537,13 +567,6 @@ pliki DICOM. Przy decyzji miało znaczenie przede wszystkim to, że jest to narz
 bezpłatne. Ponadto udostępniane przez API serwera funkcjonalności pozwalające na
 zarządzanie i przeglądanie zapisanych plików są wystarczające dla realizowanego systemu.
 
-\begin{figure}[b!]
-	\center
-	\includegraphics[width=0.55\textwidth]{Orthanc-preview}
-	\caption{Podgląd obrazu DICOM przy użyciu interfejsu przeglądarkowego Orthanc}
-    	\label{fig:Orthanc-preview}
-\end{figure}
-
 Poza serwerem Orthanc stworzono serwer w technologii .NET Core \cite{Dotnet}
 wspomagający interfejs użytkownika, który pozwala na przeprowadzanie czasochłonnych
 aplikacji poza interfejsem użytkownika. Wybrano tę technologię ze względu na to,
@@ -559,33 +582,13 @@ i elastyczność \cite{Dlaczego react}. Wybranie tej technologii pozwoliło na s
 aplikacji przeglądarkowej pozwalającej na generowanie obrysów manualnych przy
 użyciu myszy lub tabletu graficznego, wybieranie punktów, z których generowane
 będą obrysy półautomatyczne, oglądanie wcześniej wygenerowanych i zapisanych
-brysów oraz wyświetlanie statystyk dotyczących wykonanego obrysu. Interfejs
+obrysów oraz wyświetlanie statystyk dotyczących wykonanego obrysu. Interfejs
 inspirowany jest podglądem obrazu w aplikacji DWV, ale działanie półautomatycznego
 obrysu zostało zrealizowane inaczej --- obrys nie jest generowany na bieżąco, lecz na życzenie
 użytkownika. Wybrane przez niego punkty na obrazie wysyłane są do serwera i na obrazie wyświetlany jest
 wynik półautomatycznego dopasowania obrysu.
 
-\begin{figure}[t]
-	\includegraphics[width=1\textwidth]{DWV-interface}
-	\caption{Przykład użycia aplikacji DWV - obrys półautomatyczny (Livewire)}
-    	\label{fig:DWV-interface}
-\end{figure}
-
-\begin{figure}[b]
-	\center
-	\includegraphics[width=0.8\textwidth]{Orthanc-upload}
-	\caption{Interfejs wgrywania plików DICOM do serwera Orthanc}
-    	\label{fig:Orthanc-upload}
-\end{figure}
-
-\begin{figure}[t]
-	\center
-	\includegraphics[width=1\textwidth]{Orthanc-tags}
-	\caption{Podgląd tagów pliku DICOM przy użyciu interfejsu przeglądarkowego Orthanc}
-    	\label{fig:Orthanc-tags}
-\end{figure}
-
-\afterpage{\blankpage}
+%\afterpage{\blankpage}
 
 \chapter {Opis autorskiego narzędzia informatycznego}
 
@@ -705,7 +708,7 @@ pozostawienie pustych pól w formularzu.
 \newcommand{\specialcell}[3][c]{%
  \begin{tabular}[#1]{@{}#2@{}}#3\end{tabular}}
 \begin{table}
-\caption[Spis wymagań niefunkcjonalnych]{Spis wymagań niefunkcjonalnych}
+\caption{Spis wymagań niefunkcjonalnych}
 \label{tabela wymagania niefunkcjonalne}
 \centering
 \begin{tabular}{ | p{0.2\textwidth} | p{0.65\textwidth} | }
@@ -805,7 +808,7 @@ dostępny dla interfejsu użytkownika poprzez API dostępne przez protokół HTT
 Pozwala ono na pobieranie zapisanych obrysów, zapisywanie obrysów manualnych i
 generowanie podglądu i zapis obrysu półautomatycznego.
 
-\section {Moduł obrazów manualnych}
+\section {Moduł obrysów manualnych}
 
 Obrysy manualne generowane przez użytkowników zapisywane są przez serwer obrysów
 i obliczeń w postaci plików CSV na dysku serwera. W momencie zapisu obliczane są
@@ -902,6 +905,7 @@ przeprowadzono operację morfologiczną z następującymi maskami:
 
 \begin{table}[h!]
 \centering
+\setlength{\tabcolsep}{40pt}
 \begin{tabular} { c c }
   Maska rzędów & Maska kolumn \\
 $
@@ -923,13 +927,14 @@ Po wykonaniu tych operacji otrzymano wartości $s_1$ i $s_2$ odpowiednio dla mas
 rzędów i kolumn. Na podstawie tych danych otrzymano następujące informacje o gradiencie:
 \begin{table}[h!]
 \centering
+\setlength{\tabcolsep}{30pt}
 \begin{tabular} { c c }
   Wielkość gradientu & Kierunek krawędzi \\
 $\sqrt{s_1^2 + s_2^2}$ & $tg^{-1} \Bigg[ {\cfrac{s_1}{s_2}} \Bigg]$
 \end{tabular}
 \end{table}
 
-\subsection {Opracowany algorytm obrysu półauotomatycznego}
+\subsection {Opracowany algorytm obrysu półautomatycznego}
 
 Opracowany algorytm służy do półautomatycznego tworzenia obrysów na podstawie wybranych punktów,
 które są interpolowane przez algorytm bazujący na operatorze Cany'ego, operatorze Sobela i algorytmie A*.
@@ -1247,7 +1252,7 @@ while ( OPEN niepusty )
 
 Aby maksymalnie dobrze wykorzystać niską złożoność obliczeniową algorytmu A*
 należało wykorzystać dobre struktury danych do tego algorytmu. Zbiór CLOSE
-wymagał szybkiego sprawdzania przynależności. Po przenalizowaniu rekomendowanych
+wymagał szybkiego sprawdzania przynależności. Po przeanalizowaniu rekomendowanych
 struktur danych \cite{Dotnet struktury} został użyty HashSet<T>.
 
 Zbiór Open oferował zastosowanie znacznie bardziej finezyjnych struktur danych.
@@ -1452,7 +1457,7 @@ jak wątroba i trzustka wykonane przy użyciu rezonansu magnetycznego oraz badan
 
 W autorskiej aplikacji otwierano kolejne badania. Rysunek \ref{fig:112} przedstawia
 jedną klatkę obrazu medycznego Badania 1, z pewnej serii. Rysunek \ref{fig:113}
-przedstawia Badanie 2, natomiast Rysunek \ref{fig:114} predstawia Badanie 3, a
+przedstawia Badanie 2, natomiast Rysunek \ref{fig:114} przedstawia Badanie 3, a
 Rysunek \ref{fig:115} Badanie 4.
 
 \begin{figure}[p]
@@ -1578,7 +1583,7 @@ się maksymalna odległość między kolejnymi punktami. Bliżej to zjawisko zos
 opisane w podrozdziale 4.4.
 
 Na Rysunku \ref{fig:testy_3} przedstawiono wyniki trzeciego testu. Nie ingerowano
-we wspomnianą w podrozdziale 4.4 maksymalną odległość --- tawianino gęsto kolejne
+we wspomnianą w podrozdziale 4.4 maksymalną odległość --- wstawiano gęsto kolejne
 punkty obok siebie na łuku. W ten sposób sprawdzano wpływ liczby uruchomień
 algorytmu A*, poprzez zmianę liczby punktów, na czas obliczeń.
 
@@ -1632,9 +1637,9 @@ przypadku małych obrysów, dominującą częścią obliczeń są operacje na pr
 obrazie. Ponadto czasy obliczeń zawierają narzut czasowy wywołany przez
 przetwarzanie zapytań.
 
-Na podstawie przeprowadzonych obserwacji zaleca się, aby użytkownikcyunikali
+Na podstawie przeprowadzonych obserwacji zaleca się, aby użytkownikcy unikali
 dużych obrysów, szczególnie na zdjęciach o wysokiej rozdzielczości rozdzielczości,
-czyli np. mammografiach ablo zdjęciach rentgenowskich. Ponadto generowanie obrysów
+czyli np. mammografiach albo zdjęciach rentgenowskich. Ponadto generowanie obrysów
 półautomatycznych działa zauważalnie lepiej dla zdjęć o ostrych krawędziach i o
 niskim szumie. W celu poprawienia zarówno jakości wykrywanego obrysu jak i
 wydajności czasowej przeprowadzanych w trakcie generowania obrysu obliczeń użytkownik
