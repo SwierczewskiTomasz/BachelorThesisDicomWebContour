@@ -838,12 +838,12 @@ jest problemem trudnym. Takie algorytmy muszą spełniać szereg wymagań,
 które stwierdzają poprawność danego algorytmu, jak również operatora morfologicznego.
 Dla wielu takich algorytmów można znaleźć odpowiednie przykłady,
 dla których krawędzie nie zostaną wyznaczone poprawnie. Zgodnie z J. Cytowski \cite{Cyfrowe przetwarzanie
-obrazów medycznych} ,,dobry detektor krawędzi powinien spełniać następujące warunki:
+obrazów medycznych} dobry detektor krawędzi powinien spełniać następujące warunki:
 \begin{itemize}[noitemsep]
 \item {niskie prawdopodobieństwo zaznaczenia punktów nienależących do krawędzi
 oraz niskie prawdopodobieństwo niezaznaczenia punktów należących do krawędzi,}
 \item {zaznaczone punkty krawędzi powinny być możliwie blisko jej osi,}
-\item {wyłącznie jedna odpowiedź na pojedynczy punkt krawędzi.''}
+\item {wyłącznie jedna odpowiedź na pojedynczy punkt krawędzi.}
 \end{itemize}
 
 Detektory krawędzi oparte na gradiencie, w tym operator Canny'ego są często używane.
@@ -891,7 +891,7 @@ zaczęto proces śledzenia krawędzi --- dla każdego sąsiada, którego wartoś
 jest większa od $T_1$ zaznaczono go jako krawędź. Jest ona wykonywana rekurencyjnie
 dla każdego zakwalifikowanego punktu.
 
-Zamiast dokładnych wartości progowych można przekazać do funkcji 2 wartości ---
+Zamiast dokładnych wartości progowych można przekazać do funkcji dwie wartości ---
 $t_1, t_2$, które są procentem liczby pikseli, które będą niedopuszczone jako
 krawędzie. Dla $t_1~=~0.7, t_2 = 0.9$ dopuszczono tylko 10\% pikseli jako te,
 które są większe od $T_2$. Podając $t_1, t_2$ wyznaczono rozkład wartości
@@ -986,6 +986,43 @@ się 1, to w tym miejscu na bitmapie znajduje się krawędź, w przeciwnym przyp
 0. W ten sposób algorytm wykrył wszystkie znaczące krawędzie na bitmapie. Kolejnym
 krokiem przetwarzania było stworzenie grafu na podstawie wyżej wymienionej macierzy.
 
+Przykład działania operatora Canny'ego przedstawiono na Rysunkach od \ref{fig:123} do \ref{fig:127}. 
+Obraz wyjściowy do dalszych działań został przedstawiony na Rysunku \ref{fig:123}.
+
+\pagebreak
+
+\begin{figure}[h!]
+	\center
+	\includegraphics[width=0.57\textwidth]{123}
+	\caption{Oryginalny obraz, który przedstawia badanie rezonansem magnetycznym stawu ramiennego}
+    	\label{fig:123}
+\end{figure}
+
+Po dwóch pierwszych krokach operatora Canny'ego, czyli wyznaczeniu gradientu i zastosowaniu algorytmu
+usuwania niemaksymalnych krawędzi uzyskano obraz z~potencjalnymi krawędziami. Został on~przedstawiony
+na Rysunku \ref{fig:126}.
+
+\begin{figure}[h!]
+	\center
+	\includegraphics[width=0.57\textwidth]{126}
+	\caption{Obraz po zastosowaniu algorytmu usuwania niemaksymalnych krawędzi}
+    	\label{fig:126}
+\end{figure}
+
+W ostatnim kroku była przeprowadzana histereza. Wynikiem jej działania jest macierz z~informacjami 
+gdzie znajduje się krawędź. Na Rysunku \ref{fig:127} wartościom 1~w~macierzy odpowiada kolor czarny, 
+a~wartościom 0~odpowiada kolor biały.
+
+
+
+\begin{figure}[h!]
+	\center
+	\includegraphics[width=0.57\textwidth]{127}
+	\caption{Wynikowa macierz po zastosowaniu operatora Canny'ego, gdzie kolorem białym są 
+	reprezentowane wartości odpowiadające 0, a kolor czarny odpowiada 1}
+    	\label{fig:127}
+\end{figure}
+
 \subsection {Stworzenie grafu z bitmapy}
 
 Kolejnym etapem było stworzenie grafu z bitmapy. Na tym etapie danymi wejściowymi były:
@@ -999,9 +1036,10 @@ punkcie krawędź,
 Przed rozpoczęciem działania algorytmu należy zapewnić łączność 4-krotną
 (ang. \textit{pixel 4-connectivity}) \cite{Pixel connectivity}, zwaną także
 sąsiedztwem von Neumanna. Przy łączności 4-krotnej sprawdza się tylko sąsiadów
-w poziomie lub pionie zgodnie ze schematem na rysunku poniżej.
+w poziomie lub pionie zgodnie ze schematem na Rysunku \ref{fig:4pixel}.
 
 %Opisać te rysunki i wywalić stąd - nie muszą być dokładnie w tym miejscu.
+\begin{figure}[h!]
 \begin{center}
 \begin{tikzpicture}
 \draw[step=1cm,gray,very thin] grid (3,3);
@@ -1012,10 +1050,15 @@ w poziomie lub pionie zgodnie ze schematem na rysunku poniżej.
 \fill[fill=gray!60!white, draw=black] (1,2) rectangle (2,3);
 \end{tikzpicture}
 \end{center}
+\caption{Ilustracja łączności 4-krotnej}
+\label{fig:4pixel}
+\end{figure}
 
 Dla łączności 8-krotnej sprawdza się wszystkich możliwych sąsiadów, także po
 przekątnej. Jest ona zwana także sąsiedztwem Moore'a lub otoczeniem Moore'a \cite{Moore}.
+Została ona przedstawiona na Rysunku \ref{fig:8pixel}.
 
+\begin{figure}[h!]
 \begin{center}
 \begin{tikzpicture}
 \draw[step=1cm,gray,very thin] grid (3,3);
@@ -1030,6 +1073,9 @@ przekątnej. Jest ona zwana także sąsiedztwem Moore'a lub otoczeniem Moore'a \
 \fill[fill=gray!60!white, draw=black] (2,0) rectangle (3,1);
 \end{tikzpicture}
 \end{center}
+\caption{Ilustracja łączności 8-krotnej}
+\label{fig:8pixel}
+\end{figure}
 
 %Bibliografia do tego?
 W przypadku zastosowania łączności 8-krotnej przy wyznaczaniu długości krawędzi
@@ -1059,6 +1105,7 @@ co najmniej trzy krawędzie.
 W przypadku łączności 8-krotnej do detekcji wierzchołków należałoby stosować
 przekształcenia Hit-or-Miss z elementami strukturalnymi. Elementy strukturalne
 do wykrywania odpowiednich punktów są następujące:
+
 \begin{itemize}%[noitemsep]
 \item wierzchołek izolowany: \\
 $
@@ -1068,7 +1115,7 @@ $
 0 & 0 & 0
 \end{bmatrix}
 $,
-\item punkty końcowe (ang. endpixels): \\
+\item punkty końcowe (ang. \textit{endpixels}): \\
 $
 \begin{bmatrix}
 0 & 0 & 0 \\
@@ -1113,9 +1160,10 @@ z wykrytymi krawędziami w optymistycznym przypadku.
 \bigskip
 
 W pracy zdecydowano się na metrykę 4-krotną ze względu na prostotę obliczeń,
-która skróci czas pracy algorytmu. Przygotowano
-i zaimplementowano algorytm tworzący graf z bitmapy, a~jego pseudokod znajduje
-się w Załączniku 1. %Poprawić, nie poniżej!!!
+która skróciła czas pracy algorytmum. Nie wymagało to także dodatkowych 
+obliczeń związanych z~ścienianiem. Przygotowano
+i~zaimplementowano algorytm tworzący graf z~bitmapy, a~jego pseudokod znajduje
+się w~Załączniku 1. %Poprawić, nie poniżej!!!
 
 Utworzony w ten sposób graf jest grafem nieskierowanym z wagami, gdzie wagi to
 liczba pikseli, czy też punktów należących do krawędzi. Graf ten może nie być
