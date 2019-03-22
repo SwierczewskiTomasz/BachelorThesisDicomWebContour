@@ -231,19 +231,22 @@
 %\tytul
 %\end{center}
 Niniejszy dokument prezentuje pracę dyplomową inżynierską pod tytułem "\tytul".
-Celem realizowanym przez autorów pracy jest stworzenie narzędzia informatycznego
-pozwalającego na manualne oraz półautomatyczne obrysowywanie obrazów medycznych.
+Celem realizowanym przez autorów pracy było stworzenie narzędzia do manualnego 
+i~półautomatycznego obrysowywania struktur anatomicznych, zmian patologicznych
+na~obrazach medycznych, wykorzystywanego zarówno przez lekarzy, jak i~inżynierów
+biomedycznych.
 Zakres pracy obejmuje omówienie: standardu DICOM, przegląd aplikacji dostępnych
 na rynku, pozwalających na przeglądanie i wykonywanie obrysów na obrazach
 medycznych DICOM, architektury tworzonego systemu i eksperymentów przeprowadzonych
-w trakcie tworzenia narzędzia.
+w trakcie tworzenia zaproponowanego narzędzia.
 
 Zastosowana architektura umożliwia jednoczesne korzystanie z narzędzia przez
-wielu użytkowników. Opracowany na potrzeby generowania obrysów algorytm wykorzystuje
+wielu użytkowników. Moduł obrysów manualnych został zaimplementowany głównie 
+w~warstwie ściśle związanej z interfejscem użytkownika. Moduł obrysów półautomatycznych 
+bazuje na algorytmie opracowanym na potrzeby generowania obrysów, który wykorzystuje
 operator Canny'ego oraz algorytm wyszukiwania najkrótszych ścieżek w grafie.
-Obliczane przez system statystyki dotyczące obrysowanych obszarów mogą posłużyć
-w przyszłości jako parametry wejściowe do metod automatycznego wykrywania
- podobnych struktur, dla których obrysy są wykonane.
+Didatjiwi dodany moduł statystyczny umożliwia wyznaczenie podstawowych miar statystycznych,
+opisujących obrysowane fragmenty obrazów.
 \\
 \\
 \noindent \textbf{Słowa kluczowe:} interfejs użytkownika, tablet graficzny, obrazy medyczne, DICOM, obrys, statystyki danych obrazowych, system informatyczny, interfejs REST API, wykrywanie krawędzi, generowanie obrysów
@@ -256,11 +259,15 @@ w przyszłości jako parametry wejściowe do metod automatycznego wykrywania
 \selectlanguage{english}
 \begin{abstract}
 
-The following document describes bachelor's thesis on "\title". The goal of authors' is to create a digital tool that allows to manually draw and semi-automatically generate contours on medical images. The topics discussed include: discussion of DICOM standard, analysis of state-of-the-art systems and tools used to viewing and creating contours on DICOM medical images, system's architectue and experiments conducted simultaneously with the creation of the tool.
+%Nie przetłumaczyłem
 
-The architecture used enables simultaneous use of the tool by many users. The algorithm developed for te purpose of generating contourse uses Canny's Operator and the algorithm of searching the shortest path in the graph. The statistics calculated by the system regarding the areas limited by contourcan be used in future as input parameters for methods of automatic detection of similar structures for which contours have been made.
-\\
-\\
+Do nowego przetłumaczenia - Tomek. 
+
+%The following document describes bachelor's thesis on "\title". The goal of authors' is to create a digital tool that allows to manually draw and semi-automatically generate contours on medical images. The topics discussed include: discussion of DICOM standard, analysis of state-of-the-art systems and tools used to viewing and creating contours on DICOM medical images, system's architectue and experiments conducted simultaneously with the creation of the tool.
+
+%The architecture used enables simultaneous use of the tool by many users. The algorithm developed for te purpose of generating contourse uses Canny's Operator and the algorithm of searching the shortest path in the graph. The statistics calculated by the system regarding the areas limited by contourcan be used in future as input parameters for methods of automatic detection of similar structures for which contours have been made.
+%\\
+%\\
 \noindent \textbf{Keywords:} user interface, graphics tablet, medical images, DICOM, contour, statistics of image data, IT system, REST API interface, edge detection, contour generation
 \end{abstract}
 }
@@ -324,10 +331,27 @@ samodzielnie, co poświadczam własnoręcznym podpisem.
 W niniejszym rozdziale przedstawiono cel pracy inżynierskiej wraz z motywacją,
 która kierowała autorami przy wyborze właśnie tego tematu.
 
+\section*{Motywacja}
+
+W czasach gwałtownego rozwoju sztucznej inteligencji jest ona stosowana prawie
+do każdej dziedziny z szeroko pojętej nauki. Jedną z takich dziedzin jest medycyna.
+Próba odnajdywania we wczesnym stadium różnych zmian patologicznych pozwala 
+na~szybką terapię, a~w~konsenkwencji niejednokrotnie na~całkowite wylecznie. Dlatego
+ważne jest komputerowe wspomaganie podejmowania decyzji w~diagnostyce obrazowej.
+Obecnie trwają prace nad automatycznymi
+sposobami wykrywania takich zmian na obrazach medycznych.
+
+W celu interpretowania obrazów medycznych potrzebna jest wiedza anatomiczna, jak
+i radiologiczna. Z tego powodu potrzeba stworzyć narzędzie, które w wygodny sposób
+pozwoli nam wykonywać obrysy wybranych narządów i anormalności medycznych. Na
+podstawie wykonanych obrysów będzie można w przyszłości tworzyć zaawansowane
+narzędzia do automatycznej klasyfikacji lub rozwijać zaproponowane narzędzie.
+
 \section*{Cel pracy}
 
-Celem niniejszej pracy inżynierskiej było stworzenie narzędzia informatycznego
-umożliwiającego tworzenie obrysów plików medycznych. Użytkownik może otwierać
+Celem niniejszej pracy inżynierskiej było stworzenie narzędzia informatycznego,
+umożliwiającego tworzenie obrysów struktur anatomicznych czy zmian patologicznych 
+na~obrazach medycznych. Użytkownik może otwierać
 dane obrazowe w formacie DICOM i dokonywać obrysów manualnych lub półautomatycznych
 wybranych struktur lub anormalności. W przypadku obrysów manualnych użytkownik
 może tworzyć kilka obrysów jednocześnie w celu zaznaczania anormalności w konkretnej tkance.
@@ -336,36 +360,26 @@ Użytkownik może korzystać z tabletu graficznego w celu wygodniejszego rysowan
 Został stworzony algorytm półautomatyczny do tworzenia obrysów półautomatycznych.
 Jest to metoda półautomatyczna, ponieważ jest wspomagana przez człowieka, który
 wybiera punkty na obrazie medycznym. Algorytm ma za zadanie interpolować punkty
-wybrane przez użytkownika. Do algorytmu półautomatycznego generowania obrys
-u zostało zastosowane rozwiązanie inspirowane wieloma algorytmami przetwarzania
-obrazów medycznych. W szczególności został użyty operator Canny'ego, a następnie
-dane przetwarzanie są poprzez algorytmy grafowe. Została przeprowadzona walidacja,
+wybrane przez użytkownika. Do algorytmu półautomatycznego generowania obrysu
+został użyty operator Canny'ego, a~następnie dane przetwarzanie są 
+poprzez algorytmy grafowe. Została przeprowadzona walidacja,
 czy ta metoda sprawdza się w celu usprawnienia rysowania obrysów manualnych.
+
+Z zapronowanego przez autorów rozwiązania mogą korzystać lekarze w~codziennej pracy,
+studenci medycyny w~celu nauki wykrywania zmian patologicznych, czy też lekarze i~inżynierowie 
+biomedyczni w trakcie współpracy w badaniach naukowych.
 
 Zaproponowane przez autorów rozwiązanie opiera się na aplikacji przeglądarkowej
 i serwera przechowującego obrysy. To rozwiązanie pozwala na użycie go sieciach
 lokalnych, gdzie użytkownik lub użytkownicy na dowolnej stacji roboczej mogą
 wykonywać obrysy, które zapisywane są na wspólnym dla wszystkich użytkowników serwerze.
 
-\section*{Motywacja}
-
-W czasach gwałtownego rozwoju sztucznej inteligencji jest ona stosowana prawie
-do każdej dziedziny z szeroko pojętej nauki. Jedną z takich dziedzin jest medycyna.
-Próba odnajdywania we wczesnym stadium różnych zmian może ocalić
-wiele ludzkich istnień. Obecnie trwają prace nad automatycznymi
-sposobami wykrywania takich zmian na obrazach medycznych.
-
-W celu interpretowania obrazów medycznych potrzebna jest wiedza anatomiczna, jak
-i radiologiczna. Z tego powodu potrzeba stworzyć narzędzie, które w wygodny sposób
-pozwoli nam wykonywać obrysy wybranych narządów i anormalności medycznych. Na
-podstawie wykonanych obrysów będzie można w przyszłości tworzyć zaawansowane
-narzędzia do automatycznej klasyfikacji.
 
 \chapter {Wprowadzenie}
 
-Rozdział ten stanowi wstęp do medycyny pod kątem przetwarzania obrazów medycznych.
-Wyjaśniono w nim, co to jest plik DICOM i jakie badania są reprezentowane tym
-formatem pliku. Ponadto opisano podział prac wykonanych w trakcie tworzenia
+W tym rozdziale zostało przedstawione wprowadzenie dotyczące formatu obrazów 
+medycznych DICOM i aspektu medycznego pracy.
+Ponadto opisano podział prac wykonanych w~trakcie tworzenia
 narzędzia informatycznego.
 
 \section {Zagadnienia medyczne związane z aplikacją}
@@ -378,16 +392,8 @@ angiografii subtrakcyjnej, zdjęcia rentgenowskie, mammografia i wiele innych ba
 Do wad tego standardu należy różnorodność metod implementacji. Powoduje to czasem
 sytuacje, w których nie można wyświetlić pliku na sprzęcie innego producenta, ze
 względu na różnice w sposobie implementacji. W takich sytuacjach należy ręcznie
-modyfikować pliki DICOM, aby mogły być poprawnie obsłużone. Z tego powodu zapis
-obrysu do pliku DICOM jest utrudniony --- nie istnieją obecnie narzędzia
-umożliwiające odczytanie zapisanego obrysu. Ponadto ilość tagów zawartych w pliku
+modyfikować pliki DICOM, aby mogły być poprawnie obsłużone. Ponadto liczba tagów zawartych w~pliku
 DICOM stanowi barierę w sprawnym korzystaniu z tak zapisanych wyników badań.
-
-Obecnie na rynku istnieje wiele aplikacji pozwalających na przeglądanie plików DICOM.
-Wśród nich nie istnieje aplikacja uniwersalna, w pełni obsługująca wszystkie badania diagnostyczne.
-
- DICOM jest standardem pliku obrazu medycznego, jednakże pojawiają się istotne
- problemy z jego użytkowaniem.
 
 \section {Podział prac}
 
