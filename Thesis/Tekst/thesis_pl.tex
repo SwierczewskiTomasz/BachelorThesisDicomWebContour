@@ -1443,6 +1443,15 @@ wartości pixel spacing odczytywanej z tagu obrazu DICOM,
 \item liczba pikseli wewnątrz obrysu.
 \end{itemize}
 
+Przykładowe wygenerowane statystyki zostały przedstawione na Rysunku \ref{fig:107b}.
+
+\begin{figure}[h!]
+	\center
+	\includegraphics[width=0.8\textwidth]{107}
+	\caption{Przykładowe wygenerowane statystyki}
+    	\label{fig:107b}
+\end{figure}
+
 Do obliczenia histogramu jest wymagany punkt wewnętrzny obrysu. Środek ciężkości
 obrysu nie zawsze musi znajdować się wewnątrz obrysu. W przypadku zastosowania
 algorytmu scan-linii dla obrysu manualnego nie jest podana informacja o logicznych
@@ -1451,12 +1460,14 @@ wartościach, gdzie jest krawędź, więc nie można wykryć np. krawędzi pozio
 %a nie obrys.
 % pani dr chciała to inaczej
 
-Z tego powodu wybrano algorytm Flood Fill, czyli rozlewania się rekurencyjnego % cytacja
+Z tego powodu wybrano algorytm Flood Fill \cite{AiSD2}, czyli rozlewania się rekurencyjnego % cytacja
 zliczonych pikseli od punktu wewnętrznego. Właśnie z tego powodu od użytkownika
 jest wymagane podanie dodatkowej informacji, jaką jest punkt wewnętrzny obrysu.
 Założono, że użytkownik zaznaczy go poprawnie. W sytuacji, gdy zostanie podany
 błędny punkt to ten algorytm policzy to co znajduje się na zewnątrz obrysu, a
 nie to co jest wewnątrz.
+
+Długość obrysu w pikselach jest obliczana na podstawie liczebności listy pikseli należących do obrysu.
 
 \section {Moduł anonimizacji danych}
 
