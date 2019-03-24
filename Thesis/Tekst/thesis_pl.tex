@@ -1359,7 +1359,7 @@ Dictionary<Vertex, MySortedListElement> OpenDictionary =
 MySortedList OpenList = new MySortedList();
 \end{verbatim}
 
-W ten sposób w~połączeniu tych dwóch podstruktur otrzymujemy strukturę danych
+W ten sposób w~połączeniu tych dwóch podstruktur otrzymano strukturę danych
 o następujących własnościach:
 \begin{itemize}[noitemsep]
 \item dodawanie w~czasie $O(n)$,
@@ -1422,10 +1422,10 @@ W sytuacji, gdy wczytane krawędzie do~grafu są bardzo długie, może zdarzyć 
 taka sytuacja, że punkt zaznaczony przez użytkownika znajduje się bardzo blisko
 krawędzi, ale daleko od~punktu początkowego lub końcowego krawędzi. W~tym celu
 jest wprowadzony mechanizm dzielenia zbyt długich krawędzi na~kilka krótszych.
-\item \textbf {Problem z~ilością punktów} \\
+\item \textbf {Problem z~liczbą punktów} \\
 Dla każdego punktu jest uruchamiany algorytm A*, zatem w~sposób liniowy od~ilości
 punktów zależy liczba uruchomień algorytmu A*. Nie można wyznaczyć, czy w~złożoności
-średniej całego algorytmu algorytm jest zależny liniowo od~ilości punktów, czy
+średniej całego algorytmu jest on zależny liniowo od~ilości punktów, czy
 w sposób logarytmiczny, czy też w~sposób stały.
 \end{enumerate}
 
@@ -1439,9 +1439,9 @@ zarówno dla obrysów manualnych i~półautomatycznych, do~których należą:
 (kolor, to~liczba w~zakresie $[0,255]$, gdzie 0~oznacza najciemniejszy piksel,
 a 255 najjaśniejszy),
 \begin{itemize}[noitemsep]
-\item wartość maksymalna --- maksymalna wartość koloru piksela wewnątrz obrysu,
-\item wartość minimalna --- minimalna wartość koloru piksela wewnątrz obrysu,
-\item wartość średnia --- średnia arytmetyczna wartości kolorów pikseli wewnątrz obrysu,
+\item wartość maksymalna --- maksymalna wartość piksela wewnątrz obrysu,
+\item wartość minimalna --- minimalna wartość piksela wewnątrz obrysu,
+\item wartość średnia --- średnia arytmetyczna wartości pikseli wewnątrz obrysu,
 \end{itemize}
 \item środek ciężkości --- średnia arytmetyczna pozycji pikseli obrysu,
 \item długość obrysu w~$mm$ --- obliczana na~podstawie położenia pikseli i~% doprecyzuj, bo~ja~nie wiem
@@ -1472,7 +1472,7 @@ Z tego powodu wybrano algorytm Flood Fill \cite{AiSD2}, czyli rozlewania się re
 zliczonych pikseli od~punktu wewnętrznego. Właśnie z~tego powodu od~użytkownika
 jest wymagane podanie dodatkowej informacji, jaką jest punkt wewnętrzny obrysu.
 Założono, że użytkownik zaznaczy go~poprawnie. W~sytuacji, gdy zostanie podany
-błędny punkt to~ten algorytm policzy to~co~znajduje się na~zewnątrz obrysu, a
+błędny punkt, to~ten algorytm policzy to~co~znajduje się na~zewnątrz obrysu, a
 nie to~co~jest wewnątrz.
 
 Długość obrysu w~pikselach jest obliczana na~podstawie liczebności listy pikseli należących do~obrysu.
@@ -1480,12 +1480,12 @@ Długość obrysu w~pikselach jest obliczana na~podstawie liczebności listy pik
 \section {Moduł anonimizacji danych}
 
 W celu umożliwienia anonimizacji danych pacjentów zawartych w~plikach DICOM skorzystano
-z REST API serwera Orthanc. Umożliwia ono wykonanie kopii badania wgranego do~serwera
-z~nowymi danymi pacjenta. Po~wykonaniu kopii z~podanymi przez użytkownika danymi
+z REST API serwera Orthanc. Umożliwia to wykonanie kopii badania wgranego do~serwera
+z~nowymi danymi pacjenta. Po~wykonaniu kopii z~podanymi przez użytkownika danymi,
 oryginalny obraz DICOM jest usuwany z~serwera obrazów Orthanc.
 
 
-\afterpage{\blankpage}
+%\afterpage{\blankpage}
 
 \chapter {Przeprowadzone eksperymenty}
 
@@ -1668,7 +1668,7 @@ można wysnuć wnioski, które zostaną zaprezentowane w~podrozdziale 4.4.
 
 Poniżej przedstawiono analizę wyników oraz wnioski z~przeprowadzonych testów.
 
-Zauważono, że gdy generujemy statystyki, to~czas potrzebny na~obliczenie statystyk
+Zauważono, że gdy były generowane statystyki, to~czas potrzebny na~obliczenie statystyk
 zwiększał czas na~realizację zapytania o~około 30\%. Wiązało się to~z~odwiedzeniem
 wszystkich punktów wewnątrz obrysu, co~powodowało wydłużenie obliczeń.
 
@@ -1700,9 +1700,9 @@ które na~pewno nie polepszyłyby rozwiązania.
 
 Wraz ze~wzrostem liczby punktów wybranych przez użytkownika najczęściej malał
 czas potrzebny na~wygenerowanie obrysu półautomatycznego. Czas dla większych
-obrysów maleje w~sposób znaczący, dla małych obrysów w~sposób niezauważalny.
-Dzieje się tak dlatego, że operacje na~grafach są tylko elementem obliczeń. W
-przypadku małych obrysów, dominującą częścią obliczeń są operacje na~przetwarzanym
+obrysów malał w~sposób znaczący, dla małych obrysów w~sposób niezauważalny.
+Działo się tak dlatego, że operacje na~grafach były tylko elementem obliczeń. W
+przypadku małych obrysów, dominującą częścią obliczeń były operacje na~przetwarzanym
 obrazie. Ponadto czasy obliczeń zawierają narzut czasowy wywołany przez
 przetwarzanie zapytań.
 
@@ -1754,7 +1754,7 @@ rozmiarom obrazu. Decyzja została uzasadniona potrzebą zapewnienia poprawnego
 obliczania statystyk. Zapisywanie obrysów w~takich wymiarach ułatwia obliczanie
 liczby pikseli wewnątrz obrysu.
 
-Ze względu na~złożoność algorytmu używanego do~wyznaczania obrysu półautomatycznego
+Ze względu na~złożoność algorytmu używanego do~wyznaczania obrysu półautomatycznego,
 wykonywanie obrysów półautomatycznych w~obrazach o~dużej rozdzielczości przekracza
 dwukrotnie dopuszczalny czas 30~sekund. Czas
 obliczeń można poprawić poprzez ograniczenie obszaru, w~którym wykrywane będą
@@ -1763,7 +1763,7 @@ zbliżonych do~pełnych wymiarów obrazu.
 
 Podczas pracy nad narzędziem rozważano dodatkowe funkcjonalności, które nie zostały
 poruszone w~tej pracy. Są one potencjalnymi możliwościami rozwoju narzędzia
-stworzonego w~ramach tej pracy. Funkcjonalności opisano szczegółowo poniżej.
+stworzonego w~ramach tej pracy. Funkcjonalności te opisano szczegółowo poniżej.
 
 W obecnej wersji systemu nie zaimplementowano deskryptorów kształtu obrysu.
 Zaimplementowanie takich deskryptorów mogłoby dostarczyć dodatkowych informacji
@@ -1912,7 +1912,7 @@ inteligencji opartych na~obrysach wykonanych przez użytkownika.
 
 Do niniejszej pracy dyplomowej inżynierskiej została załączona płyta CD. W~jej skład wchodzą:
 \begin{itemize}[noitemsep]
-\item wesja elektroniczna pracy, której treść jest identyczna z~powyższą w
+\item wersja elektroniczna pracy, której treść jest identyczna z~powyższą w
 pliku \verb+garsteckil-swierczewskit-praca-inzynierska.pdf+,
 \item strona tytułowa pracy w~pliku \verb+garsteckil-swierczewskit-strona-tytulowa.pdf+,
 \item streszczenie w~języku polskim i~angielskim w~plikach o~nazwach odpowiednio
@@ -2021,8 +2021,8 @@ pobrać wersję odpowiednią dla używanego systemu operacyjnego, a~następnie
 postępować zgodnie z~informacjami wyświetlanymi w~trakcie instalacji.
 
 W celu konfiguracji serwera w~pliku DotNetProject/Api/Properties/launchSettings.json
-należy wipsać w~24~linii  wartość adresu i~portu na~którym serwer ma~zostać
-udostępniony, jako wartość pola applicationUrl . Przykładowa poprawna wartość
+należy wpisać jako wartość~24~linii adres i~port, na~którym serwer ma~zostać
+udostępniony, jako wartość pola applicationUrl. Przykładowa poprawna wartość
 linii 24~to\texttt{ "applicationUrl": "https://localhost:5001",}.
 
 Ponadto w~pliku DotNetProject/Api/Startup.cs należy podać w~linii 33~link pod
@@ -2169,7 +2169,7 @@ odpowiednim miejscu na~obrazie --- Rysunek \ref{fig:8}.
 
 Po kliknięciu przycisku wyślij (Send) lewym przyciskiem myszy obrys zostaje
 zapisany i~pojawia się na~liście wykonanych obrysów (Avaiable Contours). Lista
-zawiera jednie obrysy dla oglądanego obrazu --- Rysunek \ref{fig:9}.
+zawiera jedynie obrysy dla oglądanego obrazu --- Rysunek \ref{fig:9}.
 
 \begin{figure}[h!]
 	\center
