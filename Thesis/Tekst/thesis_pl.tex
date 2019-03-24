@@ -343,7 +343,7 @@ sposobami wykrywania takich zmian na~obrazach medycznych.
 
 W celu interpretowania obrazów medycznych potrzebna jest wiedza anatomiczna, jak
 i radiologiczna. Z~tego powodu potrzeba stworzyć narzędzie, które w~wygodny sposób
-pozwoli nam wykonywać obrysy wybranych narządów i~anormalności medycznych. Na
+pozwoli wykonywać obrysy wybranych narządów i~anormalności medycznych. Na
 podstawie wykonanych obrysów będzie można w~przyszłości tworzyć zaawansowane
 narzędzia do~automatycznej klasyfikacji lub rozwijać zaproponowane narzędzie.
 
@@ -357,7 +357,7 @@ wybranych struktur lub anormalności. W~przypadku obrysów manualnych użytkowni
 może tworzyć kilka obrysów jednocześnie w~celu zaznaczania anormalności w~konkretnej tkance.
 Użytkownik może korzystać z~tabletu graficznego w~celu wygodniejszego rysowania obrysów.
 
-Został stworzony algorytm półautomatyczny do~tworzenia obrysów półautomatycznych.
+Został stworzony algorytm do~tworzenia obrysów półautomatycznych.
 Jest to~metoda półautomatyczna, ponieważ jest wspomagana przez człowieka, który
 wybiera punkty na~obrazie medycznym. Algorytm ma~za~zadanie interpolować punkty
 wybrane przez użytkownika. Do~algorytmu półautomatycznego generowania obrysu
@@ -370,7 +370,7 @@ studenci medycyny w~celu nauki wykrywania zmian patologicznych, czy też lekarze
 biomedyczni w~trakcie współpracy w~badaniach naukowych.
 
 Zaproponowane przez autorów rozwiązanie opiera się na~aplikacji przeglądarkowej
-i serwera przechowującego obrysy. To~rozwiązanie pozwala na~użycie go~sieciach
+i~na~serwerze przechowującym obrysy. To~rozwiązanie pozwala na~użycie go~w~sieciach
 lokalnych, gdzie użytkownik lub użytkownicy na~dowolnej stacji roboczej mogą
 wykonywać obrysy, które zapisywane są na~wspólnym dla wszystkich użytkowników serwerze.
 
@@ -397,7 +397,7 @@ DICOM stanowi barierę w~sprawnym korzystaniu z~tak zapisanych wyników badań.
 
 \section {Podział prac}
 
-Ze względu na~złożoność realizowanego narzędzia dokonano podziału zdań pomiędzy
+Ze względu na~złożoność realizowanego narzędzia dokonano podziału zadań pomiędzy
 członków zespołu.
 
 Łukasz Garstecki wykonał:
@@ -425,8 +425,8 @@ Tomasz Świerczewski wykonał:
 \chapter {Stan wiedzy}
 
 W poniższym rozdziale zostały przedstawione istniejące na~rynku aplikacje o
-funkcjonalnościach określonych w~celu pracy. Opisano wymagania zarówno funkcjonalne
-jak i~niefunkcjonalne jakie powinien spełniać. Autorski system do~tworzenia obrysów
+funkcjonalnościach określonych w~celu pracy. Opisano wymagania dla projektowanego systemu
+zarówno funkcjonalne jak i~niefunkcjonalne. Autorski system do~tworzenia obrysów
 na obrazach w~formacie DICOM struktur anatomicznych czy zmian patologicznych
 powinien spełniać wymagania zarówno lekarzy jak i~inżynierów medycznych, wykorzystujących
 to narzędzie w~pracy badawczej i~naukowej. Przedstawiono również proponowane rozwiązanie
@@ -446,7 +446,7 @@ obrazowania, czy też różnorodnej tekstury tkanki obrazowanej.
 Istnieje wiele rozwiązań umożliwiających wykonywanie obrysów przy użyciu przeglądarki.
 W tej pracy opisano szczegółowo dwie wybrane aplikacje.
 
-Pierwsze z~nich to~aplikacja OHIF Viewer oparta o~biblioteki Cornerstone.
+Pierwsza z~nich to~aplikacja OHIF Viewer oparta o~biblioteki Cornerstone.
 
 Cornerstone Core \cite{Cornerstone Core} to~biblioteka, która umożliwia przetwarzanie
 obrazów medycznych z~wykorzystaniem elementu canvas z~języka HTML5. Biblioteka
@@ -484,7 +484,7 @@ Rysunku \ref{fig:OHIF-example}.
 	\includegraphics[width=0.7\textwidth]{OHIF-example}
 	\caption{Przykład użycia aplikacji OHIF Viewer --- oznaczono: prostokątny obszar,
 	dla którego obliczone zostały wybrane statystyki; odcinek, dla którego otrzymano
-	odległość jednostkach rzeczywistych; wskaźnik, wskazujący na~zmianę, posiadający
+	odległość w~jednostkach rzeczywistych; wskaźnik, wskazujący na~zmianę, posiadający
 	etykietę tekstową}
     	\label{fig:OHIF-example}
 \end{figure}
@@ -492,8 +492,8 @@ Rysunku \ref{fig:OHIF-example}.
 Niestety aplikacja nie umożliwia wykonywania obrysów manualnych, ani półautomatycznych,
 jak również nie pozwala na~zapisanie naniesionych na~obraz oznaczeń.
 
-Drugim rozwiązaniem działającym pozwalającym na~pracę z~plikami DICOM w~przeglądarce
-internetowej to~DICOM Web Viewer.
+Drugim rozwiązaniem działającym i~pozwalającym na~pracę z~plikami DICOM w~przeglądarce
+internetowej jest DICOM Web Viewer.
 
 Aplikacja DICOM Web Viewer (DWV) \cite{DWV} jest również przykładem aplikacji
 przeglądarkowej służącej do~przetwarzania obrazów DICOM, z~wygodnym interfejsem
@@ -512,7 +512,7 @@ DWV przedstawiono na~Rysunku \ref{fig:DWV-interface}.
 \begin{itemize}[noitemsep]
 \item przybliżanie i~oddalanie obrazu,
 \item przesuwanie obrazu w~wyświetlanym komponencie,
-\item zmiana jasności wyświetlanego obrazu,
+\item możliwość zmiany jasności wyświetlanego obrazu,
 \item mierzenie odległości w~linii prostej na~obrazie z~podaniem rzeczywistych wartości,
 \item oznaczanie obszarów przy pomocy prostokątów oraz elips.
 \end{itemize}
@@ -540,7 +540,7 @@ poruszanie kursorem po~obrazie.
 Orthanc \cite{Orthanc} to~serwer plików DICOM, który umożliwia łatwe przechowywanie,
 zarządzanie oraz dostęp do~plików medycznych DICOM. Ponadto Orthanc udostępnia
 REST API \cite{Orthanc API}, które umożliwia przeglądanie wgranych na~serwer plików DICOM podzielonych
-na kategorie takie jak pacjenci, badania i~serie.
+na kategorie takie jak: pacjenci, badania i~serie.
 
 Serwer Orthanc udostępnia prosty interfejs webowy, dzięki któremu możliwe jest
 wgrywanie nowych plików (interfejs wgrywania plików przedstawiono na~Rysunku
@@ -605,7 +605,7 @@ W poniższym rozdziale zawarto dokumentację techniczną i~biznesową tworzonego
 
 \section {Specyfikacja wymagań}
 
-Przed stworzeniem systemu zostały zgromadzone dane dotyczące wymagań stawianych
+Pierwszym krokiem podczas projektowania rozwiązania było zgromadzenie danych dotyczących wymagań stawianych
 przed tworzonym systemem. Zostały one przedstawione w~postaci zgodnej z~wymaganiami
 stawianymi w~inżynierii oprogramowania w~rozdziałach 3.1.1. - 3.1.3. Wymagania
 były gromadzone na~podstawie wywiadów przeprowadzonych z~opiekunem naukowym tej
@@ -688,8 +688,8 @@ na obraz, na~którym został wykonany.
 %Doprecyzować listę po~prawej stronie
 \item \textbf {Jako użytkownik chcę zobaczyć statystyki dotyczące obrysu.} \\
 Użytkownik wybiera z~listy obrysów zapisany obrys i~przegląda statystyki obliczone
-na podstawie zapisanego obrysu. Do~statystyk zalicza się obwód obrysu, pole obrysu,
-histogram obrazu na~obszarze obrysu oraz liczba pikseli wewnątrz obrysu.
+na podstawie zapisanego obrysu. Do~statystyk zalicza się: obwód obrysu, pole obrysu,
+histogram obrazu na~obszarze obrysu oraz liczbę pikseli wewnątrz obrysu.
 
 %Doprecyzować listę po~prawej stronie
 \item \textbf {Jako użytkownik chcę zobaczyć jednocześnie dowolną liczbę zapisanych
@@ -698,12 +698,12 @@ Użytkownik wybiera poprzez kliknięcie lewym przyciskiem myszy na~nazwie obrysu
 znajdującej się na~liście obrysów. Wybrane obrysy wyświetlane są jednocześnie
 na przeglądanym przez użytkownika zdjęciu. Użytkownik może wyłączyć podgląd
 wcześniej wybranego obrysu poprzez ponowne wciśnięcie lewego przycisku myszy
-na nazwie obrysu na~liście po~prawej stronie. Na~zdjęciu wyświetlane są jedynie
+na nazwie obrysu, która znajduje się na~liście po~prawej stronie. Na~zdjęciu wyświetlane są jedynie
 obrysy wykonane na~tym obrazie.
 
 %Doprecyzować listę po~prawej stronie
 \item \textbf {Jako użytkownik chcę zanonimizować dane pacjenta zawarte w~pliku DICOM.} \\
-Użytkownik może zanonimizować pacjenta, gdy przegląda jego obraz. Użytkownik może
+Użytkownik może zanonimizować dane pacjenta, gdy przegląda jego obraz. Użytkownik może
 anonimizować imię i~nazwisko pacjenta, datę urodzenia pacjenta oraz płeć pacjenta
 poprzez nadanie nowych wartości lub poprzez usunięcie poprzedniej wartości i
 pozostawienie pustych pól w~formularzu.
@@ -803,7 +803,7 @@ stworzone przy pomocy ASP.NET Core 2.2 \cite{ASPNET} przy wykorzystaniu framewor
 - utwórz, odczytaj, aktualizuj i~usuń. W~celu pobrania zdjęć medycznych serwer z~API
 łączy się do~bazy danych Orthanc. Informacje o~obrysach, takie jak ID~obrysu, tag,
 ID obrazu medycznego i~typ obrysu (półautomatyczny lub manualny) są przechowywane
-w bazie danych Microsoft SQL Server. Pozostałe informacje, takie jak lista pikseli
+w bazie danych Microsoft SQL Server. Pozostałe informacje, takie jak: lista pikseli
 należących do~obrysu, lista punktów w~przypadku obrysu półautomatycznego i~statystyki
 są przechowywane w~plikach CSV. Te~pliki są zapisywane w~katalogu roboczym obok
 miejsca przechowywania plików źródłowych dla API.
@@ -824,7 +824,8 @@ W związku z~tym, że obrazy wyświetlane w~interfejsie są w~innej rozdzielczo�
 niż rzeczywisty rozmiar obrazu, obrysy przed zapisaniem zostają przeskalowane do
 faktycznych wymiarów obrazu. W~przypadku obrazów o~małych rozdzielczościach może
 spowodować to~utratę dokładności obrysu, a~w~przypadku obrysów bardzo małych
-obszarów zdegradowanie obrysu do~jednego piksela. Tego typu straty mogą wpływać
+obszarów może to~doprowadzić do~zdegradowania 
+obrysu do~jednego piksela. Tego typu straty mogą wpływać
 na poprawność obliczanych statystyk jak również błędne wyświetlanie zapisanych
 obrysów w~interfejsie użytkownika.
 
@@ -866,7 +867,7 @@ Zgodnie z~\cite{Cyfrowe przetwarzanie obrazów medycznych} za~ich główne wady 
 znacząco wpływa na~rozmieszczenie pozycji, w~których gradient osiąga wartości
 maksymalne lub przecina zera,
 \item pomijanie narożników, które spowodowane jest faktem, że wartość 1D~gradientu
-w narożnikach jest zazwyczaj zbyt mała, aby wykrywać wokół nich,
+w narożnikach jest zazwyczaj zbyt mała, aby wykrywać krawędzie wokół nich,
 \item znajdowanie schodkowych krawędzi, które są wykrywane tylko przez operator pierwszej pochodnej,
 \item dużą wrażliwość na~szum,
 \item na~podstawie obserwacji działania algorytmu --- rozmyte krawędzie często
@@ -878,7 +879,7 @@ Operator Canny'ego \cite{Canny} składa się z~3~zasadniczych kroków:
 \item \textbf {Określenie wartości i~kąta gradientu} \\
 W tym celu został wykorzystany operator gradientu, a~estymatorem gradientu w
 funkcji dyskretnej, jaką jest obraz, zastosowano maskę, czy też operator Sobela.
-Wykorzystując go~uzyskano dla każdego piksela wielkość oraz kierunek gradientu,
+Wykorzystując go,~uzyskano dla każdego piksela wielkość oraz kierunek gradientu,
 co służy do~dalszych obliczeń,
 \item \textbf {Wykrycie miejsc występowania krawędzi} \\
 W tym celu został wykorzystany algorytm usuwania niemaksymalnych pikseli
@@ -976,7 +977,7 @@ Poniżej zostaną przedstawione dokładne rozwiązania dla każdego z~tych krok�
 Przed rozpoczęciem przetwarzania jest pobierany obraz medyczny o~danym wcześniej
 identyfikatorze z~serwera Orthanc. Bitmapa tworzona jest na~podstawie obrazu DICOM poprzez
 zapisanie w~odpowiednich komórkach wartości kolorów z~oryginalnego obrazu.
-Stawi ona podstawę do~dalszej pracy algorytmu.
+Stanowi ona podstawę do~dalszej pracy algorytmu.
 
 \subsection {Wykrycie krawędzi na~bitmapie}
 
@@ -1033,7 +1034,7 @@ a~wartościom 0~odpowiada kolor biały.
 
 Kolejnym etapem było stworzenie grafu z~bitmapy. Na~tym etapie danymi wejściowymi były:
 \begin{itemize}[noitemsep]
-\item macierz z~wartościami logicznymi prawda/fałsz określającymi czy znajduje się w~danym
+\item macierz z~wartościami logicznymi prawda/fałsz określającymi, czy znajduje się w~danym
 punkcie krawędź,
 \item punkty wybrane przez użytkownika aplikacji.
 \end{itemize}
@@ -1166,25 +1167,25 @@ z wykrytymi krawędziami w~optymistycznym przypadku.
 \bigskip
 
 W pracy zdecydowano się na~metrykę 4-krotną ze~względu na~prostotę obliczeń,
-która skróciła czas pracy algorytmum. Nie wymagało to~także dodatkowych
-obliczeń związanych z~ścienianiem. Przygotowano
+która skróciła czas pracy algorytmu. Nie wymagało to~także dodatkowych
+obliczeń związanych ze~ścienianiem. Przygotowano
 i~zaimplementowano algorytm tworzący graf z~bitmapy, a~jego pseudokod znajduje
 się w~Załączniku 1. %Poprawić, nie poniżej!!!
 
-Utworzony w~ten sposób graf jest grafem nieskierowanym z~wagami, gdzie wagi to
-liczba pikseli, czy też punktów należących do~krawędzi. Graf ten może nie być
-spójny. Ponadto może nie zawierać wierzchołków, które pokrywają się z~punktami
+Utworzony w~ten sposób graf był grafem nieskierowanym z~wagami, gdzie wagi to
+liczba pikseli, czy też liczba punktów należących do~krawędzi. Graf ten mógł nie być
+spójny. Ponadto mógł nie zawierać wierzchołków, które pokrywały się z~punktami
 wybranymi przez użytkownika.
 
-Graf ten zazwyczaj jest rzadki, ponieważ liczba jego krawędzi jest rzędu liczby
+Graf ten zazwyczaj był rzadki, ponieważ liczba jego krawędzi była rzędu liczby
 jego wierzchołków.  Z~uwagi na~czasami bardzo dużą liczbę wierzchołków --- nawet
 do kilkudziesięciu tysięcy --- próba implementacji przy pomocy macierzy sąsiedztwa
 mogłaby spowodować zużycie całej możliwej pamięci operacyjnej. Dla 50~tysięcy
 wierzchołków program musiałby zadeklarować macierz sąsiedztwa zawierającą 2,5
 miliarda komórek. Z~tych powodów graf został zaimplementowany przy pomocy list sąsiedztwa.
 
-W przyjętej implementacji każda krawędź zawiera dodatkowo informację o~tym, jakie
-piksele należą do~danej krawędzi w~rzeczywistym obrazie.
+W przyjętej implementacji każda krawędź zawierała dodatkowo informację o~tym, jakie
+piksele należały do~danej krawędzi w~rzeczywistym obrazie.
 
 \subsection {Zapewnienie spójności grafu}
 
@@ -1210,7 +1211,7 @@ a zatem kolejkę, więc jest to~przeszukiwanie wszerz. Złożoność obliczeniow
 algorytmu to~$O(|E|)$.
 
 Po wyznaczeniu spójnych składowych grafu dla każdej pary składowych znajdowano
-taką parę wierzchołków, żeby odległość między nimi jest minimalna. Jeśli odległość
+taką parę wierzchołków, żeby odległość między nimi była minimalna. Jeśli odległość
 była mniejsza niż maksymalna odległość między dwoma dowolnymi punktami zaznaczonymi
 przez użytkownika, to~była dodawana sztuczna krawędź o~wadze 2,5 razy większej
 niż odległość wynikająca z~metryki Manhattan pomiędzy tymi dwoma wierzchołkami.
@@ -1246,7 +1247,7 @@ koszcie. Z~uwagi na~fakt, że wagi w~grafie są ściśle związane z~odległośc
 używane jest sformułowanie szukania najkrótszych ścieżek. Wagi w~tym grafie są
 nieujemne. Może w~nim istnieć kilka ścieżek z~jednego punktu do~drugiego o~tym
 samym koszcie, więc algorytm kończy swoje działanie na~tym etapie, gdy znajdzie
-jedną z~nich. W~tym grafie nie występują krawędzie wielokrotne i~nie zawiera
+jedną z~nich. W~tym grafie nie występują krawędzie wielokrotne i~graf nie zawiera
 cykli własnych.
 
 Do wyszukiwania najkrótszych ścieżek w~grafie, po~zgłębieniu literatury
@@ -1312,11 +1313,12 @@ wymagał szybkiego sprawdzania przynależności. Po~przeanalizowaniu rekomendowa
 struktur danych \cite{Dotnet struktury} został użyty HashSet<T>.
 
 Zbiór Open oferował zastosowanie znacznie bardziej finezyjnych struktur danych.
-Wymagane było od~niego, aby był kolejką priorytetową, czyli aby był sortowany po
+Wymagano od~niego, aby był kolejką priorytetową, czyli aby był sortowany po
 priorytetach będącymi sumą odległości wierzchołków od~źródła i~oszacowań odległości
-tych wierzchołków od~celu. Warto zauważyć, że oprócz sortowania często są wstawiane
+tych wierzchołków od~celu. Warto zauważyć, że oprócz sortowania często były wstawiane
 do niego wierzchołki, pobierane, usuwane i~modyfikowane wartości priorytetu.
-Bardzo często jest sprawdzana przynależność i~wyszukiwanie według klucza.
+Bardzo często była sprawdzana przynależność i~przeprowadzano 
+wyszukiwanie według klucza.
 
 Porównanie czasów różnych operacji dla różnych klas słownikowych zaimplementowanych
 w~technologii .NET można znaleźć w~\cite{C w pigulce}.
@@ -1326,7 +1328,7 @@ sortowana po~kluczu, a~nie tak jak jest potrzebne w~tym przypadku sortowanie
 po wartości. Poszukiwano zatem struktury danych, która sortuje po~wartościach
 i ma~łatwy dostęp przez klucz.
 
-W naszym rozwiązaniu została zaimplementowana struktura danych opierająca się
+W zaproponowanym rozwiązaniu została zaimplementowana struktura danych opierająca się
 na dwóch podstrukturach - zaimplementowanej kolejki priorytetowej poprzez listę,
 oraz słownik Dictionary<K,V> z~technologii .NET, który opiera się o~Tablicę
 skrótów. Zaimplementowana lista miała następującą strukturę:
