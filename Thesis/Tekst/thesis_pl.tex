@@ -504,7 +504,7 @@ DWV przedstawiono na~Rysunku \ref{fig:DWV-interface}.
 \begin{figure}[tb!]
 	\center
 	\includegraphics[width=0.7\textwidth]{DWV-interface}
-	\caption{Przykład użycia aplikacji DWV - obrys półautomatyczny (Livewire)}
+	\caption{Przykład użycia aplikacji DWV - obrys półautomatyczny (Livewire) \cite{DWV}}
     	\label{fig:DWV-interface}
 \end{figure}
 
@@ -524,7 +524,7 @@ poruszanie kursorem po~obrazie.
 \begin{figure}[tb!]
 	\center
 	\includegraphics[width=0.8\textwidth]{Orthanc-upload}
-	\caption{Interfejs wgrywania plików DICOM do~serwera Orthanc}
+	\caption{Interfejs wgrywania plików DICOM do~serwera Orthanc \cite{Orthanc}}
     	\label{fig:Orthanc-upload}
 \end{figure}
 
@@ -557,7 +557,22 @@ przyciskiem myszy w~prawą część podglądu obrazu.
     	\label{fig:Orthanc-preview}
 \end{figure}
 
-%SONIC DICOM
+Innym rozwiązaniem pozwalającym na zarządzanie badaniami obrazowymi jest SonicDICOM \cite{SonicDICOM}.
+Podobnie jak Orthanc udostępnia on API \cite{SonicDICOM API} pozwalające na komunikację zewnętrznych narzędzi
+z systemem w celu przeglądnia, wyświetlania i modyfikacji zapisanych w systemie badań.
+
+Podobnie jak Orthanc, SonicDicom posiada on wbudowany interfejs do przeglądania
+zapisanych w systemie badań, który nie umożliwia wykonywania obrysów na badaniach.
+
+\begin{figure}[tb!]
+	\center
+	\includegraphics[width=0.55\textwidth]{SoniCDICOMViewer}
+	\caption{Podgląd obrazu DICOM przy użyciu interfejsu SonicDICOM \cite{SonicDICOM img}}
+    	\label{fig:Orthanc-preview}
+\end{figure}
+
+System SonicDICOM jest rozwiązaniem komercyjnym i wykorzystanie go wymaga wykupienia
+licencji w celu korzystania z zawarnych w nim funkcjonalności.
 
 \subsection {Podsumowanie}
 
@@ -567,6 +582,13 @@ Ponadto żadne z~narzędzi nie przechowuje utworzonych w~sposób manualny
 ani wygenerowanych półautomatycznie obrysów.
 
 \section {Proponowane rozwiązanie}
+
+\begin{figure}[tb!]
+	\center
+	\includegraphics[width=0.55\textwidth]{architektura}
+	\caption{Architektura proponowanego rozwiązania}
+    	\label{fig:Orthanc-preview}
+\end{figure}
 
 W rozwiązaniu zdecydowano się skorzystać z~serwera Orthanc jako bazy przechowującej
 pliki DICOM. Przy decyzji miało znaczenie przede wszystkim to, że jest to~narzędzie
@@ -598,10 +620,10 @@ wynik półautomatycznego dopasowania obrysu.
 
 \chapter {Opis autorskiego narzędzia informatycznego}
 
-W poniższym rozdziale zawarto dokumentację techniczną i~biznesową tworzonego systemu.
- Przedstawiono w~szczególności: wymagania funkcjonalne i~niefunkcjonalne,
- architekturę, zastosowane metody półautomatycznego obrysu oraz metody obliczania
- statystyk obrysu.
+W poniższym rozdziale zawarto dokumentację biznesową jak i~techniczną tworzonego narzędzia.
+Przedstawiono: wymagania funkcjonalne i~niefunkcjonalne,
+architekturę narzędzia, a także zastosowane metody półautomatycznego obrysu oraz metody obliczania
+statystyk dla wybranego obszaru obrazu wewnątrz obrysu.
 
 \section {Specyfikacja wymagań}
 
@@ -742,9 +764,10 @@ pozostawienie pustych pól w~formularzu.
 \end{tabular}
 \end{table}
 
-Drugim rodzajem wymagań są wymagania niefunkcjonalne. Opisują one kryteria osądzania
+Drugim rodzajem wymagań przy tworzeniu systemu są wymagania niefunkcjonalne, które opisują kryteria osądzania
 działania systemu pod kątem jakościowym. Założone wymagania niefunkcjonalne zostały
-przedstawione w~Tabeli \ref{tabela wymagania niefunkcjonalne}.
+przedstawione w~Tabeli \ref{tabela wymagania niefunkcjonalne}. Do najważniejszych
+obszarów ujętych w tabeli należą: użyteczność, niezawodność oraz wydajność.
 
 \section {Architektura rozwiązania}
 
@@ -792,7 +815,7 @@ API serwera udostępnia dane obrazów posegregowanych względem kolejno: pacjent
 badań oraz serii. Wykorzystano je~w~interfejsie użytkownika do~nawigacji pomiędzy
 obrazami. Dodatkowo dla każdego obrazu serwer udostępnia dane obrazowe, umożliwiając
 wyświetlenie obrazu w~interfejsie użytkownika. Ponadto API udostępnia wszystkie
-tagi obrazu DICOM, co~umożliwia wyświetlanie interfejsowi użytkownika informacji
+tagi obrazu DICOM, co~umożliwia wyświetlanie w interfejsie użytkownika informacji
 w nich zawartych.
 
 \subsection {Serwer obrysów i~obliczeń}
@@ -811,22 +834,53 @@ miejsca przechowywania plików źródłowych dla API.
 Poza serwerem Orthanc interfejs korzysta także z~serwera przechowującego obrysy,
 a także wykonującego obliczenia związane z~generowaniem obrysów. Serwer ten jest
 dostępny dla interfejsu użytkownika poprzez API dostępne przez protokół HTTP.
-Pozwala ono na~pobieranie zapisanych obrysów, zapisywanie obrysów manualnych i
-generowanie podglądu i~zapis obrysu półautomatycznego.
+Pozwala ono na~pobieranie zapisanych obrysów, zapisywanie obrysów manualnych
+i~generowanie podglądu i~zapis obrysu półautomatycznego.
+
+\subsection {Baza danych}
+
+W celu zapisania danych związanych z~obrysami wykorzystana została baza SQL~Lite.
+Baza składa się z~jednej tabeli, w~której przechowywane są: identyfikator obrazu DICOM,
+identyfikator obrysu, nazwa obrysu oraz informacja, czy obraz został wygenerowany
+manualnie czy półautomatycznie. Punkty z których składa się obrys i~statystytki
+z~nim związane zapisywane są~w~oddzielnych
+plikach tekstowych o nazwie identycznej z identyfikatorem obrysu.
 
 \section {Moduł obrysów manualnych}
 
+Moduł służy do samodzielnego wykonywania obrysów przy użyciu myszy albo tabletu
+graficznego. Obrysy wykonywane są poprzez przesuwanie przez użytkownika kursora
+z~wciśniętym lewym przyciskiem myszy po~ekranie. Daje to użytkownikowi całkowitą
+konrolę nad kształtem wykonywanego przez niego obrysu. Dzięki temu modułowi
+użytkownik może otrzymać obrys w sytuacji,
+gdy moduł obrysów półautomatycznych nie daje satysfakcjonujących użytkownika rezultatów.
+
 Obrysy manualne generowane przez użytkowników zapisywane są przez serwer obrysów
-i obliczeń w~postaci plików CSV na~dysku serwera. W~momencie zapisu obliczane są
-również statystyki dotyczące obrysowanej części obrazu.
+i~obliczeń w~postaci plików CSV na~dysku serwera. Na obrys składa się lista
+pozycji punktów na obrazie, przez które użytkownik przesuwał kursor oraz kolor obrysu.
+W~momencie zapisu obrysu do pliku obliczane są
+również statystyki dotyczące obrysowanej części obrazu, takie jak długość obrysu,
+pole obrysu, środek ciężkości obrysu, histogram obrazu zawartego w obrysie oraz
+liczba pikseli wewnątrz obrysu.
 
 W związku z~tym, że obrazy wyświetlane w~interfejsie są w~innej rozdzielczości
-niż rzeczywisty rozmiar obrazu, obrysy przed zapisaniem zostają przeskalowane do
-faktycznych wymiarów obrazu. W~przypadku obrazów o~małych rozdzielczościach może
+niż rzeczywisty rozmiar obrazu (spowodownae jest to potrzebą zapewnienia, że obrys
+będzie wyświetlany na ekranie w całości jak również, że obrazy o małej rozdzielczości
+będą dostatecznie czytelne dla użytkownika), obrysy przed zapisaniem zostają przeskalowane do
+faktycznych wymiarów obrazu poprzez przemnożenie współrzędnych zaznaczonych przez
+użytkownika punktów przez odwrotność współczynnika skalowania obrazu.
+ W~przypadku obrazów o~małych rozdzielczościach może
 spowodować to~utratę dokładności obrysu, a~w~przypadku obrysów bardzo małych
-obszarów zdegradowanie obrysu do~jednego piksela. Tego typu straty mogą wpływać
+obszarów zdegradowanie obrysu do~jednego piksela \ref{fig:manual-0px}. Tego typu straty mogą wpływać
 na poprawność obliczanych statystyk jak również błędne wyświetlanie zapisanych
 obrysów w~interfejsie użytkownika.
+
+\begin{figure}[h]
+	\center
+	\includegraphics[width=0.7\textwidth]{manualny-0px}
+	\caption{Przykład obrysu bez pikseli wewnątrz ze względu na niską rozdzielczość obrazu}
+    	\label{fig:manual-0px}
+\end{figure}
 
 \section {Moduł obrysów półautomatycznych}
 
@@ -1823,9 +1877,12 @@ inteligencji opartych na~obrysach wykonanych przez użytkownika.
 \bibitem{Canny} Canny J. F.: Finding Edges and Lines in~Images. \emph{Technical report no. 720, Massachusetts Institute of~Technology (MIT)}, Cambridge, Massachusetts, USA, 1983
 \bibitem{Cyfrowe przetwarzanie obrazów medycznych} Cytowski J., Gielecki J., Gola A.: Cyfrowe przetwarzanie obrazów medycznych: Algorytmy. Technologie. Zastosowania. \emph{Akademicka Oficyna Wydawnicza EXIT}, Warszawa, 88--94, 2008
 \bibitem{React} Facebook Inc.: Informacje o~bibliotece ReactJS. Oficjalna strona: https://reactjs.org/ [Dostęp 27~stycznia 2019]
-\bibitem{Cornerstone Core}  Hafey C.: Dokumentacja projektu Cornerstone Core. Oficjalna strona: https://docs.cornerstonejs.org/ [Dostęp 27~stycznia 2019]
+\bibitem{SonicDICOM} JIUN Corporation: Oficjana strona: https://sonicdicom.com/ [Dostęp 24~marca 2019]
+\bibitem{SonicDICOM} JIUN Corporation: Przykład użycia intefejsu podglądu badań w systemie SonicDICOM: https://sonicdicom.com/screens/viewer-of-dicom-viewer/ [Dostęp 24~marca 2019]
+\bibitem{SonicDICOM API} JIUN Corporation: Instrukcja korzystania z~REST API SonicDICOM. Oficialna strona: https://docs.sonicdicom.com/install-manual/integration.html [Dostęp 24 marca 2019]
+\bibitem{Cornerstone Core} Hafey C.: Dokumentacja projektu Cornerstone Core. Oficjalna strona: https://docs.cornerstonejs.org/ [Dostęp 27~stycznia 2019]
 \bibitem{A*} Hart P. E., Nilsson N. J., Raphael B.: A~Formal Basis for the Heurestic Determination of~Minimum Cost Paths \emph{IEEE Transactions on~Systems Science and Cybernetics 4(2)}, 100--107, 1968
-\bibitem{DWV}  ivmartel: Projekt DICOM Web Viewer. Oficjalna strona: https://ivmartel.github.io/dwv/ [Dostęp 27~stycznia 2019]
+\bibitem{DWV} ivmartel: Projekt DICOM Web Viewer. Oficjalna strona: https://ivmartel.github.io/dwv/ [Dostęp 27~stycznia 2019]
 \bibitem{Dlaczego dotnet} Kronis K., Uhanova M.: Performance Comparision of~Java EE~and ASP.NET Core Technologies for Web API Developmnet. \emph{Applied Computer Systems 23, Riga Technical University}, Ryga, 37--44, 2018
 \bibitem{Dotnet} Microsoft Corporation: Dokumentacja platformy .NET. Oficjalna strona: https://docs.microsoft.com/pl-pl/dotnet/ [Dostęp 22~stycznia 2019]
 \bibitem{Dotnet struktury} Microsoft Corporation: Dokumentacja rekomendowanych struktur danych platformy .NET. Oficjalna strona: https://docs.microsoft.com/pl-pl/dotnet/standard/collections/ [Dostęp 22~stycznia 2019]
@@ -1841,7 +1898,7 @@ inteligencji opartych na~obrysach wykonanych przez użytkownika.
 \bibitem{K3M} Saeed K., Tabędzki M., Rybnik M., Adamski M.: K3M: A~Universal Algorithm for Image Skeletonization and a~Review of~Thinning Techniques \emph{International Journal of~Applied Mathematics and Computer Science, 2010, 20(2)} Białystok, 317--335, 2010
 \bibitem{Algorytmy Sedgewick} Sedgewick R., Wayne K.: Algorytmy Wydanie IV, \emph{Helion}, Gliwice, 526--706, 2012
 \bibitem{Sobel} Sobel I., Feldman G.: An~3x3 Isotropic Image Gradient Operator for Image Processing. \emph {Presentation at~Stanford Aartificial Intelligence Project (SAIL) in~1968}, 2014
-\bibitem{Moore}  Weisstein, Eric W.: Moore Neighborhood. \emph{From MathWorld--A Wolfram Web Resource.} http://mathworld.wolfram.com/MooreNeighborhood.html  [Dostęp 22~stycznia 2019]
+\bibitem{Moore} Weisstein, Eric W.: Moore Neighborhood. \emph{From MathWorld--A Wolfram Web Resource.} http://mathworld.wolfram.com/MooreNeighborhood.html  [Dostęp 22~stycznia 2019]
 
 %\bibitem[1]{Ktos} A. Author, \emph{Title of~a~book}, Publisher, year, page--page.
 %\bibitem[2]{Innyktos} J. Bobkowski, S. Dobkowski, Jak stworzyć bibliografię w~BibTeX-u, \emph{Czasopismo nr}, rok, strona--strona.
@@ -1862,19 +1919,19 @@ inteligencji opartych na~obrysach wykonanych przez użytkownika.
 
 
 \begin{itemize}[noitemsep]
-\item API -- ang. Application Programming Interface --- zestaw ściśle określonych reguł, poprzez które komunikują się ze~sobą programy\\
-\item CRUD --- ang. Create, Read, Update, Delete --- utwórz, odczytaj, aktualizuj i~usuń -- cztery podstawowe funkcje w~aplikacjach, które umożliwiają zarządzanie nią\\
-\item CSV --- ang. Comma-Separated Values (w pracy użyte w~kontekście formatu pliku) \\
-\item DoS --- ang. Denial of~Service --- atak na~system komputerowy mający na~celu uniemożliwienie działania systemu\\
-\item DICOM --- ang. Digital Imaging and Communications in~Medicine --- norma ujednolicająca wymianę i~interpretację obrazowych danych medycznych\\
-\item HTML5 --- ang. HyperText Markup Language 5~--- język do~tworzenia i~prezentowania stron internetowych www\\
-\item HTTP --- ang. Hypertext Transfer Protocol --- protokół wymiany danych hipertekstowych\\
-\item HTTPS --- ang. Hypertex Transfer Protocol Secure --- szyfrowana wersja protokołu HTTP\\
-\item ID~--- ang. Identifier --- unikalna nazwa przypisana do~danego obiektu, pozwalająca rozróżniać obiekty w~systemie\\
-\item JSON --- ang. JavaScript Object Notation --- lekki format wymiany danych, bazujący na~podzbiorze języka JavaScript\\
-\item REST --- ang. Representational State Transfer --- styl architektury oprogramowania dla systemów rozproszonych\\
-\item RGB --- ang. Red, Green, Blue --- model przestrzeni barw, opisanej współrzędnymi 3~barw podstawowych: czerwonej, zielonej i~niebieskiej\\
-\item SDK --- ang. Software Development Kit --- zestaw narzędzi programistycznych niezbędny do~tworzenia aplikacji korzystającej z~danej biblioteki\\
+\item API -- ang. \textit{Application Programming Interface} --- zestaw ściśle określonych reguł, poprzez które komunikują się ze~sobą programy\\
+\item CRUD --- ang. \textit{Create, Read, Update, Delete} --- utwórz, odczytaj, aktualizuj i~usuń -- cztery podstawowe funkcje w~aplikacjach, które umożliwiają zarządzanie nią\\
+\item CSV --- ang. \textit{Comma-Separated Values} (w pracy użyte w~kontekście formatu pliku) \\
+\item DoS --- ang. \textit{Denial of~Service} --- atak na~system komputerowy mający na~celu uniemożliwienie działania systemu\\
+\item DICOM --- ang. \textit{Digital Imaging and Communications in~Medicine} --- norma ujednolicająca wymianę i~interpretację obrazowych danych medycznych\\
+\item HTML5 --- ang. \textit{HyperText Markup Language 5} --- język do~tworzenia i~prezentowania stron internetowych www\\
+\item HTTP --- ang. \textit{Hypertext Transfer Protocol} --- protokół wymiany danych hipertekstowych\\
+\item HTTPS --- ang. \textit{Hypertex Transfer Protocol Secure} --- szyfrowana wersja protokołu HTTP\\
+\item ID~--- ang. \textit{Identifier} --- unikalna nazwa przypisana do~danego obiektu, pozwalająca rozróżniać obiekty w~systemie\\
+\item JSON --- ang. \textit{JavaScript Object Notation} --- lekki format wymiany danych, bazujący na~podzbiorze języka JavaScript\\
+\item REST --- ang. \textit{Representational State Transfer} --- styl architektury oprogramowania dla systemów rozproszonych\\
+\item RGB --- ang. \textit{Red, Green, Blue} --- model przestrzeni barw, opisanej współrzędnymi 3~barw podstawowych: czerwonej, zielonej i~niebieskiej\\
+\item SDK --- ang. \textit{Software Development Kit} --- zestaw narzędzi programistycznych niezbędny do~tworzenia aplikacji korzystającej z~danej biblioteki\\
 \end{itemize}
 
 %\thispagestyle{empty}
