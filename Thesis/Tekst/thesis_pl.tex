@@ -616,7 +616,7 @@ obrysu zostało zrealizowane inaczej --- obrys nie jest generowany na~bieżąco,
 użytkownika. Wybrane przez niego punkty na~obrazie wysyłane są do~serwera i~na~obrazie wyświetlany jest
 wynik półautomatycznego dopasowania obrysu.
 
-%\afterpage{\blankpage}
+\afterpage{\blankpage}
 
 \chapter {Opis autorskiego narzędzia informatycznego}
 
@@ -627,42 +627,44 @@ statystyk dla wybranego obszaru obrazu wewnątrz obrysu.
 
 \section {Specyfikacja wymagań}
 
-Pierwszym krokiem podczas projektowania rozwiązania było zgromadzenie danych dotyczących wymagań stawianych
-przed tworzonym systemem. Zostały one przedstawione w~postaci zgodnej z~wymaganiami
-stawianymi w~inżynierii oprogramowania w~rozdziałach 3.1.1. - 3.1.3. Wymagania
-były gromadzone na~podstawie wywiadów przeprowadzonych z~opiekunem naukowym tej
-pracy dyplomowej, z~lekarzami i~ze~studentami Warszawskiego Uniwersytetu Medycznego.
+Specyfikacja wymagań została opracowana na podstaiwe danych dotyczących wymagań stawianych
+przed tworzonym systemem. Zostały one przedstawione w~rozdziałach 3.1.1. - 3.1.3. Wymagania
+były konsultowane z~lekarzami i~ze~studentami Warszawskiego Uniwersytetu Medycznego.
 
 \subsection {Opis biznesowy}
 \interfootnotelinepenalty=10000
 
-Celem projektu jest stworzenie interfejsu przyjaznego użytkownikowi, który umożliwi
-przeglądanie plików DICOM, a~także przeprowadzanie na~tych plikach obrysów. Prace
-obejmują stworzenie aplikacji webowej, która udostępni użytkownikowi interfejs
-komunikujący się z~bazą danych Orthanc. Ponadto prace obejmują stworzenie serwera
+Celem projektu było stworzenie interfejsu przyjaznego użytkownikowi, który umożliwi
+przeglądanie obrazów DICOM, w~celu wykonywania obrysów na~tych obrazach, a~także wyliczenia
+związanych z wykonananym obrysem statystyk. Praca
+obejmowała stworzenie aplikacji webowej, która udostępni użytkownikowi interfejs
+komunikujący się z~bazą danych Orthanc. Ponadto praca obejmowała stworzenie serwera
 odpowiedzialnego za~przechowywanie wygenerowanych przez użytkownika obrysów oraz
 wyznaczanie obrysów półautomatycznych.
 
 Do podstawowych funkcjonalności systemu zaliczają się:
 \begin{itemize}[noitemsep]
 %O listach wyliczeniowych https://sjp.pwn.pl/poradnia/haslo/listy-wyliczeniowe;4812.html
-\item generowanie obrysu manualnego.
-\item generowanie obrysu półautomatycznego na~podstawie punktów wybranych przez użytkownika.
-\item zapisywanie wygenerowanych obrysów.
 \item anonimizacja\footnote {Anonimizacja (ang. anonymization) --- operacja mająca
 na celu usunięcie z~danych informacji o~pacjentach, które pozwoliłyby na~identyfikację
 danych z~tożsamością pacjenta. Są to~między innymi: imiona, nazwisko, pesel.
 Inne tłumaczenia słowa anonymization --- utajnianie, usuwanie danych niejawnych.
 Z uwagi na~fakt, że te~tłumaczenia nie oddają dobrze kontekstu, zastosowano kalkę
-językową.} danych zapisanych w~strukturze pliku DICOM.
+językową.} danych zapisanych w~strukturze pliku DICOM, w~sytuacji braku takiej anonimizacji,
+\item generowanie obrysu manualnego,
+\item generowanie obrysu półautomatycznego na~podstawie punktów wybranych przez użytkownika,
+\item zapisywanie wygenerowanych obrysów w postaci plików CSV zawierających
+punkty wybrane przez użytkownika i wyliczone statystyki.
 \end{itemize}
 
 \subsection {Wymagania funkcjonalne}
 
 Nieodłącznym elementem inżynierii oprogramowania przy próbie dokumentacji
 określonego produktu lub usługi, są wymagania funkcjonalne i~niefunkcjonalne.
-Te pierwsze opisują funkcje i~możliwości, które system powinien realizować.
-Zostały przygotowane wymagania funkcjonalne dla tworzonego systemu. Przedstawiono
+Te pierwsze opisują funkcje i~możliwości, które system powinien realizować, drugie
+natomiast mówią o tym jakiej wydajności, użyteczności i dostępności wymaga się od tworzonego narzędzia.
+Wymagania funkcjonalne zostały przygotowane na podstawie konsultacji z~lekarzami
+i~studentami kierunków medycznych dla tworzonego systemu. Przedstawiono
 je poniżej w~postaci historii użytkownika (ang. user stories), czyli czynności
 jakie może chcieć wykonać użytkownik tego systemu.
 \begin{enumerate}
@@ -736,7 +738,7 @@ pozostawienie pustych pól w~formularzu.
 \newcommand{\specialcell}[3][c]{%
  \begin{tabular}[#1]{@{}#2@{}}#3\end{tabular}}
 \begin{table}
-\caption{Spis wymagań niefunkcjonalnych}
+\caption{spis wymagań niefunkcjonalnych}
 \label{tabela wymagania niefunkcjonalne}
 \centering
 \begin{tabular}{ | p{0.2\textwidth} | p{0.65\textwidth} | }
@@ -771,7 +773,17 @@ obszarów ujętych w tabeli należą: użyteczność, niezawodność oraz wydajn
 
 \section {Architektura rozwiązania}
 
-Na Rysunku \ref{fig:architektura} przedstawiono architekturę autorskiego systemu.
+Architektura autorskiego systemu do tworzenia obrysów na obrazach w formacie DICOM
+(Rysunek \ref{fig:architektura}) pozwala na~połączenie z~serwerem obrazów DICOM (Orthanc) oraz serwerem
+obrysów dowolnej liczby klientów korzystających z~przeglądarki. Algorytmy zapisu
+obrysu, generowania obrysu, obliczania statystyk oraz anonimizacji badań są od
+siebie niezależne i~mogą zostać zrównoleglone --- ograniczeniem jest tutaj moc
+obliczeniowa maszyny, na~której uruchomiony jest serwer. Niemożliwe jest zwiększenie
+wydajności poprzez zwiększenie liczby instancji serwera. Dopuszczalne jest takie
+rozwiązanie, gdyż planowana liczba użytkowników jednocześnie korzystających z~aplikacji
+to nie więcej niż 20~osób. Wynika to z tego, że narzędzie będzie używane przez pracowników
+zakładu i zaproszonych przez nich lekarzy. Możliwości zwiększenia skalowalności w~kontekście
+obliczeniwym zostało opisane w~Rozdziale 5.2.
 
 \begin{figure}[h]
 	\center
@@ -779,16 +791,6 @@ Na Rysunku \ref{fig:architektura} przedstawiono architekturę autorskiego system
 	\caption{Diagram UML przedstawiający architekturę autorskiego systemu}
     	\label{fig:architektura}
 \end{figure}
-
-Architektura pozwala na~połączenie z~serwerem plików DICOM (Orthanc) oraz serwerem
-obrysów dowolnej liczby klientów korzystających z~przeglądarki. Algorytmy zapisu
-obrysu, generowania obrysu, obliczania statystyk oraz anonimizacji plików są od
-siebie niezależne i~mogą zostać zrównoleglone --- ograniczeniem jest tutaj moc
-obliczeniowa maszyny na~której uruchomiony jest serwer. Niemożliwe jest zwiększenie
-wydajności poprzez zwiększenie liczby instancji serwera. Dopuszczalne jest takie
-rozwiązanie, gdyż planowana liczba użytkowników jednocześnie korzystających z~aplikacji
-to nie więcej niż 20~osób. Możliwości zwiększenia skalowalności w~kontekście
-obliczeniowej zostało opisane w~rozdziale 5.2.
 
 \subsection {Interfejs użytkownika}
 
@@ -818,7 +820,7 @@ wyświetlenie obrazu w~interfejsie użytkownika. Ponadto API udostępnia wszystk
 tagi obrazu DICOM, co~umożliwia wyświetlanie w interfejsie użytkownika informacji
 w nich zawartych.
 
-\subsection {Serwer obrysów i~obliczeń}
+\subsection {Serwer obrysów i~statystyk}
 Kolejny kluczowy element stworzonego systemu to~serwer obrysów i~obliczeń. Udostępnia
 on API z~obrysami, które zostało wykorzystane przez interfejs użytkownika. API zostało
 stworzone przy pomocy ASP.NET Core 2.2 \cite{ASPNET} przy wykorzystaniu frameworka
