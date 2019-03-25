@@ -1276,12 +1276,12 @@ Przykład zasady działania tej operacji przedstawia poniższy pseudokod:
 \begin{verbatim}
 foreach (Spójna składowa grafu s1)
 {
-    foreach (Spójna składowa grafu s2, różna od~s1~i~nie przetwarzana
+    foreach (Spójna składowa grafu s2, różna od s1 i nie przetwarzana
       wcześniej jako s1)
     {
-        Wybierz wierzchołek v1~z~s1~i~v2~z~s2~takie, że odległość pomiędzy
-          nimi jest najmniejsza ze~wszystkich takich par
-        Dodaj sztuczną krawędź pomiędzy v1~i~v2
+        Wybierz wierzchołek v1 z s1 i v2 z s2 takie, że odległość pomiędzy
+          nimi jest najmniejsza ze wszystkich takich par
+        Dodaj sztuczną krawędź pomiędzy v1 i v2
     }
 }
 \end{verbatim}
@@ -1331,31 +1331,31 @@ metryki Manhattan. Przykładowy pseudokod tego algorytmie można znaleźć w
 \cite{AiSD2} i~jest on~następujący: %Także nie powinno tak tego się robić!
 
 \begin{verbatim}
-CLOSE = 0~// zbiór (z szybkim sprawdzeniem przynależności)
+CLOSE = 0 // zbiór (z szybkim sprawdzeniem przynależności)
 OPEN = {s} // kolejka priorytetowa
-// priorytety - sumy odległości wierzchołków od~źródła
-// i~oszacowań odległości tych wierzchołków od~celu
+// priorytety - sumy odległości wierzchołków od źródła
+// i oszacowań odległości tych wierzchołków od celu
 odległość[s] = 0
 while ( OPEN niepusty )
 {
-    u~= wierzchołek należący do~OPEN taki, że
+    u = wierzchołek należący do OPEN taki, że
         odległość[u] + oszacowanie[u,t] <=
         odległość[w] + oszacowanie[w,t]
-        dla wszystkich w~należących do~OPEN
-    usuń u~z~OPEN
-    wstaw u~do~CLOSE
-    if~( u~== t~) break
-    foreach ( wierzchołek w~sąsiadujący z~u~taki, że w~należący do~CLOSE )
+        dla wszystkich w należących do OPEN
+    usuń u z OPEN
+    wstaw u do CLOSE
+    if ( u == t ) break
+    foreach ( wierzchołek w sąsiadujący z u taki, że w należący do CLOSE )
     {
-        if~( w~należy do~OPEN )
+        if ( w należy do OPEN )
         {
             odległość[w] = nieskończoność
-            wstaw w~do~OPEN
+            wstaw w do OPEN
         }
-        if~( odległość[w] > odległość[u] + waga<u,w> )
+        if ( odległość[w] > odległość[u] + waga<u,w> )
         {
             odległość[w] = odległość[u] + waga<u,w>
-            aktualizacja priorytetu wierzchołka w~(w OPEN)
+            aktualizacja priorytetu wierzchołka w (w OPEN)
             poprzedni[w] = u
         }
     }
@@ -1995,57 +1995,57 @@ Główne algorytmy odpowiedzialne za~generowanie obrysów półautomatycznych zn
 \item Załącznik 1~- Pseudokod generujący graf z~bitmapy
 
 \begin{verbatim}
-MATRIX - macierz wejściowa z~oznaczonymi krawędziami jako 1
-foreach(punkt A~taki, że MATRIX(A) == 1)
+MATRIX - macierz wejściowa z oznaczonymi krawędziami jako 1
+foreach(punkt A taki, że MATRIX(A) == 1)
 {
-    if~( punkt A~ma~1~sąsiada albo co~najmniej 3~sąsiadów )
+    if ( punkt A ma 1 sąsiada albo co najmniej 3 sąsiadów )
     {
         // (tzn. jest albo punktem końcowym albo węzłowym)
-        wstaw punkt A~do~kolejki wierzchołków L_V
+        wstaw punkt A do kolejki wierzchołków L_V
         while ( kolejka wierzchołków L_V niepusta )
         {
-             weź wierzchołek V_1 z~kolejki L_V
-            usuń V_1 z~kolejki L_V
-            dodaj wierzchołek V_1 do~grafu G
-            foreach (punkt B~sąsiadujący z~V_1 )
+             weź wierzchołek V_1 z kolejki L_V
+            usuń V_1 z kolejki L_V
+            dodaj wierzchołek V_1 do grafu G
+            foreach (punkt B sąsiadujący z V_1 )
              {
-                if~( MATRIX(B) == 1~)
+                if ( MATRIX(B) == 1 )
                  {
                     stwórz nową krawędź E.
-                    dodaj B~do~E
+                    dodaj B do E
                     ustaw wierzchołek V_1 jako początek krawędzi E
-                    dodaj krawędź E~do~kolejki przetwarzanych krawędzi L_E
+                    dodaj krawędź E do kolejki przetwarzanych krawędzi L_E
                 }
                 while ( L_E niepusta)
                  {
-                    weź krawędź E~z~L_E
-                    usuń E~z~kolejki
+                    weź krawędź E z L_E
+                    usuń E z kolejki
                     stwórz kolejkę potencjalnych punktów krawędzi E, L_P
-                    weź punkt C~z~E
-                    usuń C~z~E
-                    dodaj punkt C~do~kolejki L_P
+                    weź punkt C z E
+                    usuń C z E
+                    dodaj punkt C do kolejki L_P
                     while ( L_P niepusta )
                     {
-                        weź punkt D~z~L_P
-                        usuń D~z~L_P
-                        K~= liczba sąsiadów D
-                        if~( K~== 0~lub K~> 1~)
+                        weź punkt D z L_P
+                        usuń D z L_P
+                        K = liczba sąsiadów D
+                        if ( K == 0 lub K > 1 )
                         {
-                            stwórz wierzchołek V_2, który znajduje się w~D
-                            do~listy krawędzi wierzchołka V_2 dodaj E
-                            do~listy krawędzi wierzchołka V_1 dodaj E
+                            stwórz wierzchołek V_2, który znajduje się w D
+                            do listy krawędzi wierzchołka V_2 dodaj E
+                            do listy krawędzi wierzchołka V_1 dodaj E
                             ustaw wierzchołek V_2 jako koniec krawędzi E
-                            dodaj krawędź E~do~grafu G
-                            dodaj wierzchołek V_2 do~kolejki L_V
+                            dodaj krawędź E do grafu G
+                            dodaj wierzchołek V_2 do kolejki L_V
                         }
-                        if~( K~== 1~)
+                        if ( K == 1 )
                         {
-                            dodaj punkt D~do~E
-                            foreach ( punkt F~sąsiadujący z~D~)
+                            dodaj punkt D do E
+                            foreach ( punkt F sąsiadujący z D )
                             {
-                                if~( MATRIX(F) == 1)
+                                if ( MATRIX(F) == 1)
                                 {
-                                    dodaj F~do~L_P
+                                    dodaj F do L_P
                                 }
                             }
                         }
