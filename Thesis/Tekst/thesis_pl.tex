@@ -479,7 +479,7 @@ Aplikacja pozwala na~wykorzystanie większości możliwości udostępnianych prz
 biblioteki Cornerstone. Przykładowe użycie aplikacji zostało przedstawione na
 Rysunku \ref{fig:OHIF-example}.
 
-\begin{figure}[tbh!]
+\begin{figure}[b!]
 	\center
 	\includegraphics[width=0.7\textwidth]{OHIF-example}
 	\caption{Przykład użycia aplikacji OHIF Viewer --- oznaczono: prostokątny obszar,
@@ -520,21 +520,6 @@ DWV przedstawiono na~Rysunku \ref{fig:DWV-interface}.
 Aplikacja nie pozwala na~wykonywanie manualnych obrysów poprzez samodzielne
 poruszanie kursorem po~obrazie.
 
-
-\begin{figure}[tb!]
-	\center
-	\includegraphics[width=0.8\textwidth]{Orthanc-upload}
-	\caption{Interfejs wgrywania plików DICOM do~serwera Orthanc \cite{Orthanc}}
-    	\label{fig:Orthanc-upload}
-\end{figure}
-
-\begin{figure}[tbh!]
-	\center
-	\includegraphics[width=1\textwidth]{Orthanc-tags}
-	\caption{Podgląd tagów pliku DICOM przy użyciu interfejsu przeglądarkowego Orthanc}
-    	\label{fig:Orthanc-tags}
-\end{figure}
-
 \subsection {Serwer z~bazą plików DICOM}
 
 Orthanc \cite{Orthanc} to~serwer plików DICOM, który umożliwia łatwe przechowywanie,
@@ -552,6 +537,20 @@ przyciskiem myszy w~prawą część podglądu obrazu.
 
 \begin{figure}[tb!]
 	\center
+	\includegraphics[width=0.95\textwidth]{Orthanc-tags}
+	\caption{Podgląd tagów pliku DICOM przy użyciu interfejsu przeglądarkowego Orthanc}
+    	\label{fig:Orthanc-tags}
+\end{figure}
+
+\begin{figure}[tb!]
+	\center
+	\includegraphics[width=0.8\textwidth]{Orthanc-upload}
+	\caption{Interfejs wgrywania plików DICOM do~serwera Orthanc \cite{Orthanc}}
+    	\label{fig:Orthanc-upload}
+\end{figure}
+
+\begin{figure}[tbh!]
+	\center
 	\includegraphics[width=0.55\textwidth]{Orthanc-preview}
 	\caption{Podgląd obrazu DICOM przy użyciu interfejsu przeglądarkowego Orthanc}
     	\label{fig:Orthanc-preview}
@@ -566,13 +565,13 @@ zapisanych w systemie badań, który nie umożliwia wykonywania obrysów na bada
 
 \begin{figure}[tb!]
 	\center
-	\includegraphics[width=0.55\textwidth]{SoniCDICOMViewer}
-	\caption{Podgląd obrazu DICOM przy użyciu interfejsu SonicDICOM \cite{SonicDICOM img}}
-    	\label{fig:Orthanc-preview}
+	\includegraphics[width=0.6\textwidth]{SoniCDICOMViewer}
+	\caption{Podgląd obrazu DICOM przy użyciu interfejsu SonicDICOM \cite{SonicDICOM API}}
+    	\label{fig:SonicDICOM}
 \end{figure}
 
 System SonicDICOM jest rozwiązaniem komercyjnym i wykorzystanie go wymaga wykupienia
-licencji w celu korzystania z zawarnych w nim funkcjonalności.
+licencji w celu korzystania z zawarnych w nim funkcjonalności. 
 
 \subsection {Podsumowanie}
 
@@ -582,13 +581,6 @@ Ponadto żadne z~narzędzi nie przechowuje utworzonych w~sposób manualny
 ani wygenerowanych półautomatycznie obrysów.
 
 \section {Proponowane rozwiązanie}
-
-\begin{figure}[tb!]
-	\center
-	\includegraphics[width=0.55\textwidth]{architektura}
-	\caption{Architektura proponowanego rozwiązania}
-    	\label{fig:Orthanc-preview}
-\end{figure}
 
 W rozwiązaniu zdecydowano się skorzystać z~serwera Orthanc jako bazy przechowującej
 pliki DICOM. Przy decyzji miało znaczenie przede wszystkim to, że jest to~narzędzie
@@ -615,6 +607,13 @@ inspirowany jest podglądem obrazu w~aplikacji DWV, ale działanie półautomaty
 obrysu zostało zrealizowane inaczej --- obrys nie jest generowany na~bieżąco, lecz na~życzenie
 użytkownika. Wybrane przez niego punkty na~obrazie wysyłane są do~serwera i~na~obrazie wyświetlany jest
 wynik półautomatycznego dopasowania obrysu.
+
+\begin{figure}[tb]
+	\center
+	\includegraphics[width=0.7\textwidth]{architektura}
+	\caption{Diagram UML przedstawiający architekturę autorskiego systemu}
+    	\label{fig:architektura2}
+\end{figure}
 
 \afterpage{\blankpage}
 
@@ -785,9 +784,9 @@ to nie więcej niż 20~osób. Wynika to z tego, że narzędzie będzie używane 
 zakładu i zaproszonych przez nich lekarzy. Możliwości zwiększenia skalowalności w~kontekście
 obliczeniwym zostało opisane w~Rozdziale 5.2.
 
-\begin{figure}[h]
+\begin{figure}[t]
 	\center
-	\includegraphics[width=1\textwidth]{architektura}
+	\includegraphics[width=0.7\textwidth]{architektura}
 	\caption{Diagram UML przedstawiający architekturę autorskiego systemu}
     	\label{fig:architektura}
 \end{figure}
@@ -879,7 +878,7 @@ obrysów w~interfejsie użytkownika.
 
 \begin{figure}[h]
 	\center
-	\includegraphics[width=0.7\textwidth]{manualny-0px}
+	\includegraphics[width=0.9\textwidth]{manualny-0px}
 	\caption{Przykład obrysu bez pikseli wewnątrz ze względu na niską rozdzielczość obrazu}
     	\label{fig:manual-0px}
 \end{figure}
@@ -1540,7 +1539,7 @@ z~nowymi danymi pacjenta. Po~wykonaniu kopii z~podanymi przez użytkownika danym
 oryginalny obraz DICOM jest usuwany z~serwera obrazów Orthanc.
 
 
-%\afterpage{\blankpage}
+\afterpage{\blankpage}
 
 \chapter {Przeprowadzone eksperymenty}
 
