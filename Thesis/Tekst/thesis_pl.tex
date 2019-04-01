@@ -431,44 +431,47 @@ Tomasz Świerczewski wykonał:
 \chapter {Stan wiedzy}
 
 W poniższym rozdziale zostały przedstawione istniejące na~rynku aplikacje o
-funkcjonalnościach określonych w~celu pracy. Opisano wymagania dla projektowanego systemu
-zarówno funkcjonalne jak i~niefunkcjonalne. Autorski system do~tworzenia obrysów
+funkcjonalnościach określonych w~celu niniejszej pracy. Opisano zarówno funkcjonalne jak i~niefunkcjonalne
+wymagania dla projektowanego systemu. Zaproponowany system do~tworzenia obrysów
 na obrazach w~formacie DICOM struktur anatomicznych czy zmian patologicznych
-powinien spełniać wymagania zarówno lekarzy jak i~inżynierów medycznych, wykorzystujących
+powinien spełniać wymagania zarówno lekarzy, jak i~inżynierów medycznych, wykorzystujących
 to narzędzie w~pracy badawczej i~naukowej. Przedstawiono również proponowane rozwiązanie
-postawionych przed systemem wymagań.
+postawionych wymagań.
 
 \section {Przegląd istniejących rozwiązań}
 
-Obrysy to~krzywe zamknięte naniesione na~obraz, w~celu oznaczenia wewnętrznej części.
-Obrysy można tworzyć manualnie (użytkownik wybiera wszystkie punkty obrysu), lub
-półautomatycznie (użytkownik wybiera kilka punktów, a~algorytm łączy je~na~podstawie
-analizy obrazu). Obie metody są niedoskonałe, gdyż często to~użytkownik musi skorygować
-obrys, ze~względu na~różnorodność obrazów medycznych wynikających z~różnych systemów
-obrazowania, czy też różnorodnej tekstury tkanki obrazowanej.
+Obrysy to~krzywe zamknięte naniesione na~obraz w~celu oznaczenia wewnętrznej części
+regionu zainteresowania (ang. \textit{ROI --- region of interest}).
+Obrysy można tworzyć manualnie (użytkownik wybiera wszystkie punkty obrysu) lub
+półautomatycznie (użytkownik wybiera kilka punktów, a~algorytm łączy je~przy wykorzystaniu
+algorytmu Canny'ego). Obrysy tworzone obiema metodami są modyfikowalne przez użytkownika,
+co w takich zastosowaniach jak obrysy na obrazach medycznych ma duże znaczenie. Użytkownik często musi skorygować
+wygenerowany obrys ze~względu na~różnorodność obrazów medycznych wynikających z~różnych systemów
+obrazowania, czy też ze~względu na~różnorodność tekstury tkanki obrazowanej (innej dla kążdego pacjenta).
 
 \subsection {Przeglądarki DICOM}
 
 Istnieje wiele rozwiązań umożliwiających wykonywanie obrysów przy użyciu przeglądarki.
-W tej pracy opisano szczegółowo dwie wybrane aplikacje.
+W~tej pracy opisano szczegółowo dwie wybrane aplikacje, które według nas w~największym
+stopniu spełniają założone cele pracy.
 
-Pierwsza z~nich to~aplikacja OHIF Viewer oparta o~biblioteki Cornerstone.
+Pierwsza z~nich to~aplikacja OHIF Viewer \cite{OHIF Viewer} oparta o~biblioteki Cornerstone.
 
 Cornerstone Core \cite{Cornerstone Core} to~biblioteka, która umożliwia przetwarzanie
 obrazów medycznych z~wykorzystaniem elementu canvas z~języka HTML5. Biblioteka
 udostępnia interfejs do~wyświetlania obrazów medycznych pozwalający na~zarządzanie
-wyświetlaniem zdjęcia. Podstawowe funkcjonalności obsługiwane przez bibliotekę to:
+wyświetlaniem obrazu. Podstawowe funkcjonalności obsługiwane przez tę bibliotekę to:
 
 \begin{itemize}[noitemsep]
 \item przybliżanie i~oddalanie obrazu,
 \item obrót obrazu,
-\item przesuwanie obrazu w~wyświetlanym komponencie,
+\item przesuwanie obrazu na ekranie,
 \item zmiana jasności wyświetlanego obrazu,
 \item mapowanie kolorów,
 \item interpolacja pikseli w~obrazie (dla obrazów o~niskiej rozdzielczości).
 \end{itemize}
 
-Ponadto twórcy biblioteki Cornerstone Core stworzyli bibliotekę Cornerstone Tools,
+Ponadto twórcy biblioteki Cornerstone Core stworzyli bibliotekę Cornerstone Tools \cite{Cornerstone Tools},
 która korzysta z~biblioteki Cornerstone Core i~poza funkcjonalnościami
 Cornerstone Core udostępnia opisane niżej funkcjonalności
 potrzebne lekarzom do~analizy badań pacjentów, takie jak:
@@ -490,18 +493,18 @@ Rysunku \ref{fig:OHIF-example}.
 	\includegraphics[width=0.7\textwidth]{OHIF-example}
 	\caption{Przykład użycia aplikacji OHIF Viewer --- oznaczono: prostokątny obszar,
 	dla którego obliczone zostały wybrane statystyki; odcinek, dla którego otrzymano
-	odległość w~jednostkach rzeczywistych; wskaźnik, wskazujący na~zmianę, posiadający
-	etykietę tekstową}
+	odległość w~jednostkach rzeczywistych; wskaźnik, wskazujący na~zmianę i posiadający
+	etykietę tekstową.}
     	\label{fig:OHIF-example}
 \end{figure}
 
-Niestety aplikacja nie umożliwia wykonywania obrysów manualnych, ani półautomatycznych,
+Niestety aplikacja OHIF Viewer nie umożliwia wykonywania obrysów manualnych ani półautomatycznych,
 jak również nie pozwala na~zapisanie naniesionych na~obraz oznaczeń.
 
 Drugim rozwiązaniem działającym i~pozwalającym na~pracę z~plikami DICOM w~przeglądarce
-internetowej jest DICOM Web Viewer.
+internetowej jest DICOM Web Viewer \cite{DWV}.
 
-Aplikacja DICOM Web Viewer (DWV) \cite{DWV} jest również przykładem aplikacji
+Aplikacja DICOM Web Viewer (DWV) jest również przykładem aplikacji
 przeglądarkowej służącej do~przetwarzania obrazów DICOM, z~wygodnym interfejsem
 automatycznego i~półautomatycznego obrysowywania obszarów zaznaczonych
 przez użytkownika na~obrazie. Przykładowy obrys wykonany przy użyciu aplikacji
@@ -531,7 +534,7 @@ poruszanie kursorem po~obrazie.
 Orthanc \cite{Orthanc} to~serwer plików DICOM, który umożliwia łatwe przechowywanie,
 zarządzanie oraz dostęp do~plików medycznych DICOM. Ponadto Orthanc udostępnia
 REST API \cite{Orthanc API}, które umożliwia przeglądanie wgranych na~serwer plików DICOM podzielonych
-na kategorie takie jak: pacjenci, badania i~serie.
+na kategorie takie jak: dane pacjentów, badania pacjenta i~serie.
 
 Serwer Orthanc udostępnia prosty interfejs webowy, dzięki któremu możliwe jest
 wgrywanie nowych plików (interfejs wgrywania plików przedstawiono na~Rysunku
@@ -562,7 +565,7 @@ przyciskiem myszy w~prawą część podglądu obrazu.
     	\label{fig:Orthanc-preview}
 \end{figure}
 
-Innym rozwiązaniem pozwalającym na zarządzanie badaniami obrazowymi jest SonicDICOM \cite{SonicDICOM}.
+Innym rozwiązaniem pozwalającym na zarządzanie badaniami obrazowymi jest SonicDICOM~\cite{SonicDICOM}.
 Podobnie jak Orthanc udostępnia on API \cite{SonicDICOM API} pozwalające na komunikację zewnętrznych narzędzi
 z systemem w celu przeglądnia, wyświetlania i modyfikacji zapisanych w systemie badań.
 
@@ -581,17 +584,23 @@ licencji w celu korzystania z zawarnych w nim funkcjonalności.
 
 \subsection {Podsumowanie}
 
-Istniejące rozwiązania przeglądarkowe nie zapewniają wygodnego interfejsu użytkownikowi
+Wymienione rozwiązania przeglądarkowe nie zapewniają wygodnego interfejsu użytkownikowi
 do manualnego obrysowywania interesujących go~fragmentów obrazów medycznych przy użyciu tabletu graficznego.
-Ponadto żadne z~narzędzi nie przechowuje utworzonych w~sposób manualny
-ani wygenerowanych półautomatycznie obrysów.
+Ponadto żadne z~tych narzędzi nie przechowuje obrysów utworzonych w~sposób manualny
+ani półautomatyczniy.
 
 \section {Proponowane rozwiązanie}
 
-W rozwiązaniu zdecydowano się skorzystać z~serwera Orthanc jako bazy przechowującej
+Przygotowane rozwiązanie zapewnia funkcjonalności niedostępne w innych narzędziach
+takie jak połączenie funkcjonalności manualnego i półautomatycznego generowania obryów,
+zapisanie i przeglądanie wykonanych i wygenerowanych obrysów,
+obliczanie statystyk związanych z wykonanymi obrysem jak również zmiania danych pacjenta
+dla przeglądanego badania.
+
+W zaproponowanym rozwiązaniu (Rysunek \ref{fig:architektura2}) zdecydowano się skorzystać z~serwera Orthanc jako bazy przechowującej
 pliki DICOM. Przy decyzji miało znaczenie przede wszystkim to, że jest to~narzędzie
 bezpłatne. Ponadto udostępniane przez API serwera funkcjonalności pozwalające na
-zarządzanie i~przeglądanie zapisanych plików są wystarczające dla realizowanego systemu.
+zarządzanie i~przeglądanie zapisanych plików były wystarczające dla realizowanego systemu.
 
 Poza serwerem Orthanc stworzono serwer w~technologii .NET Core \cite{Dotnet}
 wspomagający interfejs użytkownika, który pozwala na~przeprowadzanie czasochłonnych
@@ -607,7 +616,7 @@ z biblioteką Redux\cite{Redux}. Zdecydowano się na~tę technologię ze~względ
 i elastyczność \cite{Dlaczego react}. Wybranie tej technologii pozwoliło na~stworzenie
 aplikacji przeglądarkowej pozwalającej na~generowanie obrysów manualnych przy
 użyciu myszy lub tabletu graficznego, wybieranie punktów, z~których generowane
-będą obrysy półautomatyczne, oglądanie wcześniej wygenerowanych i~zapisanych
+będą obrysy półautomatyczne, możliwość oglądania wcześniej wygenerowanych i~zapisanych
 obrysów oraz wyświetlanie statystyk dotyczących wykonanego obrysu. Interfejs
 inspirowany jest podglądem obrazu w~aplikacji DWV, ale działanie półautomatycznego
 obrysu zostało zrealizowane inaczej --- obrys nie jest generowany na~bieżąco, lecz na~życzenie
@@ -616,32 +625,32 @@ wynik półautomatycznego dopasowania obrysu.
 
 \begin{figure}[tb]
 	\center
-	\includegraphics[width=0.7\textwidth]{architektura}
-	\caption{Diagram UML przedstawiający architekturę autorskiego systemu}
-    	\label{fig:architektura2}
+	\includegraphics[width=0.7\textwidth]{architektura2}
+	\caption{Diagram przedstawiający części autorskiego systemu}
+    	\label{fig:architektura2} % TODO: add image!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 \end{figure}
 
 \afterpage{\blankpage}
 
 \chapter {Opis autorskiego narzędzia informatycznego}
 
-W poniższym rozdziale zawarto dokumentację biznesową jak i~techniczną tworzonego narzędzia.
-Przedstawiono: wymagania funkcjonalne i~niefunkcjonalne,
+W poniższym rozdziale zawarto dokumentację biznesową, jak i~techniczną tworzonego narzędzia.
+Przedstawiono wymagania funkcjonalne i~niefunkcjonalne,
 architekturę narzędzia, a także zastosowane metody półautomatycznego obrysu oraz metody obliczania
 statystyk dla wybranego obszaru obrazu wewnątrz obrysu.
 
 \section {Specyfikacja wymagań}
 
-Specyfikacja wymagań została opracowana na podstaiwe danych dotyczących wymagań stawianych
+Specyfikacja wymagań została opracowana na podstawie danych dotyczących wymagań stawianych
 przed tworzonym systemem. Zostały one przedstawione w~rozdziałach 3.1.1. - 3.1.3. Wymagania
-były konsultowane z~lekarzami i~ze~studentami Warszawskiego Uniwersytetu Medycznego.
+były konsultowane z~lekarzami i~studentami ostatniego roku medycyny z Warszawskiego Uniwersytetu Medycznego.
 
 \subsection {Opis biznesowy}
 \interfootnotelinepenalty=10000
 
 Celem projektu było stworzenie interfejsu przyjaznego użytkownikowi, który umożliwi
 przeglądanie obrazów DICOM, w~celu wykonywania obrysów na~tych obrazach, a~także wyliczenia
-związanych z wykonananym obrysem statystyk. Praca
+statystyk dotyczących wykonanych obrysów. Praca
 obejmowała stworzenie aplikacji webowej, która udostępni użytkownikowi interfejs
 komunikujący się z~bazą danych Orthanc. Ponadto praca obejmowała stworzenie serwera
 odpowiedzialnego za~przechowywanie wygenerowanych przez użytkownika obrysów oraz
@@ -664,12 +673,12 @@ punkty wybrane przez użytkownika i wyliczone statystyki.
 
 \subsection {Wymagania funkcjonalne}
 
-Nieodłącznym elementem inżynierii oprogramowania przy próbie dokumentacji
+Nieodłącznym elementem inżynierii oprogramowania przy tworzeniu dokumentacji
 określonego produktu lub usługi, są wymagania funkcjonalne i~niefunkcjonalne.
 Te pierwsze opisują funkcje i~możliwości, które system powinien realizować, drugie
 natomiast mówią o tym jakiej wydajności, użyteczności i dostępności wymaga się od tworzonego narzędzia.
-Wymagania funkcjonalne zostały przygotowane na podstawie konsultacji z~lekarzami
-i~studentami kierunków medycznych dla tworzonego systemu. Przedstawiono
+Wymagania funkcjonalne dla tworzonego systemu zostały przygotowane na podstawie
+konsultacji z~lekarzami i studentami ostatniego roku radiologii. Przedstawiono
 je poniżej w~postaci historii użytkownika (ang. user stories), czyli czynności
 jakie może chcieć wykonać użytkownik tego systemu.
 \begin{enumerate}
@@ -740,6 +749,19 @@ pozostawienie pustych pól w~formularzu.
 \end{enumerate}
 
 \subsection {Wymagania niefunkcjonalne}
+
+Drugim rodzajem wymagań przy tworzeniu systemu są wymagania niefunkcjonalne, które opisują kryteria osądzania
+działania systemu pod kątem jakościowym. Założone wymagania niefunkcjonalne zostały
+przedstawione w~Tabeli \ref{tabela wymagania niefunkcjonalne}. Do najważniejszych
+obszarów ujętych w tabeli należą:
+
+\begin{enumerate}[label=(\alph*)]
+  \item użyteczność pod względem dostępności z różnych urządzeń o rozdzielczościach
+   1920 na 1080 pikseli oraz pod względem zapewnienia dostępu do zapisanych na serwerze obrysów
+  \item niezawodność aplikacji w działaniu
+  \item wydajność pozwalająca na generację obrysów w krótkim czasie.
+\end{enumerate}
+
 \newcommand{\specialcell}[3][c]{%
  \begin{tabular}[#1]{@{}#2@{}}#3\end{tabular}}
 \begin{table}
@@ -771,12 +793,7 @@ pozostawienie pustych pól w~formularzu.
 \end{tabular}
 \end{table}
 
-Drugim rodzajem wymagań przy tworzeniu systemu są wymagania niefunkcjonalne, które opisują kryteria osądzania
-działania systemu pod kątem jakościowym. Założone wymagania niefunkcjonalne zostały
-przedstawione w~Tabeli \ref{tabela wymagania niefunkcjonalne}. Do najważniejszych
-obszarów ujętych w tabeli należą: użyteczność, niezawodność oraz wydajność.
-
-\section {Architektura rozwiązania}
+\section {Architektura zaproponowanego narzędzia}
 
 Architektura autorskiego systemu do tworzenia obrysów na obrazach w formacie DICOM
 (Rysunek \ref{fig:architektura}) pozwala na~połączenie z~serwerem obrazów DICOM (Orthanc) oraz serwerem
@@ -802,10 +819,10 @@ obliczeniwym zostało opisane w~Rozdziale 5.2.
 Kluczowym elementem stworzonego systemu jest interfejs użytkownika napisany w
 języku skryptowym JavaScript przy użyciu biblioteki ReactJS. Udostępnia ona
 interfejs nawigujący po~zapisanych w~serwerze Orthanc plikach DICOM. Ponadto dla
-wyświetlonego obrazu udostępnia szczegóły dotyczące obrazu, badania i~pacjenta.
+wyświetlonego obrazu udostępnia szczegóły dotyczące akwizycji obrazu, rodzaju badania i~danych pacjenta.
 Umożliwia także wykonanie obrysu manualnego zrealizowanego przy użyciu biblioteki
-react-canvas-draw. W~aplikacji zawarto również autorski interfejs do~wyboru punktów
-do algorytmu półautomatycznego, wykonany z~użyciem elementu canvas \cite{Canvas}.
+\textit{react-canvas-draw} \cite{React canvas draw}. W~aplikacji zawarto również autorski interfejs do~wyboru punktów
+do algorytmu półautomatycznego, wykonany z~użyciem elementu \textit{canvas} \cite{Canvas}.
 Podgląd zapisanych w~systemie obrysów wraz z~wyliczonymi dla nich statystykami
 jest możliwy z~poziomu tworzenia obrysów oraz w~osobnej zakładce, gdzie udostępniono
 widok, w~którym użytkownik może oglądać jednocześnie wybrane przez siebie obrysy
@@ -818,8 +835,8 @@ przechowywane są przez serwer DICOM. Dostęp do~zapisanych na~serwerze danych j
 możliwy poprzez udostępniane przez serwer API. Interfejs użytkownika wykorzystuje
 API poprzez protokół HTTP.
 
-API serwera udostępnia dane obrazów posegregowanych względem kolejno: pacjentów,
-badań oraz serii. Wykorzystano je~w~interfejsie użytkownika do~nawigacji pomiędzy
+API serwera udostępnia informacje o obrazach, takie jak dane pacjenta,
+rodzaj badania oraz serii. Wykorzystano je~w~interfejsie użytkownika do~nawigacji pomiędzy
 obrazami. Dodatkowo dla każdego obrazu serwer udostępnia dane obrazowe, umożliwiając
 wyświetlenie obrazu w~interfejsie użytkownika. Ponadto API udostępnia wszystkie
 tagi obrazu DICOM, co~umożliwia wyświetlanie w interfejsie użytkownika informacji
@@ -828,12 +845,12 @@ w nich zawartych.
 \subsection {Serwer obrysów i~statystyk}
 Kolejny kluczowy element stworzonego systemu to~serwer obrysów i~obliczeń. Udostępnia
 on API z~obrysami, które zostało wykorzystane przez interfejs użytkownika. API zostało
-stworzone przy pomocy ASP.NET Core 2.2 \cite{ASPNET} przy wykorzystaniu frameworka
-.NET Core 2.2 \cite{Charakterystyka dotnet}. API oferuje 4~podstawowe operacje CRUD
-- utwórz, odczytaj, aktualizuj i~usuń. W~celu pobrania zdjęć medycznych serwer z~API
+stworzone przy pomocy ASP.NET Core 2.2 \cite{ASPNET} i wykorzystaniu frameworka
+.NET Core 2.2 \cite{Charakterystyka dotnet}. API oferuje cztery podstawowe operacje CRUD
+- utwórz, odczytaj, aktualizuj i~usuń. W~celu pobrania obrazów medycznych serwer z~API
 łączy się do~bazy danych Orthanc. Informacje o~obrysach, takie jak ID~obrysu, tag,
 ID obrazu medycznego i~typ obrysu (półautomatyczny lub manualny) są przechowywane
-w bazie danych Microsoft SQL Server. Pozostałe informacje, takie jak: lista pikseli
+w bazie danych Microsoft SQL Server. Pozostałe informacje takie jak: lista pikseli
 należących do~obrysu, lista punktów w~przypadku obrysu półautomatycznego i~statystyki
 są przechowywane w~plikach CSV. Te~pliki są zapisywane w~katalogu roboczym obok
 miejsca przechowywania plików źródłowych dla API.
@@ -848,7 +865,7 @@ i~generowanie podglądu i~zapis obrysu półautomatycznego.
 
 W celu zapisania danych związanych z~obrysami wykorzystana została baza SQL~Lite.
 Baza składa się z~jednej tabeli, w~której przechowywane są: identyfikator obrazu DICOM,
-identyfikator obrysu, nazwa obrysu oraz informacja, czy obraz został wygenerowany
+identyfikator obrysu, nazwa obrysu oraz informacja o tym, czy obraz został wygenerowany
 manualnie czy półautomatycznie. Punkty z których składa się obrys i~statystytki
 z~nim związane zapisywane są~w~oddzielnych
 plikach tekstowych o nazwie identycznej z identyfikatorem obrysu.
@@ -867,8 +884,7 @@ i~obliczeń w~postaci plików CSV na~dysku serwera. Na obrys składa się lista
 pozycji punktów na obrazie, przez które użytkownik przesuwał kursor, a~także kolor obrysu.
 W~momencie zapisu obrysu do pliku obliczane są
 również statystyki dotyczące obrysowanej części obrazu, takie jak długość obrysu,
-pole obrysu, środek ciężkości obrysu, histogram regionu zainteresowania (ang. \textit{ROI ---
-region of interest}) zawartego w obrysie oraz
+pole obrysu, środek ciężkości obrysu, histogram regionu zainteresowania zawartego w obrysie oraz
 liczba pikseli wewnątrz obrysu.
 
 W związku z~tym, że obrazy wyświetlane w~interfejsie są w~innej rozdzielczości
@@ -1601,6 +1617,9 @@ z REST API serwera Orthanc. Umożliwia to wykonanie kopii badania wgranego do~se
 z~nowymi danymi pacjenta. Po~wykonaniu kopii z~podanymi przez użytkownika danymi,
 oryginalny obraz DICOM jest usuwany z~serwera obrazów Orthanc.
 
+Danymi, które użytkownik może zmienić to~imię i~nazwisko pacjenta, data urodzenia pacjenta
+i~płeć pacjenta. W miejsce wymienionych pól użytkownik może wpisać dowolne ciągi
+znaków, w szczególności takie, które nie pozwolą na ustalenie tożsamości pacjenta.
 
 \afterpage{\blankpage}
 
@@ -1937,6 +1956,7 @@ inteligencji opartych na~obrysach wykonanych przez użytkownika.
 
 \bibitem{Redux} Abramov D. and the Redux documentation authors: ReduxJs https://redux.js.org/ [Dostęp 23~lutego 2019]
 \bibitem{C w pigulce} Albahari J., Albahari B.: C~6.0 w~pigułce, \emph{Helion, O'Reilly Media, Inc.},Gliwice, page--page, 2016
+\bibitem{React canvas draw} Beierling-Mutz M.: React Canvas Draw. Oficjalne repozytorium: https://github.com/embiem/react-canvas-draw [Dostęp 1~kwietnia 2019]
 \bibitem{Bresenham} Bresenham J. E.: Algorithm for computer control of~a~digital plotter. \emph{ICM System Journal 4(1)} 1965
 \bibitem{AiSD2} Bródka J.: Wykłady z~przedmiotu Algorytmy i~Struktury Danych 2~\emph{Politechnika Warszawska, Wydział Matematyki i~Nauk Informacyjnych} Materiały dostepne na~stronie: http://mini.pw.edu.pl/~brodka/ASD2.html [Dostęp 22~stycznia 2019]
 \bibitem{Canny} Canny J. F.: Finding Edges and Lines in~Images. \emph{Technical report no. 720, Massachusetts Institute of~Technology (MIT)}, Cambridge, Massachusetts, USA, 1983
@@ -1946,6 +1966,7 @@ inteligencji opartych na~obrysach wykonanych przez użytkownika.
 \bibitem{SonicDICOM} JIUN Corporation: Przykład użycia intefejsu podglądu badań w systemie SonicDICOM: https://sonicdicom.com/screens/viewer-of-dicom-viewer/ [Dostęp 24~marca 2019]
 \bibitem{SonicDICOM API} JIUN Corporation: Instrukcja korzystania z~REST API SonicDICOM. Oficialna strona: https://docs.sonicdicom.com/install-manual/integration.html [Dostęp 24 marca 2019]
 \bibitem{Cornerstone Core} Hafey C.: Dokumentacja projektu Cornerstone Core. Oficjalna strona: https://docs.cornerstonejs.org/ [Dostęp 27~stycznia 2019]
+\bibitem{Cornerstone Tools} Hafey C.: Dokumentacja projektu Cornerstone Tools. Oficjalna strona: https://tools.cornerstonejs.org/ [Dostęp 1~kwietnia 2019]
 \bibitem{A*} Hart P. E., Nilsson N. J., Raphael B.: A~Formal Basis for the Heurestic Determination of~Minimum Cost Paths \emph{IEEE Transactions on~Systems Science and Cybernetics 4(2)}, 100--107, 1968
 \bibitem{DWV} ivmartel: Projekt DICOM Web Viewer. Oficjalna strona: https://ivmartel.github.io/dwv/ [Dostęp 27~stycznia 2019]
 \bibitem{GK1} Kotowski P.: Wykłady z~przedmiotu Grafika Komputerowa~1~\emph{Politechnika Warszawska, Wydział Matematyki i~Nauk Informacyjnych} Materiały dostepne na~stronie: http://mini.pw.edu.pl/~kotowski/gk/gk.html [Dostęp 01~kwietnia 2019]
@@ -1957,6 +1978,7 @@ inteligencji opartych na~obrysach wykonanych przez użytkownika.
 \bibitem{Canvas} Mozilla and individual contributors: Dokumentacja HTMLCanvasElement. Oficjalna strona: https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/ [Dostęp 27~stycznia 2019]
 \bibitem{DICOM} National Electrical Manufacturers Association: Standard DICOM. Oficjalna strona: https://www.dicomstandard.org/ [Dostęp 22~stycznia 2019]
 \bibitem{Dlaczego react} Nowacki R., Plechawska-Wójcik M.: Analiza porównawcza narzędzi do~budowania aplikacji Single Page Application --- AngularJS, ReactJS, Ember.js, \emph{Journal of~Computer Sciences Institute 2, Politechnika Lubelska, Instytut Informatyki}, Lublin, 98--103, 2016
+\bibitem{OHIF Viewer} OHIF: Open Health Imaging Foundation. Oficjalna strona: http://ohif.org/ [Dostęp 1~kwietnia 2019]
 \bibitem{Orthanc} Osimis S.A.: Projekt Orthanc. Oficjalna strona: https://www.orthanc-server.com/ [Dostęp 27~stycznia 2019]
 \bibitem{Orthanc API} Osimis S.A.: Instrukcja korzystania z~REST API Orthanc. Oficjalna strona: http://book.orthanc-server.com/users/rest.html [Dostęp 23~lutego 2019]
 \bibitem{Pixel connectivity} Rosenfeld A., Kak A. C.: Digital Picture Processing, \emph{Academic Press, Inc.}, Nowy Jork, 1982
