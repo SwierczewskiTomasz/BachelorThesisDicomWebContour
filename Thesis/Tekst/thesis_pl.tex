@@ -37,6 +37,8 @@
 
 \usepackage{mathtools}
 
+\usepackage{textcomp} %aby były stopnie
+
 % ---------------- Marginesy, akapity, interlinia ------------------
 
 \usepackage[inner=20mm, outer=20mm, bindingoffset=10mm, top=25mm, bottom=25mm]{geometry}
@@ -849,31 +851,33 @@ plikach tekstowych o nazwie identycznej z identyfikatorem obrysu.
 
 \section {Moduł obrysów manualnych}
 
-Moduł służy do samodzielnego wykonywania obrysów przy użyciu myszy albo tabletu
+Moduł obrysów manualnych służy do~samodzielnego wykonywania obrysów przy użyciu myszy albo tabletu
 graficznego. Obrysy wykonywane są poprzez przesuwanie przez użytkownika kursora
 z~wciśniętym lewym przyciskiem myszy po~ekranie. Daje to użytkownikowi całkowitą
 konrolę nad kształtem wykonywanego przez niego obrysu. Dzięki temu modułowi
 użytkownik może otrzymać obrys w sytuacji,
-gdy moduł obrysów półautomatycznych nie daje satysfakcjonujących użytkownika rezultatów.
+gdy moduł obrysów półautomatycznych nie daje użytkownikowi satysfakcjonujących rezultatów.
 
 Obrysy manualne generowane przez użytkowników zapisywane są przez serwer obrysów
 i~obliczeń w~postaci plików CSV na~dysku serwera. Na obrys składa się lista
-pozycji punktów na obrazie, przez które użytkownik przesuwał kursor oraz kolor obrysu.
+pozycji punktów na obrazie, przez które użytkownik przesuwał kursor, a~także kolor obrysu.
 W~momencie zapisu obrysu do pliku obliczane są
 również statystyki dotyczące obrysowanej części obrazu, takie jak długość obrysu,
-pole obrysu, środek ciężkości obrysu, histogram obrazu zawartego w obrysie oraz
+pole obrysu, środek ciężkości obrysu, histogram regionu zainteresowania (ang. \textit{ROI --- 
+region of interest}) zawartego w obrysie oraz
 liczba pikseli wewnątrz obrysu.
 
 W związku z~tym, że obrazy wyświetlane w~interfejsie są w~innej rozdzielczości
-niż rzeczywisty rozmiar obrazu (spowodownae jest to potrzebą zapewnienia, że obrys
-będzie wyświetlany na ekranie w całości jak również, że obrazy o małej rozdzielczości
-będą dostatecznie czytelne dla użytkownika), obrysy przed zapisaniem zostają przeskalowane do
+niż rzeczywisty rozmiar obrazu (spowodowane jest to potrzebą zapewnienia, że obrys
+będzie wyświetlany na ekranie w całości, jak również faktem, że obrazy o małej rozdzielczości
+będą dostatecznie czytelne dla użytkownika), to obrysy przed zapisaniem zostają przeskalowane do
 faktycznych wymiarów obrazu poprzez przemnożenie współrzędnych zaznaczonych przez
 użytkownika punktów przez odwrotność współczynnika skalowania obrazu.
- W~przypadku obrazów o~małych rozdzielczościach może
+Natomiast w~przypadku obrazów o~małych rozdzielczościach może
 spowodować to~utratę dokładności obrysu, a~w~przypadku obrysów bardzo małych
-obszarów zdegradowanie obrysu do~jednego piksela \ref{fig:manual-0px}. Tego typu straty mogą wpływać
-na poprawność obliczanych statystyk jak również błędne wyświetlanie zapisanych
+obszarów zdegradowanie obrysu do~jednego piksela, co~zostało przedstawione na Rysunku 
+\ref{fig:manual-0px}. Tego typu straty mogą wpływać
+na poprawność obliczanych statystyk, jak również błędne wyświetlanie zapisanych
 obrysów w~interfejsie użytkownika.
 
 \begin{figure}[h]
@@ -885,42 +889,47 @@ obrysów w~interfejsie użytkownika.
 
 \section {Moduł obrysów półautomatycznych}
 
-Moduł obrysów półautomatycznych pozwala użytkownikom na~generowanie
+Moduł obrysów półautomatycznych pozwala użytkownikowi na~generowanie
 obrysów poprzez wybieranie punktów na~obrazie DICOM. Wybrane punkty łączone są
 ze sobą na~podstawie autorskiego algorytmu opisanego w~tym podrozdziale.
 
-\subsection {Przegląd literatury}
+\subsection {Algorytmy generowania półautomatycznego obrysu}
 
 Często na~obrazach medycznych różnice w~charakterystyce poziomów szarości pikseli
-reprezentujących interesujące nas obiekty są nieznaczne. Pliki te~często nie posiadają
+reprezentujących interesujące nas obiekty są~nieznaczne. Pliki zawierające te~obrazy medyczne często nie posiadają
 dodatkowych informacji o~położeniu tych obiektów, ani czym się wyróżniają i~co~przedstawiają.
 Problem opracowania uniwersalnego algorytmu wykrywania krawędzi na~obrazach medycznych
 jest problemem trudnym. Takie algorytmy muszą spełniać szereg wymagań,
 które stwierdzają poprawność danego algorytmu, jak również operatora morfologicznego.
 Dla wielu takich algorytmów można znaleźć odpowiednie przykłady,
-dla których krawędzie nie zostaną wyznaczone poprawnie. Zgodnie z~J. Cytowski \cite{Cyfrowe przetwarzanie
-obrazów medycznych} dobry detektor krawędzi powinien spełniać następujące warunki:
+dla których krawędzie nie zostaną wyznaczone poprawnie. Według J.~Cytowskiego \cite{Cyfrowe przetwarzanie
+obrazów medycznych} dobry detektor krawędzi powinien mieć niskie prawdopodobieństwo 
+zaznaczenia punktów nienależących do~krawędzi, oraz niskie prawdopodobieństwo 
+niezaznaczenia punktów należących do~krawędzi. Ponadto zaznaczone punkty krawędzi 
+przez taki detektor powinny być możliwie blisko jej osi. Ostatnim warunkiem, który powinien 
+spełniać taki detektor jest udzielanie minimalnej odpowiedzi, co~można rozumieć jako zwracanie 
+tylko jednej krawędzi dla jednej prawdziwej krawędzi, zaś szum nie powinien powodować 
+fałszywych detekcji. Nie można tego powiedzieć o~detektorze, który podzieli jedną krawędź 
+na~dwie lub zwróci dwie położone bardzo blisko siebie równoległe zamiast jednej. 
+
+Detektory krawędzi oparte na~gradiencie, w~tym operator Canny'ego są~często używane 
+zarówno w~przetwarzaniu obrazów medycznych, jaki i~innych bardziej ogólnych zastosowaniach 
+w~innych dziedzinach nauki. Stosuje się je~do obrazów, które mają duże różnice w~luminancji i~nie 
+są~zaszumione. W~przypadku obrazów medycznych często możemy mówić właśnie o~takich obrazach.
+Główne zalety detektorów krawędzi opartych na~krawędzi 
+wymienione w~\cite{Cyfrowe przetwarzanie obrazów medycznych}, to:
 \begin{itemize}[noitemsep]
-\item {niskie prawdopodobieństwo zaznaczenia punktów nienależących do~krawędzi
-oraz niskie prawdopodobieństwo niezaznaczenia punktów należących do~krawędzi,}
-\item {zaznaczone punkty krawędzi powinny być możliwie blisko jej osi,}
-\item {wyłącznie jedna odpowiedź na~pojedynczy punkt krawędzi.}
+\item dobre wyniki dla obrazów o~dobrej jakości i~bez szumów,
+\item odpowiednia wydajność --- złożoność algorytmów powinna być liniowa względem liczby przetwarzanych pikseli,
+\item brak zastosowania metod o~dużej złożoności obliczeniowej, skomplikowanych metod sztucznej inteligencji.
 \end{itemize}
 
-Detektory krawędzi oparte na~gradiencie, w~tym operator Canny'ego są często używane.
-Ich główne zalety na~podstawie \cite{Cyfrowe przetwarzanie obrazów medycznych} to:
-\begin{itemize}[noitemsep]
-\item dają dobre wyniki dla obrazów o~dobrej jakości i~bez szumów.
-\item są wydajne - ich złożoność jest liniowa względem liczby przetwarzanych pikseli.
-\item nie wymagają skomplikowanej sztucznej inteligencji do~działania.
-\end{itemize}
-
-Zgodnie z~\cite{Cyfrowe przetwarzanie obrazów medycznych} za~ich główne wady można uznać:
+Natomiast do~głównych wad tych algorytmów można zaliczyć:
 \begin{itemize}[noitemsep]
 \item potrzebę określenia rozmiaru maski i~wartości progowej, gdyż rozmiar maski
 znacząco wpływa na~rozmieszczenie pozycji, w~których gradient osiąga wartości
-maksymalne lub przecina zera,
-\item pomijanie narożników, które spowodowane jest faktem, że wartość 1D~gradientu
+maksymalne lub~przecina zera,
+\item pomijanie narożników, które spowodowane jest faktem, że~wartość 1D~gradientu
 w narożnikach jest zazwyczaj zbyt mała, aby wykrywać krawędzie wokół nich,
 \item znajdowanie schodkowych krawędzi, które są wykrywane tylko przez operator pierwszej pochodnej,
 \item dużą wrażliwość na~szum,
@@ -928,14 +937,17 @@ w narożnikach jest zazwyczaj zbyt mała, aby wykrywać krawędzie wokół nich,
 nie są wykrywane przez małe różnice w~wartościach kolejnych sąsiadujących pikseli.
 \end{itemize}
 
-Operator Canny'ego \cite{Canny} składa się z~3~zasadniczych kroków:
+Poniżej po krótce przedstawiono ogólny opis działania detektorów krawędzi opartych na~gradiencie, 
+na~przykładzie operatora Canny'ego \cite{Canny}. Wymyślony przez Canne'go operator 
+składa się z~trzech~zasadniczych kroków:
 \begin{enumerate}%[noitemsep]
-\item \textbf {Określenie wartości i~kąta gradientu} \\
-W tym celu został wykorzystany operator gradientu, a~estymatorem gradientu w
-funkcji dyskretnej, jaką jest obraz, zastosowano maskę, czy też operator Sobela.
-Wykorzystując go,~uzyskano dla każdego piksela wielkość oraz kierunek gradientu,
-co służy do~dalszych obliczeń,
-\item \textbf {Wykrycie miejsc występowania krawędzi} \\
+\item Określenie wartości i~kąta gradientu \\
+W celu wyznaczenia wartości oraz kąta gradientu należy wykorzystać operator gradientu, 
+który będzie estymatorem gradientu w funkcji dyskretnej, jaką jest obraz.
+Stosuje się takie operatory jak Krzyż Robertsa, Prewitta czy też operator Sobela. 
+Wykorzystując jeden z~takich operatorów,~uzyskano dla każdego piksela wielkość oraz 
+kierunek gradientu, co służy do~dalszych obliczeń,
+\item Wykrycie miejsc występowania krawędzi \\
 W tym celu został wykorzystany algorytm usuwania niemaksymalnych pikseli
 (ang. \textit{non-max suppression}). Polega on~na~wyborze
 takich pikseli, które mają największą wartość gradientu na~linii o~kierunku
@@ -943,7 +955,7 @@ zgodnym z~kątem danego gradientu. Możliwe są cztery kierunki: pionowy, poziom
 dwa diagonalne. Jeśli dany piksel miał większą wartość gradientu od~dwóch swoich
 sąsiadów, to~zaznaczono go~jako potencjalny punkt tworzący krawędzie. W~ten sposób
 otrzymano obraz z~potencjalnymi krawędziami,
-\item \textbf {Wyznaczanie krawędzi progowaniem histerezy} \\
+\item Wyznaczanie krawędzi progowaniem histerezy \\
 Po poprzednim kroku na~obrazie nadal znajdują się nieistotne krawędzie. W~tym celu
 Canny wprowadził ideę progowania histerezy. Metoda ta~wymaga dwóch wartości progowych
 $T_1, T_2$ takich, że $T_1 < T_2$. Jeżeli wartość gradientu w~danym pikselu jest
@@ -954,13 +966,22 @@ dla każdego zakwalifikowanego punktu.
 
 Zamiast dokładnych wartości progowych można przekazać do~funkcji dwie wartości ---
 $t_1, t_2$, które są procentem liczby pikseli, które będą niedopuszczone jako
-krawędzie. Dla $t_1~=~0.7, t_2 = 0.9$ dopuszczono tylko 10\% pikseli jako te,
+krawędzie. Dla~$t_1~=~0.7, t_2 = 0.9$ dopuszczono tylko 10\% pikseli jako te,
 które są większe od~$T_2$. Podając $t_1, t_2$ wyznaczono rozkład wartości
 gradientu w~badanym obrazie, obliczono dystrybuantę $F(x)$ i~wybrano dla $T_1$
 ten argument, dla którego $F(x) = t_1 * p$, gdzie $p$ to~liczba pikseli i~analogicznie
 dla $T_2$. W~ten sposób wyznaczono progi do~histerezy.
 
 \end{enumerate}
+
+W celu obliczenia wartości oraz kąta gradientu stosuje się operator gradientu. 
+Istnieją różne rozwiązania obliczenia gradientu, a~najczęściej wykorzystuje się
+do~tego operator Sobela, Prewitta lub Krzyż Robertsa. Krzyż Robertsa ma~najmniejszą złożoność, 
+lecz także wykazuje największą wrażliwość na~szumy. Operator Sobela i~Prewitta 
+mają podobną złożoność obliczeniową, ale~operator Sobela lepiej wygładza 
+krawędzie niż operator Prewitta. Z~wyżej wymienionych powodów w~autorskim rozwiązaniu 
+zdecydowano się użyć operatora Sobela w~celu obliczenia wartości oraz~kąta gradientu.
+Założenia i~sposób działania tego operatora zostały przedstawione poniżej.
 
 Operator Sobela \cite{Sobel} to~metoda wyznaczania gradientu, a~więc zarazem
 krawędzi w~kierunku poziomym, jak i~w~pionowym. Dla każdego piksela
@@ -997,24 +1018,30 @@ $\sqrt{s_1^2 + s_2^2}$ & $tg^{-1} \Bigg[ {\cfrac{s_1}{s_2}} \Bigg]$
 \end{tabular}
 \end{table}
 
+Podsumowując, w~dzisiejszych czasach w~celu zachowania niskiej złożoności obliczeniowej stosuje się
+detektory krawędzi oparte na~gradiencie. Jednym z~takich detektorów jest operator Canny'ego. W~celu obliczenia
+gradientu w~autorskim rozwiązaniu zastosowano operator Sobela, a~następnie aby wyznaczyć 
+położenia krawędzi zastosowano operator Canny'ego. 
+
 \subsection {Opracowany algorytm obrysów półautomatycznych}
 
 Opracowany algorytm służy do~półautomatycznego tworzenia obrysów na~podstawie wybranych punktów,
-które są interpolowane przez algorytm bazujący na~operatorze Cany'ego, operatorze Sobela i~algorytmie A*.
-Powyższe rozwiązania pozwalają na~uzyskanie najlepszych efektów na~przetwarzanych
+które są interpolowane przez algorytm bazujący na~operatorze Canny'ego, operatorze 
+Sobela i~algorytmie A* (algorytm A* to~heurestyczny algorytm znajdowania nakrótszych ścieżek w~grafie).
+Powyższe rozwiązania pozwalają na~uzyskanie satysfakcjonujących efektów na~przetwarzanych
 przez narzędzie obrazach medycznych.
 % screen z~aplikacji i~schemat
 
-Danymi wejściowymi są:
+Danymi wejściowymi dla tego algorytmu obrysów półautomatycznych są:
 \begin{itemize}[noitemsep]
-\item {identyfikator obrazu medycznego, na~którym był wykonywany obrys,}
-\item {lista punktów wybranych przez użytkownika; punkty te~zostały wcześniej
-przeskalowane ze~współrzędnych w~internetowej aplikacji webowej
+\item {identyfikator obrazu medycznego, na~którym jest wykonywany obrys,}
+\item {lista punktów wybranych przez użytkownika; punkty te~są~wcześniej
+przeskalowywane ze~współrzędnych w~internetowej aplikacji webowej
 na współrzędne odpowiadające rozdzielczości oryginalnego obrazu.}
 \end{itemize}
 
 
-Algorytm można podzielić na~kilka ważnych etapów:
+Zaproponowany algorytm można podzielić na~kilka etapów:
 
 \begin{itemize}[noitemsep]
 \item {wygenerowanie bitmapy}
@@ -1028,18 +1055,19 @@ Poniżej zostaną przedstawione dokładne rozwiązania dla każdego z~tych krok�
 
 \subsection {Wygenerowanie bitmapy}
 
-Przed rozpoczęciem przetwarzania jest pobierany obraz medyczny o~danym wcześniej
+W pierwszym etapie jest pobierany obraz medyczny o~danym wcześniej
 identyfikatorze z~serwera Orthanc. Bitmapa tworzona jest na~podstawie obrazu DICOM poprzez
 zapisanie w~odpowiednich komórkach wartości kolorów z~oryginalnego obrazu.
 Stanowi ona podstawę do~dalszej pracy algorytmu.
 
 \subsection {Wykrycie krawędzi na~bitmapie}
 
-W pracy został użyty operator Canny'ego, ze~względu na~możliwość dostosowania go
-do bardzo różnorodnych problemów. Zgodnie z~Rysunkiem 4.25 %sprawdzić numer
-,,Porównanie operatorów wykrywania krawędzi'' w~\cite{Cyfrowe przetwarzanie obrazów medycznych}
-najlepiej wykrywał główne narządy, takie jak wątroba czy też trzustka. Z~wyżej
-wymienionych powodów został on~wykorzystany w~tym algorytmie.
+W pracy został użyty operator Canny'ego, ze~względu na~możliwość dostosowania 
+go~do~bardzo różnorodnych zagadnień detekcji obiektów w~obrazach medycznych.
+Potwierdza to~porównanie operatorów wykrywania krawędzi zobrazowane 
+w~\cite{Cyfrowe przetwarzanie obrazów medycznych}, operator Canny'ego
+najlepiej wykrywał główne narządy, takie jak wątroba czy też trzustka, w~porównaniu 
+do~innych analizowanych narzędzi, takich jak operator Laplace'a czy też operatora \textit{zero-crossing}.
 
 Stosując operator Canny'ego otrzymano macierz, gdzie każde pole w~macierzy odpowiada pikselowi
 w wejściowej bitmapie --- obrazie medycznym. Jeśli w~komórce macierzy znajduje
@@ -1047,42 +1075,48 @@ się 1, to~w~tym miejscu na~bitmapie znajduje się krawędź, w~przeciwnym przyp
 0. W~ten sposób algorytm wykrył wszystkie znaczące krawędzie na~bitmapie. Kolejnym
 krokiem przetwarzania było stworzenie grafu na~podstawie wyżej wymienionej macierzy.
 
-Przykład działania operatora Canny'ego przedstawiono na~Rysunkach od~\ref{fig:123} do~\ref{fig:127}.
-Obraz wyjściowy do~dalszych działań został przedstawiony na~Rysunku \ref{fig:123}.
+Przykład działania operatora Canny'ego przedstawiono na~Rysunkach od \ref{fig:123} do \ref{fig:127}.
+Obraz wyjściowy do dalszych działań został przedstawiony na Rysunku \ref{fig:123}. 
 
-\pagebreak
+%\begin{figure}[h!]
+%	\center
+%	\includegraphics[width=0.45\textwidth]{123}
+%	\caption{Oryginalny obraz, który przedstawia badanie rezonansem magnetycznym stawu ramiennego}
+%	\label{fig:123}
+%\end{figure}
 
-\begin{figure}[h!]
+\begin{figure}[p!]
 	\center
-	\includegraphics[width=0.57\textwidth]{123}
-	\caption{Oryginalny obraz, który przedstawia badanie rezonansem magnetycznym stawu ramiennego}
-    	\label{fig:123}
+	\minipage{0.48\textwidth}
+		\includegraphics[width=\linewidth]{123}
+		\caption{Oryginalny obraz, który przedstawia badanie rezonansem magnetycznym 
+		stawu ramiennego}%, jest on~obrazem wyjściowym do~dalszych rozważań}
+		\label{fig:123}
+	\endminipage
+	\\
+	\minipage{0.48\textwidth}
+		\includegraphics[width=\linewidth]{126}
+		\caption{Obraz po~zastosowaniu algorytmu usuwania 
+	niemaksymalnych krawędzi nadal zawierający nieistotne krawędzie, które należy 
+	w~kolejnym kroku usunąć}
+		\label{fig:126}
+	\endminipage\hfill
+	\minipage{0.48\textwidth}
+		\includegraphics[width=\linewidth]{127}
+		\caption{Wynikowa macierz po~zastosowaniu 
+	operatora Canny'ego, gdzie kolorem białym są
+	reprezentowane wartości odpowiadające 0, a~kolor czarny odpowiada 1}
+		\label{fig:127}
+	\endminipage\hfill
 \end{figure}
 
 Po dwóch pierwszych krokach operatora Canny'ego, czyli wyznaczeniu gradientu i~zastosowaniu algorytmu
 usuwania niemaksymalnych krawędzi uzyskano obraz z~potencjalnymi krawędziami. Został on~przedstawiony
 na Rysunku \ref{fig:126}.
 
-\begin{figure}[h!]
-	\center
-	\includegraphics[width=0.57\textwidth]{126}
-	\caption{Obraz po~zastosowaniu algorytmu usuwania niemaksymalnych krawędzi}
-    	\label{fig:126}
-\end{figure}
-
 W ostatnim kroku była przeprowadzana histereza. Wynikiem jej działania jest macierz z~informacjami
-gdzie znajduje się krawędź. Na~Rysunku \ref{fig:127} wartościom 1~w~macierzy odpowiada kolor czarny,
+gdzie znajduje się krawędź. Na~Rysunku \ref{fig:126} wartościom 1~w~macierzy odpowiada kolor czarny,
 a~wartościom 0~odpowiada kolor biały.
-
-
-
-\begin{figure}[h!]
-	\center
-	\includegraphics[width=0.57\textwidth]{127}
-	\caption{Wynikowa macierz po~zastosowaniu operatora Canny'ego, gdzie kolorem białym są
-	reprezentowane wartości odpowiadające 0, a~kolor czarny odpowiada 1}
-    	\label{fig:127}
-\end{figure}
 
 \subsection {Stworzenie grafu z~bitmapy}
 
@@ -1102,41 +1136,63 @@ w poziomie lub pionie zgodnie ze~schematem na~Rysunku \ref{fig:4pixel}.
 %Opisać te~rysunki i~wywalić stąd - nie muszą być dokładnie w~tym miejscu.
 \begin{figure}[h!]
 \begin{center}
-\begin{tikzpicture}
-\draw[step=1cm,gray,very thin] grid (3,3);
-\fill[fill=black!60!white, draw=black] (1,1) rectangle (2,2);
-\fill[fill=gray!60!white, draw=black] (1,0) rectangle (2,1);
-\fill[fill=gray!60!white, draw=black] (0,1) rectangle (1,2);
-\fill[fill=gray!60!white, draw=black] (2,1) rectangle (3,2);
-\fill[fill=gray!60!white, draw=black] (1,2) rectangle (2,3);
-\end{tikzpicture}
+	\minipage{0.48\textwidth}
+	\begin{center}
+		\begin{tikzpicture}
+			\draw[step=1cm,gray,very thin] grid (3,3);
+			\fill[fill=black!60!white, draw=black] (1,1) rectangle (2,2);
+			\fill[fill=gray!60!white, draw=black] (1,0) rectangle (2,1);
+			\fill[fill=gray!60!white, draw=black] (0,1) rectangle (1,2);
+			\fill[fill=gray!60!white, draw=black] (2,1) rectangle (3,2);
+			\fill[fill=gray!60!white, draw=black] (1,2) rectangle (2,3);
+		\end{tikzpicture}
+		\caption{Ilustracja łączności 4-krotnej}
+		\label{fig:4pixel}
+	\end{center}
+	\endminipage\hfill
+	\minipage{0.48\textwidth}
+	\begin{center}
+		\begin{tikzpicture}
+			\draw[step=1cm,gray,very thin] grid (3,3);
+			\fill[fill=black!60!white, draw=black] (1,1) rectangle (2,2);
+			\fill[fill=gray!60!white, draw=black] (1,0) rectangle (2,1);
+			\fill[fill=gray!60!white, draw=black] (0,1) rectangle (1,2);
+			\fill[fill=gray!60!white, draw=black] (2,1) rectangle (3,2);
+			\fill[fill=gray!60!white, draw=black] (1,2) rectangle (2,3);
+			\fill[fill=gray!60!white, draw=black] (0,0) rectangle (1,1);
+			\fill[fill=gray!60!white, draw=black] (2,2) rectangle (3,3);
+			\fill[fill=gray!60!white, draw=black] (0,2) rectangle (1,3);
+			\fill[fill=gray!60!white, draw=black] (2,0) rectangle (3,1);
+		\end{tikzpicture}
+		\caption{Ilustracja łączności 8-krotnej}
+		\label{fig:8pixel}
+	\end{center}
+	\endminipage\hfill
 \end{center}
-\caption{Ilustracja łączności 4-krotnej}
-\label{fig:4pixel}
 \end{figure}
 
 Dla łączności 8-krotnej sprawdza się wszystkich możliwych sąsiadów, także po
 przekątnej. Jest ona zwana także sąsiedztwem Moore'a lub otoczeniem Moore'a \cite{Moore}.
 Została ona przedstawiona na~Rysunku \ref{fig:8pixel}.
 
-\begin{figure}[h!]
-\begin{center}
-\begin{tikzpicture}
-\draw[step=1cm,gray,very thin] grid (3,3);
-\fill[fill=black!60!white, draw=black] (1,1) rectangle (2,2);
-\fill[fill=gray!60!white, draw=black] (1,0) rectangle (2,1);
-\fill[fill=gray!60!white, draw=black] (0,1) rectangle (1,2);
-\fill[fill=gray!60!white, draw=black] (2,1) rectangle (3,2);
-\fill[fill=gray!60!white, draw=black] (1,2) rectangle (2,3);
-\fill[fill=gray!60!white, draw=black] (0,0) rectangle (1,1);
-\fill[fill=gray!60!white, draw=black] (2,2) rectangle (3,3);
-\fill[fill=gray!60!white, draw=black] (0,2) rectangle (1,3);
-\fill[fill=gray!60!white, draw=black] (2,0) rectangle (3,1);
-\end{tikzpicture}
-\end{center}
-\caption{Ilustracja łączności 8-krotnej}
-\label{fig:8pixel}
-\end{figure}
+%\begin{figure}[h!]
+%\begin{center}
+%\begin{tikzpicture}
+%\draw[step=1cm,gray,very thin] grid (3,3);
+%\fill[fill=black!60!white, draw=black] (1,1) rectangle (2,2);
+%\fill[fill=gray!60!white, draw=black] (1,0) rectangle (2,1);
+%\fill[fill=gray!60!white, draw=black] (0,1) rectangle (1,2);
+%\fill[fill=gray!60!white, draw=black] (2,1) rectangle (3,2);
+%\fill[fill=gray!60!white, draw=black] (1,2) rectangle (2,3);
+%\fill[fill=gray!60!white, draw=black] (0,0) rectangle (1,1);
+%\fill[fill=gray!60!white, draw=black] (2,2) rectangle (3,3);
+%\fill[fill=gray!60!white, draw=black] (0,2) rectangle (1,3);
+%\fill[fill=gray!60!white, draw=black] (2,0) rectangle (3,1);
+%\end{tikzpicture}
+%\end{center}
+%\caption{Ilustracja łączności 8-krotnej}
+%\label{fig:8pixel}
+%\end{figure}
 
 %Bibliografia do~tego?
 W przypadku zastosowania łączności 8-krotnej przy wyznaczaniu długości krawędzi
@@ -1184,8 +1240,8 @@ $
 z & z~& z
 \end{bmatrix}
 $,
-\item punkty łączące (ang. \textit{linkpixels}), czyli fragmenty krawędzi, posiadają
-dokładnie dwóch sąsiadów, nie używamy przekształcenia Hit-or-Miss a~tylko liczymy sąsiadów
+\item punkty łączące (ang. \textit{linkpixels}) --- fragmenty krawędzi, posiadają
+dokładnie dwa punkty sąsiadujące, nie używane są przekształcenia Hit-or-Miss, a~tylko są liczone punkty sąsiadujące,
 \item punkty węzłowe (ang. \textit{vertices}), czyli punkty, od~których odchodzą co~najmniej trzy krawędzie: \\
 $
 \begin{bmatrix}
@@ -1199,12 +1255,12 @@ $ lub $
 z & 1~& z~\\
 1 & z~& 1
 \end{bmatrix}
-$,.
+$.
 \end{itemize}
 
-Warto zauważyć, że te~elementy strukturalne należy obracać o~90, 180 i~270 stopni.
+Warto zauważyć, że te~elementy strukturalne należy obracać o~90\textdegree, 180\textdegree~i~270\textdegree.
 Za każdym razem trzeba by~wielokrotnie sprawdzać te~same piksele. Ponadto należy
-sprawdzać~8, a~nie 4~sąsiadów.
+stosować spójność 8-krotną, a~nie 4~krotną.
 
 Kolejnym problemem jest fakt, że przy spójności 8-krotnej przekształcenie
 Hit-or-Miss może w~najbliższym otoczeniu punktu krzyżowania się krawędzi oznaczyć
@@ -1212,19 +1268,19 @@ kilka otaczających punktów, jako punkty węzłowe. Jest to~złe rozwiązanie, 
 w ten sposób może nawet kilkukrotnie zwiększyć liczbę wierzchołków w~grafie, co
 przełożyłoby się na~niską wydajność algorytmu.
 
-Ostatnim problemem z~jakim należałoby się liczyć wybierając łączność 8-krotną
+Ostatnim problemem, który należałoby rozwiązać wybierając łączność 8-krotną
 jest fakt, że macierz wejściową dla tego etapu algorytmu trzeba by~poddać procesowi
 szkieletyzacji. Najlepiej byłoby w~tym celu skorzystać z~algorytmu KMM \cite{KMM}
-lub K3M \cite{K3M}. Te~algorytmy musiałyby co~najmniej raz przejrzeć całą macierz
-z wykrytymi krawędziami w~optymistycznym przypadku.
+lub K3M \cite{K3M}. Te~algorytmy, w~optymistycznym przypadku, musiałyby co~najmniej 
+raz przeanalizować całą macierz z~wykrytymi krawędziami.
 
 \bigskip
 
 W pracy zdecydowano się na~metrykę 4-krotną ze~względu na~prostotę obliczeń,
 która skróciła czas pracy algorytmu. Nie wymagało to~także dodatkowych
-obliczeń związanych ze~ścienianiem. Przygotowano
+obliczeń związanych ze~szkieletyzacją (ang. \textit{thinning}). Przygotowano
 i~zaimplementowano algorytm tworzący graf z~bitmapy, a~jego pseudokod znajduje
-się w~Załączniku 1. %Poprawić, nie poniżej!!!
+się w~Załączniku 1.
 
 Utworzony w~ten sposób graf był grafem nieskierowanym z~wagami, gdzie wagi to
 liczba pikseli, czy też liczba punktów należących do~krawędzi. Graf ten mógł nie być
@@ -1232,8 +1288,8 @@ spójny. Ponadto mógł nie zawierać wierzchołków, które pokrywały się z~p
 wybranymi przez użytkownika.
 
 Graf ten zazwyczaj był rzadki, ponieważ liczba jego krawędzi była rzędu liczby
-jego wierzchołków.  Z~uwagi na~czasami bardzo dużą liczbę wierzchołków --- nawet
-do kilkudziesięciu tysięcy --- próba implementacji przy pomocy macierzy sąsiedztwa
+jego wierzchołków.  Z~uwagi na~czasami bardzo dużą liczbę wierzchołków, nawet
+do kilkudziesięciu tysięcy, próba implementacji przy pomocy macierzy sąsiedztwa
 mogłaby spowodować zużycie całej możliwej pamięci operacyjnej. Dla 50~tysięcy
 wierzchołków program musiałby zadeklarować macierz sąsiedztwa zawierającą 2,5
 miliarda komórek. Z~tych powodów graf został zaimplementowany przy pomocy list sąsiedztwa.
@@ -1257,12 +1313,13 @@ algorytmy wyszukiwania najkrótszych ścieżek w~grafie do~minimalizowania dług
 takich fragmentów zawierających sztuczne krawędzie.
 
 Do znajdowania spójnych składowych grafu najczęściej używa się algorytmu
-przeszukiwania grafu w~głąb (ang. Depth-first search, w~skrócie DFS) lub
-przeszukiwania grafu wszerz (ang. Breadth-first search, w~skrócie BFS)
+przeszukiwania grafu w~głąb (ang. \textit{Depth-first search}, w~skrócie DFS) lub
+przeszukiwania grafu wszerz (ang. \textit{Breadth-first search}, w~skrócie BFS)
 \cite{Algorytmy Sedgewick}. Użyto algorytmu przeszukiwania wszerz, opierając się
-na przykładowej implementacji w~materiałach \cite{AiSD2}. Wykorzystano Queue<T>,
-a zatem kolejkę, więc jest to~przeszukiwanie wszerz. Złożoność obliczeniowa tego
-algorytmu to~$O(|E|)$.
+na przykładowej implementacji w~materiałach \cite{AiSD2}. Ponieważ zdecydowano się 
+na~przeszukiwanie wszerz, to wykorzystano \textit{Queue<T>}, a~zatem kolejkę. Dla tego zagadnienia
+nie ma różnicy czy wybrano przeszukiwanie wszerz, czy też w~głąb. Złożoność 
+obliczeniowa tego algorytmu przeszukiwania to~$O(|E|)$.
 
 Po wyznaczeniu spójnych składowych grafu dla każdej pary składowych znajdowano
 taką parę wierzchołków, żeby odległość między nimi była minimalna. Jeśli odległość
@@ -1293,8 +1350,9 @@ W ten sposób osiągnięto spójny graf, który zawiera punkty dodane przez uży
 Na tym etapie została zapewniona spójność grafu. Z~całą pewnością istnieje ścieżka
 pomiędzy punktami wybranymi przez użytkownika, te~punkty są osiągalne. Pozostało
 wybrać najkrótszą ścieżkę łączącą kolejne punkty. Założono, że jest dana lista
-punktów wybranych przez użytkownika i~zawiera ona kolejne punkty, tzn. pierwszy
-należy połączyć z~drugim, drugi z~trzecim, \dots, ostatni z~pierwszym.
+punktów wybranych przez użytkownika i~zawiera ona kolejne punkty, tzn. algorytm 
+prowadzi ścieżkę od pierwszego punktu przez kolejne punkty wybrane przez użytkownika 
+aż~do~ostatniego takiego punktu. Następnie jest łączony ostatni punkt z~pierwszym.  
 
 Warto zaznaczyć, że wyszukiwano ścieżki o~minimalnej wadze, czy też o~minimalnym
 koszcie. Z~uwagi na~fakt, że wagi w~grafie są ściśle związane z~odległościami to
@@ -1305,8 +1363,8 @@ jedną z~nich. W~tym grafie nie występują krawędzie wielokrotne i~graf nie za
 cykli własnych.
 
 Do wyszukiwania najkrótszych ścieżek w~grafie, po~zgłębieniu literatury
-\cite{Algorytmy Sedgewick} i~\cite{AiSD2} były rozważane do~użycia 2~algorytmy.
-Był to~algorytm Dijkstry i~A*. Do~algorytmu A* była rozważana heurystyka w~postaci
+\cite{Algorytmy Sedgewick} i~\cite{AiSD2} były rozważane do~użycia dwa~algorytmy.
+Był to~algorytm Dijkstry i~algorytm A*. Do~algorytmu A* była rozważana heurystyka w~postaci
 odległości miejskiej, Manhattan z~wierzchołka $v$ do~celu $t$, ozn. $h(v)$.
 
 Zgodnie z~\cite{AiSD2} ,,Funkcja $h$ musi spełniać następujące warunki:
@@ -1361,12 +1419,12 @@ while ( OPEN niepusty )
 }
 \end{verbatim}
 
-Aby maksymalnie dobrze wykorzystać niską złożoność obliczeniową algorytmu A*
-należało wykorzystać dobre struktury danych do~tego algorytmu. Zbiór CLOSE
+W celu wykorzystania niskiej złożoności obliczeniowej algorytmu A*
+należało zastosować dobre struktury danych do~tego algorytmu. Zbiór CLOSE
 wymagał szybkiego sprawdzania przynależności. Po~przeanalizowaniu rekomendowanych
-struktur danych \cite{Dotnet struktury} został użyty HashSet<T>.
+struktur danych \cite{Dotnet struktury} został użyty \textit{HashSet<T>}.
 
-Zbiór Open oferował zastosowanie znacznie bardziej finezyjnych struktur danych.
+Zbiór OPEN oferował zastosowanie znacznie bardziej finezyjnych struktur danych.
 Wymagano od~niego, aby był kolejką priorytetową, czyli aby był sortowany po
 priorytetach będącymi sumą odległości wierzchołków od~źródła i~oszacowań odległości
 tych wierzchołków od~celu. Warto zauważyć, że oprócz sortowania często były wstawiane
@@ -1376,15 +1434,15 @@ wyszukiwanie według klucza.
 
 Porównanie czasów różnych operacji dla różnych klas słownikowych zaimplementowanych
 w~technologii .NET można znaleźć w~\cite{C w pigulce}.
-Najlepszym rozwiązaniem byłoby użycie SortedDictionary<K,V>,
-która jest implementowana przez drzewo czerwono-czarne. Niestety, jest
-sortowana po~kluczu, a~nie tak jak jest potrzebne w~tym przypadku sortowanie
+Najlepszym rozwiązaniem byłoby użycie \textit{SortedDictionary<K,V>},
+która jest implementowana przez drzewo czerwono-czarne. Niestety jest
+sortowana po~kluczu a~nie tak, jak jest potrzebne w~tym przypadku sortowanie
 po wartości. Poszukiwano zatem struktury danych, która sortuje po~wartościach
 i ma~łatwy dostęp przez klucz.
 
 W zaproponowanym rozwiązaniu została zaimplementowana struktura danych opierająca się
-na dwóch podstrukturach - zaimplementowanej kolejki priorytetowej poprzez listę,
-oraz słownik Dictionary<K,V> z~technologii .NET, który opiera się o~Tablicę
+na dwóch podstrukturach - zaimplementowanej kolejki priorytetowej poprzez listę
+oraz słownik \textit{Dictionary<K,V>} z~technologii .NET, który opiera się na~tablicy
 skrótów. Zaimplementowana lista miała następującą strukturę:
 
 \begin{verbatim}
@@ -1403,7 +1461,7 @@ Wstawianie nowego elementu ma~złożoność pesymistyczną $O(n)$, usuwanie $O(1
 Zbadanie przynależności po~kluczu to~$O(n)$ i~nie zaleca się tego robić.
 
 Niezależnie od~tej struktury jest przechowywana druga struktura danych,
-Dictionary<K,V>, gdzie kluczami są wierzchołki, a~wartości to~referencje na
+\textit{Dictionary<K,V>}, gdzie kluczami są wierzchołki, a~wartości to~referencje na
 elementy tej listy. Zmienne odpowiedzialne za~przechowanie kolejki priorytetowej
 OPEN zostały zadeklarowane w~sposób następujący:
 
