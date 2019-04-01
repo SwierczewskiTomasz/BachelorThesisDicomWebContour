@@ -1505,36 +1505,37 @@ zapewnienia łączności 4-krotnej.
 \subsection {Optymalizacja algorytmu obrysu półautomatycznego}
 
 Większość obrazów medycznych ma~rozdzielczość rzędu kilkaset na~kilkaset pikseli,
-a więc na~całym obrazie znajduje się kilkaset tysięcy pikseli. Zdarzają się też
+a więc cały obraz zawiera kilkaset tysięcy pikseli. Zdarzają się też
 pliki w~znacznie większej rozdzielczości, takimi są między innymi mammografia i
-zdjęcie rentgenowskie rzędu kilku tysięcy na~kilka tysięcy pikseli.
-Na tych obrazach znajduje się do~kilkudziesięciu milionów
+obrazy rentgenowskie rzędu kilku tysięcy na~kilka tysięcy pikseli.
+Takie obrazy zawierają do~kilkudziesięciu milionów
 pikseli. W~celu sprawnego przetwarzania tych obrazów potrzebne było przeprowadzenie optymalizacji
-algorytmu. Zostały dodane usprawnienia, które opisano poniżej.
+algorytmu, opisanej w dalszej części pracy.
 \begin{enumerate}
-\item \textbf {Zmniejszenie rozmiaru obrazu roboczego} \\
-W pierwszym kroku zmniejszono rozmiar obrazu roboczego. Wyznaczono najmniejszy obszar zainteresowania w~kształcie
+\item Zmniejszenie rozmiaru obrazu roboczego \\
+W pierwszym kroku zmniejszono rozmiar obrazu roboczego. Wyznaczono najmniejszy obszar 
+zainteresowania (ang. \textit{ROI --- Region of Interest}) w~kształcie
 prostokąta, w~którym mieszczą się wszystkie punkty zaznaczone przez użytkownika.
 Powiększono ten obszar o~marginesy w~taki sposób, by~wyjściowy prostokąt nadal
-był w~środku, a~pole powiększonego było 4-krotnie większe. Innymi słowami ---
+był w~środku, a~pole powiększonego było 4-krotnie większe. Innymi słowami,
 dodano marginesy po~50\% szerokości/wysokości do~każdego wymiaru. Jeśli rozmiar
 powiększonego prostokąta jest większy niż obrazu, to~nie jest zmieniany obraz roboczy.
 Gdy użytkownik stworzył niewielki obrys, to~rozmiar obrazu jest także niewielki.
 W sytuacji, gdy obrys zajmuje prawie cały obraz medyczny, to~nadal musi być
 przetwarzany cały obraz.
-\item \textbf {Sięganie do~pamięci zamiast to~bitmapy} \\
+\item Sięganie do~pamięci zamiast to~bitmapy \\
 W celu przyśpieszenia działania operatora Sobela i~liczenia statystyk, zamiast
 sięgać do~bitmapy metodą \textbf{.GetPixel()} na~platformie .NET, bitmapa została zapisana
 do tablicy bajtów w~celu uzyskania bezpośredniego dostępu. Została wykorzystana do~tego
 funkcja \textbf{.LockBits()}. Zysk na~tej operacji był kilkudziesięciokrotny. Na~późniejszych
 etapach algorytmu pracowano na~macierzy, która nie była już bitmapą, więc operacje
 te wykonywały się znacznie szybciej.
-\item \textbf {Dzielenie zbyt długich krawędzi} \\
+\item Dzielenie zbyt długich krawędzi \\
 W sytuacji, gdy wczytane krawędzie do~grafu są bardzo długie, może zdarzyć się
 taka sytuacja, że punkt zaznaczony przez użytkownika znajduje się bardzo blisko
 krawędzi, ale daleko od~punktu początkowego lub końcowego krawędzi. W~tym celu
 jest wprowadzony mechanizm dzielenia zbyt długich krawędzi na~kilka krótszych.
-\item \textbf {Problem z~liczbą punktów} \\
+\item Problem z~liczbą punktów \\
 Dla każdego punktu jest uruchamiany algorytm A*, zatem w~sposób liniowy od~ilości
 punktów zależy liczba uruchomień algorytmu A*. Nie można wyznaczyć, czy w~złożoności
 średniej całego algorytmu jest on zależny liniowo od~ilości punktów, czy
@@ -1557,7 +1558,7 @@ a 255 najjaśniejszy),
 \end{itemize}
 \item środek ciężkości --- średnia arytmetyczna pozycji pikseli obrysu,
 \item długość obrysu w~$mm$ --- obliczana na~podstawie położenia pikseli i~% doprecyzuj, bo~ja~nie wiem
-wartości pixel spacing odczytywanej z~tagu obrazu DICOM,
+wartości \textit{pixel spacing} odczytywanej z~tagu obrazu DICOM,
 \item długość obrysu w~pikselach,
 \item pole powierzchni w~$mm^2$,
 \item liczba pikseli wewnątrz obrysu.
@@ -1574,13 +1575,13 @@ Przykładowe wygenerowane statystyki zostały przedstawione na~Rysunku \ref{fig:
 
 Do obliczenia histogramu jest wymagany punkt wewnętrzny obrysu. Środek ciężkości
 obrysu nie zawsze musi znajdować się wewnątrz obrysu. W~przypadku zastosowania
-algorytmu scan-linii dla obrysu manualnego nie jest podana informacja o~logicznych
+algorytmu \textit{scan-linii} \cite{GK1} dla obrysu manualnego nie jest podana informacja o~logicznych
 wartościach, gdzie jest krawędź, więc nie można wykryć np. krawędzi poziomych.
 %Algorytm scan-linii lepiej nadaje się w~przypadku, gdy wypełniamy wielokąt,
 %a nie obrys.
 % pani dr~chciała to~inaczej
 
-Z tego powodu wybrano algorytm Flood Fill \cite{AiSD2}, czyli rozlewania się rekurencyjnego % cytacja
+Z tego powodu wybrano algorytm \textit{Flood Fill} \cite{AiSD2}, czyli rozlewania się rekurencyjnego % cytacja
 zliczonych pikseli od~punktu wewnętrznego. Właśnie z~tego powodu od~użytkownika
 jest wymagane podanie dodatkowej informacji, jaką jest punkt wewnętrzny obrysu.
 Założono, że użytkownik zaznaczy go~poprawnie. W~sytuacji, gdy zostanie podany
@@ -1943,6 +1944,7 @@ inteligencji opartych na~obrysach wykonanych przez użytkownika.
 \bibitem{Cornerstone Core} Hafey C.: Dokumentacja projektu Cornerstone Core. Oficjalna strona: https://docs.cornerstonejs.org/ [Dostęp 27~stycznia 2019]
 \bibitem{A*} Hart P. E., Nilsson N. J., Raphael B.: A~Formal Basis for the Heurestic Determination of~Minimum Cost Paths \emph{IEEE Transactions on~Systems Science and Cybernetics 4(2)}, 100--107, 1968
 \bibitem{DWV} ivmartel: Projekt DICOM Web Viewer. Oficjalna strona: https://ivmartel.github.io/dwv/ [Dostęp 27~stycznia 2019]
+\bibitem{GK1} Kotowski P.: Wykłady z~przedmiotu Grafika Komputerowa~1~\emph{Politechnika Warszawska, Wydział Matematyki i~Nauk Informacyjnych} Materiały dostepne na~stronie: http://mini.pw.edu.pl/~kotowski/gk/gk.html [Dostęp 01~kwietnia 2019]
 \bibitem{Dlaczego dotnet} Kronis K., Uhanova M.: Performance Comparision of~Java EE~and ASP.NET Core Technologies for Web API Developmnet. \emph{Applied Computer Systems 23, Riga Technical University}, Ryga, 37--44, 2018
 \bibitem{Dotnet} Microsoft Corporation: Dokumentacja platformy .NET. Oficjalna strona: https://docs.microsoft.com/pl-pl/dotnet/ [Dostęp 22~stycznia 2019]
 \bibitem{Dotnet struktury} Microsoft Corporation: Dokumentacja rekomendowanych struktur danych platformy .NET. Oficjalna strona: https://docs.microsoft.com/pl-pl/dotnet/standard/collections/ [Dostęp 22~stycznia 2019]
@@ -1997,7 +1999,7 @@ inteligencji opartych na~obrysach wykonanych przez użytkownika.
 %\thispagestyle{empty}
 
 
-\afterpage{\blankpage}
+%\afterpage{\blankpage}
 
 % ----- 10. Spis rysunków - jeśli nie ma, zakomentować --------
 \listoffigures
@@ -2007,7 +2009,7 @@ inteligencji opartych na~obrysach wykonanych przez użytkownika.
 %Jak nie występują, usunąć.
 
 
-\afterpage{\blankpage}
+%\afterpage{\blankpage}
 
 
 % ------------ 11. Spis tabel - jak wyżej ------------------
@@ -2045,11 +2047,11 @@ Główne algorytmy odpowiedzialne za~generowanie obrysów półautomatycznych zn
 
 % 13. Spis załączników - jak nie ma~załączników, to~zakomentować lub usunąć
 
-\chapter*{Spis załączników}
-\markboth{}{Spis załączników}
-\addcontentsline{toc}{chapter}{Spis załączników}
-\begin{enumerate}
-\item Załącznik 1~- Pseudokod generujący graf z~bitmapy
+\chapter*{Dodatek 1 --- Pseudokod generujący graf z~bitmapy}
+\markboth{}{Dodatek 1 --- Pseudokod generujący graf z~bitmapy}
+\addcontentsline{toc}{chapter}{Dodatek 1 --- Pseudokod generujący graf z~bitmapy}
+%\begin{enumerate}
+%\item Załącznik 1~- Pseudokod generujący graf z~bitmapy
 
 \begin{verbatim}
 MATRIX - macierz wejściowa z oznaczonymi krawędziami jako 1
@@ -2117,7 +2119,10 @@ Zwróć graf G
 \end{verbatim}
 
 % --- 8. Instrukcja instalacji
-\item Załącznik 2~- Instrukcja instalacji
+%\item Załącznik 2~- Instrukcja instalacji
+\chapter*{Dodatek 2 --- Instrukcja instalacji}
+\markboth{}{Dodatek 2 --- Instrukcja instalacji}
+\addcontentsline{toc}{chapter}{Dodatek 2 --- Instrukcja instalacji}
 
 W celu instalacji serwera Orthanc należy otworzyć stronę
 \url{https://www.orthanc-server.com/download.php}, pobrać wersję odpowiednią dla
@@ -2176,7 +2181,10 @@ należy uruchomić w~konsoli obsługującej skrypty w~języku bash.
 
 
 \newpage
-\item Załącznik 2~- Instrukcja użytkowania
+%\item Załącznik 2~- Instrukcja użytkowania
+\chapter*{Dodatek 3 --- Instrukcja użytkowania}
+\markboth{}{Dodatek 3 --- Instrukcja użytkowania}
+\addcontentsline{toc}{chapter}{Dodatek 3 --- Instrukcja użytkowania}
 
 Po otwarciu aplikacji użytkownik może przeglądać pacjentów (patients), których
 badania zostały wgrane do~serwera Orthanc --- Rysunek \ref{fig:1}.
@@ -2421,7 +2429,7 @@ pacjenta, datę jego urodzenia oraz płeć po~anonimizacji jego danych --- Rysun
 
 
 
-\end{enumerate}
+%\end{enumerate}
 %\thispagestyle{empty}
 
 \end{document}
