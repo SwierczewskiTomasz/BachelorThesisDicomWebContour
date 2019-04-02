@@ -364,9 +364,9 @@ może tworzyć kilka obrysów jednocześnie w~celu zaznaczania anormalności w~o
 Użytkownik może korzystać z~tabletu graficznego w~celu wygodniejszego rysowania obrysów.
 
 W ramach pracy stworzono także algorytm do~tworzenia obrysów półautomatycznych.
-Metoda ta, polega na wybraniu przez użytkownika punktów na~obrazie, a~następnie
+Metoda ta polega na wybraniu przez użytkownika punktów na~obrazie, a~następnie
 wygenerowaniu obrysów z~uwzględnieniem tych punktów. W~tym celu
-został użyty operator Canny'ego, a~następnie punkty przetwarzanie są
+został użyty operator Canny'ego, a~następnie punkty przetwarzane są
 poprzez algorytmy grafowe.
 %Została przeprowadzona walidacja,
 %czy ta~metoda sprawdza się w~celu usprawnienia rysowania obrysów manualnych. @Tomek ??????????????????????????????????????
@@ -447,12 +447,12 @@ półautomatycznie (użytkownik wybiera kilka punktów, a~algorytm łączy je~pr
 algorytmu Canny'ego). Obrysy tworzone obiema metodami są modyfikowalne przez użytkownika,
 co w takich zastosowaniach jak obrysy na obrazach medycznych ma duże znaczenie. Użytkownik często musi skorygować
 wygenerowany obrys ze~względu na~różnorodność obrazów medycznych wynikających z~różnych systemów
-obrazowania, czy też ze~względu na~różnorodność tekstury tkanki obrazowanej (innej dla kążdego pacjenta).
+obrazowania, czy też ze~względu na~różnorodność tekstury tkanki obrazowanej (innej dla każdego pacjenta).
 
 \subsection {Przeglądarki DICOM}
 
 Istnieje wiele rozwiązań umożliwiających wykonywanie obrysów przy użyciu przeglądarki.
-W~tej pracy opisano szczegółowo dwie wybrane aplikacje, które według nas w~największym
+W~tej pracy opisano szczegółowo dwie wybrane aplikacje, które według autorów w~największym
 stopniu spełniają założone cele pracy.
 
 Pierwsza z~nich to~aplikacja OHIF Viewer \cite{OHIF Viewer} oparta o~biblioteki Cornerstone.
@@ -566,10 +566,10 @@ przyciskiem myszy w~prawą część podglądu obrazu.
 \end{figure}
 
 Innym rozwiązaniem pozwalającym na zarządzanie badaniami obrazowymi jest SonicDICOM~\cite{SonicDICOM}.
-Podobnie jak Orthanc udostępnia on API \cite{SonicDICOM API} pozwalające na komunikację zewnętrznych narzędzi
+Podobnie jak Orthanc udostępnia on API \cite{SonicDICOM API}, pozwalające na komunikację zewnętrznych narzędzi
 z systemem w celu przeglądnia, wyświetlania i modyfikacji zapisanych w systemie badań.
 
-Podobnie jak Orthanc, SonicDicom posiada on wbudowany interfejs do przeglądania
+Analogicznie jak Orthanc, SonicDICOM posiada wbudowany interfejs do przeglądania
 zapisanych w systemie badań, który nie umożliwia wykonywania obrysów na badaniach.
 
 \begin{figure}[tb!]
@@ -580,21 +580,21 @@ zapisanych w systemie badań, który nie umożliwia wykonywania obrysów na bada
 \end{figure}
 
 System SonicDICOM jest rozwiązaniem komercyjnym i wykorzystanie go wymaga wykupienia
-licencji w celu korzystania z zawarnych w nim funkcjonalności.
+licencji w celu korzystania z zawartych w nim funkcjonalności.
 
 \subsection {Podsumowanie}
 
 Wymienione rozwiązania przeglądarkowe nie zapewniają wygodnego interfejsu użytkownikowi
 do manualnego obrysowywania interesujących go~fragmentów obrazów medycznych przy użyciu tabletu graficznego.
 Ponadto żadne z~tych narzędzi nie przechowuje obrysów utworzonych w~sposób manualny
-ani półautomatyczniy.
+ani półautomatyczny.
 
 \section {Proponowane rozwiązanie}
 
 Przygotowane rozwiązanie zapewnia funkcjonalności niedostępne w innych narzędziach
-takie jak połączenie funkcjonalności manualnego i półautomatycznego generowania obryów,
+takie jak: połączenie funkcjonalności manualnego i półautomatycznego generowania obrysów,
 zapisanie i przeglądanie wykonanych i wygenerowanych obrysów,
-obliczanie statystyk związanych z wykonanymi obrysem jak również zmiania danych pacjenta
+obliczanie statystyk związanych z wykonanymi obrysami, jak również zmiana danych pacjenta
 dla przeglądanego badania.
 
 W zaproponowanym rozwiązaniu (Rysunek \ref{fig:architektura2}) zdecydowano się skorzystać z~serwera Orthanc jako bazy przechowującej
@@ -606,7 +606,7 @@ Poza serwerem Orthanc stworzono serwer w~technologii .NET Core \cite{Dotnet}
 wspomagający interfejs użytkownika, który pozwala na~przeprowadzanie czasochłonnych
 aplikacji poza interfejsem użytkownika. Wybrano tę technologię ze~względu na~to,
 że jest ciągle rozwijana, podobnie jak Orthanc .NET Core jest rozwiązaniem darmowym
-i nie ustępuje jakością w~stosunku do~Java EE~\cite{Dlaczego dotnet}.
+i nie ustępuje jakością w~stosunku do~Java~EE~\cite{Dlaczego dotnet}.
 Podstawowymi zadaniami tego serwera było przechowywanie
 wykonanych przez użytkownika obrysów manualnych, generowanie i~przechowywanie
 obrysów półautomatycznych oraz obliczanie statystyk związanych z~zapisanymi obrysami.
@@ -614,7 +614,7 @@ obrysów półautomatycznych oraz obliczanie statystyk związanych z~zapisanymi 
 Jako interfejs użytkownika wykorzystano bibliotekę ReactJS \cite{React} w~połączeniu
 z biblioteką Redux\cite{Redux}. Zdecydowano się na~tę technologię ze~względu na~bardzo dobre wsparcie techniczne
 i elastyczność \cite{Dlaczego react}. Wybranie tej technologii pozwoliło na~stworzenie
-aplikacji przeglądarkowej pozwalającej na~generowanie obrysów manualnych przy
+aplikacji przeglądarkowej, pozwalającej na~generowanie obrysów manualnych przy
 użyciu myszy lub tabletu graficznego, wybieranie punktów, z~których generowane
 będą obrysy półautomatyczne, możliwość oglądania wcześniej wygenerowanych i~zapisanych
 obrysów oraz wyświetlanie statystyk dotyczących wykonanego obrysu. Interfejs
@@ -688,7 +688,7 @@ badania oraz serii. Wybranie serii skutkuje wyświetleniem pierwszego obrazu DIC
 
 \item \textbf {Jako użytkownik chcę zmienić obraz w~serii przy użyciu rolki myszy.} \\
 Po umieszczeniu kursora na~obrazie, przewijanie rolką myszy do~góry powoduje zmianę
-wyświetlanego obrazu na~kolejny obraz w~serii. Gdy przewijamy rolką myszy do~góry
+wyświetlanego obrazu na~kolejny obraz w~serii. Gdy rolka myszy jest przewijana do~góry
 na ostatnim obrazie w~serii wyświetlany obraz nie zmienia się. Analogicznie
 przewijanie rolką myszy w~dół powoduje zmianę wyświetlanego obrazu na~poprzedni
 obraz w~serii, a~przewijanie w~dół rolką myszy na~pierwszym obrazie w~serii nie
@@ -732,7 +732,7 @@ histogram obrazu na~obszarze obrysu oraz liczbę pikseli wewnątrz obrysu.
 %Doprecyzować listę po~prawej stronie
 \item \textbf {Jako użytkownik chcę zobaczyć jednocześnie dowolną liczbę zapisanych
 w systemie obrysów na~jednym obrazie DICOM.} \\
-Użytkownik wybiera poprzez kliknięcie lewym przyciskiem myszy na~nazwie obrysu
+Użytkownik wybiera poprzez kliknięcie lewym przyciskiem myszy na~nazwie obrysu,
 znajdującej się na~liście obrysów. Wybrane obrysy wyświetlane są jednocześnie
 na przeglądanym przez użytkownika zdjęciu. Użytkownik może wyłączyć podgląd
 wcześniej wybranego obrysu poprzez ponowne wciśnięcie lewego przycisku myszy
@@ -757,15 +757,15 @@ obszarów ujętych w tabeli należą:
 
 \begin{enumerate}[label=(\alph*)]
   \item użyteczność pod względem dostępności z różnych urządzeń o rozdzielczościach
-   1920 na 1080 pikseli oraz pod względem zapewnienia dostępu do zapisanych na serwerze obrysów
-  \item niezawodność aplikacji w działaniu
+   1920x1080 pikseli oraz pod względem zapewnienia dostępu do zapisanych na serwerze obrysów,
+  \item niezawodność aplikacji w działaniu,
   \item wydajność pozwalająca na generację obrysów w krótkim czasie.
 \end{enumerate}
 
 \newcommand{\specialcell}[3][c]{%
  \begin{tabular}[#1]{@{}#2@{}}#3\end{tabular}}
 \begin{table}
-\caption{spis wymagań niefunkcjonalnych}
+\caption{Spis wymagań niefunkcjonalnych}
 \label{tabela wymagania niefunkcjonalne}
 \centering
 \begin{tabular}{ | p{0.2\textwidth} | p{0.65\textwidth} | }
@@ -835,7 +835,7 @@ przechowywane są przez serwer DICOM. Dostęp do~zapisanych na~serwerze danych j
 możliwy poprzez udostępniane przez serwer API. Interfejs użytkownika wykorzystuje
 API poprzez protokół HTTP.
 
-API serwera udostępnia informacje o obrazach, takie jak dane pacjenta,
+API serwera udostępnia informacje o obrazach, takie jak: dane pacjenta,
 rodzaj badania oraz serii. Wykorzystano je~w~interfejsie użytkownika do~nawigacji pomiędzy
 obrazami. Dodatkowo dla każdego obrazu serwer udostępnia dane obrazowe, umożliwiając
 wyświetlenie obrazu w~interfejsie użytkownika. Ponadto API udostępnia wszystkie
@@ -848,7 +848,7 @@ on API z~obrysami, które zostało wykorzystane przez interfejs użytkownika. AP
 stworzone przy pomocy ASP.NET Core 2.2 \cite{ASPNET} i wykorzystaniu frameworka
 .NET Core 2.2 \cite{Charakterystyka dotnet}. API oferuje cztery podstawowe operacje CRUD
 - utwórz, odczytaj, aktualizuj i~usuń. W~celu pobrania obrazów medycznych serwer z~API
-łączy się do~bazy danych Orthanc. Informacje o~obrysach, takie jak ID~obrysu, tag,
+łączy się do~bazy danych Orthanc. Informacje o~obrysach, takie jak: ID~obrysu, tag,
 ID obrazu medycznego i~typ obrysu (półautomatyczny lub manualny) są przechowywane
 w bazie danych Microsoft SQL Server. Pozostałe informacje takie jak: lista pikseli
 należących do~obrysu, lista punktów w~przypadku obrysu półautomatycznego i~statystyki
@@ -883,7 +883,7 @@ Obrysy manualne generowane przez użytkowników zapisywane są przez serwer obry
 i~obliczeń w~postaci plików CSV na~dysku serwera. Na obrys składa się lista
 pozycji punktów na obrazie, przez które użytkownik przesuwał kursor, a~także kolor obrysu.
 W~momencie zapisu obrysu do pliku obliczane są
-również statystyki dotyczące obrysowanej części obrazu, takie jak długość obrysu,
+również statystyki dotyczące obrysowanej części obrazu, takie jak: długość obrysu,
 pole obrysu, środek ciężkości obrysu, histogram regionu zainteresowania zawartego w obrysie oraz
 liczba pikseli wewnątrz obrysu.
 
@@ -933,7 +933,7 @@ fałszywych detekcji. Nie można tego powiedzieć o~detektorze, który podzieli 
 na~dwie lub zwróci dwie położone bardzo blisko siebie równoległe zamiast jednej.
 
 Detektory krawędzi oparte na~gradiencie, w~tym operator Canny'ego są~często używane
-zarówno w~przetwarzaniu obrazów medycznych, jaki i~innych bardziej ogólnych zastosowaniach
+zarówno w~przetwarzaniu obrazów medycznych, jak i~innych bardziej ogólnych zastosowaniach
 w~innych dziedzinach nauki. Stosuje się je~do obrazów, które mają duże różnice w~luminancji i~nie
 są~zaszumione. W~przypadku obrazów medycznych często możemy mówić właśnie o~takich obrazach.
 Główne zalety detektorów krawędzi opartych na~krawędzi
@@ -1064,7 +1064,7 @@ na współrzędne odpowiadające rozdzielczości oryginalnego obrazu.}
 Zaproponowany algorytm można podzielić na~kilka etapów:
 
 \begin{itemize}[noitemsep]
-\item {wygenerowanie bitmapy}
+\item {wygenerowanie bitmapy,}
 \item {wykrycie krawędzi na~bitmapie,}
 \item {stworzenie grafu z~bitmapy,}
 \item {zapewnienie spójności grafu,}
@@ -1084,8 +1084,8 @@ Stanowi ona podstawę do~dalszej pracy algorytmu.
 
 W pracy został użyty operator Canny'ego, ze~względu na~możliwość dostosowania
 go~do~bardzo różnorodnych zagadnień detekcji obiektów w~obrazach medycznych.
-Potwierdza to~porównanie operatorów wykrywania krawędzi zobrazowane
-w~\cite{Cyfrowe przetwarzanie obrazów medycznych}, operator Canny'ego
+Potwierdza to~porównanie operatorów wykrywania krawędzi zobrazowane przez 
+J.~Cytowskiego~\cite{Cyfrowe przetwarzanie obrazów medycznych}, operator Canny'ego
 najlepiej wykrywał główne narządy, takie jak wątroba czy też trzustka, w~porównaniu
 do~innych analizowanych narzędzi, takich jak operator Laplace'a czy też operatora \textit{zero-crossing}.
 
@@ -1404,7 +1404,7 @@ części wierzchołków, co~poprawia złożoność średnią. Wynosi ona wtedy $
 
 Do implementacji wyszukiwania najkrótszych ścieżek w~grafie na~podstawie wyżej
 wymienionych wniosków został wykorzystany algorytm A* z~heurystyką w~postaci
-metryki Manhattan. Przykładowy pseudokod tego algorytmie można znaleźć w
+metryki Manhattan. Przykładowy pseudokod tego algorytmu można znaleźć w
 \cite{AiSD2} i~jest on~następujący: %Także nie powinno tak tego się robić!
 
 \begin{verbatim}
@@ -1496,7 +1496,7 @@ o następujących własnościach:
 \begin{itemize}[noitemsep]
 \item dodawanie w~czasie $O(n)$,
 \item wyszukiwanie po~kluczu w~czasie $O(1)$,
-\item wybieranie najmniejszy element według wartości w~czasie $O(1)$,
+\item wybieranie najmniejszego elementu według wartości w~czasie $O(1)$,
 \item usuwanie w~czasie $O(1)$
 \item modyfikowanie jednego elementu w~czasie $O(n)$.
 \end{itemize}
@@ -1605,8 +1605,10 @@ Z tego powodu wybrano algorytm \textit{Flood Fill} \cite{AiSD2}, czyli rozlewani
 zliczonych pikseli od~punktu wewnętrznego. Właśnie z~tego powodu od~użytkownika
 jest wymagane podanie dodatkowej informacji, jaką jest punkt wewnętrzny obrysu.
 Założono, że użytkownik zaznaczy go~poprawnie. W~sytuacji, gdy zostanie podany
-błędny punkt, to~ten algorytm policzy to~co~znajduje się na~zewnątrz obrysu, a
-nie to~co~jest wewnątrz.
+błędny punkt, to~ten algorytm policzy to, co~znajduje się poza regioniem zainteresowania (ROI),
+a~nie to, co~znajduje się wewnątrz tego regionu.
+%to~ten algorytm policzy to~co~znajduje się na~zewnątrz obrysu, a
+%nie to~co~jest wewnątrz.
 
 Długość obrysu w~pikselach jest obliczana na~podstawie liczebności listy pikseli należących do~obrysu.
 
@@ -2335,7 +2337,7 @@ Rysunek \ref{fig:10}.
 \begin{figure}[h!]
 	\center
 	\includegraphics[width=0.6\textwidth]{10}
-	\caption{Moduł obrysu półauotomatycznego}
+	\caption{Moduł obrysu półautomatycznego}
     	\label{fig:10}
 \end{figure}
 
@@ -2350,7 +2352,7 @@ zgodnie albo przeciwnie do~ruchu wskazówek zegara --- Rysunek \ref{fig:11}.
 \begin{figure}[h!]
 	\center
 	\includegraphics[width=0.5\textwidth]{11}
-	\caption{Punkty wybrane do~obrysu półauotomatycznego}
+	\caption{Punkty wybrane do~obrysu półautomatycznego}
     	\label{fig:11}
 \end{figure}
 
@@ -2360,7 +2362,7 @@ zobaczyć wygenerowany przez algorytm obrys. --- Rysunek \ref{fig:12}.
 \begin{figure}[h!]
 	\center
 	\includegraphics[width=0.5\textwidth]{12}
-	\caption{Podgląd obrysu półauotomatycznego}
+	\caption{Podgląd obrysu półautomatycznego}
     	\label{fig:12}
 \end{figure}
 
@@ -2373,7 +2375,7 @@ punkty poprzez klikanie na~nich lewego przycisku myszy --- Rysunek \ref{fig:13}.
 \begin{figure}[h!]
 	\center
 	\includegraphics[width=0.7\textwidth]{13}
-	\caption{Podgląd obrysu półauotomatycznego po~dodaniu nowych punktów}
+	\caption{Podgląd obrysu półautomatycznego po~dodaniu nowych punktów}
     	\label{fig:13}
 \end{figure}
 
@@ -2389,7 +2391,7 @@ nowe punkty w~złym miejscu lub użytkownik wprowadził punkty w~złej kolejnoś
 \begin{figure}[h!]
 	\center
 	\includegraphics[width=0.7\textwidth]{14}
-	\caption{Widok zapisu obrysu półauotomatycznego}
+	\caption{Widok zapisu obrysu półautomatycznego}
     	\label{fig:14}
 \end{figure}
 
