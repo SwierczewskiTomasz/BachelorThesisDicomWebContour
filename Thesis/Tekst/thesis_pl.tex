@@ -388,7 +388,7 @@ medycznych DICOM i~aspektu medycznego pracy.
 Ponadto opisano podział prac wykonanych w~trakcie tworzenia
 narzędzia informatycznego.
 
-\section {Zagadnienia medyczne związane z~aplikacją}
+\section {Zagadnienia medyczne}
 
 DICOM (ang. Digital Imaging and Communications in~Medicine) \cite{DICOM} to~norma
 opracowana dla potrzeb wymiany i~interpretacji danych medycznych, które są
@@ -401,6 +401,48 @@ względu na~różnice w~sposobie implementacji. W~takich sytuacjach należy ręc
 modyfikować pliki DICOM, aby mogły być poprawnie obsłużone. Ponadto liczba tagów zawartych w~pliku
 DICOM stanowi barierę w~sprawnym korzystaniu z~tak zapisanych wyników badań.
 
+\section {Automatyczna detekcja zmian patologicznych}
+
+Na~podstawie badań zapisanych w~formacie DICOM lekarze są~w~stanie diagnozować
+pacjentów i~wybierać terapię odpowiednią dla zauważonych w~badaniu nieprawidłowości.
+W~celu ułatwienia odpowiedniej diagnozy jak również w celu weryfikacji oceny lekarza
+przydatne są narzędzia automatycznej detekcji zmian patologicznych.
+
+Narzędzia automatycznej detekcji służą do~przetwarzania danych obrazowych w~celu
+wykrycia patologicznych zmian. Wykorzystują w~tym celu między innymi metody sztucznej
+inteligencji, które do poprawnego działania wymagają zbioru testowego --- zbioru
+obrysów zmian patologicznych. Na podstawie tego zbioru algorytm będzie uczył się
+wykrywać podobne zmiany w badaniach poddawanych automatycznej detekcji.
+
+Kluczowe znaczenie w skuteczności poprawnej klasyfikacji badań na~zawierające i~nie
+zawierające zmian patologiczych, ma zbór testowy obrysów. Algorytmy sztucznej inteligencji
+pozwalają na wykrywanie struktur podobnych do~zaznaczonych w~zbiorze testowym,
+przez co decydujące znaczenie przy wykrywaniu zmian może mieć dokładność zbioru testowego.
+
+\section {Obrysy zmian patologicznych}
+
+Dokładność obrysu w~dużym stopniu zależy od~rozdzielczości badania obrazowego i~dokładności
+wyboru punktów obrysu zależnej od użytkownika. Obrys powinien znajdować się na krawędzi
+obrysowywanej tkanki, co jest bardzo trudne do uzyskania manualnie. W~wykonywaniu
+obrysów pomocne mogą być algorytmy szkieletyzacji obrazu. Pozwalają one na automatyczne
+wykrycie kształtów struktur znajdujących się na obrazie. Zastosowanie takich algorytmów
+pozwala na~zmniejszenie niedokładności obrysów wykonywanych manualnie oraz na~skrócenie
+czasu wykonywania pojedynczego obrysu.
+
+Na rynku istnieje wiele różnych rozwiązań pozwalających na wykonywanie obrysów,
+zarówno manualnie (np. ImageJ) jak również z automatycznym wykrywaniem krawędzi (np. DWV).
+Wspomniane narzędnia zwykle nie pozwalają na wykonywanie obrysów wieloma metodami,
+pozwalają na obrysy manualne albo półautomatyczne. Ponadto często mają skomplikowany
+interfejs, który stanowi spore utrudnienie w korzystaniu przez niedoświadczonych
+użytkowników.
+
+\section {Proponowane rozwiązanie}
+
+W celu usprawnienia procesu tworzenia obrysów zmian patologicznych przygotowane
+zostało narzędzie przeglądarkowe pozwalające na~wykonywanie obrysów dwiema metodami:
+manualną i~półautomatyczną. Ponadto narzędzie pozwala~na zapisywanie wykonanych obryów,
+obiczanie statystyk dotyczących regionu zainteresowania oraz anonimizację badań DICOM.
+
 \section {Podział prac}
 
 Ze względu na~złożoność realizowanego narzędzia dokonano podziału zadań pomiędzy
@@ -409,22 +451,17 @@ członków zespołu.
 Łukasz Garstecki wykonał:
 
 \begin{itemize}[noitemsep]
-\item interfejs użytkownika w~aplikacji przeglądarkowej,
-\item obsługę wczytywania plików medycznych do~aplikacji przeglądarkowej,
-\item moduł anonimizacji danych pacjenta i~modyfikacji plików medycznych,
-\item narzędzie do~rysowania obrysu manualnego,
-\item narzędzie do~wybierania punktów obrysu półautomatycznego,
-\item narzędzie do~wizualizacji stworzonych obrysów przez użytkownika.
+	\item moduł obrysów manualnych,
+	\item moduł anonimizacji,
+	\item interfejs wyświetlania wykonanych obrysów.
 \end{itemize}
 
 Tomasz Świerczewski wykonał:
 
 \begin{itemize}[noitemsep]
-\item serwer zapisujący i~generujący obrysy wraz z~bazą danych,
-\item algorytm generujący obrysy półautomatyczne,
-\item REST API, udostępniające obrysy,
+\item moduł obrysów półautomatycznych,
 \item moduł statystyk,
-\item testy aplikacji.
+\item moduł zapisu obrysów.
 \end{itemize}
 
 
@@ -1084,7 +1121,7 @@ Stanowi ona podstawę do~dalszej pracy algorytmu.
 
 W pracy został użyty operator Canny'ego, ze~względu na~możliwość dostosowania
 go~do~bardzo różnorodnych zagadnień detekcji obiektów w~obrazach medycznych.
-Potwierdza to~porównanie operatorów wykrywania krawędzi zobrazowane przez 
+Potwierdza to~porównanie operatorów wykrywania krawędzi zobrazowane przez
 J.~Cytowskiego~\cite{Cyfrowe przetwarzanie obrazów medycznych}, operator Canny'ego
 najlepiej wykrywał główne narządy, takie jak wątroba czy też trzustka, w~porównaniu
 do~innych analizowanych narzędzi, takich jak operator Laplace'a czy też operatora \textit{zero-crossing}.
