@@ -340,7 +340,7 @@ do każdej dziedziny z~szeroko pojętej nauki. Jedną z~takich dziedzin jest tak
 Powstają coraz to nowsze rozwiązania komputerowego wspomagania medycyny w diagnostyce i~terapii.
 Jednym z takich zagadnień jest próba rozpoznawania we~wczesnym stadium różnych zmian
 patologicznych na obrazach medycznych. Wczesne wykrywanie zmian pozwala
-na~szybką terapię, a~w~konsenkwencji niejednokrotnie na~całkowite wylecznie. Między innymi dlatego
+na~szybką terapię, a~w~konsenkwencji niejednokrotnie na~całkowite wyleczenie. Między innymi dlatego
 tak ważne jest tworzenie komputerowych systemów wspomagania procesu podejmowania
 decyzji przez radiologów w~diagnostyce obrazowej.
 
@@ -351,7 +351,7 @@ CT we~wczesnej fazie). W~celu stworzenia dobrego narzędzia automatycznego wspom
 decyzji należy posiadać zbiór danych referencyjnych. W~praktyce wykorzystuje się
 dane obrazowe opisane i obrysowane przez lekarzy---specjalistów. Ten etap prac
 jest czasochłonny i żmudny. Dlatego warto automatyzować ten etap tworzenia narzędzi
-komputegowego wspomagania decyzji.
+komputerowego wspomagania decyzji.
 
 \section*{Cel pracy}
 
@@ -388,18 +388,56 @@ medycznych DICOM i~aspektu medycznego pracy.
 Ponadto opisano podział prac wykonanych w~trakcie tworzenia
 narzędzia informatycznego.
 
-\section {Zagadnienia medyczne związane z~aplikacją}
+\section {Zagadnienia medyczne}
 
 DICOM (ang. Digital Imaging and Communications in~Medicine) \cite{DICOM} to~norma
 opracowana dla potrzeb wymiany i~interpretacji danych medycznych, które są
 najczęściej obrazami medycznymi. W~postaci pliku DICOM mogą być zapisywane obrazy
 tomografii komputerowej, obrazowania metodą rezonansu magnetycznego, cyfrowej
 angiografii subtrakcyjnej, zdjęcia rentgenowskie, mammografia i~wiele innych badań.
-Do wad tego standardu należy różnorodność metod implementacji. Powoduje to~czasem
-sytuacje, w~których nie można wyświetlić pliku na~sprzęcie innego producenta, ze
-względu na~różnice w~sposobie implementacji. W~takich sytuacjach należy ręcznie
-modyfikować pliki DICOM, aby mogły być poprawnie obsłużone. Ponadto liczba tagów zawartych w~pliku
+Do wad tego standardu należy różnorodność metod implementacji, co powoduje to~czasem
+sytuacje, w~których nie można wyświetlić pliku na~sprzęcie innego producenta.
+W~takich sytuacjach należy ręcznie
+modyfikować badania, aby mogły być poprawnie obsłużone. Ponadto liczba tagów zawartych w~badaniu
 DICOM stanowi barierę w~sprawnym korzystaniu z~tak zapisanych wyników badań.
+
+\section {Automatyczna detekcja zmian patologicznych}
+
+Na~podstawie wyników badań zapisanych w~formacie DICOM lekarze są~w~stanie diagnozować
+pacjentów i~wybierać terapię odpowiednią dla zauważonych w~badaniu nieprawidłowości.
+W~celu ułatwienia odpowiedniej diagnozy jak również weryfikacji oceny lekarza
+przydatne są narzędzia automatycznej detekcji zmian patologicznych,
+które służą do~przetwarzania danych obrazowych w~celu
+wykrycia patologicznych zmian. Wykorzystują do~tego między innymi metody sztucznej
+inteligencji, które do poprawnego działania wymagają zbioru testowego --- zbioru
+obrysów zmian patologicznych. Na podstawie tego zbioru algorytm uczy się
+wykrywać podobne zmiany w badaniach poddawanych automatycznej detekcji.
+Ze~względu na~to~kluczowe znaczenie dla poprawności decyzji algorytmu ma~dokładność zbioru testowego.
+
+\section {Obrysy zmian patologicznych}
+
+Dokładność obrysu w~dużym stopniu zależy od~rozdzielczości badania obrazowego i~precyzji
+wyboru punktów przez użytkownika. Obrys powinien znajdować się na krawędzi
+obrysowywanej tkanki, co jest bardzo trudne do uzyskania manualnie,
+dlatego pomocne mogą być algorytmy wykrywania krawędzi na obrazie, które pozwalają one na automatyczne
+wykrycie kształtów struktur znajdujących się na obrazie. Zastosowanie takich algorytmów
+pozwala na~zwiększenie precyzji obrysów wykonywanych manualnie oraz na~skrócenie
+czasu wykonywania pojedynczego obrysu.
+
+Na rynku istnieją już rozwiązania umożliwiające wykonywanie obrysów,
+zarówno manualnie (np. ImageJ) jak również z automatycznym wykrywaniem krawędzi (np. DWV).
+Wspomniane narzędzia zwykle nie dają możliwości wykonywania obrysów wieloma metodami,
+a jedynie na obrysy manualne albo półautomatyczne. Ponadto często mają skomplikowany
+interfejs, który stanowi spore utrudnienie w korzystaniu przez użytkowników.
+
+\section {Proponowane rozwiązanie}
+
+W celu usprawnienia procesu tworzenia obrysów zmian patologicznych przygotowane
+zostało narzędzie pozwalające na~wykonywanie obrysów dwiema metodami:
+manualną i~półautomatyczną. Ponadto narzędzie pozwala~na zapisywanie wykonanych obryów,
+obliczanie statystyk dotyczących regionu zainteresowania oraz anonimizację badań DICOM.
+Narzędzie działa w przeglądarce internetowej i~pozwala na wykonywanie obrysów na badaniach
+zapisanych na zdalnym serwerze.
 
 \section {Podział prac}
 
@@ -409,24 +447,22 @@ członków zespołu.
 Łukasz Garstecki wykonał:
 
 \begin{itemize}[noitemsep]
-\item interfejs użytkownika w~aplikacji przeglądarkowej,
-\item obsługę wczytywania plików medycznych do~aplikacji przeglądarkowej,
-\item moduł anonimizacji danych pacjenta i~modyfikacji plików medycznych,
-\item narzędzie do~rysowania obrysu manualnego,
-\item narzędzie do~wybierania punktów obrysu półautomatycznego,
-\item narzędzie do~wizualizacji stworzonych obrysów przez użytkownika.
+	\item moduł obrysów manualnych,
+	\item moduł anonimizacji,
+	\item interfejs wyświetlania wykonanych obrysów.
 \end{itemize}
+
+\pagebreak
 
 Tomasz Świerczewski wykonał:
 
 \begin{itemize}[noitemsep]
-\item serwer zapisujący i~generujący obrysy wraz z~bazą danych,
-\item algorytm generujący obrysy półautomatyczne,
-\item REST API, udostępniające obrysy,
+\item moduł obrysów półautomatycznych,
 \item moduł statystyk,
-\item testy aplikacji.
+\item moduł zapisu obrysów.
 \end{itemize}
 
+\afterpage{\blankpage}
 
 \chapter {Stan wiedzy}
 
@@ -567,7 +603,7 @@ przyciskiem myszy w~prawą część podglądu obrazu.
 
 Innym rozwiązaniem pozwalającym na zarządzanie badaniami obrazowymi jest SonicDICOM~\cite{SonicDICOM}.
 Podobnie jak Orthanc udostępnia on API \cite{SonicDICOM API}, pozwalające na komunikację zewnętrznych narzędzi
-z systemem w celu przeglądnia, wyświetlania i modyfikacji zapisanych w systemie badań.
+z systemem w celu przeglądania, wyświetlania i modyfikacji zapisanych w systemie badań.
 
 Analogicznie jak Orthanc, SonicDICOM posiada wbudowany interfejs do przeglądania
 zapisanych w systemie badań, który nie umożliwia wykonywania obrysów na badaniach.
@@ -643,7 +679,8 @@ statystyk dla wybranego obszaru obrazu wewnątrz obrysu.
 
 Specyfikacja wymagań została opracowana na podstawie danych dotyczących wymagań stawianych
 przed tworzonym systemem. Zostały one przedstawione w~rozdziałach 3.1.1. - 3.1.3. Wymagania
-były konsultowane z~lekarzami i~studentami ostatniego roku medycyny z Warszawskiego Uniwersytetu Medycznego.
+były konsultowane %z~lekarzami i~studentami ostatniego roku medycyny z Warszawskiego Uniwersytetu Medycznego.
+środowiskiem medycznym m.in. Warszawskim Uniwersytetem Medycznym.
 
 \subsection {Opis biznesowy}
 \interfootnotelinepenalty=10000
@@ -805,7 +842,7 @@ wydajności poprzez zwiększenie liczby instancji serwera. Dopuszczalne jest tak
 rozwiązanie, gdyż planowana liczba użytkowników jednocześnie korzystających z~aplikacji
 to nie więcej niż 20~osób. Wynika to z tego, że narzędzie będzie używane przez pracowników
 zakładu i zaproszonych przez nich lekarzy. Możliwości zwiększenia skalowalności w~kontekście
-obliczeniwym zostało opisane w~Rozdziale 5.2.
+obliczeniowym zostało opisane w~Rozdziale 5.
 
 \begin{figure}[t]
 	\center
@@ -866,7 +903,7 @@ i~generowanie podglądu i~zapis obrysu półautomatycznego.
 W celu zapisania danych związanych z~obrysami wykorzystana została baza SQL~Lite.
 Baza składa się z~jednej tabeli, w~której przechowywane są: identyfikator obrazu DICOM,
 identyfikator obrysu, nazwa obrysu oraz informacja o tym, czy obraz został wygenerowany
-manualnie czy półautomatycznie. Punkty z których składa się obrys i~statystytki
+manualnie czy półautomatycznie. Punkty, z których składa się obrys i~statystytki
 z~nim związane zapisywane są~w~oddzielnych
 plikach tekstowych o nazwie identycznej z identyfikatorem obrysu.
 
@@ -875,7 +912,7 @@ plikach tekstowych o nazwie identycznej z identyfikatorem obrysu.
 Moduł obrysów manualnych służy do~samodzielnego wykonywania obrysów przy użyciu myszy albo tabletu
 graficznego. Obrysy wykonywane są poprzez przesuwanie przez użytkownika kursora
 z~wciśniętym lewym przyciskiem myszy po~ekranie. Daje to użytkownikowi całkowitą
-konrolę nad kształtem wykonywanego przez niego obrysu. Dzięki temu modułowi
+kontrolę nad kształtem wykonywanego przez niego obrysu. Dzięki temu modułowi
 użytkownik może otrzymać obrys w sytuacji,
 gdy moduł obrysów półautomatycznych nie daje użytkownikowi satysfakcjonujących rezultatów.
 
@@ -1047,7 +1084,7 @@ położenia krawędzi zastosowano operator Canny'ego.
 
 Opracowany algorytm służy do~półautomatycznego tworzenia obrysów na~podstawie wybranych punktów,
 które są interpolowane przez algorytm bazujący na~operatorze Canny'ego, operatorze
-Sobela i~algorytmie A* (algorytm A* to~heurestyczny algorytm znajdowania nakrótszych ścieżek w~grafie).
+Sobela i~algorytmie A* (algorytm A* to~heurestyczny algorytm znajdowania najkrótszych ścieżek w~grafie).
 Powyższe rozwiązania pozwalają na~uzyskanie satysfakcjonujących efektów na~przetwarzanych
 przez narzędzie obrazach medycznych.
 % screen z~aplikacji i~schemat
@@ -1084,7 +1121,7 @@ Stanowi ona podstawę do~dalszej pracy algorytmu.
 
 W pracy został użyty operator Canny'ego, ze~względu na~możliwość dostosowania
 go~do~bardzo różnorodnych zagadnień detekcji obiektów w~obrazach medycznych.
-Potwierdza to~porównanie operatorów wykrywania krawędzi zobrazowane przez 
+Potwierdza to~porównanie operatorów wykrywania krawędzi zobrazowane przez
 J.~Cytowskiego~\cite{Cyfrowe przetwarzanie obrazów medycznych}, operator Canny'ego
 najlepiej wykrywał główne narządy, takie jak wątroba czy też trzustka, w~porównaniu
 do~innych analizowanych narzędzi, takich jak operator Laplace'a czy też operatora \textit{zero-crossing}.
@@ -1628,7 +1665,7 @@ znaków, w szczególności takie, które nie pozwolą na ustalenie tożsamości 
 \chapter {Przeprowadzone eksperymenty}
 
 %Zostały przeprowadzne eksperymenty na~autorskim narzędziu do~tworzenia obrysów.
-Eksperymenty zostały przeprowadzone przy użyciu zaproponowanego narzędza 
+Eksperymenty zostały przeprowadzone przy użyciu zaproponowanego narzędzia 
 do~tworzenia obrysów pod kątem:
 \begin{itemize}[noitemsep]
 \item działania narzędzia z różnymi typami badań medycznych,
@@ -1846,7 +1883,7 @@ na Rysunku \ref{fig:112}.
 W pierwszym teście sprawdzono czasy generowania obrysu półautomatycznego,
  w~zależności od~ilości punktów wybranych przez użytkownika. Oczekiwano,
 że obrys będzie wyglądał podobnie do~tych na~Rysunkach \ref{fig:105} i~\ref{fig:107}.
-Rozmiary przetwarzanych fragmentów obrazu w~algorytmie były porównywalne. Algorymt
+Rozmiary przetwarzanych fragmentów obrazu w~algorytmie były porównywalne. Algorytm
 wykorzystywał fragmenty obrazu medycznego zawierające wszystkie punkty wybrane
 przez użytkownika z~uwzględnieniem marginesów.
 
@@ -2413,28 +2450,25 @@ wciśniętym rysikiem po~tablecie --- Rysunek \ref{fig:5}.
 
 \pagebreak
 
-Po wciśnięciu przycisku zapisz obrys (Save Contour), użytkownikowi ukazuje się
-okno dialogowe. W~celu usunięcia nieudanego obrysu należy kliknąć lewym przyciskiem
-myszy w~przycisk wyczyść obraz (Clear Image). W~celu zapisania obrysu należy
-wykonać następujące kroki: Wpisać nazwę obrysu w~pole tekstowe poniżej obrazu
-(pod napisem Contour Name)  --- \ref{fig:6}.
+W~celu usunięcia nieudanego obrysu należy kliknąć lewym przyciskiem
+myszy w~przycisk wyczyść obraz (Clear Image). Po wciśnięciu przycisku zapisz obrys
+(Save Contour), użytkownikowi ukazuje się okno dialogowe --- \ref{fig:6}.
 
 \begin{figure}[h!]
 	\center
-	\includegraphics[width=0.8\textwidth]{6}
+	\includegraphics[width=0.48\textwidth]{6}
 	\caption{Okno zapisu obrysu manualnego}
     	\label{fig:6}
 \end{figure}
 
- Po~wpisaniu nazwy, należy kliknąć przycisk podgląd punktów (Preview Points)
- lewym przyciskiem myszy. Pozwoli to~użytkownikowi zobaczyć wykonany przez niego
- obrys --- Rysunek \ref{fig:7}.
-
- \pagebreak
+W~celu zapisania obrysu należy wpisać nazwę obrysu w~pole tekstowe poniżej obrazu.
+Następnie, należy kliknąć przycisk podgląd punktów (Preview Points)
+lewym przyciskiem myszy. Pozwoli to~użytkownikowi zobaczyć wykonany przez niego
+obrys --- Rysunek \ref{fig:7}.
 
 \begin{figure}[h!]
 	\center
-	\includegraphics[width=0.9\textwidth]{7}
+	\includegraphics[width=0.48\textwidth]{7}
 	\caption{Podgląd wykonanego obrysu}
     	\label{fig:7}
 \end{figure}
@@ -2443,37 +2477,36 @@ Następną czynnością, którą musi wykonać użytkownik przed zapisaniem to~w
 punktu wewnątrz wykonanego obrysu, poprzez wciśnięcie lewego przycisku myszy w
 odpowiednim miejscu na~obrazie --- Rysunek \ref{fig:8}.
 
-%Tutaj i~tak nic więcej się nie zmieści, więc dałem 0.9 na~obrazek, aby był czytelny
-
 \pagebreak
 
 \begin{figure}[h!]
 	\center
-	\includegraphics[width=0.8\textwidth]{8}
+	\includegraphics[width=0.6\textwidth]{8}
 	\caption{Wybór punktu wewnątrz obrysu}
     	\label{fig:8}
 \end{figure}
 
 Po kliknięciu przycisku wyślij (Send) lewym przyciskiem myszy obrys zostaje
 zapisany i~pojawia się na~liście wykonanych obrysów (Avaiable Contours). Lista
-zawiera jedynie obrysy dla oglądanego obrazu --- Rysunek \ref{fig:9}.
+zawiera jedynie obrysy dla oglądanego obrazu --- Rysunek \ref{fig:9}. Na liście
+obrysy pojawiają się w postaci nazwy podanej przy zapisywaniu.
 
 \begin{figure}[h!]
 	\center
-	\includegraphics[width=0.5\textwidth]{9}
+	\includegraphics[width=0.35\textwidth]{9}
 	\caption{Widok listy obrysów po~zapisaniu obrysu manualnego}
     	\label{fig:9}
 \end{figure}
 
-\pagebreak
-
 Użytkownik może wykonywać obrysy w~sposób półautomatyczny. W~tym celu musi
 wybrać kartę z~obrysami półautomatycznymi (z Manual do~Semi-Automatic) ---
-Rysunek \ref{fig:10}.
+Rysunek \ref{fig:10}. Widok jest bardzo podobny do widoku obrysów manualnych.
+
+\pagebreak
 
 \begin{figure}[h!]
 	\center
-	\includegraphics[width=0.6\textwidth]{10}
+	\includegraphics[width=0.4\textwidth]{10}
 	\caption{Moduł obrysu półautomatycznego}
     	\label{fig:10}
 \end{figure}
@@ -2484,14 +2517,14 @@ graficznego, powinien przycisnąć rysik do~tabletu w~interesujących go~punktac
 Punkty wprowadzane powinny być w~kolejności, w~której występują w~obrysie,
 zgodnie albo przeciwnie do~ruchu wskazówek zegara --- Rysunek \ref{fig:11}.
 
-\pagebreak
-
 \begin{figure}[h!]
 	\center
-	\includegraphics[width=0.5\textwidth]{11}
+	\includegraphics[width=0.4\textwidth]{11}
 	\caption{Punkty wybrane do~obrysu półautomatycznego}
     	\label{fig:11}
 \end{figure}
+
+\pagebreak
 
 Po wciśnięciu przycisku podgląd obrysu (Preview Contour) użytkownik może
 zobaczyć wygenerowany przez algorytm obrys. --- Rysunek \ref{fig:12}.
@@ -2503,31 +2536,29 @@ zobaczyć wygenerowany przez algorytm obrys. --- Rysunek \ref{fig:12}.
     	\label{fig:12}
 \end{figure}
 
-\pagebreak
-
 Jeśli algorytm popełnił błąd użytkownik może dodać nowe punkty klikając lewym
 przyciskiem myszy w~interesujących go~miejscach lub usunąć nietrafnie umieszczone
 punkty poprzez klikanie na~nich lewego przycisku myszy --- Rysunek \ref{fig:13}.
 
 \begin{figure}[h!]
 	\center
-	\includegraphics[width=0.7\textwidth]{13}
+	\includegraphics[width=0.5\textwidth]{13}
 	\caption{Podgląd obrysu półautomatycznego po~dodaniu nowych punktów}
     	\label{fig:13}
 \end{figure}
 
-Gdy wygenerowany obrys jest satysfakcjonujący dla użytkownika, może go~zapisać
-klikając zapisz obrys (Save Contour). Okno zapisu jest analogiczne do~okna zapisu
+\pagebreak
+
+Gdy wygenerowany obrys jest satysfakcjonujący dla użytkownika, może on~go~zapisać
+klikając przycisk zapisz obrys (Save Contour). Okno zapisu jest analogiczne do~okna zapisu
 obrysu manualnego. Jeśli na~obrazie pojawią się krzyżujące krawędzie, należy
 wyczyścić obrys i~wykonać go~od~początku, gdyż algorytm modyfikujący obrys dodał
 nowe punkty w~złym miejscu lub użytkownik wprowadził punkty w~złej kolejności
 --- Rysunek \ref{fig:14}.
 
-\pagebreak
-
 \begin{figure}[h!]
 	\center
-	\includegraphics[width=0.7\textwidth]{14}
+	\includegraphics[width=0.5\textwidth]{14}
 	\caption{Widok zapisu obrysu półautomatycznego}
     	\label{fig:14}
 \end{figure}
@@ -2537,12 +2568,13 @@ kliknięcie lewego przycisku myszy na~nazwie obrysu --- Rysunek \ref{fig:15}.
 
 \begin{figure}[h!]
 	\center
-	\includegraphics[width=0.7\textwidth]{15}
+	\includegraphics[width=0.5\textwidth]{15}
 	\caption{Podgląd statystyk obrysu}
     	\label{fig:15}
 \end{figure}
 
 \pagebreak
+
 Przed wykonaniem obrysu użytkownik może wybrać kolor wykonywanego obrysu.
 Po wciśnięciu lewym przyciskiem myszy na~przycisk wybierz kolor (Choose Color),
 pojawia się okno wyboru koloru. Użytkownik może wybrać kolor z~przygotowanej
