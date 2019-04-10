@@ -361,7 +361,7 @@ na~obrazach medycznych. Użytkownik może otwierać
 dane obrazowe w~formacie DICOM i~dokonywać obrysów manualnych lub półautomatycznych
 wybranych struktur lub anormalności. W~przypadku obrysów manualnych użytkownik
 może tworzyć kilka obrysów jednocześnie w~celu zaznaczania anormalności w~obrazowanej tkance.
-Użytkownik może korzystać z~tabletu graficznego w~celu wygodniejszego rysowania obrysów.
+Użytkownik może korzystać z~tabletu graficznego w~celu wygodniejszego dokonywania obrysów.
 
 W ramach pracy stworzono także algorytm do~tworzenia obrysów półautomatycznych.
 Metoda ta polega na wybraniu przez użytkownika punktów na~obrazie, a~następnie
@@ -394,7 +394,10 @@ DICOM (ang. Digital Imaging and Communications in~Medicine) \cite{DICOM} to~norm
 opracowana dla potrzeb wymiany i~interpretacji danych medycznych, które są
 najczęściej obrazami medycznymi. W~postaci pliku DICOM mogą być zapisywane obrazy
 tomografii komputerowej, obrazowania metodą rezonansu magnetycznego, cyfrowej
-angiografii subtrakcyjnej, zdjęcia rentgenowskie, mammografia i~wiele innych badań.
+angiografii subtrakcyjnej, zdjęcia rentgenowskie, mammogramy i~wiele innych badań.
+Standard umożliwia obsługę wielu różnych badań przy wykorzystaniu jednego narzędzia,
+co ułatwia tworzenie uniwersalnych narzędzi wspomagających diagnostykę, jak również
+daje możliwość zapisywania informacji nieopisanych w standardzie w ramach pliku DICOM.
 Do wad tego standardu należy różnorodność metod implementacji, co powoduje to~czasem
 sytuacje, w~których nie można wyświetlić pliku na~sprzęcie innego producenta.
 W~takich sytuacjach należy ręcznie
@@ -403,32 +406,32 @@ DICOM stanowi barierę w~sprawnym korzystaniu z~tak zapisanych wyników badań.
 
 \section {Automatyczna detekcja zmian patologicznych}
 
-Na~podstawie wyników badań zapisanych w~formacie DICOM lekarze są~w~stanie diagnozować
+Na~podstawie badań obrazowych zapisanych w~formacie DICOM lekarze są~w~stanie diagnozować
 pacjentów i~wybierać terapię odpowiednią dla zauważonych w~badaniu nieprawidłowości.
-W~celu ułatwienia odpowiedniej diagnozy jak również weryfikacji oceny lekarza
+W~celu ułatwienia odpowiedniej diagnozy, jak również weryfikacji oceny lekarza
 przydatne są narzędzia automatycznej detekcji zmian patologicznych,
 które służą do~przetwarzania danych obrazowych w~celu
 wykrycia patologicznych zmian. Wykorzystują do~tego między innymi metody sztucznej
-inteligencji, które do poprawnego działania wymagają zbioru testowego --- zbioru
-obrysów zmian patologicznych. Na podstawie tego zbioru algorytm uczy się
+inteligencji, które do poprawnego działania wymagają zbioru testowego, czyli zbioru obrazów
+wraz~z obrysami zmian patolologicznych czy struktur anatomicznych, stworzonych przez
+ekspertów --- lekarzy. Na podstawie tego zbioru algorytm uczy się
 wykrywać podobne zmiany w badaniach poddawanych automatycznej detekcji.
-Ze~względu na~to~kluczowe znaczenie dla poprawności decyzji algorytmu ma~dokładność zbioru testowego.
+Ze~względu na~to~kluczowe znaczenie dla poprawności działania algorytmu ma~dokładność i~wiarygodność zbioru testowego.
 
 \section {Obrysy zmian patologicznych}
 
 Dokładność obrysu w~dużym stopniu zależy od~rozdzielczości badania obrazowego i~precyzji
 wyboru punktów przez użytkownika. Obrys powinien znajdować się na krawędzi
 obrysowywanej tkanki, co jest bardzo trudne do uzyskania manualnie,
-dlatego pomocne mogą być algorytmy wykrywania krawędzi na obrazie, które pozwalają one na automatyczne
+dlatego pomocne mogą być algorytmy wykrywania krawędzi na obrazie, które pozwalają na automatyczne
 wykrycie kształtów struktur znajdujących się na obrazie. Zastosowanie takich algorytmów
 pozwala na~zwiększenie precyzji obrysów wykonywanych manualnie oraz na~skrócenie
 czasu wykonywania pojedynczego obrysu.
 
 Na rynku istnieją już rozwiązania umożliwiające wykonywanie obrysów,
-zarówno manualnie (np. ImageJ) jak również z automatycznym wykrywaniem krawędzi (np. DWV).
+zarówno manualnie (np. ImageJ~\cite{ImageJ}), jak również z automatycznym wykrywaniem krawędzi (np. DWV~\cite{DWV}).
 Wspomniane narzędzia zwykle nie dają możliwości wykonywania obrysów wieloma metodami,
-a jedynie na obrysy manualne albo półautomatyczne. Ponadto często mają skomplikowany
-interfejs, który stanowi spore utrudnienie w korzystaniu przez użytkowników.
+a jedynie na obrysy manualne albo półautomatyczne.
 
 \section {Proponowane rozwiązanie}
 
@@ -467,7 +470,7 @@ Tomasz Świerczewski wykonał:
 \chapter {Stan wiedzy}
 
 W poniższym rozdziale zostały przedstawione istniejące na~rynku aplikacje o
-funkcjonalnościach określonych w~celu niniejszej pracy. Opisano zarówno funkcjonalne jak i~niefunkcjonalne
+funkcjonalnościach określonych w~celu niniejszej pracy. Opisano zarówno funkcjonalne, jak i~niefunkcjonalne
 wymagania dla projektowanego systemu. Zaproponowany system do~tworzenia obrysów
 na obrazach w~formacie DICOM struktur anatomicznych czy zmian patologicznych
 powinien spełniać wymagania zarówno lekarzy, jak i~inżynierów medycznych, wykorzystujących
@@ -494,7 +497,7 @@ stopniu spełniają założone cele pracy.
 Pierwsza z~nich to~aplikacja OHIF Viewer \cite{OHIF Viewer} oparta o~biblioteki Cornerstone.
 
 Cornerstone Core \cite{Cornerstone Core} to~biblioteka, która umożliwia przetwarzanie
-obrazów medycznych z~wykorzystaniem elementu canvas z~języka HTML5. Biblioteka
+obrazów medycznych z~wykorzystaniem elementu \textit{canvas} z~języka HTML5. Biblioteka
 udostępnia interfejs do~wyświetlania obrazów medycznych pozwalający na~zarządzanie
 wyświetlaniem obrazu. Podstawowe funkcjonalności obsługiwane przez tę bibliotekę to:
 
@@ -528,7 +531,7 @@ Rysunku \ref{fig:OHIF-example}.
 	\center
 	\includegraphics[width=0.7\textwidth]{OHIF-example}
 	\caption{Przykład użycia aplikacji OHIF Viewer --- oznaczono: prostokątny obszar,
-	dla którego obliczone zostały wybrane statystyki; odcinek, dla którego otrzymano
+	dla~którego obliczone zostały wybrane statystyki; odcinek, dla którego otrzymano
 	odległość w~jednostkach rzeczywistych; wskaźnik, wskazujący na~zmianę i posiadający
 	etykietę tekstową.}
     	\label{fig:OHIF-example}
@@ -628,13 +631,13 @@ ani półautomatyczny.
 \section {Proponowane rozwiązanie}
 
 Przygotowane rozwiązanie zapewnia funkcjonalności niedostępne w innych narzędziach
-takie jak: połączenie funkcjonalności manualnego i półautomatycznego generowania obrysów,
-zapisanie i przeglądanie wykonanych i wygenerowanych obrysów,
-obliczanie statystyk związanych z wykonanymi obrysami, jak również zmiana danych pacjenta
+takie jak: połączenie funkcjonalności manualnego i~półautomatycznego generowania obrysów,
+zapisanie i przeglądanie wykonanych i~wygenerowanych obrysów,
+obliczanie statystyk związanych z~wykonanymi obrysami, jak również zmiana danych pacjenta
 dla przeglądanego badania.
 
 W zaproponowanym rozwiązaniu (Rysunek \ref{fig:architektura2}) zdecydowano się skorzystać z~serwera Orthanc jako bazy przechowującej
-pliki DICOM. Przy decyzji miało znaczenie przede wszystkim to, że jest to~narzędzie
+pliki DICOM. Przy decyzji miało znaczenie przede wszystkim to, że~jest to~narzędzie
 bezpłatne. Ponadto udostępniane przez API serwera funkcjonalności pozwalające na
 zarządzanie i~przeglądanie zapisanych plików były wystarczające dla realizowanego systemu.
 
@@ -662,7 +665,7 @@ wynik półautomatycznego dopasowania obrysu.
 \begin{figure}[tb]
 	\center
 	\includegraphics[width=0.7\textwidth]{architektura2}
-	\caption{Diagram przedstawiający części autorskiego systemu}
+	\caption{Diagram przedstawiający elementy autorskiego systemu}
     	\label{fig:architektura2} % TODO: add image!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 \end{figure}
 
@@ -711,9 +714,9 @@ punkty wybrane przez użytkownika i wyliczone statystyki.
 \subsection {Wymagania funkcjonalne}
 
 Nieodłącznym elementem inżynierii oprogramowania przy tworzeniu dokumentacji
-określonego produktu lub usługi, są wymagania funkcjonalne i~niefunkcjonalne.
-Te pierwsze opisują funkcje i~możliwości, które system powinien realizować, drugie
-natomiast mówią o tym jakiej wydajności, użyteczności i dostępności wymaga się od tworzonego narzędzia.
+określonego produktu lub usługi są wymagania funkcjonalne i~niefunkcjonalne.
+Te pierwsze opisują funkcje i~możliwości, które system powinien realizować, natomiast
+drugie mówią o tym, jakiej wydajności, użyteczności i dostępności wymaga się od tworzonego narzędzia.
 Wymagania funkcjonalne dla tworzonego systemu zostały przygotowane na podstawie
 konsultacji z~lekarzami i studentami ostatniego roku radiologii. Przedstawiono
 je poniżej w~postaci historii użytkownika (ang. user stories), czyli czynności
@@ -859,7 +862,7 @@ interfejs nawigujący po~zapisanych w~serwerze Orthanc plikach DICOM. Ponadto dl
 wyświetlonego obrazu udostępnia szczegóły dotyczące akwizycji obrazu, rodzaju badania i~danych pacjenta.
 Umożliwia także wykonanie obrysu manualnego zrealizowanego przy użyciu biblioteki
 \textit{react-canvas-draw} \cite{React canvas draw}. W~aplikacji zawarto również autorski interfejs do~wyboru punktów
-do algorytmu półautomatycznego, wykonany z~użyciem elementu \textit{canvas} \cite{Canvas}.
+do algorytmu półautomatycznego, wykonany z~użyciem elementu \textbf{canvas} \cite{Canvas}.
 Podgląd zapisanych w~systemie obrysów wraz z~wyliczonymi dla nich statystykami
 jest możliwy z~poziomu tworzenia obrysów oraz w~osobnej zakładce, gdzie udostępniono
 widok, w~którym użytkownik może oglądać jednocześnie wybrane przez siebie obrysy
@@ -1665,7 +1668,7 @@ znaków, w szczególności takie, które nie pozwolą na ustalenie tożsamości 
 \chapter {Przeprowadzone eksperymenty}
 
 %Zostały przeprowadzne eksperymenty na~autorskim narzędziu do~tworzenia obrysów.
-Eksperymenty zostały przeprowadzone przy użyciu zaproponowanego narzędzia 
+Eksperymenty zostały przeprowadzone przy użyciu zaproponowanego narzędzia
 do~tworzenia obrysów pod kątem:
 \begin{itemize}[noitemsep]
 \item działania narzędzia z różnymi typami badań medycznych,
@@ -1688,8 +1691,8 @@ Celsjusza; nie występuje throttling;
 \section {Zbiór testowy}
 
 %Na zbiór plików testowych składają się prywatne badania autora i~jego najbliższej rodziny.
-Zbiór danych testowych składał się z~20 badań, w~tym badania 
-CT~(ang. \textit{computed tomography}~---~tomografia komputerowa), 
+Zbiór danych testowych składał się z~20 badań, w~tym badania
+CT~(ang. \textit{computed tomography}~---~tomografia komputerowa),
 MRI~(ang. \textit{magnetic resonance imaging}~---~obrazowanie metodą rezonansu magnetycznego),
 RTG, MMG. Badania te zostały wykonane na różnych urządzeniach, w~różnych placówkach medycznych.
 
@@ -1739,9 +1742,9 @@ Aplikacja obsługuje wszystkie przebadane typy badań, czyli CT, MRI, RTG, MMG.
 Nie wykonano testów na innych typach badań takich jak cyfrowej angiografii subtrakcyjnej
 i~wielu innych. Aplikacja powinna obsługiwać inne typy badań, ponieważ wspiera pliki DICOM.
 
-W celu zaprezentowania funkcjonalności autorskiej aplikacji, na Rysunku \ref{fig:113} 
-przedstawiono w~jaki sposób autorska aplikacja ukazuje 
-użytkownikowi badanie RTG. 
+W celu zaprezentowania funkcjonalności autorskiej aplikacji, na Rysunku \ref{fig:113}
+przedstawiono w~jaki sposób autorska aplikacja ukazuje
+użytkownikowi badanie RTG.
 
 \begin{figure}[h!]
 	\center
@@ -1750,8 +1753,8 @@ użytkownikowi badanie RTG.
     	\label{fig:113}
 \end{figure}
 
-Na Rysunku \ref{fig:140} przedstawiono inne badanie, MRI. Dodatkowo przedstawiono, 
-że~aplikacja umożliwia zmianę wyświetlanej warstwy. Użytkownik ma~możliwość wybrania 
+Na Rysunku \ref{fig:140} przedstawiono inne badanie, MRI. Dodatkowo przedstawiono,
+że~aplikacja umożliwia zmianę wyświetlanej warstwy. Użytkownik ma~możliwość wybrania
 odpowiedniej warstwy z~listy, bądź wybranie następnej lub poprzedniej warstwy przez użycie
 rolki myszy. Ta~funkcjonalność zadziała, gdy kursor myszy znajduje się nad obrazem.
 Użytkownik ma także możliwość zmiany serii badania poprzez wybranie jej z~odpowiedniej listy.
@@ -1784,7 +1787,7 @@ Dzięki zastosowaniu serwera Orthanc powinny być obsługiwane wszystkie pliki D
 
 Aplikacja pozwala na~wykonanie obrysu na~wyświetlanym obrazie. Może to~być zarówno obrys
 manualny jak i~półautomatyczny. Na Rysunku \ref{fig:105} przedstawiono przykładowy obrys manualny
-wykonany na~badaniu MRI barku. Po~lewej stronie jest przedstawiony obrys, a~po~prawej 
+wykonany na~badaniu MRI barku. Po~lewej stronie jest przedstawiony obrys, a~po~prawej
 stronie są~przedstawione statystyki ROI, czyli regionu zainteresowania, w~tym przypadku obszaru
 wewnątrz obrysu.
 
@@ -1858,8 +1861,8 @@ jego tworzenia. Przebieg tego testu przedstawiono na~Rysunku \ref{fig:146}.
 		d
 	\end{center}
 	\endminipage\hfill
-	\caption{Przykład edycji obrysu półautomatycznego. Początkowo wybrano pięć punktów 
-	(a)~i~wygenerowano obrys (b). Następnie usunięto jeden z~punktów i~dodano dwa kolejne (c). 
+	\caption{Przykład edycji obrysu półautomatycznego. Początkowo wybrano pięć punktów
+	(a)~i~wygenerowano obrys (b). Następnie usunięto jeden z~punktów i~dodano dwa kolejne (c).
 	Wygenerowany w~ten sposób obrys półautomatyczny (d).}
 	\label{fig:146}
 \end{center}
@@ -1894,7 +1897,7 @@ punktów do~obrysu.
 
 Dla każdej liczby wierzchołków przeprowadzano 10~kolejnych pomiarów generowania
 tego samego obrysu. Pozwoliło to~na~wyznaczenie średniego czasu generowania obrysu,
-niezależnie od~chwilowego wykorzystania procesora. Średni czas był obliczany przez narzędzia 
+niezależnie od~chwilowego wykorzystania procesora. Średni czas był obliczany przez narzędzia
 programistyczne badając działanie serwera w trybie debugowania. Realizowano to~przez
 analizę czasu potrzebny na wygenerowanie odpowiedzi przez serwer.
 
@@ -1949,7 +1952,7 @@ opisane w~podrozdziale 4.4.
 \begin{figure}[h!]
 	\center
 	\includegraphics[width=0.85\textwidth]{150}
-	\caption{Czasy generowania obrysu półautomatycznego barku w~zależności od~ilości punktów 
+	\caption{Czasy generowania obrysu półautomatycznego barku w~zależności od~ilości punktów
 	w~celu analizy zależności od algorytmu A*}
     	\label{fig:testy_3}
 \end{figure}
@@ -1961,7 +1964,7 @@ algorytmu A* poprzez zmianę liczby punktów na~czas obliczeń.
 
 Uzyskane wyniki są bardzo podobne do~poprzednich, choć bez wyraźnych skoków.
 Czas potrzebny na~wygenerowanie obrysu nie spadł tak bardzo jak w~drugim teście,
-ale spadek był zauważalny, z~ok. 4.7s~do~3.7s. 
+ale spadek był zauważalny, z~ok. 4.7s~do~3.7s.
 
 Wraz ze~zwiększeniem się przestrzeni roboczej obrazu rośnie czas potrzebny na
 wygenerowanie obrysu. Na~podstawie wykresów zależności czasu od~liczby punktów
@@ -1987,7 +1990,7 @@ pewnej liczby pikseli, która odpowiednio się zwiększa. Dla mammogramów, któ
 blisko 20 megapikseli, obrys był generowany nawet kilkadziesiąt sekund. Dla większości obrysów
 czasy obliczeń nie przekraczały zakładanych 30~sekund w~wymaganiach niefunkcjonalnych.
 
-Ponadto warto podkreślić, że~wraz 
+Ponadto warto podkreślić, że~wraz
 ze~zwiększaniem liczby punktów zmniejszał się czas potrzebny na~wygenerowanie
 obrysu półautomatycznego. Powodowały to~dwa oddzielne zjawiska. Pierwsze z~nich, to
 maksymalna odległość pomiędzy kolejnymi dwoma punktami wybranymi przez użytkownika.
@@ -2014,10 +2017,10 @@ przypadku małych obrysów, dominującą częścią obliczeń były operacje na~
 obrazie. Ponadto czasy obliczeń zawierają narzut czasowy wywołany przez
 przetwarzanie zapytań.
 
-W~przypadku zdjęć o wysokiej rozdzielczości, takich jak mammogramy lub badania 
+W~przypadku zdjęć o wysokiej rozdzielczości, takich jak mammogramy lub badania
 rentgenowskie, autorskie narzędzie do~generowania obrysów półautomatycznych
 będzie stosunkowo długo wykonywało obliczenia, rzędu kilkunastu do~kilkudziesięciu
-sekund. Można uznać to za wadę. Rozwiązaniem dla tego problemu może być 
+sekund. Można uznać to za wadę. Rozwiązaniem dla tego problemu może być
 preprocessing, czyli zawężenie ROI --- regionów zainteresowania na~tych plikach
 w~taki sposób, aby algorytm nie przetwarzał zbyt dużej liczby pikseli.
 Ponadto generowanie obrysów
@@ -2062,7 +2065,8 @@ W związku z~tym, większość obrazów wyświetlona jest w~rozmiarze różnym o
 faktycznego rozmiaru obrazu. Rozważano dwie możliwości rozdzielczości wykonywanych
 obrysów: realne wymiary obrazu oraz rozmiary obrazu wyświetlanego na~ekranie.
 Zdecydowano, że obrysy powinny być zapisywane w~wymiarach identycznych realnym
-rozmiarom obrazu. Decyzja została uzasadniona potrzebą zapewnienia poprawnego
+rozmiarom obrazu. Decyzja została uzasadniona potrzebą zapewnienia dokładnego obrysu struktur i w konsekwencji poprawnego
+rozmiarom obrazu. Decyzja została uzasadniona potrzebą zapewnienia dokładnego obrysu struktur i w konsekwencji poprawnego
 obliczania statystyk. Zapisywanie obrysów w~takich wymiarach ułatwia obliczanie
 liczby pikseli wewnątrz obrysu.
 
@@ -2080,11 +2084,10 @@ stworzonego w~ramach tej pracy. Funkcjonalności te opisano szczegółowo poniż
 W obecnej wersji systemu nie zaimplementowano deskryptorów kształtu obrysu.
 Zaimplementowanie takich deskryptorów mogłoby dostarczyć dodatkowych informacji
 na temat wykonanych przez użytkownika obrysów. Taka informacja może w~przyszłości
-dostarczyć dodatkową zmienną, którą można by~wykorzystywać w~celu trenowania
-sztucznej inteligencji w~zautomatyzowanym wykrywaniu organów, jak również wykrywaniu
-i sugerowaniu niepokojących zmian.
+dostarczyć dodatkową zmienną, którą można by~wykorzystać w metodach sztucznej
+inteligencji w celu detekcji narządów, tkanek, jak również wykrywaniu potencjalnych zmian patologicznych.
 
-W tej wersji w~systemie użytkownicy nie są rozróżnialni. Dodanie użytkowników
+W zaproponowanej obecnie wersji użytkownicy nie są rozróżnialni. Dodanie użytkowników
 pozwoliłoby na~segregowanie tworzonych obrysów i~wyświetlanie użytkownikowi
 obrysów wykonanych jedynie przez niego samego, a~nie wszystkich obrysów istniejących
 w systemie. Z~punktu widzenia użyteczności systemu użytkownik nie musiałby szukać
@@ -2104,12 +2107,12 @@ użytkownik chciałby takie informacje zapisać musiałby samodzielnie przepisa�
 wyświetlane w~widoku szczegółów obrysu. Zautomatyzowanie takiej funkcjonalności
 mogłoby zaoszczędzić użytkownikowi wiele czasu.
 
-Głównym celem wykonywania obrysów na~obrazach medycznym jest generowanie zbioru
-testowego dla różnych metod sztucznej inteligencji mających na~celu sugerowanie
-lekarzom niepokojących zmian wykrytych automatycznie. W~związku z~tym użytecznym
-rozszerzeniem funkcjonalności systemu byłoby zintegrowanie go~z~modułem sztucznej
-inteligencji i~umożliwienie obrysowywania wgrywanych obrazów metodami sztucznej
-inteligencji opartych na~obrysach wykonanych przez użytkownika.
+Głównym celem wykonywania obrysów na~obrazach medycznych jest generowanie zbioru
+testowego, zawierającego różnorodne cechy obrazowe i~wykorzystywane w~różnych
+metodach sztucznej inteligencji, wspierających lekarzy poprzez automatyzaczną
+detekcję np.~zmian podejrzanych. W~przypadku zgromadzenia bardzo dużej bazy danych
+obrysów różnych zmian, struktur anatomicznych na~obrazach różnych modalności można~by
+spróbować stworzyć moduł sztucznej inteligencji rozpoznający zawarte w~bazie danych zmiany lub struktury.
 
 %\chapter*{}
 %\markboth{}{}
@@ -2134,10 +2137,11 @@ inteligencji opartych na~obrysach wykonanych przez użytkownika.
 \bibitem{C w pigulce} Albahari J., Albahari B. "C~6.0 w~pigułce", \emph{Helion, O'Reilly Media, Inc.}, Gliwice,  2016
 \bibitem{React canvas draw} Beierling-Mutz M. React Canvas Draw. Oficjalne repozytorium: https://github.com/embiem/react-canvas-draw [Dostęp 1~kwietnia 2019]
 \bibitem{Bresenham} Bresenham J. E. "Algorithm for computer control of~a~digital plotter." \emph{ICM System Journal 4(1)} 1965
-\bibitem{AiSD2} Bródka J. Wykłady z~przedmiotu Algorytmy i~Struktury Danych 2~\emph{Politechnika Warszawska, Wydział Matematyki i~Nauk Informacyjnych} Materiały dostepne na~stronie: http://mini.pw.edu.pl/~brodka/ASD2.html [Dostęp 1~kwietnia 2019]
+\bibitem{AiSD2} Bródka J. Wykłady z~przedmiotu Algorytmy i~Struktury Danych 2~\emph{Politechnika Warszawska, Wydział Matematyki i~Nauk Informacyjnych} Materiały dostepne na~stronie: http://mini.pw.edu.pl/\~brodka/ASD2.html [Dostęp 1~kwietnia 2019]
 \bibitem{Canny} Canny J. F. "Finding Edges and Lines in~Images." \emph{Technical report no. 720, Massachusetts Institute of~Technology (MIT)}, Cambridge, Massachusetts, USA, 1983
 \bibitem{Cyfrowe przetwarzanie obrazów medycznych} Cytowski J., Gielecki J., Gola A. "Cyfrowe przetwarzanie obrazów medycznych: Algorytmy. Technologie. Zastosowania." \emph{Akademicka Oficyna Wydawnicza EXIT}, Warszawa, 2008
 \bibitem{React} Facebook Inc.: Informacje o~bibliotece ReactJS. Oficjalna strona: https://reactjs.org/ [Dostęp 1~kwietnia 2019]
+\bibitem{ImageJ} ImageJ: Oficjalna strona: https://imagej.nih.gov/ij/index.html [Dostęp 10~kwietnia 2019]
 \bibitem{SonicDICOM} JIUN Corporation: Oficjana strona: https://sonicdicom.com/ [Dostęp 24~marca 2019]
 \bibitem{SonicDICOM} JIUN Corporation: Przykład użycia intefejsu podglądu badań w systemie SonicDICOM: https://sonicdicom.com/screens/viewer-of-dicom-viewer/ [Dostęp 24~marca 2019]
 \bibitem{SonicDICOM API} JIUN Corporation: Instrukcja korzystania z~REST API SonicDICOM. Oficialna strona: https://docs.sonicdicom.com/install-manual/integration.html [Dostęp 24 marca 2019]
@@ -2333,7 +2337,7 @@ odnośnie konfiguracji należy zapoznać się z~dokumentacją znajdującą się 
 \url{http://book.orthanc-server.com/users/cookbook.html}
 
 W celu instalacji serwera obrysów i~aplikacji webowej należy skopiować pliki
-znajdujące się na~płycie w~folderach Web oraz DotNetProject na~stację,
+znajdujące się na~płycie w~folderach \texttt{Web} oraz \texttt{DotNetProject} na~stację,
 na której aplikacje te~zostaną uruchomione.
 
 Do działania serwera obrysów wymagany jest .NET Core w~wersji 2.2 lub nowszej.
@@ -2341,34 +2345,34 @@ W celu instalacji .NET Core należy otworzyć stronę \url{https://dotnet.micros
 pobrać wersję odpowiednią dla używanego systemu operacyjnego, a~następnie
 postępować zgodnie z~informacjami wyświetlanymi w~trakcie instalacji.
 
-W celu konfiguracji serwera w~pliku DotNetProject/Api/Properties/launchSettings.json
+W celu konfiguracji serwera w~pliku \texttt{DotNetProject/Api/Properties/launchSettings.json}
 należy wpisać jako wartość~24~linii adres i~port, na~którym serwer ma~zostać
-udostępniony, jako wartość pola applicationUrl. Przykładowa poprawna wartość
+udostępniony, jako wartość pola \texttt{applicationUrl}. Przykładowa poprawna wartość
 linii 24~to\texttt{ "applicationUrl": "https://localhost:5001",}.
 
-Ponadto w~pliku DotNetProject/Api/Startup.cs należy podać w~linii 33~link pod
-którym dostępna jest aplikacja przeglądarkowa jako argument metody WithOrigins.
+Ponadto w~pliku \texttt{DotNetProject/Api/Startup.cs} należy podać w~linii 33~link, pod
+którym dostępna jest aplikacja przeglądarkowa jako argument metody \texttt{WithOrigins}.
 Przykładowa poprawna wartość linii 24~to
 \texttt{builder => builder.WithOrigins("http://localhost:8080", "http://localhost:3000")}.
 
 W celu uruchomienia serwera obrysów należy przejść do~skopiowanego folderu
-DotNetProject/API i~wykonać w~konsoli polecenie \texttt{\$ dotnet build \&\& dotnet run}.
+\texttt{DotNetProject/API} i~wykonać w~konsoli polecenie \texttt{\$ dotnet build \&\& dotnet run}.
 
-Do działania aplikacji przeglądarkowej wymagany jest Node w~wersji co~najmniej
-9.4 oraz yarn w~wersji co~najmniej 1.10.1, aby zainstalować Node.js należy udać
+Do działania aplikacji przeglądarkowej wymagany jest Node.JS w~wersji co~najmniej
+9.4 oraz \textit{yarn} w~wersji co~najmniej 1.10.1, aby zainstalować Node.JS należy udać
 się na~stronę \url{https://nodejs.org/en/download/} i~wybrać wersję odpowiadającą
 systemowi, z~którego korzystamy. Postępować zgodnie ze~wskazówkami instalatora.
-W celu instalacji yarn należy udać się na~stronę https://yarnpkg.com/en/docs/install
+W celu instalacji \textit{yarn} należy udać się na~stronę url{https://yarnpkg.com/en/docs/install},
 aby pobrać wersję odpowiadającą systemowi, na~którym będzie uruchamiana aplikacja
 i uruchomić instalator.
 
 W celu konfiguracji portu, na~który będzie wystawiona aplikacja webowa należy
-ustawić odpowiednią liczbę w~4~linii pliku Web/express.js. Przykładowa poprawna
+ustawić odpowiednią liczbę w~4~linii pliku \texttt{Web/express.js}. Przykładowa poprawna
 konfiguracja:\\
 \texttt{\$ const portNumber = 3000;}
 
 Ponadto w~celu konfiguracji aplikacji należy ustawić adresy do~API serwera obrysów
-i~serwera Orthanc w~pliku Web/src/helpers/requestHelper.ts poprzez zmianę zawartośc
+i~serwera Orthanc w~pliku \texttt{Web/src/helpers/requestHelper.ts} poprzez zmianę zawartośc
 cudzysłowów w~pierwszych dwóch linijkach pliku. 	Przykładowa poprawna konfiguracja:\\
 \texttt{export const orthancURL = "http://localhost:8042/";}\\
 \texttt{export const apiURL = "https://localhost:5001/";}
@@ -2422,9 +2426,9 @@ do widoku badań, klikając w~strzałkę na~liście z~seriami --- Rysunek \ref{f
 \end{figure}
 
 Po wyborze serii na~ekranie pojawia się pierwszy obraz z~serii. Użytkownik
-może przełączać się pomiędzy obrazami korzystając z~listy obrazów po~lewej
+może przełączać się pomiędzy obrazami, korzystając z~listy obrazów po~lewej
 stronie lub używając rolki myszy po~najechaniu na~obraz. Aby powrócić do~wyboru
-serii należy kliknąć lewym przyciskiem myszy na~strzałkę na~liście instancji
+serii, należy kliknąć lewym przyciskiem myszy na~strzałkę na~liście instancji
 (instances) --- Rysunek \ref{fig:4}.
 
 \pagebreak
@@ -2474,7 +2478,7 @@ obrys --- Rysunek \ref{fig:7}.
 \end{figure}
 
 Następną czynnością, którą musi wykonać użytkownik przed zapisaniem to~wybranie
-punktu wewnątrz wykonanego obrysu, poprzez wciśnięcie lewego przycisku myszy w
+punktu wewnątrz wykonanego obrysu poprzez wciśnięcie lewego przycisku myszy w
 odpowiednim miejscu na~obrazie --- Rysunek \ref{fig:8}.
 
 \pagebreak
@@ -2511,7 +2515,7 @@ Rysunek \ref{fig:10}. Widok jest bardzo podobny do widoku obrysów manualnych.
     	\label{fig:10}
 \end{figure}
 
-Aby wybrać punkty do~obrysu półautomatycznego użytkownik powinien klikać w
+W celu wybrania punktów do~obrysu półautomatycznego użytkownik powinien klikać w
 interesujące go~punkty lewym przyciskiem myszy. Jeśli korzysta z~tabletu
 graficznego, powinien przycisnąć rysik do~tabletu w~interesujących go~punktach.
 Punkty wprowadzane powinny być w~kolejności, w~której występują w~obrysie,
