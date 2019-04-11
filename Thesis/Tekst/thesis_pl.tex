@@ -234,7 +234,7 @@
 %\end{center}
 Niniejszy dokument prezentuje pracę dyplomową inżynierską pod tytułem "\tytul".
 Celem realizowanym przez autorów pracy było stworzenie narzędzia do~manualnego
-i~półautomatycznego obrysowywania struktur anatomicznych, zmian patologicznych
+i~półautomatycznego obrysowywania struktur anatomicznych oraz zmian patologicznych
 na~obrazach medycznych.
 Narzędzie może być wykorzystywane zarówno przez lekarzy w celach diagniostycznych, jak i~inżynierów
 biomedycznych w celach naukowych.
@@ -262,16 +262,26 @@ opisujących obrysowane regiony zainteresowania w obrazach.
 \selectlanguage{english}
 \begin{abstract}
 
-%Nie przetłumaczyłem
+The following document describes bachelor's thesis on~"\title". The goal of~authors'
+is~to~create a~digital tool that allows to~manually draw and semi-automatically generate
+contours of anatomical structures and lesions on~medical images.
+Tool can be used by medical doctors with diagnostic purposes and by medical engineers
+with scientific purposes. The topics discussed include: discussion
+of~DICOM standard, analysis of~state-of-the-art systems and tools used to~viewing
+and creating contours on~DICOM medical images, system's architecture and experiments
+conducted simultaneously with the creation of~the tool.
 
-Do nowego przetłumaczenia.
+The architecture used enables simultaneous use of~the tool by~many users.
+Manual contour module had mainly been implemented in part connected with user interface.
+Semi-automatic module is based on the algorithm developed for the~purpose of~generating contours, that uses Canny's
+Operator and the algorithm of~searching the shortest path in~the graph.
+Additionally statistics module was added which allows to calculate basic statistical measurements,
+describing contoured regions of interest in the images.
 
-%The following document describes bachelor's thesis on~"\title". The goal of~authors' is~to~create a~digital tool that allows to~manually draw and semi-automatically generate contours on~medical images. The topics discussed include: discussion of~DICOM standard, analysis of~state-of-the-art systems and tools used to~viewing and creating contours on~DICOM medical images, system's architectue and experiments conducted simultaneously with the creation of~the tool.
-
-%The architecture used enables simultaneous use of~the tool by~many users. The algorithm developed for te~purpose of~generating contourse uses Canny's Operator and the algorithm of~searching the shortest path in~the graph. The statistics calculated by~the system regarding the areas limited by~contourcan be~used in~future as~input parameters for methods of~automatic detection of~similar structures for which contours have been made.
-%\\
-%\\
-\noindent \textbf{Keywords:} user interface, graphics tablet, medical images, DICOM, contour, statistics of~image data, IT~system, REST API interface, edge detection, contour generation
+\\
+\\
+\noindent \textbf{Keywords:} user interface, graphics tablet, medical images, DICOM,
+contour, statistics of~image data, IT~system, REST~API interface, edge detection, contour generation
 \end{abstract}
 }
 
@@ -1695,8 +1705,8 @@ Celsjusza; nie występuje throttling;
 Zbiór danych testowych składał się z~20 badań, w~tym badania
 CT~(ang. \textit{computed tomography}~---~tomografia komputerowa),
 MRI~(ang. \textit{magnetic resonance imaging}~---~obrazowanie metodą rezonansu magnetycznego),
-RTG~(ang. \textit{radiograph}~---~rentgenogram) oraz 
-MMG~(ang. \textit{mammogram}~---~mammogram). 
+RTG~(ang. \textit{radiograph}~---~rentgenogram) oraz
+MMG~(ang. \textit{mammogram}~---~mammogram).
 Badania te zostały wykonane na różnych urządzeniach, w~różnych placówkach medycznych.
 
 Badania tomografią komputerową zazwyczaj składają się z~jednej serii. Ta seria zazwyczaj zawiera od~kilkudziesięciu
@@ -1788,11 +1798,11 @@ Dzięki zastosowaniu serwera Orthanc powinny być obsługiwane wszystkie pliki D
 
 Aplikacja pozwala na~wykonanie obrysu na~wyświetlanym obrazie. Może to~być zarówno obrys
 manualny, jak i~półautomatyczny. Na Rysunku \ref{fig:105} przedstawiono przykładowy obrys manualny
-wykonany na~badaniu MRI barku. Po~lewej stronie jest przedstawiony obrys, a~po~prawej 
-stronie są~przedstawione statystyki ROI, czyli regionu zainteresowania, w~tym przypadku 
+wykonany na~badaniu MRI barku. Po~lewej stronie jest przedstawiony obrys, a~po~prawej
+stronie są~przedstawione statystyki ROI, czyli regionu zainteresowania, w~tym przypadku
 została obrysowana głowa kości ramienna z gojącym się złamaniem Hilla-Sachsa. Taki obrys może pomóc w~ocenie
 stopnia złamania i późniejszej stabilności stawu, poprzez porównanie pola powierzchni kości po złamaniu
-względem referencyjnego badania. To złamanie można dostrzeć jako wgłębienie w lewej części obrysu. 
+względem referencyjnego badania. To złamanie można dostrzeć jako wgłębienie w lewej części obrysu.
 
 Na tym badaniu jest przedstawiony bark prawy i~dokonano obrysu kości ramiennej. W~statystykach można
 znaleźć takie informacje jak obwód, pole powierzchni ROI, jego środek na obrazie. Dodatkowo jest zawarty
@@ -1836,7 +1846,7 @@ a~statystyki po~prawej.
 \pagebreak
 
 W ramach analizy działania aplikacji wykonano testy edycji obrysu półautomatycznego w~trakcie
-jego tworzenia. Przebieg tych testów przedstawiono na~Rysunku \ref{fig:146} dla MRI, 
+jego tworzenia. Przebieg tych testów przedstawiono na~Rysunku \ref{fig:146} dla MRI,
 Rysunku~\ref{fig:174} dla CT, Rysunku~\ref{fig:170} dla MMG oraz Rysunku~\ref{fig:179} dla RTG.
 
 \begin{figure}[h!]
@@ -1865,8 +1875,8 @@ Rysunku~\ref{fig:174} dla CT, Rysunku~\ref{fig:170} dla MMG oraz Rysunku~\ref{fi
 		d
 	\end{center}
 	\endminipage\hfill
-	\caption{Przykład edycji obrysu półautomatycznego dla MRI. Początkowo wybrano pięć punktów 
-	(a)~i~wygenerowano obrys (b). Następnie usunięto jeden z~punktów i~dodano dwa kolejne (c). 
+	\caption{Przykład edycji obrysu półautomatycznego dla MRI. Początkowo wybrano pięć punktów
+	(a)~i~wygenerowano obrys (b). Następnie usunięto jeden z~punktów i~dodano dwa kolejne (c).
 	Wygenerowany w~ten sposób obrys półautomatyczny (d)}
 	\label{fig:146}
 \end{center}
@@ -1905,8 +1915,8 @@ Rysunku~\ref{fig:174} dla CT, Rysunku~\ref{fig:170} dla MMG oraz Rysunku~\ref{fi
 	\end{center}
 	\endminipage\hfill
 	\caption{Przykład edycji obrysu półautomatycznego dla CT. Był obrysowywany krąg kręgosłupa (a).
-	Początkowo wybrano dwanaście punktów 
-	(b)~i~wygenerowano obrys (c). Następnie dodano dwa kolejne punkty (d). 
+	Początkowo wybrano dwanaście punktów
+	(b)~i~wygenerowano obrys (c). Następnie dodano dwa kolejne punkty (d).
 	Wygenerowany w~ten sposób obrys półautomatyczny (e)}
 	\label{fig:174}
 \end{center}
@@ -1932,7 +1942,7 @@ Rysunku~\ref{fig:174} dla CT, Rysunku~\ref{fig:170} dla MMG oraz Rysunku~\ref{fi
 		c
 	\end{center}
 	\endminipage\hfill
-	\caption{Przykład tworzenia obrysu półautomatycznego dla MMG. Na początkowym obrazie (a) dodano pięć punktów (b), 
+	\caption{Przykład tworzenia obrysu półautomatycznego dla MMG. Na początkowym obrazie (a) dodano pięć punktów (b),
 	a~następnie wygenerowano obrys (c)}
 	\label{fig:170}
 \end{center}
@@ -1970,11 +1980,11 @@ Rysunku~\ref{fig:174} dla CT, Rysunku~\ref{fig:170} dla MMG oraz Rysunku~\ref{fi
 		e
 	\end{center}
 	\endminipage\hfill
-	\caption{Przykład edycji obrysu półautomatycznego dla RTG. Obraz przedstawia zwichnięty staw 
+	\caption{Przykład edycji obrysu półautomatycznego dla RTG. Obraz przedstawia zwichnięty staw
 	ramienny ze~złamaniem Hilla-Sachsa (a). Złamanie to można dostrzec jako ciemniejszą przestrzeń
 	na wskutek wgniecenia kości ramiennej przez krawędź panewki łopatki i wyrostka kruczego łopatki.
-	Początkowo wybrano sześć punktów 
-	(b)~i~wygenerowano obrys (c). Następnie dodano kolejny punkt (d). 
+	Początkowo wybrano sześć punktów
+	(b)~i~wygenerowano obrys (c). Następnie dodano kolejny punkt (d).
 	Wygenerowany w~ten sposób obrys półautomatyczny (e)}
 	\label{fig:179}
 \end{center}
@@ -2131,10 +2141,10 @@ przypadku małych obrysów, dominującą częścią obliczeń były operacje na~
 obrazie. Ponadto czasy obliczeń zawierają narzut czasowy wywołany przez
 przetwarzanie zapytań.
 
-W~przypadku obrazów o wysokiej rozdzielczości, takich jak mammogramy lub badania 
+W~przypadku obrazów o wysokiej rozdzielczości, takich jak mammogramy lub badania
 rentgenowskie, autorskie narzędzie do~generowania obrysów półautomatycznych
 będzie stosunkowo długo wykonywało obliczenia, rzędu kilkunastu do~kilkudziesięciu
-sekund. Można uznać to za wadę. Natomiast rozwiązaniem dla tego problemu może być 
+sekund. Można uznać to za wadę. Natomiast rozwiązaniem dla tego problemu może być
 wstępne przetwarzanie, czyli wybieranie regionów zainteresowania (ROI)
 z~obrazów
 w~taki sposób, aby algorytm nie przetwarzał zbyt dużej zbędnej liczby pikseli.
