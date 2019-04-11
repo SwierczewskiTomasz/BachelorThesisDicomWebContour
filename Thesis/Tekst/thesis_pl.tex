@@ -235,11 +235,12 @@
 Niniejszy dokument prezentuje pracę dyplomową inżynierską pod tytułem "\tytul".
 Celem realizowanym przez autorów pracy było stworzenie narzędzia do~manualnego
 i~półautomatycznego obrysowywania struktur anatomicznych, zmian patologicznych
-na~obrazach medycznych, wykorzystywanego zarówno przez lekarzy, jak i~inżynierów
-biomedycznych.
-Zakres pracy obejmuje omówienie: standardu DICOM, przegląd aplikacji dostępnych
+na~obrazach medycznych.
+Narzędzie może być wykorzystywane zarówno przez lekarzy w celach diagniostycznych, jak i~inżynierów
+biomedycznych w celach naukowych.
+Zakres pracy obejmuje omówienie standardu DICOM, przegląd aplikacji dostępnych
 na rynku, pozwalających na~przeglądanie i~wykonywanie obrysów na~obrazach
-medycznych DICOM, architektury tworzonego systemu i~eksperymentów przeprowadzonych
+medycznych DICOM, architektury zaproponowanego systemu i~eksperymentów przeprowadzonych
 w trakcie tworzenia zaproponowanego narzędzia.
 
 Zastosowana architektura umożliwia jednoczesne korzystanie z~narzędzia przez
@@ -248,7 +249,7 @@ w~warstwie ściśle związanej z~interfejscem użytkownika. Moduł obrysów pó�
 bazuje na~algorytmie opracowanym na~potrzeby generowania obrysów, który wykorzystuje
 operator Canny'ego oraz algorytm wyszukiwania najkrótszych ścieżek w~grafie.
 Dodatkowo dodany moduł statystyczny umożliwia wyznaczenie podstawowych miar statystycznych,
-opisujących obrysowane fragmenty obrazów.
+opisujących obrysowane regiony zainteresowania w obrazach.
 \\
 \\
 \noindent \textbf{Słowa kluczowe:} interfejs użytkownika, tablet graficzny, obrazy medyczne, DICOM, obrys, statystyki danych obrazowych, system informatyczny, interfejs REST API, wykrywanie krawędzi, generowanie obrysów
@@ -263,7 +264,7 @@ opisujących obrysowane fragmenty obrazów.
 
 %Nie przetłumaczyłem
 
-Do nowego przetłumaczenia - Tomek.
+Do nowego przetłumaczenia.
 
 %The following document describes bachelor's thesis on~"\title". The goal of~authors' is~to~create a~digital tool that allows to~manually draw and semi-automatically generate contours on~medical images. The topics discussed include: discussion of~DICOM standard, analysis of~state-of-the-art systems and tools used to~viewing and creating contours on~DICOM medical images, system's architectue and experiments conducted simultaneously with the creation of~the tool.
 
@@ -669,7 +670,7 @@ wynik półautomatycznego dopasowania obrysu.
     	\label{fig:architektura2} % TODO: add image!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 \end{figure}
 
-\afterpage{\blankpage}
+%\afterpage{\blankpage}
 
 \chapter {Opis autorskiego narzędzia informatycznego}
 
@@ -1594,7 +1595,7 @@ te wykonywały się znacznie szybciej.
 W sytuacji, gdy wczytane krawędzie do~grafu są bardzo długie, może zdarzyć się
 taka sytuacja, że punkt zaznaczony przez użytkownika znajduje się bardzo blisko
 krawędzi, ale daleko od~punktu początkowego lub końcowego krawędzi. W~tym celu
-jest wprowadzony mechanizm dzielenia zbyt długich krawędzi na~kilka krótszych.
+jest wprowadzony mechanizm dzielenia zbyt długich krawędzi na~kilka krótszych. \\
 \item Problem z~liczbą punktów \\
 Dla każdego punktu jest uruchamiany algorytm A*, zatem w~sposób liniowy od~ilości
 punktów zależy liczba uruchomień algorytmu A*. Nie można wyznaczyć, czy w~złożoności
