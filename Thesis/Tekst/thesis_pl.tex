@@ -1691,7 +1691,9 @@ Celsjusza; nie występuje throttling;
 Zbiór danych testowych składał się z~20 badań, w~tym badania 
 CT~(ang. \textit{computed tomography}~---~tomografia komputerowa), 
 MRI~(ang. \textit{magnetic resonance imaging}~---~obrazowanie metodą rezonansu magnetycznego),
-RTG oraz MMG. Badania te zostały wykonane na różnych urządzeniach, w~różnych placówkach medycznych.
+RTG~(ang. \textit{radiograph}~---~rentgenogram) oraz 
+MMG~(ang. \textit{mammogram}~---~mammogram). 
+Badania te zostały wykonane na różnych urządzeniach, w~różnych placówkach medycznych.
 
 Badania tomografią komputerową zazwyczaj składają się z~jednej serii. Ta seria zazwyczaj zawiera od~kilkudziesięciu
 do~kilkuset kolejnych wartw, które są obrazami. Dla większości badań rozdzielczość takiego obrazu wynosiła 512x512 pikseli.
@@ -1745,7 +1747,7 @@ użytkownikowi badanie RTG.
 
 \begin{figure}[h!]
 	\center
-	\includegraphics[width=0.6\textwidth]{113}
+	\includegraphics[width=0.55\textwidth]{113}
 	\caption{Widok badania RTG barku}
     	\label{fig:113}
 \end{figure}
@@ -1762,15 +1764,15 @@ Użytkownik ma także możliwość zmiany serii badania poprzez wybranie jej z~o
 \begin{center}
 	\minipage{0.48\textwidth}
 	\begin{center}
-		\includegraphics[width=1.0\textwidth]{141}
+		\includegraphics[width=1.0\textwidth]{185}
 	\end{center}
 	\endminipage\hfill
 	\minipage{0.48\textwidth}
 	\begin{center}
-		\includegraphics[width=1.0\textwidth]{140}
+		\includegraphics[width=1.0\textwidth]{184}
 	\end{center}
 	\endminipage\hfill
-	\caption{Dwie kolejne warstwy badania MRI}
+	\caption{Widok badania MRI - warstwa 5 z 20 oraz 10 z 20}
 	\label{fig:140}
 \end{center}
 \end{figure}
@@ -1829,8 +1831,9 @@ a~statystyki po~prawej.
 
 \pagebreak
 
-W ramach analizy działania aplikacji wykonano test edycji obrysu półautomatycznego w~trakcie
-jego tworzenia. Przebieg tego testu przedstawiono na~Rysunku \ref{fig:146}.
+W ramach analizy działania aplikacji wykonano testy edycji obrysu półautomatycznego w~trakcie
+jego tworzenia. Przebieg tych testów przedstawiono na~Rysunku \ref{fig:146} dla MRI, 
+Rysunku~\ref{fig:174} dla CT, Rysunku~\ref{fig:170} dla MMG oraz Rysunku~\ref{fig:179} dla RTG.
 
 \begin{figure}[h!]
 \begin{center}
@@ -1858,10 +1861,118 @@ jego tworzenia. Przebieg tego testu przedstawiono na~Rysunku \ref{fig:146}.
 		d
 	\end{center}
 	\endminipage\hfill
-	\caption{Przykład edycji obrysu półautomatycznego. Początkowo wybrano pięć punktów 
+	\caption{Przykład edycji obrysu półautomatycznego dla MRI. Początkowo wybrano pięć punktów 
 	(a)~i~wygenerowano obrys (b). Następnie usunięto jeden z~punktów i~dodano dwa kolejne (c). 
-	Wygenerowany w~ten sposób obrys półautomatyczny (d).}
+	Wygenerowany w~ten sposób obrys półautomatyczny (d)}
 	\label{fig:146}
+\end{center}
+\end{figure}
+
+\begin{figure}[h!]
+\begin{center}
+	\minipage{0.19\textwidth}
+	\begin{center}
+		\includegraphics[width=1.0\textwidth]{174}
+		a
+	\end{center}
+	\endminipage\hfill
+	\minipage{0.19\textwidth}
+	\begin{center}
+		\includegraphics[width=1.0\textwidth]{175}
+		b
+	\end{center}
+	\endminipage\hfill
+	\minipage{0.19\textwidth}
+	\begin{center}
+		\includegraphics[width=1.0\textwidth]{176}
+		c
+	\end{center}
+	\endminipage\hfill
+	\minipage{0.19\textwidth}
+	\begin{center}
+		\includegraphics[width=1.0\textwidth]{177}
+		d
+	\end{center}
+	\endminipage\hfill
+	\minipage{0.19\textwidth}
+	\begin{center}
+		\includegraphics[width=1.0\textwidth]{178}
+		e
+	\end{center}
+	\endminipage\hfill
+	\caption{Przykład edycji obrysu półautomatycznego dla CT. Był obrysowywany krąg kręgosłupa (a).
+	Początkowo wybrano dwanaście punktów 
+	(b)~i~wygenerowano obrys (c). Następnie dodano dwa kolejne punkty (d). 
+	Wygenerowany w~ten sposób obrys półautomatyczny (e)}
+	\label{fig:174}
+\end{center}
+\end{figure}
+
+\begin{figure}[h!]
+\begin{center}
+	\minipage{0.28\textwidth}
+	\begin{center}
+		\includegraphics[width=1.0\textwidth]{170}
+		a
+	\end{center}
+	\endminipage\hfill
+	\minipage{0.28\textwidth}
+	\begin{center}
+		\includegraphics[width=1.0\textwidth]{171}
+		b
+	\end{center}
+	\endminipage\hfill
+	\minipage{0.28\textwidth}
+	\begin{center}
+		\includegraphics[width=1.0\textwidth]{172}
+		c
+	\end{center}
+	\endminipage\hfill
+	\caption{Przykład tworzenia obrysu półautomatycznego dla MMG. Na początkowym obrazie (a) dodano pięć punktów (b), 
+	a~następnie wygenerowano obrys (c)}
+	\label{fig:170}
+\end{center}
+\end{figure}
+
+\begin{figure}[h!]
+\begin{center}
+	\minipage{0.19\textwidth}
+	\begin{center}
+		\includegraphics[width=1.0\textwidth]{179}
+		a
+	\end{center}
+	\endminipage\hfill
+	\minipage{0.19\textwidth}
+	\begin{center}
+		\includegraphics[width=1.0\textwidth]{180}
+		b
+	\end{center}
+	\endminipage\hfill
+	\minipage{0.19\textwidth}
+	\begin{center}
+		\includegraphics[width=1.0\textwidth]{181}
+		c
+	\end{center}
+	\endminipage\hfill
+	\minipage{0.19\textwidth}
+	\begin{center}
+		\includegraphics[width=1.0\textwidth]{182}
+		d
+	\end{center}
+	\endminipage\hfill
+	\minipage{0.19\textwidth}
+	\begin{center}
+		\includegraphics[width=1.0\textwidth]{183}
+		e
+	\end{center}
+	\endminipage\hfill
+	\caption{Przykład edycji obrysu półautomatycznego dla RTG. Obraz przedstawia zwichnięty staw 
+	ramienny ze~złamaniem Hilla-Sachsa (a). Złamanie to można dostrzec jako ciemniejszą przestrzeń
+	na wskutek wgniecenia kości ramiennej przez krawędź panewki łopatki i wyrostka kruczego łopatki.
+	Początkowo wybrano sześć punktów 
+	(b)~i~wygenerowano obrys (c). Następnie dodano kolejny punkt (d). 
+	Wygenerowany w~ten sposób obrys półautomatyczny (e)}
+	\label{fig:179}
 \end{center}
 \end{figure}
 
