@@ -1658,7 +1658,7 @@ oryginalny obraz DICOM jest usuwany z~serwera obrazów Orthanc.
 
 Danymi, które użytkownik może zmienić to~imię i~nazwisko pacjenta, data urodzenia pacjenta
 i~płeć pacjenta. W miejsce wymienionych pól użytkownik może wpisać dowolne ciągi
-znaków, w szczególności takie, które nie pozwolą na ustalenie tożsamości pacjenta.
+znaków, w~szczególności takie, które nie pozwolą na ustalenie tożsamości pacjenta.
 
 \afterpage{\blankpage}
 
@@ -1691,17 +1691,19 @@ Celsjusza; nie występuje throttling;
 Zbiór danych testowych składał się z~20 badań, w~tym badania 
 CT~(ang. \textit{computed tomography}~---~tomografia komputerowa), 
 MRI~(ang. \textit{magnetic resonance imaging}~---~obrazowanie metodą rezonansu magnetycznego),
-RTG, MMG. Badania te zostały wykonane na różnych urządzeniach, w~różnych placówkach medycznych.
+RTG~(ang. \textit{radiograph}~---~rentgenogram) oraz 
+MMG~(ang. \textit{mammogram}~---~mammogram). 
+Badania te zostały wykonane na różnych urządzeniach, w~różnych placówkach medycznych.
 
 Badania tomografią komputerową zazwyczaj składają się z~jednej serii. Ta seria zazwyczaj zawiera od~kilkudziesięciu
-do~kilkuset kolejnych wartw, które są obrazami. Dla większości badań rozdzielczość takiego obrazu wynosiła 512 na 512 pikseli.
+do~kilkuset kolejnych wartw, które są obrazami. Dla większości badań rozdzielczość takiego obrazu wynosiła 512x512 pikseli.
 
 Badania rezonansem magnetycznym zazwyczaj składają się z~kilku do kilkunastu serii, gdzie każda seria zawierała kilkanaście warstw.
-Rozdzielczość jednego obrazu składającego się na warstwę zazwyczaj wynosiła 512 na 512 pikseli.
+Rozdzielczość jednego obrazu składającego się na warstwę zazwyczaj wynosiła 512x512 pikseli.
 
-Na badanie rentgenowskie składa się zazwyczaj jedna do kilku serii, gdzie każda zawiera jeden obraz. Rozdzielczość tego obrazu zazwyczaj wynosiła około 1952 na 1620 pikseli.
+Na badanie rentgenowskie składa się zazwyczaj jedna do kilku serii, gdzie każda zawiera jeden obraz. Rozdzielczość tego obrazu zazwyczaj wynosiła około 1952x1620 pikseli.
 
-Mammogramy mają największą rozdzielczość. Jeden obraz składał się z 6000 na 3300 pikseli, co daje rozdzielczość prawie 20 megapikseli.
+Mammogramy mają największą rozdzielczość. Jeden obraz składał się z 6000x3300 pikseli, co daje rozdzielczość prawie 20 megapikseli.
 
 %Do testów zostały wykorzystane następujące badania:
 %\begin{enumerate}[noitemsep]
@@ -1745,7 +1747,7 @@ użytkownikowi badanie RTG.
 
 \begin{figure}[h!]
 	\center
-	\includegraphics[width=0.6\textwidth]{113}
+	\includegraphics[width=0.55\textwidth]{113}
 	\caption{Widok badania RTG barku}
     	\label{fig:113}
 \end{figure}
@@ -1762,15 +1764,15 @@ Użytkownik ma także możliwość zmiany serii badania poprzez wybranie jej z~o
 \begin{center}
 	\minipage{0.48\textwidth}
 	\begin{center}
-		\includegraphics[width=1.0\textwidth]{141}
+		\includegraphics[width=1.0\textwidth]{185}
 	\end{center}
 	\endminipage\hfill
 	\minipage{0.48\textwidth}
 	\begin{center}
-		\includegraphics[width=1.0\textwidth]{140}
+		\includegraphics[width=1.0\textwidth]{184}
 	\end{center}
 	\endminipage\hfill
-	\caption{Dwie kolejne warstwy badania MRI}
+	\caption{Widok badania MRI - warstwa 5 z 20 oraz 10 z 20}
 	\label{fig:140}
 \end{center}
 \end{figure}
@@ -1780,13 +1782,13 @@ Użytkownik ma także możliwość zmiany serii badania poprzez wybranie jej z~o
 Aplikacja ta spełnia wszystkie zakładane wymagania w~zakresie przeglądania i~obsługi różnych typów plików.
 Dzięki zastosowaniu serwera Orthanc powinny być obsługiwane wszystkie pliki DICOM.
 
-\bigskip
-
 Aplikacja pozwala na~wykonanie obrysu na~wyświetlanym obrazie. Może to~być zarówno obrys
-manualny jak i~półautomatyczny. Na Rysunku \ref{fig:105} przedstawiono przykładowy obrys manualny
+manualny, jak i~półautomatyczny. Na Rysunku \ref{fig:105} przedstawiono przykładowy obrys manualny
 wykonany na~badaniu MRI barku. Po~lewej stronie jest przedstawiony obrys, a~po~prawej 
-stronie są~przedstawione statystyki ROI, czyli regionu zainteresowania, w~tym przypadku obszaru
-wewnątrz obrysu.
+stronie są~przedstawione statystyki ROI, czyli regionu zainteresowania, w~tym przypadku 
+została obrysowana głowa kości ramienna z gojącym się złamaniem Hilla-Sachsa. Taki obrys może pomóc w~ocenie
+stopnia złamania i późniejszej stabilności stawu, poprzez porównanie pola powierzchni kości po złamaniu
+względem referencyjnego badania. To złamanie można dostrzeć jako wgłębienie w lewej części obrysu. 
 
 Na tym badaniu jest przedstawiony bark prawy i~dokonano obrysu kości ramiennej. W~statystykach można
 znaleźć takie informacje jak obwód, pole powierzchni ROI, jego środek na obrazie. Dodatkowo jest zawarty
@@ -1829,8 +1831,9 @@ a~statystyki po~prawej.
 
 \pagebreak
 
-W ramach analizy działania aplikacji wykonano test edycji obrysu półautomatycznego w~trakcie
-jego tworzenia. Przebieg tego testu przedstawiono na~Rysunku \ref{fig:146}.
+W ramach analizy działania aplikacji wykonano testy edycji obrysu półautomatycznego w~trakcie
+jego tworzenia. Przebieg tych testów przedstawiono na~Rysunku \ref{fig:146} dla MRI, 
+Rysunku~\ref{fig:174} dla CT, Rysunku~\ref{fig:170} dla MMG oraz Rysunku~\ref{fig:179} dla RTG.
 
 \begin{figure}[h!]
 \begin{center}
@@ -1858,17 +1861,125 @@ jego tworzenia. Przebieg tego testu przedstawiono na~Rysunku \ref{fig:146}.
 		d
 	\end{center}
 	\endminipage\hfill
-	\caption{Przykład edycji obrysu półautomatycznego. Początkowo wybrano pięć punktów 
+	\caption{Przykład edycji obrysu półautomatycznego dla MRI. Początkowo wybrano pięć punktów 
 	(a)~i~wygenerowano obrys (b). Następnie usunięto jeden z~punktów i~dodano dwa kolejne (c). 
-	Wygenerowany w~ten sposób obrys półautomatyczny (d).}
+	Wygenerowany w~ten sposób obrys półautomatyczny (d)}
 	\label{fig:146}
+\end{center}
+\end{figure}
+
+\begin{figure}[h!]
+\begin{center}
+	\minipage{0.19\textwidth}
+	\begin{center}
+		\includegraphics[width=1.0\textwidth]{174}
+		a
+	\end{center}
+	\endminipage\hfill
+	\minipage{0.19\textwidth}
+	\begin{center}
+		\includegraphics[width=1.0\textwidth]{175}
+		b
+	\end{center}
+	\endminipage\hfill
+	\minipage{0.19\textwidth}
+	\begin{center}
+		\includegraphics[width=1.0\textwidth]{176}
+		c
+	\end{center}
+	\endminipage\hfill
+	\minipage{0.19\textwidth}
+	\begin{center}
+		\includegraphics[width=1.0\textwidth]{177}
+		d
+	\end{center}
+	\endminipage\hfill
+	\minipage{0.19\textwidth}
+	\begin{center}
+		\includegraphics[width=1.0\textwidth]{178}
+		e
+	\end{center}
+	\endminipage\hfill
+	\caption{Przykład edycji obrysu półautomatycznego dla CT. Był obrysowywany krąg kręgosłupa (a).
+	Początkowo wybrano dwanaście punktów 
+	(b)~i~wygenerowano obrys (c). Następnie dodano dwa kolejne punkty (d). 
+	Wygenerowany w~ten sposób obrys półautomatyczny (e)}
+	\label{fig:174}
+\end{center}
+\end{figure}
+
+\begin{figure}[h!]
+\begin{center}
+	\minipage{0.28\textwidth}
+	\begin{center}
+		\includegraphics[width=1.0\textwidth]{170}
+		a
+	\end{center}
+	\endminipage\hfill
+	\minipage{0.28\textwidth}
+	\begin{center}
+		\includegraphics[width=1.0\textwidth]{171}
+		b
+	\end{center}
+	\endminipage\hfill
+	\minipage{0.28\textwidth}
+	\begin{center}
+		\includegraphics[width=1.0\textwidth]{172}
+		c
+	\end{center}
+	\endminipage\hfill
+	\caption{Przykład tworzenia obrysu półautomatycznego dla MMG. Na początkowym obrazie (a) dodano pięć punktów (b), 
+	a~następnie wygenerowano obrys (c)}
+	\label{fig:170}
+\end{center}
+\end{figure}
+
+\begin{figure}[h!]
+\begin{center}
+	\minipage{0.19\textwidth}
+	\begin{center}
+		\includegraphics[width=1.0\textwidth]{179}
+		a
+	\end{center}
+	\endminipage\hfill
+	\minipage{0.19\textwidth}
+	\begin{center}
+		\includegraphics[width=1.0\textwidth]{180}
+		b
+	\end{center}
+	\endminipage\hfill
+	\minipage{0.19\textwidth}
+	\begin{center}
+		\includegraphics[width=1.0\textwidth]{181}
+		c
+	\end{center}
+	\endminipage\hfill
+	\minipage{0.19\textwidth}
+	\begin{center}
+		\includegraphics[width=1.0\textwidth]{182}
+		d
+	\end{center}
+	\endminipage\hfill
+	\minipage{0.19\textwidth}
+	\begin{center}
+		\includegraphics[width=1.0\textwidth]{183}
+		e
+	\end{center}
+	\endminipage\hfill
+	\caption{Przykład edycji obrysu półautomatycznego dla RTG. Obraz przedstawia zwichnięty staw 
+	ramienny ze~złamaniem Hilla-Sachsa (a). Złamanie to można dostrzec jako ciemniejszą przestrzeń
+	na wskutek wgniecenia kości ramiennej przez krawędź panewki łopatki i wyrostka kruczego łopatki.
+	Początkowo wybrano sześć punktów 
+	(b)~i~wygenerowano obrys (c). Następnie dodano kolejny punkt (d). 
+	Wygenerowany w~ten sposób obrys półautomatyczny (e)}
+	\label{fig:179}
 \end{center}
 \end{figure}
 
 \section {Wydajność algorytmu półautomatycznego}
 
 W celu sprawdzenia wydajności stworzonego algorytmu półautomatycznego posłużono
-się badaniem MRI barku, o~rozdzielczości 512 na~512 pikseli. Widok tego badania został przedstawiony
+się badaniem MRI barku, o~rozdzielczości 512x512 pikseli. Widok tego badania został przedstawiony
 na Rysunku \ref{fig:112}.
 
 \begin{figure}[h!]
@@ -1880,11 +1991,11 @@ na Rysunku \ref{fig:112}.
 
 \pagebreak
 
-W pierwszym teście sprawdzono czasy generowania obrysu półautomatycznego,
+W pierwszym teście sprawdzono czasy generowania obrysu półautomatycznego
  w~zależności od~ilości punktów wybranych przez użytkownika. Oczekiwano,
 że obrys będzie wyglądał podobnie do~tych na~Rysunkach \ref{fig:105} i~\ref{fig:107}.
-Rozmiary przetwarzanych fragmentów obrazu w~algorytmie były porównywalne. Algorytm
-wykorzystywał fragmenty obrazu medycznego zawierające wszystkie punkty wybrane
+Rozmiary przetwarzanych regionów zainteresowania w~algorytmie były porównywalne. Algorytm
+wykorzystywał regiony zainteresowania zawierające wszystkie punkty wybrane
 przez użytkownika z~uwzględnieniem marginesów.
 
 W trakcie dodawania kolejnych punktów starano się poprawiać obrys, tzn. aby
@@ -1907,7 +2018,7 @@ odpowiedzi przez API na~otrzymane zapytanie.
 	\includegraphics[width=0.85\textwidth]{152}
 	\caption{Czasy generowania obrysu półautomatycznego granicy kości ramiennej
 	 w~zależności od~liczby punktów
-	początkowych wskazanych przez użytkownika}
+	początkowych wskazanych przez użytkownika --- obrys jak na Rys. \ref{fig:146}}
     	\label{fig:testy_1}
 \end{figure}
 
@@ -1921,10 +2032,12 @@ wygenerowanego obrysu.
 	\center
 	\includegraphics[width=0.85\textwidth]{151}
 	\caption{Czasy generowania obrysu półautomatycznego barku w~zależności od~liczby punktów
-	początkowych wskazanych przez użytkownika dla równomiernego wstawiania punktów}
+	początkowych wskazanych przez użytkownika dla równomiernego wstawiania punktów
+	}
     	\label{fig:testy_2}
 \end{figure}
 
+\bigskip
 
 %Na Rysunku \ref{fig:testy_2} przedstawiono wyniki dla drugiego z~testów. Starano się obrysować
 W kolejnym teście (Rysunek \ref{fig:testy_2}) obrysowano
@@ -1965,7 +2078,7 @@ ale spadek był zauważalny, z~ok. 4.7s~do~3.7s.
 
 Wraz ze~zwiększeniem się przestrzeni roboczej obrazu rośnie czas potrzebny na
 wygenerowanie obrysu. Na~podstawie wykresów zależności czasu od~liczby punktów
-można wysnuć wnioski, że lepiej jest stawiać więcej punktów, niż mniej. Ponadto na czas generowania
+można wysnuć wnioski, że lepiej jest stawiać więcej punktów niż mniej. Ponadto na czas generowania
 obrysu półautomatycznego wpływa zarówno przestrzeń robocza, jak i~liczba wywołań algorytmu A*. Gdy zwiększamy
 liczbę punktów, to~zarówno algorytm A* szybciej znajdzie kolejny punkt zaznaczony przez użytkownika, jak i~nie
 trzeba analizować dużej części obrazu.
@@ -2014,18 +2127,23 @@ przypadku małych obrysów, dominującą częścią obliczeń były operacje na~
 obrazie. Ponadto czasy obliczeń zawierają narzut czasowy wywołany przez
 przetwarzanie zapytań.
 
-W~przypadku zdjęć o wysokiej rozdzielczości, takich jak mammogramy lub badania 
+W~przypadku obrazów o wysokiej rozdzielczości, takich jak mammogramy lub badania 
 rentgenowskie, autorskie narzędzie do~generowania obrysów półautomatycznych
 będzie stosunkowo długo wykonywało obliczenia, rzędu kilkunastu do~kilkudziesięciu
-sekund. Można uznać to za wadę. Rozwiązaniem dla tego problemu może być 
-preprocessing, czyli zawężenie ROI --- regionów zainteresowania na~tych plikach
-w~taki sposób, aby algorytm nie przetwarzał zbyt dużej liczby pikseli.
+sekund. Można uznać to za wadę. Natomiast rozwiązaniem dla tego problemu może być 
+wstępne przetwarzanie, czyli wybieranie regionów zainteresowania (ROI)
+z~obrazów
+w~taki sposób, aby algorytm nie przetwarzał zbyt dużej zbędnej liczby pikseli.
 Ponadto generowanie obrysów
-półautomatycznych działa zauważalnie lepiej dla zdjęć o~ostrych krawędziach i~o
-niskim szumie. W~celu poprawienia zarówno jakości wykrywanego obrysu jak i
+półautomatycznych działa zauważalnie lepiej dla obrazów o~ostrych krawędziach i~o
+niskim szumie. W~celu poprawienia zarówno jakości wykrywanego obrysu, jak i
 wydajności czasowej przeprowadzanych w~trakcie generowania obrysu obliczeń użytkownik
 powinien wybierać liczbę punktów rzędu kilkunastu punktów, co~może mieć zauważalnie
 lepszą wydajność niż wybranie kilku punktów.
+
+Stworzone przez autorów narzędzie do tworzenia półautomatycznych obrysów zostało zoptymalizowane
+pod kątem jakości, a~nie szybkości działania. Tworzenie obrysu jest czynnością jednorazową, więc
+preferowane jest uzyskanie lepszych rezultatów.
 
 %\afterpage{\blankpage}
 \chapter {Podsumowanie}
@@ -2145,6 +2263,7 @@ inteligencji opartych na~obrysach wykonanych przez użytkownika.
 \bibitem{Cornerstone Tools} Hafey C. Dokumentacja projektu Cornerstone Tools. Oficjalna strona: https://tools.cornerstonejs.org/ [Dostęp 1~kwietnia 2019]
 \bibitem{A*} Hart P. E., Nilsson N. J., Raphael B. "A~Formal Basis for the Heurestic Determination of~Minimum Cost Paths" \emph{IEEE Transactions on~Systems Science and Cybernetics 4(2)}, 1968
 \bibitem{DWV} ivmartel: Projekt DICOM Web Viewer. Oficjalna strona: https://ivmartel.github.io/dwv/ [Dostęp 1~kwietnia 2019]
+\bibitem{GK1} Kotowski P. Wykłady z~przedmiotu Grafika Komputerowa~1~\emph{Politechnika Warszawska, Wydział Matematyki i~Nauk Informacyjnych} Materiały dostepne na~stronie: http://mini.pw.edu.pl/~kotowski/gk/gk.html [Dostęp 5~kwietnia 2019]
 \bibitem{Dlaczego dotnet} Kronis K., Uhanova M. "Performance Comparision of~Java EE~and ASP.NET Core Technologies for Web API Developmnet." \emph{Applied Computer Systems 23, Riga Technical University}, Ryga, 2018
 \bibitem{Dotnet} Microsoft Corporation: Dokumentacja platformy .NET. Oficjalna strona: https://docs.microsoft.com/pl-pl/dotnet/ [Dostęp 1~kwietnia 2019]
 \bibitem{Dotnet struktury} Microsoft Corporation: Dokumentacja rekomendowanych struktur danych platformy .NET. Oficjalna strona: https://docs.microsoft.com/pl-pl/dotnet/standard/collections/ [Dostęp 1~kwietnia 2019]
