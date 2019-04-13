@@ -347,8 +347,8 @@ która kierowała autorami przy wyborze właśnie tego tematu.
 
 W czasach gwałtownego rozwoju sztucznej inteligencji jest ona stosowana prawie
 do każdej dziedziny z~szeroko pojętej nauki. Jedną z~takich dziedzin jest także medycyna.
-Powstają coraz to nowsze rozwiązania komputerowego wspomagania medycyny w diagnostyce i~terapii.
-Jednym z takich zagadnień jest próba rozpoznawania we~wczesnym stadium różnych zmian
+Powstają coraz to~nowsze rozwiązania komputerowego wspomagania medycyny w diagnostyce i~terapii.
+Jednym z~takich zagadnień jest próba rozpoznawania we~wczesnym stadium różnych zmian
 patologicznych na obrazach medycznych. Wczesne wykrywanie zmian pozwala
 na~szybką terapię, a~w~konsenkwencji niejednokrotnie na~całkowite wyleczenie. Między innymi dlatego
 tak ważne jest tworzenie komputerowych systemów wspomagania procesu podejmowania
@@ -407,7 +407,7 @@ tomografii komputerowej, obrazowania metodą rezonansu magnetycznego, cyfrowej
 angiografii subtrakcyjnej, zdjęcia rentgenowskie, mammogramy i~wiele innych badań.
 Standard umożliwia obsługę wielu różnych badań przy wykorzystaniu jednego narzędzia,
 co ułatwia tworzenie uniwersalnych narzędzi wspomagających diagnostykę, jak również
-daje możliwość zapisywania informacji nieopisanych w standardzie w ramach pliku DICOM.
+daje możliwość zapisywania informacji nieopisanych w~standardzie w~ramach pliku DICOM.
 Do wad tego standardu należy różnorodność metod implementacji. Powoduje to~czasem
 sytuacje, w~których nie można wyświetlić pliku na~sprzęcie innego producenta.
 W~takich sytuacjach należy ręcznie
@@ -419,7 +419,7 @@ DICOM stanowi barierę w~sprawnym korzystaniu z~tak zapisanych wyników badań.
 Na~podstawie badań obrazowych zapisanych w~formacie DICOM lekarze są~w~stanie diagnozować
 pacjentów i~wybierać terapię odpowiednią dla zauważonych w~badaniu nieprawidłowości.
 W~celu ułatwienia odpowiedniej diagnozy, jak również weryfikacji oceny lekarza
-przydatne są narzędzia automatycznej detekcji zmian patologicznych,
+przydatne są~narzędzia automatycznej detekcji zmian patologicznych,
 które służą do~przetwarzania danych obrazowych w~celu
 wykrycia patologicznych zmian. Wykorzystują do~tego między innymi metody sztucznej
 inteligencji, które do poprawnego działania wymagają zbioru testowego, czyli zbioru obrazów
@@ -467,10 +467,6 @@ członków zespołu.
 	\item interfejs wyświetlania wykonanych obrysów.
 \end{itemize}
 
-<<<<<<< HEAD
-=======
-
->>>>>>> cc432eb5ffeebfcd5e54d79bd31b1f4d1997f096
 Tomasz Świerczewski wykonał:
 
 \begin{itemize}[noitemsep]
@@ -732,7 +728,7 @@ określonego produktu lub usługi są wymagania funkcjonalne i~niefunkcjonalne.
 Te pierwsze opisują funkcje i~możliwości, które system powinien realizować, natomiast
 drugie mówią o tym, jakiej wydajności, użyteczności i dostępności wymaga się od tworzonego narzędzia.
 Wymagania funkcjonalne dla tworzonego systemu zostały przygotowane na podstawie
-konsultacji z~lekarzami i studentami ostatniego roku radiologii. Przedstawiono
+konsultacji z~lekarzami i~studentami ostatniego roku radiologii. Przedstawiono
 je poniżej w~postaci historii użytkownika (ang. user stories), czyli czynności
 jakie może chcieć wykonać użytkownik tego systemu.
 \begin{enumerate}
@@ -1189,8 +1185,10 @@ usuwania niemaksymalnych krawędzi uzyskano obraz z~potencjalnymi krawędziami. 
 na Rysunku \ref{fig:126}.
 
 W ostatnim kroku była przeprowadzana histereza. Wynikiem jej działania jest macierz z~informacjami
-gdzie znajduje się krawędź. Na~Rysunku \ref{fig:126} wartościom 1~w~macierzy odpowiada kolor czarny,
+gdzie znajduje się krawędź. Na~Rysunku \ref{fig:127} wartościom 1~w~macierzy odpowiada kolor czarny,
 a~wartościom 0~odpowiada kolor biały.
+
+\pagebreak
 
 \subsection {Stworzenie grafu z~bitmapy}
 
@@ -1654,6 +1652,8 @@ wartościach, gdzie jest krawędź, więc nie można wykryć np. krawędzi pozio
 %Algorytm scan-linii lepiej nadaje się w~przypadku, gdy wypełniamy wielokąt,
 %a nie obrys.
 % pani dr~chciała to~inaczej
+
+\pagebreak
 
 Z tego powodu wybrano algorytm \textit{Flood Fill} \cite{AiSD2}, czyli rozlewania się rekurencyjnego % cytacja
 zliczonych pikseli od~punktu wewnętrznego. Właśnie z~tego powodu od~użytkownika
