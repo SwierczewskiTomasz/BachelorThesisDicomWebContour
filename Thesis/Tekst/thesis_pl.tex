@@ -408,7 +408,7 @@ angiografii subtrakcyjnej, zdjęcia rentgenowskie, mammogramy i~wiele innych bad
 Standard umożliwia obsługę wielu różnych badań przy wykorzystaniu jednego narzędzia,
 co ułatwia tworzenie uniwersalnych narzędzi wspomagających diagnostykę, jak również
 daje możliwość zapisywania informacji nieopisanych w standardzie w ramach pliku DICOM.
-Do wad tego standardu należy różnorodność metod implementacji, co powoduje to~czasem
+Do wad tego standardu należy różnorodność metod implementacji. Powoduje to~czasem
 sytuacje, w~których nie można wyświetlić pliku na~sprzęcie innego producenta.
 W~takich sytuacjach należy ręcznie
 modyfikować badania, aby mogły być poprawnie obsłużone. Ponadto liczba tagów zawartych w~badaniu
@@ -457,6 +457,8 @@ zapisanych na zdalnym serwerze.
 Ze względu na~złożoność realizowanego narzędzia dokonano podziału zadań pomiędzy
 członków zespołu.
 
+\pagebreak
+
 Łukasz Garstecki wykonał:
 
 \begin{itemize}[noitemsep]
@@ -465,7 +467,6 @@ członków zespołu.
 	\item interfejs wyświetlania wykonanych obrysów.
 \end{itemize}
 
-\pagebreak
 
 Tomasz Świerczewski wykonał:
 
@@ -474,6 +475,8 @@ Tomasz Świerczewski wykonał:
 \item moduł statystyk,
 \item moduł zapisu obrysów.
 \end{itemize}
+
+\afterpage{\blankpage}
 
 \chapter {Stan wiedzy}
 
@@ -709,7 +712,7 @@ Do podstawowych funkcjonalności systemu zaliczają się:
 %O listach wyliczeniowych https://sjp.pwn.pl/poradnia/haslo/listy-wyliczeniowe;4812.html
 \item anonimizacja\footnote {Anonimizacja (ang. anonymization) --- operacja mająca
 na celu usunięcie z~danych informacji o~pacjentach, które pozwoliłyby na~identyfikację
-danych z~tożsamością pacjenta. Są to~między innymi: imiona, nazwisko, pesel.
+danych z~tożsamością pacjenta. Są to~między innymi: imiona, nazwisko, PESEL.
 Inne tłumaczenia słowa anonymization --- utajnianie, usuwanie danych niejawnych.
 Z uwagi na~fakt, że te~tłumaczenia nie oddają dobrze kontekstu, zastosowano kalkę
 językową.} danych zapisanych w~strukturze pliku DICOM, w~sytuacji braku takiej anonimizacji,
@@ -1005,8 +1008,8 @@ w narożnikach jest zazwyczaj zbyt mała, aby wykrywać krawędzie wokół nich,
 nie są wykrywane przez małe różnice w~wartościach kolejnych sąsiadujących pikseli.
 \end{itemize}
 
-Poniżej po krótce przedstawiono ogólny opis działania detektorów krawędzi opartych na~gradiencie,
-na~przykładzie operatora Canny'ego \cite{Canny}. Wymyślony przez Canne'go operator
+Poniżej pokrótce przedstawiono ogólny opis działania detektorów krawędzi opartych na~gradiencie,
+na~przykładzie operatora Canny'ego \cite{Canny}. Wymyślony przez Canny'ego operator
 składa się z~trzech~zasadniczych kroków:
 \begin{enumerate}%[noitemsep]
 \item Określenie wartości i~kąta gradientu \\
@@ -1356,7 +1359,7 @@ spójny. Ponadto mógł nie zawierać wierzchołków, które pokrywały się z~p
 wybranymi przez użytkownika.
 
 Graf ten zazwyczaj był rzadki, ponieważ liczba jego krawędzi była rzędu liczby
-jego wierzchołków.  Z~uwagi na~czasami bardzo dużą liczbę wierzchołków, nawet
+jego wierzchołków.  Z~uwagi na~występującą czasami bardzo dużą liczbę wierzchołków, nawet
 do kilkudziesięciu tysięcy, próba implementacji przy pomocy macierzy sąsiedztwa
 mogłaby spowodować zużycie całej możliwej pamięci operacyjnej. Dla 50~tysięcy
 wierzchołków program musiałby zadeklarować macierz sąsiedztwa zawierającą 2,5
@@ -1749,11 +1752,11 @@ Mammogramy mają największą rozdzielczość. Jeden obraz składał się z 6000
 Przeprowadzano analizę działania autorskiego narzędzia do tworzenia obrysów.
 W~pierwszym kroku przeprowadzono testy związane z~obsługą różnych typów badań.
 Aplikacja obsługuje wszystkie przebadane typy badań, czyli CT, MRI, RTG, MMG.
-Nie wykonano testów na innych typach badań takich jak cyfrowej angiografii subtrakcyjnej
+Nie wykonano testów na innych typach badań takich jak na cyfrowej angiografii subtrakcyjnej
 i~wielu innych. Aplikacja powinna obsługiwać inne typy badań, ponieważ wspiera pliki DICOM.
 
 W celu zaprezentowania funkcjonalności autorskiej aplikacji, na Rysunku \ref{fig:113}
-przedstawiono w~jaki sposób autorska aplikacja ukazuje
+przedstawiono w~jaki sposób aplikacja ukazuje
 użytkownikowi badanie RTG.
 
 \begin{figure}[h!]
@@ -1874,7 +1877,7 @@ Rysunku~\ref{fig:174} dla CT, Rysunku~\ref{fig:170} dla MMG oraz Rysunku~\ref{fi
 	\endminipage\hfill
 	\caption{Przykład edycji obrysu półautomatycznego dla MRI. Początkowo wybrano pięć punktów
 	(a)~i~wygenerowano obrys (b). Następnie usunięto jeden z~punktów i~dodano dwa kolejne (c).
-	Wygenerowany w~ten sposób obrys półautomatyczny (d)}
+	Wygenerowano w~ten sposób obrys półautomatyczny (d)}
 	\label{fig:146}
 \end{center}
 \end{figure}
@@ -1914,7 +1917,7 @@ Rysunku~\ref{fig:174} dla CT, Rysunku~\ref{fig:170} dla MMG oraz Rysunku~\ref{fi
 	\caption{Przykład edycji obrysu półautomatycznego dla CT. Był obrysowywany krąg kręgosłupa (a).
 	Początkowo wybrano dwanaście punktów
 	(b)~i~wygenerowano obrys (c). Następnie dodano dwa kolejne punkty (d).
-	Wygenerowany w~ten sposób obrys półautomatyczny (e)}
+	Wygenerowano w~ten sposób obrys półautomatyczny (e)}
 	\label{fig:174}
 \end{center}
 \end{figure}
@@ -1982,7 +1985,7 @@ Rysunku~\ref{fig:174} dla CT, Rysunku~\ref{fig:170} dla MMG oraz Rysunku~\ref{fi
 	wskutek wgniecenia kości ramiennej przez krawędź panewki łopatki i wyrostka kruczego łopatki.
 	Początkowo wybrano sześć punktów
 	(b)~i~wygenerowano obrys (c). Następnie dodano kolejny punkt (d).
-	Wygenerowany w~ten sposób obrys półautomatyczny (e)}
+	Wygenerowano w~ten sposób obrys półautomatyczny (e)}
 	\label{fig:179}
 \end{center}
 \end{figure}
@@ -2365,7 +2368,7 @@ Do niniejszej pracy dyplomowej inżynierskiej została załączona płyta CD. W~
 pliku \verb+garsteckil-swierczewskit-praca-inzynierska.pdf+,
 \item strona tytułowa pracy w~pliku \verb+garsteckil-swierczewskit-strona-tytulowa.pdf+,
 \item streszczenie w~języku polskim i~angielskim w~plikach o~nazwach odpowiednio
-\verb+garsteckil-swierczewskit-stresczenie.pdf+ i~\verb+garsteckil-swierczewski-abstract.pdf+.
+\verb+garsteckil-swierczewskit-streszczenie.pdf+ i~\verb+garsteckil-swierczewskit-abstract.pdf+.
 \end{itemize}
 
 Kod źródłowy, który został podzielony na~kilka katalogów:
@@ -2604,7 +2607,7 @@ obrys --- Rysunek \ref{fig:7}.
     	\label{fig:7}
 \end{figure}
 
-Następną czynnością, którą musi wykonać użytkownik przed zapisaniem to~wybranie
+Kolejną czynnością, którą musi wykonać użytkownik przed zapisaniem to~wybranie
 punktu wewnątrz wykonanego obrysu poprzez wciśnięcie lewego przycisku myszy w
 odpowiednim miejscu na~obrazie --- Rysunek \ref{fig:8}.
 
@@ -2667,9 +2670,9 @@ zobaczyć wygenerowany przez algorytm obrys. --- Rysunek \ref{fig:12}.
     	\label{fig:12}
 \end{figure}
 
-Jeśli algorytm popełnił błąd użytkownik może dodać nowe punkty klikając lewym
+Jeśli algorytm popełnił błąd, użytkownik może dodać nowe punkty klikając lewym
 przyciskiem myszy w~interesujących go~miejscach lub usunąć nietrafnie umieszczone
-punkty poprzez klikanie na~nich lewego przycisku myszy --- Rysunek \ref{fig:13}.
+punkty poprzez klikanie na~nich lewym przyciskiem myszy --- Rysunek \ref{fig:13}.
 
 \begin{figure}[h!]
 	\center
