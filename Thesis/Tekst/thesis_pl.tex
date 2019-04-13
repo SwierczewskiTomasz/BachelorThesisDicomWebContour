@@ -265,15 +265,15 @@ opisujących obrysowane regiony zainteresowania w obrazach.
 The following document describes bachelor's thesis on~"\title". The goal of~authors'
 is~to~create a~digital tool that allows to~manually draw and semi-automatically generate
 contours of anatomical structures and lesions on~medical images.
-Tool can be used by medical doctors with diagnostic purposes and by medical engineers
-with scientific purposes. The topics discussed include: discussion
-of~DICOM standard, analysis of~state-of-the-art systems and tools used to~viewing
+This tool can be used by medical doctors for diagnostic purposes and by medical engineers
+with scientific purposes. The topics discussed include: 
+DICOM standard, analysis of~state-of-the-art systems and tools used to~viewing
 and creating contours on~DICOM medical images, system's architecture and experiments
 conducted simultaneously with the creation of~the tool.
 
 The architecture used enables simultaneous use of~the tool by~many users.
 Manual contour module had mainly been implemented in part connected with user interface.
-Semi-automatic module is based on the algorithm developed for the~purpose of~generating contours, that uses Canny's
+Semi-automatic contour module is based on the algorithm developed for the~purpose of~generating contours, that uses Canny's
 Operator and the algorithm of~searching the shortest path in~the graph.
 Additionally statistics module was added which allows to calculate basic statistical measurements,
 describing contoured regions of interest in the images.
@@ -457,6 +457,8 @@ zapisanych na zdalnym serwerze.
 Ze względu na~złożoność realizowanego narzędzia dokonano podziału zadań pomiędzy
 członków zespołu.
 
+\pagebreak
+
 Łukasz Garstecki wykonał:
 
 \begin{itemize}[noitemsep]
@@ -464,8 +466,6 @@ członków zespołu.
 	\item moduł anonimizacji,
 	\item interfejs wyświetlania wykonanych obrysów.
 \end{itemize}
-
-\pagebreak
 
 Tomasz Świerczewski wykonał:
 
@@ -653,7 +653,7 @@ Poza serwerem Orthanc stworzono serwer w~technologii .NET Core \cite{Dotnet}
 wspomagający interfejs użytkownika, który pozwala na~przeprowadzanie czasochłonnych
 operacji poza interfejsem użytkownika. Wybrano tę technologię ze~względu na~to,
 że jest ciągle rozwijana i podobnie jak Orthanc, .NET Core jest rozwiązaniem darmowym
-i nie ustępuje jakością względem ~Java~EE~\cite{Dlaczego dotnet}.
+i nie ustępuje jakością względem Java~EE~\cite{Dlaczego dotnet}.
 Podstawowymi zadaniami tego serwera było przechowywanie
 wykonanych przez użytkownika obrysów manualnych, generowanie i~przechowywanie
 obrysów półautomatycznych oraz obliczanie statystyk związanych z~zapisanymi obrysami.
@@ -965,7 +965,7 @@ ze sobą na~podstawie autorskiego algorytmu opisanego w~tym podrozdziale.
 
 Często na~obrazach medycznych różnice w~charakterystyce poziomów szarości pikseli
 reprezentujących interesujące nas obiekty są~nieznaczne. Pliki zawierające te~obrazy medyczne często nie posiadają
-dodatkowych informacji o~położeniu tych obiektów, ani czym się wyróżniają i~co~przedstawiają.
+dodatkowych informacji o~położeniu tych obiektów, ani czym się te~obiekty wyróżniają i~co~przedstawiają.
 Problem opracowania uniwersalnego algorytmu wykrywania krawędzi na~obrazach medycznych
 jest problemem trudnym. Takie algorytmy muszą spełniać szereg wymagań,
 które stwierdzają poprawność danego algorytmu, jak również operatora morfologicznego.
@@ -1005,8 +1005,8 @@ w narożnikach jest zazwyczaj zbyt mała, aby wykrywać krawędzie wokół nich,
 nie są wykrywane przez małe różnice w~wartościach kolejnych sąsiadujących pikseli.
 \end{itemize}
 
-Poniżej po krótce przedstawiono ogólny opis działania detektorów krawędzi opartych na~gradiencie,
-na~przykładzie operatora Canny'ego \cite{Canny}. Wymyślony przez Canne'go operator
+Poniżej pokrótce przedstawiono ogólny opis działania detektorów krawędzi opartych na~gradiencie,
+na~przykładzie operatora Canny'ego \cite{Canny}. Wymyślony przez Canny'ego operator
 składa się z~trzech~zasadniczych kroków:
 \begin{enumerate}%[noitemsep]
 \item Określenie wartości i~kąta gradientu \\
