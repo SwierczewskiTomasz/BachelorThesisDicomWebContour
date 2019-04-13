@@ -236,7 +236,7 @@ Niniejszy dokument prezentuje pracę dyplomową inżynierską pod tytułem "\tyt
 Celem realizowanym przez autorów pracy było stworzenie narzędzia do~manualnego
 i~półautomatycznego obrysowywania struktur anatomicznych oraz zmian patologicznych
 na~obrazach medycznych.
-Narzędzie może być wykorzystywane zarówno przez lekarzy w celach diagniostycznych, jak i~inżynierów
+Narzędzie może być wykorzystywane zarówno przez lekarzy w celach diagnostycznych, jak i~inżynierów
 biomedycznych w celach naukowych.
 Zakres pracy obejmuje omówienie standardu DICOM, przegląd aplikacji dostępnych
 na rynku, pozwalających na~przeglądanie i~wykonywanie obrysów na~obrazach
@@ -447,7 +447,7 @@ a jedynie na obrysy manualne albo półautomatyczne.
 
 W celu usprawnienia procesu tworzenia obrysów zmian patologicznych przygotowane
 zostało narzędzie pozwalające na~wykonywanie obrysów dwiema metodami:
-manualną i~półautomatyczną. Ponadto narzędzie pozwala~na zapisywanie wykonanych obryów,
+manualną i~półautomatyczną. Ponadto narzędzie pozwala~na zapisywanie wykonanych obrysów,
 obliczanie statystyk dotyczących regionu zainteresowania oraz anonimizację badań DICOM.
 Narzędzie działa w przeglądarce internetowej i~pozwala na wykonywanie obrysów na badaniach
 zapisanych na zdalnym serwerze.
@@ -507,7 +507,7 @@ Pierwsza z~nich to~aplikacja OHIF Viewer \cite{OHIF Viewer} oparta o~biblioteki 
 Cornerstone Core \cite{Cornerstone Core} to~biblioteka, która umożliwia przetwarzanie
 obrazów medycznych z~wykorzystaniem elementu \textit{canvas} z~języka HTML5. Biblioteka
 udostępnia interfejs do~wyświetlania obrazów medycznych pozwalający na~zarządzanie
-wyświetlaniem obrazu. Podstawowe funkcjonalności obsługiwane przez tę bibliotekę to:
+wyświetlaniem obrazu, a jej podstawowe funkcjonalności to:
 
 \begin{itemize}[noitemsep]
 \item przybliżanie i~oddalanie obrazu,
@@ -651,15 +651,15 @@ zarządzanie i~przeglądanie zapisanych plików były wystarczające dla realizo
 
 Poza serwerem Orthanc stworzono serwer w~technologii .NET Core \cite{Dotnet}
 wspomagający interfejs użytkownika, który pozwala na~przeprowadzanie czasochłonnych
-aplikacji poza interfejsem użytkownika. Wybrano tę technologię ze~względu na~to,
-że jest ciągle rozwijana, podobnie jak Orthanc .NET Core jest rozwiązaniem darmowym
-i nie ustępuje jakością w~stosunku do~Java~EE~\cite{Dlaczego dotnet}.
+operacji poza interfejsem użytkownika. Wybrano tę technologię ze~względu na~to,
+że jest ciągle rozwijana i podobnie jak Orthanc, .NET Core jest rozwiązaniem darmowym
+i nie ustępuje jakością względem ~Java~EE~\cite{Dlaczego dotnet}.
 Podstawowymi zadaniami tego serwera było przechowywanie
 wykonanych przez użytkownika obrysów manualnych, generowanie i~przechowywanie
 obrysów półautomatycznych oraz obliczanie statystyk związanych z~zapisanymi obrysami.
 
 Jako interfejs użytkownika wykorzystano bibliotekę ReactJS \cite{React} w~połączeniu
-z biblioteką Redux\cite{Redux}. Zdecydowano się na~tę technologię ze~względu na~bardzo dobre wsparcie techniczne
+z biblioteką Redux\cite{Redux}. Zdecydowano się na~nią ze~względu na~bardzo dobre wsparcie techniczne
 i elastyczność \cite{Dlaczego react}. Wybranie tej technologii pozwoliło na~stworzenie
 aplikacji przeglądarkowej, pozwalającej na~generowanie obrysów manualnych przy
 użyciu myszy lub tabletu graficznego, wybieranie punktów, z~których generowane
@@ -852,8 +852,8 @@ obliczeniowa maszyny, na~której uruchomiony jest serwer. Niemożliwe jest zwię
 wydajności poprzez zwiększenie liczby instancji serwera. Dopuszczalne jest takie
 rozwiązanie, gdyż planowana liczba użytkowników jednocześnie korzystających z~aplikacji
 to nie więcej niż 20~osób. Wynika to z tego, że narzędzie będzie używane przez pracowników
-zakładu i zaproszonych przez nich lekarzy. Możliwości zwiększenia skalowalności w~kontekście
-obliczeniowym zostało opisane w~Rozdziale 5.
+zakładu i zaproszonych przez nich lekarzy. Możliwość zwiększenia skalowalności w~kontekście
+obliczeniowym została opisane w~Rozdziale 5.
 
 \begin{figure}[t]
 	\center
@@ -895,7 +895,7 @@ Kolejny kluczowy element stworzonego systemu to~serwer obrysów i~obliczeń. Udo
 on API z~obrysami, które zostało wykorzystane przez interfejs użytkownika. API zostało
 stworzone przy pomocy ASP.NET Core 2.2 \cite{ASPNET} i wykorzystaniu frameworka
 .NET Core 2.2 \cite{Charakterystyka dotnet}. API oferuje cztery podstawowe operacje CRUD
-- utwórz, odczytaj, aktualizuj i~usuń. W~celu pobrania obrazów medycznych serwer z~API
+- utwórz, odczytaj, aktualizuj i~usuń. W~celu pobrania obrazów medycznych, serwer z~API
 łączy się do~bazy danych Orthanc. Informacje o~obrysach, takie jak: ID~obrysu, tag,
 ID obrazu medycznego i~typ obrysu (półautomatyczny lub manualny) są przechowywane
 w bazie danych Microsoft SQL Server. Pozostałe informacje takie jak: lista pikseli
@@ -984,7 +984,7 @@ Detektory krawędzi oparte na~gradiencie, w~tym operator Canny'ego są~często u
 zarówno w~przetwarzaniu obrazów medycznych, jak i~innych bardziej ogólnych zastosowaniach
 w~innych dziedzinach nauki. Stosuje się je~do obrazów, które mają duże różnice w~luminancji i~nie
 są~zaszumione. W~przypadku obrazów medycznych często możemy mówić właśnie o~takich obrazach.
-Główne zalety detektorów krawędzi opartych na~krawędzi
+Główne zalety detektorów krawędzi opartych na~gradiencie
 wymienione w~\cite{Cyfrowe przetwarzanie obrazów medycznych}, to:
 \begin{itemize}[noitemsep]
 \item dobre wyniki dla obrazów o~dobrej jakości i~bez szumów,
@@ -1416,7 +1416,7 @@ W ten sposób osiągnięto spójny graf, który zawiera punkty dodane przez uży
 \subsection {Wyszukanie najkrótszych ścieżek w~grafie}
 
 Na tym etapie została zapewniona spójność grafu. Z~całą pewnością istnieje ścieżka
-pomiędzy punktami wybranymi przez użytkownika, te~punkty są osiągalne. Pozostało
+pomiędzy punktami wybranymi przez użytkownika, więc te~punkty są osiągalne. Pozostało
 wybrać najkrótszą ścieżkę łączącą kolejne punkty. Założono, że jest dana lista
 punktów wybranych przez użytkownika i~zawiera ona kolejne punkty, tzn. algorytm
 prowadzi ścieżkę od pierwszego punktu przez kolejne punkty wybrane przez użytkownika
@@ -1504,7 +1504,7 @@ Porównanie czasów różnych operacji dla różnych klas słownikowych zaimplem
 w~technologii .NET można znaleźć w~\cite{C w pigulce}.
 Najlepszym rozwiązaniem byłoby użycie \textit{SortedDictionary<K,V>},
 która jest implementowana przez drzewo czerwono-czarne. Niestety jest
-sortowana po~kluczu a~nie tak, jak jest potrzebne w~tym przypadku sortowanie
+sortowana po~kluczu, a~nie tak, jak jest potrzebne w~tym przypadku sortowanie
 po wartości. Poszukiwano zatem struktury danych, która sortuje po~wartościach
 i ma~łatwy dostęp przez klucz.
 
@@ -1564,8 +1564,8 @@ istnieje droga między kolejnymi punktami, zatem algorytm z~całą pewnością z
 poprawny wynik. Co~najwyżej będzie to~wielokąt z~punktami wybranymi przez użytkownika.
 
 Algorytm dla sztucznych krawędzi generuje listę pikseli algorytmem Bresenhama
-\cite{Bresenham}. Jest to~algorytm, który dodaje w~najbardziej optymalny sposób
-krawędzie. W~celu zapewnienia łączności 4-krotnej jest przeprowadzana operacja
+\cite{Bresenham}. Jest to~algorytm, który dodaje krawędzie w~optymalny sposób.
+W~celu zapewnienia łączności 4-krotnej jest przeprowadzana operacja
 morfologiczna z~wykrywaniem 2~pikseli po~przekątnej z~maską 4-pikselową. Gdy takie
 piksele zostaną wykryte, to~na~jednym z~rogów jest dodawany piksel w~celu
 zapewnienia łączności 4-krotnej.
@@ -1591,7 +1591,7 @@ powiększonego prostokąta jest większy niż obrazu, to~nie jest zmieniany obra
 Gdy użytkownik stworzył niewielki obrys, to~rozmiar obrazu jest także niewielki.
 W sytuacji, gdy obrys zajmuje prawie cały obraz medyczny, to~nadal musi być
 przetwarzany cały obraz.
-\item Sięganie do~pamięci zamiast to~bitmapy \\
+\item Sięganie do~pamięci zamiast do~bitmapy \\
 W celu przyśpieszenia działania operatora Sobela i~liczenia statystyk, zamiast
 sięgać do~bitmapy metodą \textbf{.GetPixel()} na~platformie .NET, bitmapa została zapisana
 do tablicy bajtów w~celu uzyskania bezpośredniego dostępu. Została wykorzystana do~tego
@@ -1979,7 +1979,7 @@ Rysunku~\ref{fig:174} dla CT, Rysunku~\ref{fig:170} dla MMG oraz Rysunku~\ref{fi
 	\endminipage\hfill
 	\caption{Przykład edycji obrysu półautomatycznego dla RTG. Obraz przedstawia zwichnięty staw
 	ramienny ze~złamaniem Hilla-Sachsa (a). Złamanie to można dostrzec jako ciemniejszą przestrzeń
-	na wskutek wgniecenia kości ramiennej przez krawędź panewki łopatki i wyrostka kruczego łopatki.
+	wskutek wgniecenia kości ramiennej przez krawędź panewki łopatki i wyrostka kruczego łopatki.
 	Początkowo wybrano sześć punktów
 	(b)~i~wygenerowano obrys (c). Następnie dodano kolejny punkt (d).
 	Wygenerowany w~ten sposób obrys półautomatyczny (e)}
@@ -2018,7 +2018,7 @@ Dla każdej liczby wierzchołków przeprowadzano 10~kolejnych pomiarów generowa
 tego samego obrysu. Pozwoliło to~na~wyznaczenie średniego czasu generowania obrysu,
 niezależnie od~chwilowego wykorzystania procesora. Średni czas był obliczany przez narzędzia
 programistyczne badając działanie serwera w trybie debugowania. Realizowano to~przez
-analizę czasu potrzebny na wygenerowanie odpowiedzi przez serwer.
+analizę czasu potrzebnego na wygenerowanie odpowiedzi przez serwer.
 
 Większość z~generowanych obrysów było podglądami, czyli nie obliczano dla nich
 statystyk. Czas mierzono poprzez sprawdzanie czasu potrzebnego na~wygenerowanie
@@ -2052,7 +2052,7 @@ wygenerowanego obrysu.
 
 %Na Rysunku \ref{fig:testy_2} przedstawiono wyniki dla drugiego z~testów. Starano się obrysować
 W kolejnym teście (Rysunek \ref{fig:testy_2}) obrysowano
-cały brak widoczny na~obrazie medycznym. W~tym celu wstawiano kolejne
+cały bark widoczny na~obrazie medycznym. W~tym celu wstawiano kolejne
 punkty i~obserwowano czasy, jakie były potrzebne na~wygenerowanie obrysu. Wraz z
 kolejnymi punktami poprawiano generowany obrys. Czasy generowania zmalały prawie 2~krotnie, z~poziomu
 około 4s~do~około 2s.
@@ -2106,7 +2106,7 @@ wszystkich punktów wewnątrz obrysu, co~powodowało wydłużenie obliczeń.
 Wraz ze~zwiększaniem rozdzielczości obrazu, jak również ze~zwiększeniem się
 tworzonego obrysu na~obrazach medycznych o~wysokiej rozdzielczości, wzrastał proporcjonalnie
 czas potrzebny na~wygenerowanie obrysu półautomatycznego. Dzieje się tak dlatego,
-że w~algorytmie wykorzystano operator Sobela i~Canny'ego, które wymagają odwiedzenia
+że w~algorytmie wykorzystano operatory Sobela i~Canny'ego, które wymagają odwiedzenia
 pewnej liczby pikseli, która odpowiednio się zwiększa. Dla mammogramów, które miały rozdzielczość
 blisko 20 megapikseli, obrys był generowany nawet kilkadziesiąt sekund. Dla większości obrysów
 czasy obliczeń nie przekraczały zakładanych 30~sekund w~wymaganiach niefunkcjonalnych.
@@ -2119,9 +2119,9 @@ W celu zapewnienia spójności grafu dodawano sztuczne krawędzie, o~maksymalnej
 nieprzekraczającej maksymalnej odległości pomiędzy wcześniej wspomnianymi punktami.
 Im krótsza była to~odległość, tym mniej było dodawanych sztucznych krawędzi.
 Dodawanie nowych krawędzi pomiędzy oddalonymi od~siebie punktami oznaczało
-kilkukrotnie mniejszą liczbę przetwarzanych krawędzi przetwarzanych przez algorytm
+kilkukrotnie mniejszą liczbę krawędzi przetwarzanych przez algorytm
 A*. Drugim zjawiskiem odpowiedzialnym za~zmniejszanie się czasu potrzebnego na
-wygenerowanie obrysu półautomatycznego, wraz z~zwiększającą się liczbą punktów,
+wygenerowanie obrysu półautomatycznego, wraz ze~zwiększającą się liczbą punktów,
 był algorytm A*. Początkowo przypuszczano, że zwiększanie liczby uruchomień algorytmu
 A* wraz ze~wzrostem liczby punktów będzie generował dodatkowy koszt obliczeniowy,
 a~nie go~redukował. Tak może się stać w~pesymistycznym przypadku. W~realnych
@@ -2148,8 +2148,8 @@ w~taki sposób, aby algorytm nie przetwarzał zbyt dużej zbędnej liczby piksel
 Ponadto generowanie obrysów
 półautomatycznych działa zauważalnie lepiej dla obrazów o~ostrych krawędziach i~o
 niskim szumie. W~celu poprawienia zarówno jakości wykrywanego obrysu, jak i
-wydajności czasowej przeprowadzanych w~trakcie generowania obrysu obliczeń użytkownik
-powinien wybierać liczbę punktów rzędu kilkunastu punktów, co~może mieć zauważalnie
+wydajności czasowej przeprowadzanych w~trakcie generowania obrysu obliczeń, użytkownik
+powinien wybierać kilkanaście punktów, co~może mieć zauważalnie
 lepszą wydajność niż wybranie kilku punktów.
 
 Stworzone przez autorów narzędzie do tworzenia półautomatycznych obrysów zostało zoptymalizowane
@@ -2165,7 +2165,7 @@ z wyłączeniem wymagania dotyczącego wydajności generowania obrysu półautom
 dla obrazów DICOM o~dużej rozdzielczości (ponad 1000000 pikseli).
 
 W trakcie pracy nad systemem napotkano różne problemy i~ograniczenia, przede wszystkim
-związane ze~specyfikacją obrazowych badań medycznych.
+związane ze~specyfiką obrazowych badań medycznych.
 
 W interfejsie ograniczeniem okazał się dostępny rozmiar ekranu. Projektowanie
 aplikacji zakładało wykorzystanie ekranu o~rozdzielczości 1920x1080, a~więc ekranu
@@ -2192,7 +2192,6 @@ faktycznego rozmiaru obrazu. Rozważano dwie możliwości rozdzielczości wykony
 obrysów: realne wymiary obrazu oraz rozmiary obrazu wyświetlanego na~ekranie.
 Zdecydowano, że obrysy powinny być zapisywane w~wymiarach identycznych realnym
 rozmiarom obrazu. Decyzja została uzasadniona potrzebą zapewnienia dokładnego obrysu struktur i w konsekwencji poprawnego
-rozmiarom obrazu. Decyzja została uzasadniona potrzebą zapewnienia dokładnego obrysu struktur i w konsekwencji poprawnego
 obliczania statystyk. Zapisywanie obrysów w~takich wymiarach ułatwia obliczanie
 liczby pikseli wewnątrz obrysu.
 
@@ -2217,7 +2216,7 @@ W zaproponowanej obecnie wersji użytkownicy nie są rozróżnialni. Dodanie uż
 pozwoliłoby na~segregowanie tworzonych obrysów i~wyświetlanie użytkownikowi
 obrysów wykonanych jedynie przez niego samego, a~nie wszystkich obrysów istniejących
 w systemie. Z~punktu widzenia użyteczności systemu użytkownik nie musiałby szukać
-swojego obrysu pośród obrysu innych użytkowników systemu.
+swojego obrysu wśród obrysów innych użytkowników systemu.
 
 Uwierzytelnianie zapobiegłoby również niepowołanemu dostępowi osób postronnych
 do wykonanych obrysów oraz uniemożliwiłoby ataki typu DoS. W~obecnej wersji można
@@ -2240,7 +2239,7 @@ detekcję np.~zmian podejrzanych. W~przypadku zgromadzenia bardzo dużej bazy da
 obrysów różnych zmian, struktur anatomicznych na~obrazach różnych modalności można~by
 spróbować stworzyć moduł sztucznej inteligencji rozpoznający zawarte w~bazie danych zmiany lub struktury.
 
-\afterpage{\blankpage}
+%\afterpage{\blankpage}
 %\chapter*{}
 %\markboth{}{}
 %\addcontentsline{toc}{chapter}{}
