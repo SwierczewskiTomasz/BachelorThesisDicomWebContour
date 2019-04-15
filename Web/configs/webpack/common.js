@@ -1,7 +1,7 @@
 // source: https://github.com/vikpe/react-webpack-typescript-starter
 // shared config (dev and prod)
-const {resolve} = require('path');
-const {CheckerPlugin} = require('awesome-typescript-loader');
+const { resolve } = require('path');
+const { CheckerPlugin } = require('awesome-typescript-loader');
 const StyleLintPlugin = require('stylelint-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
@@ -46,12 +46,8 @@ module.exports = {
   plugins: [
     new CheckerPlugin(),
     new StyleLintPlugin(),
-    new HtmlWebpackPlugin({template: 'index.html.ejs',}),
+    new HtmlWebpackPlugin({ template: 'index.html.ejs', }),
   ],
-  externals: {
-    'react': 'React',
-    'react-dom': 'ReactDOM',
-  },
   performance: {
     hints: false,
   },
