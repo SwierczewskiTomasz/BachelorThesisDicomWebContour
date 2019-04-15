@@ -262,11 +262,11 @@ opisujących obrysowane regiony zainteresowania w obrazach.
 \selectlanguage{english}
 \begin{abstract}
 
-The following document describes bachelor's thesis on~,,\title''. 
+The following document describes bachelor's thesis on~,,\title''.
 Authors’ goal was~to~create a~digital tool that allows to~manually draw and semi-automatically generate
 contours of anatomical structures and lesions on~medical images.
 This tool can be used by medical doctors for diagnostic purposes and by medical engineers
-for scientific purposes. The topics discussed include: 
+for scientific purposes. The topics discussed include:
 DICOM standard, analysis of~state-of-the-art systems and tools used for~viewing
 and creating contours on~DICOM medical images, system's architecture and experiments
 conducted simultaneously with the creation of~the tool.
@@ -1594,7 +1594,7 @@ a 255 najjaśniejszy),
 \item wartość średnia --- średnia arytmetyczna wartości pikseli wewnątrz obrysu,
 \end{itemize}
 \item środek ciężkości --- średnia arytmetyczna pozycji pikseli obrysu,
-\item długość obrysu w~$mm$ --- obliczana na~podstawie położenia pikseli i~wartości \textit{pixel spacing} 
+\item długość obrysu w~$mm$ --- obliczana na~podstawie położenia pikseli i~wartości \textit{pixel spacing}
 odczytywanej z~tagu obrazu DICOM,
 \item długość obrysu w~pikselach,
 \item pole powierzchni w~$mm^2$,
@@ -2385,7 +2385,7 @@ postępować zgodnie z~informacjami wyświetlanymi w~trakcie instalacji.
 W celu konfiguracji serwera w~pliku \texttt{DotNetProject/Api/Properties/launchSettings.json}
 należy wpisać jako wartość~24~linii adres i~port, na~którym serwer ma~zostać
 udostępniony, jako wartość pola \texttt{applicationUrl}. Przykładowa poprawna wartość
-linii 24~to\texttt{ ,, ,,applicationUrl'': ,,https://localhost:500'','' }.
+linii 24~to\texttt{ ,, "applicationUrl": "https://localhost:500",'' }.
 
 Ponadto w~pliku \texttt{DotNetProject/Api/Startup.cs} należy podać w~linii 33~link, pod
 którym dostępna jest aplikacja przeglądarkowa jako argument metody \texttt{WithOrigins}.
@@ -2428,7 +2428,7 @@ należy uruchomić w~konsoli obsługującej skrypty w~języku bash.
 \markboth{}{Dodatek 3 --- Instrukcja użytkowania}
 \addcontentsline{toc}{chapter}{Dodatek 3 --- Instrukcja użytkowania}
 
-Po otwarciu aplikacji użytkownik może przeglądać pacjentów (patients), których
+Po otwarciu aplikacji użytkownik może przeglądać pacjentów (\textit{patients}), których
 badania zostały wgrane do~serwera Orthanc --- Rysunek \ref{fig:1}.
 
 \begin{figure}[h!]
@@ -2439,7 +2439,7 @@ badania zostały wgrane do~serwera Orthanc --- Rysunek \ref{fig:1}.
 \end{figure}
 
 Po wybraniu pacjenta poprzez kliknięcie lewym przyciskiem myszy na~jego nazwę,
-na liście pojawiają się badania (studies) wybranego pacjenta. Użytkownik może
+na liście pojawiają się badania (\textit{studies}) wybranego pacjenta. Użytkownik może
 wrócić do~widoku pacjentów klikając w~strzałkę na~liście z~badaniami --- Rysunek \ref{fig:2}.
 
 \begin{figure}[h!]
@@ -2452,7 +2452,7 @@ wrócić do~widoku pacjentów klikając w~strzałkę na~liście z~badaniami --- 
 \pagebreak
 
 Po wybraniu badania poprzez kliknięcie lewym przyciskiem myszy na~jego nazwę,
-na liście pojawiają się serie (series) wybranego badania. Użytkownik może wrócić
+na liście pojawiają się serie (\textit{series}) wybranego badania. Użytkownik może wrócić
 do widoku badań, klikając w~strzałkę na~liście z~seriami --- Rysunek \ref{fig:3}.
 
 \begin{figure}[h!]
@@ -2466,7 +2466,7 @@ Po wyborze serii na~ekranie pojawia się pierwszy obraz z~serii. Użytkownik
 może przełączać się pomiędzy obrazami, korzystając z~listy obrazów po~lewej
 stronie lub używając rolki myszy po~najechaniu na~obraz. Aby powrócić do~wyboru
 serii, należy kliknąć lewym przyciskiem myszy na~strzałkę na~liście instancji
-(instances) --- Rysunek \ref{fig:4}.
+(\textit{instances}) --- Rysunek \ref{fig:4}.
 
 \pagebreak
 
@@ -2492,8 +2492,8 @@ wciśniętym rysikiem po~tablecie --- Rysunek \ref{fig:5}.
 \pagebreak
 
 W~celu usunięcia nieudanego obrysu należy kliknąć lewym przyciskiem
-myszy w~przycisk wyczyść obraz (Clear Image). Po wciśnięciu przycisku zapisz obrys
-(Save Contour), użytkownikowi ukazuje się okno dialogowe --- \ref{fig:6}.
+myszy w~przycisk wyczyść obraz (\textit{clear image}). Po wciśnięciu przycisku zapisz obrys
+(\textit{save contour}), użytkownikowi ukazuje się okno dialogowe --- \ref{fig:6}.
 
 \begin{figure}[h!]
 	\center
@@ -2503,7 +2503,7 @@ myszy w~przycisk wyczyść obraz (Clear Image). Po wciśnięciu przycisku zapisz
 \end{figure}
 
 W~celu zapisania obrysu należy wpisać nazwę obrysu w~pole tekstowe poniżej obrazu.
-Następnie, należy kliknąć przycisk podgląd punktów (Preview Points)
+Następnie, należy kliknąć przycisk podgląd punktów (\textit{preview points})
 lewym przyciskiem myszy. Pozwoli to~użytkownikowi zobaczyć wykonany przez niego
 obrys --- Rysunek \ref{fig:7}.
 
@@ -2527,8 +2527,8 @@ odpowiednim miejscu na~obrazie --- Rysunek \ref{fig:8}.
     	\label{fig:8}
 \end{figure}
 
-Po kliknięciu przycisku wyślij (Send) lewym przyciskiem myszy obrys zostaje
-zapisany i~pojawia się na~liście wykonanych obrysów (Avaiable Contours). Lista
+Po kliknięciu przycisku wyślij (\textit{send}) lewym przyciskiem myszy obrys zostaje
+zapisany i~pojawia się na~liście wykonanych obrysów (\textit{avaiable contours}). Lista
 zawiera jedynie obrysy dla oglądanego obrazu --- Rysunek \ref{fig:9}. Na liście
 obrysy pojawiają się w postaci nazwy podanej przy zapisywaniu.
 
@@ -2540,7 +2540,7 @@ obrysy pojawiają się w postaci nazwy podanej przy zapisywaniu.
 \end{figure}
 
 Użytkownik może wykonywać obrysy w~sposób półautomatyczny. W~tym celu musi
-wybrać kartę z~obrysami półautomatycznymi (z Manual do~Semi-Automatic) ---
+wybrać kartę z~obrysami półautomatycznymi (z \textit{manual} do~\textit{semi-automatic}) ---
 Rysunek \ref{fig:10}. Widok jest bardzo podobny do widoku obrysów manualnych.
 
 \pagebreak
@@ -2567,7 +2567,7 @@ zgodnie albo przeciwnie do~ruchu wskazówek zegara --- Rysunek \ref{fig:11}.
 
 \pagebreak
 
-Po wciśnięciu przycisku podgląd obrysu (Preview Contour) użytkownik może
+Po wciśnięciu przycisku podgląd obrysu (\textit{preview contour}) użytkownik może
 zobaczyć wygenerowany przez algorytm obrys. --- Rysunek \ref{fig:12}.
 
 \begin{figure}[h!]
@@ -2591,7 +2591,7 @@ punkty poprzez klikanie na~nich lewym przyciskiem myszy --- Rysunek \ref{fig:13}
 \pagebreak
 
 Gdy wygenerowany obrys jest satysfakcjonujący dla użytkownika, może on~go~zapisać
-klikając przycisk zapisz obrys (Save Contour). Okno zapisu jest analogiczne do~okna zapisu
+klikając przycisk zapisz obrys (\textit{save contour}). Okno zapisu jest analogiczne do~okna zapisu
 obrysu manualnego. Jeśli na~obrazie pojawią się krzyżujące krawędzie, należy
 wyczyścić obrys i~wykonać go~od~początku, gdyż algorytm modyfikujący obrys dodał
 nowe punkty w~złym miejscu lub użytkownik wprowadził punkty w~złej kolejności
@@ -2617,7 +2617,7 @@ kliknięcie lewego przycisku myszy na~nazwie obrysu --- Rysunek \ref{fig:15}.
 \pagebreak
 
 Przed wykonaniem obrysu użytkownik może wybrać kolor wykonywanego obrysu.
-Po wciśnięciu lewym przyciskiem myszy na~przycisk wybierz kolor (Choose Color),
+Po wciśnięciu lewym przyciskiem myszy na~przycisk wybierz kolor (\textit{choose color}),
 pojawia się okno wyboru koloru. Użytkownik może wybrać kolor z~przygotowanej
 wcześniej palety kolorów lub wprowadzić dowolny inny korzystając z~pól tekstowych,
 wprowadzając kod RGB wybranego koloru --- Rysunek \ref{fig:16}.
@@ -2654,7 +2654,7 @@ wyświetlanego obrazu --- Rysunek \ref{fig:18}.
     	\label{fig:18}
 \end{figure}
 
-Poprzez wciśnięcie przycisku anonimizuj (Anonymize) użytkownik może wybrać nazwę
+Poprzez wciśnięcie przycisku anonimizuj (\textit{anonymize}) użytkownik może wybrać nazwę
 pacjenta, datę jego urodzenia oraz płeć po~anonimizacji jego danych --- Rysunek \ref{fig:19}.
 
 \begin{figure}[h!]
