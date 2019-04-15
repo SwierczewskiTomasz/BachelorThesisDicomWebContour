@@ -211,7 +211,7 @@
 % --------------------- Ustawienia użytkownika ------------------
 
 \newcommand{\tytul}{Interfejs użytkownika do~manualnego obrysu struktur oraz wybranych anormalności w~obrazach medycznych z~wykorzystaniem tabletu graficznego}
-\renewcommand{\title}{User interface for graphic-tablet interactions for contouring of~structures and selected anormalies in~medical images}
+\renewcommand{\title}{User interface for graphic tablet interactions for contouring of~structures and selected abnormalities in~medical images}
 \newcommand{\type}{inżyniers} % magisters, licencjac
 \newcommand{\supervisor}{dr inż. Magdalena Jasionowska}
 
@@ -232,7 +232,7 @@
 %\begin{center}
 %\tytul
 %\end{center}
-Niniejszy dokument prezentuje pracę dyplomową inżynierską pod tytułem "\tytul".
+Niniejszy dokument prezentuje pracę dyplomową inżynierską pod tytułem ,,\tytul''.
 Celem realizowanym przez autorów pracy było stworzenie narzędzia do~manualnego
 i~półautomatycznego obrysowywania struktur anatomicznych oraz zmian patologicznych
 na~obrazach medycznych.
@@ -245,7 +245,7 @@ w trakcie tworzenia zaproponowanego narzędzia.
 
 Zastosowana architektura umożliwia jednoczesne korzystanie z~narzędzia przez
 wielu użytkowników. Moduł obrysów manualnych został zaimplementowany głównie
-w~warstwie ściśle związanej z~interfejscem użytkownika. Moduł obrysów półautomatycznych
+w~warstwie ściśle związanej z~interfejsem użytkownika. Moduł obrysów półautomatycznych
 bazuje na~algorytmie opracowanym na~potrzeby generowania obrysów, który wykorzystuje
 operator Canny'ego oraz algorytm wyszukiwania najkrótszych ścieżek w~grafie.
 Dodatkowo dodany moduł statystyczny umożliwia wyznaczenie podstawowych miar statystycznych,
@@ -262,19 +262,19 @@ opisujących obrysowane regiony zainteresowania w obrazach.
 \selectlanguage{english}
 \begin{abstract}
 
-The following document describes bachelor's thesis on~"\title". The goal of~authors'
-is~to~create a~digital tool that allows to~manually draw and semi-automatically generate
+The following document describes bachelor's thesis on~,,\title''. 
+Authors’ goal was~to~create a~digital tool that allows to~manually draw and semi-automatically generate
 contours of anatomical structures and lesions on~medical images.
 This tool can be used by medical doctors for diagnostic purposes and by medical engineers
-with scientific purposes. The topics discussed include: 
-DICOM standard, analysis of~state-of-the-art systems and tools used to~viewing
+for scientific purposes. The topics discussed include: 
+DICOM standard, analysis of~state-of-the-art systems and tools used for~viewing
 and creating contours on~DICOM medical images, system's architecture and experiments
 conducted simultaneously with the creation of~the tool.
 
 The architecture used enables simultaneous use of~the tool by~many users.
 Manual contour module had mainly been implemented in part connected with user interface.
 Semi-automatic contour module is based on the algorithm developed for the~purpose of~generating contours, that uses Canny's
-Operator and the algorithm of~searching the shortest path in~the graph.
+Operator and the algorithm searching for the shortest path in~the graph.
 Additionally statistics module was added which allows to calculate basic statistical measurements,
 describing contoured regions of interest in the images.
 \\
@@ -332,9 +332,8 @@ samodzielnie, co~poświadczam własnoręcznym podpisem.
 \null\thispagestyle{empty}\newpage
 \pagestyle{fancy}
 \pagenumbering{arabic}
-\setcounter{page}{11} % JEŻELI Z~POWODU DUŻEJ ILOŚCI STRON W~SPISIE TREŚCI SIĘ NIE ZGADZA, TRZEBA ZMODYFIKOWAĆ RĘCZNIE
-%oryginalnie było 11
-%ustawiam ponownie 11, usunąłem pustą stronę po~spisie treści - rodziały powinny zaczynać się na~stronach nieparzystych
+\setcounter{page}{11}
+
 
 \chapter*{Wstęp}
 \markboth{}{Wstęp}
@@ -350,16 +349,16 @@ do każdej dziedziny z~szeroko pojętej nauki. Jedną z~takich dziedzin jest tak
 Powstają coraz to~nowsze rozwiązania komputerowego wspomagania medycyny w diagnostyce i~terapii.
 Jednym z~takich zagadnień jest próba rozpoznawania we~wczesnym stadium różnych zmian
 patologicznych na obrazach medycznych. Wczesne wykrywanie zmian pozwala
-na~szybką terapię, a~w~konsenkwencji niejednokrotnie na~całkowite wyleczenie. Między innymi dlatego
+na~szybką terapię, a~w~konsekwencji niejednokrotnie na~całkowite wyleczenie. Między innymi dlatego
 tak ważne jest tworzenie komputerowych systemów wspomagania procesu podejmowania
 decyzji przez radiologów w~diagnostyce obrazowej.
 
 Komputerowe wspomaganie diagnostyki obrazowej może dotyczyć między innymi automatycznej
 detekcji zmian patologicznych uwidocznionych na~obrazach (np. systemy CAD stosowane
-w~mammografii) lub nieuwidocznionych (np. rozpoznanie udaru niedokrwiennego na~obrazach %cite!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-CT we~wczesnej fazie). W~celu stworzenia dobrego narzędzia automatycznego wspomagania %cite!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+w~mammografii) lub nieuwidocznionych (np. rozpoznanie udaru niedokrwiennego na~obrazach
+CT we~wczesnej fazie). W~celu stworzenia dobrego narzędzia automatycznego wspomagania
 decyzji należy posiadać zbiór danych referencyjnych. W~praktyce wykorzystuje się
-dane obrazowe opisane i obrysowane przez lekarzy---specjalistów. Ten etap prac
+dane obrazowe opisane i obrysowane przez lekarzy--specjalistów. Ten etap prac
 jest czasochłonny i żmudny. Dlatego warto automatyzować ten etap tworzenia narzędzi
 komputerowego wspomagania decyzji.
 
@@ -378,8 +377,6 @@ Metoda ta polega na wybraniu przez użytkownika punktów na~obrazie, a~następni
 wygenerowaniu obrysów z~uwzględnieniem tych punktów. W~tym celu
 został użyty operator Canny'ego, a~następnie punkty przetwarzane są
 poprzez algorytmy grafowe.
-%Została przeprowadzona walidacja,
-%czy ta~metoda sprawdza się w~celu usprawnienia rysowania obrysów manualnych. @Tomek ??????????????????????????????????????
 
 Z zaproponowanego przez autorów rozwiązania mogą korzystać lekarze w~codziennej pracy, ale także
 studenci medycyny w~celu nauki wykrywania zmian patologicznych, czy też lekarze i~inżynierowie
@@ -423,7 +420,7 @@ przydatne są~narzędzia automatycznej detekcji zmian patologicznych,
 które służą do~przetwarzania danych obrazowych w~celu
 wykrycia patologicznych zmian. Wykorzystują do~tego między innymi metody sztucznej
 inteligencji, które do poprawnego działania wymagają zbioru testowego, czyli zbioru obrazów
-wraz~z obrysami zmian patolologicznych czy struktur anatomicznych, stworzonych przez
+wraz~z obrysami zmian patologicznych czy struktur anatomicznych, stworzonych przez
 ekspertów --- lekarzy. Na podstawie tego zbioru algorytm uczy się
 wykrywać podobne zmiany w badaniach poddawanych automatycznej detekcji.
 Ze~względu na~to~kluczowe znaczenie dla poprawności działania algorytmu ma~dokładność i~wiarygodność zbioru testowego.
@@ -676,7 +673,7 @@ wynik półautomatycznego dopasowania obrysu.
 	\center
 	\includegraphics[width=0.7\textwidth]{architektura2}
 	\caption{Diagram przedstawiający elementy autorskiego systemu}
-    	\label{fig:architektura2} % TODO: add image!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    	\label{fig:architektura2}
 \end{figure}
 
 \afterpage{\blankpage}
@@ -692,7 +689,7 @@ statystyk dla wybranego obszaru obrazu wewnątrz obrysu.
 
 Specyfikacja wymagań została opracowana na podstawie danych dotyczących wymagań stawianych
 przed tworzonym systemem. Zostały one przedstawione w~rozdziałach 3.1.1. - 3.1.3. Wymagania
-były konsultowane ze %z~lekarzami i~studentami ostatniego roku medycyny z Warszawskiego Uniwersytetu Medycznego.
+były konsultowane ze
 środowiskiem medycznym m.in. Warszawskim Uniwersytetem Medycznym.
 
 \subsection {Opis biznesowy}
@@ -708,7 +705,6 @@ wyznaczanie obrysów półautomatycznych.
 
 Do podstawowych funkcjonalności systemu zaliczają się:
 \begin{itemize}[noitemsep]
-%O listach wyliczeniowych https://sjp.pwn.pl/poradnia/haslo/listy-wyliczeniowe;4812.html
 \item anonimizacja\footnote {Anonimizacja (ang. anonymization) --- operacja mająca
 na celu usunięcie z~danych informacji o~pacjentach, które pozwoliłyby na~identyfikację
 danych z~tożsamością pacjenta. Są to~między innymi: imiona, nazwisko, PESEL.
@@ -773,13 +769,11 @@ półautomatycznego, użytkownik wybiera nazwę obrysu i~zapisuje obrys w~system
 Użytkownik wybiera z~listy obrysów zapisany obrys i~przegląda obrys naniesiony
 na obraz, na~którym został wykonany.
 
-%Doprecyzować listę po~prawej stronie
 \item \textbf {Jako użytkownik chcę zobaczyć statystyki dotyczące obrysu.} \\
 Użytkownik wybiera z~listy obrysów zapisany obrys i~przegląda statystyki obliczone
 na podstawie zapisanego obrysu. Do~statystyk zalicza się: obwód obrysu, pole obrysu,
 histogram obrazu na~obszarze obrysu oraz liczbę pikseli wewnątrz obrysu.
 
-%Doprecyzować listę po~prawej stronie
 \item \textbf {Jako użytkownik chcę zobaczyć jednocześnie dowolną liczbę zapisanych
 w systemie obrysów na~jednym obrazie DICOM.} \\
 Użytkownik wybiera poprzez kliknięcie lewym przyciskiem myszy na~nazwie obrysu,
@@ -789,7 +783,6 @@ wcześniej wybranego obrysu poprzez ponowne wciśnięcie lewego przycisku myszy
 na nazwie obrysu, która znajduje się na~liście po~prawej stronie. Na~zdjęciu wyświetlane są jedynie
 obrysy wykonane na~tym obrazie.
 
-%Doprecyzować listę po~prawej stronie
 \item \textbf {Jako użytkownik chcę zanonimizować dane pacjenta zawarte w~pliku DICOM.} \\
 Użytkownik może zanonimizować dane pacjenta, gdy przegląda jego obraz. Użytkownik może
 anonimizować imię i~nazwisko pacjenta, datę urodzenia pacjenta oraz płeć pacjenta
@@ -916,7 +909,7 @@ i~generowanie podglądu i~zapis obrysu półautomatycznego.
 W celu zapisania danych związanych z~obrysami wykorzystana została baza SQL~Lite.
 Baza składa się z~jednej tabeli, w~której przechowywane są: identyfikator obrazu DICOM,
 identyfikator obrysu, nazwa obrysu oraz informacja o tym, czy obraz został wygenerowany
-manualnie czy półautomatycznie. Punkty, z których składa się obrys i~statystytki
+manualnie czy półautomatycznie. Punkty, z których składa się obrys i~statystyki
 z~nim związane zapisywane są~w~oddzielnych
 plikach tekstowych o nazwie identycznej z identyfikatorem obrysu.
 
@@ -1097,10 +1090,9 @@ położenia krawędzi zastosowano operator Canny'ego.
 
 Opracowany algorytm służy do~półautomatycznego tworzenia obrysów na~podstawie wybranych punktów,
 które są interpolowane przez algorytm bazujący na~operatorze Canny'ego, operatorze
-Sobela i~algorytmie A* (algorytm A* to~heurestyczny algorytm znajdowania najkrótszych ścieżek w~grafie).
+Sobela i~algorytmie A* (algorytm A* to~heurystyczny algorytm znajdowania najkrótszych ścieżek w~grafie).
 Powyższe rozwiązania pozwalają na~uzyskanie satysfakcjonujących efektów na~przetwarzanych
 przez narzędzie obrazach medycznych.
-% screen z~aplikacji i~schemat
 
 Danymi wejściowymi dla tego algorytmu obrysów półautomatycznych są:
 \begin{itemize}[noitemsep]
@@ -1148,19 +1140,13 @@ krokiem przetwarzania było stworzenie grafu na~podstawie wyżej wymienionej mac
 Przykład działania operatora Canny'ego przedstawiono na~Rysunkach od \ref{fig:123} do \ref{fig:127}.
 Obraz wyjściowy do dalszych działań został przedstawiony na Rysunku \ref{fig:123}.
 
-%\begin{figure}[h!]
-%	\center
-%	\includegraphics[width=0.45\textwidth]{123}
-%	\caption{Oryginalny obraz, który przedstawia badanie rezonansem magnetycznym stawu ramiennego}
-%	\label{fig:123}
-%\end{figure}
 
 \begin{figure}[p!]
 	\center
 	\minipage{0.48\textwidth}
 		\includegraphics[width=\linewidth]{123}
 		\caption{Oryginalny obraz, który przedstawia badanie rezonansem magnetycznym
-		stawu ramiennego}%, jest on~obrazem wyjściowym do~dalszych rozważań}
+		stawu ramiennego}
 		\label{fig:123}
 	\endminipage
 	\\
@@ -1199,13 +1185,11 @@ punkcie krawędź,
 \item punkty wybrane przez użytkownika aplikacji.
 \end{itemize}
 
-%Jaki tutaj -? - czy --?
 Przed rozpoczęciem działania algorytmu należy zapewnić łączność 4-krotną
 (ang. \textit{pixel 4-connectivity}) \cite{Pixel connectivity}, zwaną także
 sąsiedztwem von Neumanna. Przy łączności 4-krotnej sprawdza się tylko sąsiadów
 w poziomie lub pionie zgodnie ze~schematem na~Rysunku \ref{fig:4pixel}.
 
-%Opisać te~rysunki i~wywalić stąd - nie muszą być dokładnie w~tym miejscu.
 \begin{figure}[h!]
 \begin{center}
 	\minipage{0.48\textwidth}
@@ -1247,26 +1231,7 @@ Dla łączności 8-krotnej sprawdza się wszystkich możliwych sąsiadów, takż
 przekątnej. Jest ona zwana także sąsiedztwem Moore'a lub otoczeniem Moore'a \cite{Moore}.
 Została ona przedstawiona na~Rysunku \ref{fig:8pixel}.
 
-%\begin{figure}[h!]
-%\begin{center}
-%\begin{tikzpicture}
-%\draw[step=1cm,gray,very thin] grid (3,3);
-%\fill[fill=black!60!white, draw=black] (1,1) rectangle (2,2);
-%\fill[fill=gray!60!white, draw=black] (1,0) rectangle (2,1);
-%\fill[fill=gray!60!white, draw=black] (0,1) rectangle (1,2);
-%\fill[fill=gray!60!white, draw=black] (2,1) rectangle (3,2);
-%\fill[fill=gray!60!white, draw=black] (1,2) rectangle (2,3);
-%\fill[fill=gray!60!white, draw=black] (0,0) rectangle (1,1);
-%\fill[fill=gray!60!white, draw=black] (2,2) rectangle (3,3);
-%\fill[fill=gray!60!white, draw=black] (0,2) rectangle (1,3);
-%\fill[fill=gray!60!white, draw=black] (2,0) rectangle (3,1);
-%\end{tikzpicture}
-%\end{center}
-%\caption{Ilustracja łączności 8-krotnej}
-%\label{fig:8pixel}
-%\end{figure}
 
-%Bibliografia do~tego?
 W przypadku zastosowania łączności 8-krotnej przy wyznaczaniu długości krawędzi
 trzeba zastosować metrykę Czebyszewa, która jest specjalnym przypadkiem
 odległości Minkowskiego. Przy zastosowaniu łączności 4-krotnej długość krawędzi
@@ -1449,7 +1414,7 @@ Zgodnie z~\cite{AiSD2} ,,Funkcja $h$ musi spełniać następujące warunki:
 Heurystyka w~postaci metryki Manhattan spełnia te~wymagania. Z~tego powodu może
 zostać wykorzystany algorytm A*. Porównując złożoności algorytmu A* i~Dijkstry w
 \cite{AiSD2} możemy zauważyć, że algorytm A* w~pesymistycznym przypadku ma~taką
-samą złożoność jak algorytm Djikstry, czyli $O(|E|*log(|V|))$ z~kolejką priorytetową
+samą złożoność jak algorytm Dijkstry, czyli $O(|E|*log(|V|))$ z~kolejką priorytetową
 dla grafów rzadkich, a~$O(|V|^2)$ nie wykorzystując kolejki priorytetowej dla
 grafów gęstych. W~praktyce dla grafów rzadkich nie ma~potrzeby rozważania znacznej
 części wierzchołków, co~poprawia złożoność średnią. Wynosi ona wtedy $O(|E|)$.
@@ -1457,7 +1422,7 @@ części wierzchołków, co~poprawia złożoność średnią. Wynosi ona wtedy $
 Do implementacji wyszukiwania najkrótszych ścieżek w~grafie na~podstawie wyżej
 wymienionych wniosków został wykorzystany algorytm A* z~heurystyką w~postaci
 metryki Manhattan. Przykładowy pseudokod tego algorytmu można znaleźć w
-\cite{AiSD2} i~jest on~następujący: %Także nie powinno tak tego się robić!
+\cite{AiSD2} i~jest on~następujący:
 
 \begin{verbatim}
 CLOSE = 0 // zbiór (z szybkim sprawdzeniem przynależności)
@@ -1629,8 +1594,8 @@ a 255 najjaśniejszy),
 \item wartość średnia --- średnia arytmetyczna wartości pikseli wewnątrz obrysu,
 \end{itemize}
 \item środek ciężkości --- średnia arytmetyczna pozycji pikseli obrysu,
-\item długość obrysu w~$mm$ --- obliczana na~podstawie położenia pikseli i~% doprecyzuj, bo~ja~nie wiem
-wartości \textit{pixel spacing} odczytywanej z~tagu obrazu DICOM,
+\item długość obrysu w~$mm$ --- obliczana na~podstawie położenia pikseli i~wartości \textit{pixel spacing} 
+odczytywanej z~tagu obrazu DICOM,
 \item długość obrysu w~pikselach,
 \item pole powierzchni w~$mm^2$,
 \item liczba pikseli wewnątrz obrysu.
@@ -1649,20 +1614,15 @@ Do obliczenia histogramu jest wymagany punkt wewnętrzny obrysu. Środek ciężk
 obrysu nie zawsze musi znajdować się wewnątrz obrysu. W~przypadku zastosowania
 algorytmu \textit{scan-linii} \cite{GK1} dla obrysu manualnego nie jest podana informacja o~logicznych
 wartościach, gdzie jest krawędź, więc nie można wykryć np. krawędzi poziomych.
-%Algorytm scan-linii lepiej nadaje się w~przypadku, gdy wypełniamy wielokąt,
-%a nie obrys.
-% pani dr~chciała to~inaczej
 
 \pagebreak
 
-Z tego powodu wybrano algorytm \textit{Flood Fill} \cite{AiSD2}, czyli rozlewania się rekurencyjnego % cytacja
+Z tego powodu wybrano algorytm \textit{Flood Fill} \cite{AiSD2}, czyli rozlewania się rekurencyjnego
 zliczonych pikseli od~punktu wewnętrznego. Właśnie z~tego powodu od~użytkownika
 jest wymagane podanie dodatkowej informacji, jaką jest punkt wewnętrzny obrysu.
 Założono, że użytkownik zaznaczy go~poprawnie. W~sytuacji, gdy zostanie podany
-błędny punkt, to~ten algorytm policzy to, co~znajduje się poza regioniem zainteresowania (ROI),
+błędny punkt, to~ten algorytm policzy to, co~znajduje się poza regionem zainteresowania (ROI),
 a~nie to, co~znajduje się wewnątrz tego regionu.
-%to~ten algorytm policzy to~co~znajduje się na~zewnątrz obrysu, a
-%nie to~co~jest wewnątrz.
 
 Długość obrysu w~pikselach jest obliczana na~podstawie liczebności listy pikseli należących do~obrysu.
 
@@ -1681,7 +1641,6 @@ znaków, w~szczególności takie, które nie pozwolą na ustalenie tożsamości 
 
 \chapter {Przeprowadzone eksperymenty}
 
-%Zostały przeprowadzne eksperymenty na~autorskim narzędziu do~tworzenia obrysów.
 Eksperymenty zostały przeprowadzone przy użyciu zaproponowanego narzędzia
 do~tworzenia obrysów pod kątem:
 \begin{itemize}[noitemsep]
@@ -1704,7 +1663,6 @@ Celsjusza; nie występuje throttling;
 
 \section {Zbiór testowy}
 
-%Na zbiór plików testowych składają się prywatne badania autora i~jego najbliższej rodziny.
 Zbiór danych testowych składał się z~20 badań, w~tym badania
 CT~(ang. \textit{computed tomography}~---~tomografia komputerowa),
 MRI~(ang. \textit{magnetic resonance imaging}~---~obrazowanie metodą rezonansu magnetycznego),
@@ -1713,7 +1671,7 @@ MMG~(ang. \textit{mammogram}~---~mammogram).
 Badania te zostały wykonane na różnych urządzeniach, w~różnych placówkach medycznych.
 
 Badania tomografią komputerową zazwyczaj składają się z~jednej serii. Ta seria zazwyczaj zawiera od~kilkudziesięciu
-do~kilkuset kolejnych wartw, które są obrazami. Dla większości badań rozdzielczość takiego obrazu wynosiła 512x512 pikseli.
+do~kilkuset kolejnych warstw, które są obrazami. Dla większości badań rozdzielczość takiego obrazu wynosiła 512x512 pikseli.
 
 Badania rezonansem magnetycznym zazwyczaj składają się z~kilku do kilkunastu serii, gdzie każda seria zawierała kilkanaście warstw.
 Rozdzielczość jednego obrazu składającego się na warstwę zazwyczaj wynosiła 512x512 pikseli.
@@ -1722,35 +1680,7 @@ Na badanie rentgenowskie składa się zazwyczaj jedna do kilku serii, gdzie każ
 
 Mammogramy mają największą rozdzielczość. Jeden obraz składał się z 6000x3300 pikseli, co daje rozdzielczość prawie 20 megapikseli.
 
-%Do testów zostały wykorzystane następujące badania:
-%\begin{enumerate}[noitemsep]
-%\item badanie rezonansem magnetycznym barku prawego Tomasza Świerczewskiego około
-%8 tygodni po~zwichnięciu stawu ramiennego typu przedniego podkruczego --- Badanie 1,
-%\item zdjęcie rentgenowskie barku prawego Tomasza Świerczewskiego w~momencie zwichnięcia stawu ramiennego --- Badanie 2,
-%\item badanie tomografią komputerową kręgosłupa Wojciecha Świerczewskiego --- Badanie 3,
-%\item badanie rezonansem magnetycznym kręgosłupa Wojciecha Świerczewskiego --- Badanie 4.
-%\end{enumerate}
-
-%W celu zaprezentowania działania algorytmu  wybrano jedno przykładowe badanie --- badanie MRI stawu ramiennego.
-
-%Pliki te~były wykonane na~różnych urządzeniach, w~różnych szpitalach.
-
-%Dodatkowo wykorzystano wyniki badań udostępnione Politechnice Warszawskiej do
-%celów dydaktycznio badawczych. Zawierały one badania organów wewnętrznych, takich
-%jak wątroba i~trzustka wykonane przy użyciu rezonansu magnetycznego oraz badanie mammograficzne.
-
 \section {Analiza działania aplikacji}
-
-%W autorskiej aplikacji otwierano kolejne badania. Rysunek \ref{fig:112} przedstawia
-%jedną klatkę obrazu medycznego Badania 1, z~pewnej serii. Rysunek \ref{fig:113}
-%przedstawia Badanie 2, natomiast Rysunek \ref{fig:114} przedstawia Badanie 3, a
-%Rysunek \ref{fig:115} Badanie 4.
-
-%Ten test wykazał, że aplikacja otwiera różne badania medyczne, od~rezonansu
-%magnetycznego, przez tomografię komputerową po~zdjęcie rentgenowskie. Na~każdym
-%z obrazów medycznych można wykonywać obrysy. Przykładowe obrysy ręczne i
-%półautomatyczne znajdują się odpowiednio na~Rysunku \ref{fig:105} i~Rysunku
-%\ref{fig:107}. Wyniki testów potwierdzają, że statystyki są obliczane poprawnie.
 
 Przeprowadzano analizę działania autorskiego narzędzia do tworzenia obrysów.
 W~pierwszym kroku przeprowadzono testy związane z~obsługą różnych typów badań.
@@ -1794,8 +1724,6 @@ Użytkownik ma także możliwość zmiany serii badania poprzez wybranie jej z~o
 \end{center}
 \end{figure}
 
-%https://github.com/embiem/react-canvas-draw
-
 Aplikacja ta spełnia wszystkie zakładane wymagania w~zakresie przeglądania i~obsługi różnych typów plików.
 Dzięki zastosowaniu serwera Orthanc powinny być obsługiwane wszystkie pliki DICOM.
 
@@ -1805,27 +1733,13 @@ wykonany na~badaniu MRI barku. Po~lewej stronie jest przedstawiony obrys, a~po~p
 stronie są~przedstawione statystyki ROI, czyli regionu zainteresowania, w~tym przypadku
 została obrysowana głowa kości ramienna z gojącym się złamaniem Hilla-Sachsa. Taki obrys może pomóc w~ocenie
 stopnia złamania i późniejszej stabilności stawu, poprzez porównanie pola powierzchni kości po złamaniu
-względem referencyjnego badania. To złamanie można dostrzeć jako wgłębienie w lewej części obrysu.
+względem referencyjnego badania. To złamanie można dostrzec jako wgłębienie w lewej części obrysu.
 
 Na tym badaniu jest przedstawiony bark prawy i~dokonano obrysu kości ramiennej. W~statystykach można
 znaleźć takie informacje jak obwód, pole powierzchni ROI, jego środek na obrazie. Dodatkowo jest zawarty
 histogram, a~na nim kluczowe informacje o~luminancji w~ROI.
 
 \pagebreak
-
-%\begin{figure}[p]
-%	\center
-%	\includegraphics[width=0.6\textwidth]{114}
-%	\caption{Widok badania rezonansem magnetycznego kręgosłupa}
-%    	\label{fig:114}
-%\end{figure}
-
-%\begin{figure}[p]
-%	\center
-%	\includegraphics[width=0.6\textwidth]{115}
-%	\caption{Widok badania tomografią komputerową kręgosłupa}
-%    	\label{fig:115}
-%\end{figure}
 
 \begin{figure}[h!]
 	\center
@@ -2056,19 +1970,11 @@ wygenerowanego obrysu.
 
 \bigskip
 
-%Na Rysunku \ref{fig:testy_2} przedstawiono wyniki dla drugiego z~testów. Starano się obrysować
 W kolejnym teście (Rysunek \ref{fig:testy_2}) obrysowano
 cały bark widoczny na~obrazie medycznym. W~tym celu wstawiano kolejne
 punkty i~obserwowano czasy, jakie były potrzebne na~wygenerowanie obrysu. Wraz z
 kolejnymi punktami poprawiano generowany obrys. Czasy generowania zmalały prawie 2~krotnie, z~poziomu
 około 4s~do~około 2s.
-
-%\begin{figure}[h!]
-%	\center
-%	\includegraphics[width=0.6\textwidth]{108}
-%	\caption{Jeden z~wygenerowanych obrysów w~trakcie testów}
-%    	\label{fig:108}
-%\end{figure}
 
 
 Na Rysunku \ref{fig:testy_2} można zauważyć czasami gwałtowne skoki w~zmniejszającym
@@ -2101,8 +2007,6 @@ liczbę punktów, to~zarówno algorytm A* szybciej znajdzie kolejny punkt zaznac
 trzeba analizować dużej części obrazu.
 
 \section {Analiza wyników i~wnioski}
-
-%Poniżej przedstawiono analizę wyników oraz wnioski z~przeprowadzonych testów.
 
 Na podstawie przeprowadzonych testów
 zauważono, że gdy są generowane statystyki, to~czas potrzebny na~obliczenie statystyk
@@ -2240,7 +2144,7 @@ mogłoby zaoszczędzić użytkownikowi wiele czasu.
 
 Głównym celem wykonywania obrysów na~obrazach medycznych jest generowanie zbioru
 testowego, zawierającego różnorodne cechy obrazowe i~wykorzystywane w~różnych
-metodach sztucznej inteligencji, wspierających lekarzy poprzez automatyzaczną
+metodach sztucznej inteligencji, wspierających lekarzy poprzez automatyczną
 detekcję np.~zmian podejrzanych. W~przypadku zgromadzenia bardzo dużej bazy danych
 obrysów różnych zmian, struktur anatomicznych na~obrazach różnych modalności można~by
 spróbować stworzyć moduł sztucznej inteligencji rozpoznający zawarte w~bazie danych zmiany lub struktury.
@@ -2266,39 +2170,39 @@ spróbować stworzyć moduł sztucznej inteligencji rozpoznający zawarte w~bazi
 
 
 \bibitem{Redux} Abramov D. and the Redux documentation authors: ReduxJs https://redux.js.org/ [Dostęp 1~kwietnia 2019]
-\bibitem{C w pigulce} Albahari J., Albahari B. "C~6.0 w~pigułce", \emph{Helion, O'Reilly Media, Inc.}, Gliwice,  2016
+\bibitem{C w pigulce} Albahari J., Albahari B. ,,C~6.0 w~pigułce'', \emph{Helion, O'Reilly Media, Inc.}, Gliwice,  2016
 \bibitem{React canvas draw} Beierling-Mutz M. React Canvas Draw. Oficjalne repozytorium: https://github.com/embiem/react-canvas-draw [Dostęp 1~kwietnia 2019]
-\bibitem{Bresenham} Bresenham J. E. "Algorithm for computer control of~a~digital plotter." \emph{ICM System Journal 4(1)} 1965
-\bibitem{AiSD2} Bródka J. Wykłady z~przedmiotu Algorytmy i~Struktury Danych 2~\emph{Politechnika Warszawska, Wydział Matematyki i~Nauk Informacyjnych} Materiały dostepne na~stronie: http://mini.pw.edu.pl/\~brodka/ASD2.html [Dostęp 1~kwietnia 2019]
-\bibitem{Canny} Canny J. F. "Finding Edges and Lines in~Images." \emph{Technical report no. 720, Massachusetts Institute of~Technology (MIT)}, Cambridge, Massachusetts, USA, 1983
-\bibitem{Cyfrowe przetwarzanie obrazów medycznych} Cytowski J., Gielecki J., Gola A. "Cyfrowe przetwarzanie obrazów medycznych: Algorytmy. Technologie. Zastosowania." \emph{Akademicka Oficyna Wydawnicza EXIT}, Warszawa, 2008
+\bibitem{Bresenham} Bresenham J. E. ,,Algorithm for computer control of~a~digital plotter.'' \emph{ICM System Journal 4(1)} 1965
+\bibitem{AiSD2} Bródka J. Wykłady z~przedmiotu Algorytmy i~Struktury Danych 2~\emph{Politechnika Warszawska, Wydział Matematyki i~Nauk Informacyjnych} Materiały dostępne na~stronie: http://mini.pw.edu.pl/\textasciitilde brodka/ASD2.html [Dostęp 1~kwietnia 2019]
+\bibitem{Canny} Canny J. F. ,,Finding Edges and Lines in~Images.'' \emph{Technical report no. 720, Massachusetts Institute of~Technology (MIT)}, Cambridge, Massachusetts, USA, 1983
+\bibitem{Cyfrowe przetwarzanie obrazów medycznych} Cytowski J., Gielecki J., Gola A. ,,Cyfrowe przetwarzanie obrazów medycznych: Algorytmy. Technologie. Zastosowania.'' \emph{Akademicka Oficyna Wydawnicza EXIT}, Warszawa, 2008
 \bibitem{React} Facebook Inc.: Informacje o~bibliotece ReactJS. Oficjalna strona: https://reactjs.org/ [Dostęp 1~kwietnia 2019]
 \bibitem{ImageJ} ImageJ: Oficjalna strona: https://imagej.nih.gov/ij/index.html [Dostęp 10~kwietnia 2019]
-\bibitem{SonicDICOM} JIUN Corporation: Oficjana strona: https://sonicdicom.com/ [Dostęp 24~marca 2019]
-\bibitem{SonicDICOM} JIUN Corporation: Przykład użycia intefejsu podglądu badań w systemie SonicDICOM: https://sonicdicom.com/screens/viewer-of-dicom-viewer/ [Dostęp 24~marca 2019]
-\bibitem{SonicDICOM API} JIUN Corporation: Instrukcja korzystania z~REST API SonicDICOM. Oficialna strona: https://docs.sonicdicom.com/install-manual/integration.html [Dostęp 24 marca 2019]
+\bibitem{SonicDICOM} JIUN Corporation: Oficjalna strona: https://sonicdicom.com/ [Dostęp 24~marca 2019]
+\bibitem{SonicDICOM} JIUN Corporation: Przykład użycia interfejsu podglądu badań w systemie SonicDICOM: https://sonicdicom.com/screens/viewer-of-dicom-viewer/ [Dostęp 24~marca 2019]
+\bibitem{SonicDICOM API} JIUN Corporation: Instrukcja korzystania z~REST API SonicDICOM. Oficjalna strona: https://docs.sonicdicom.com/install-manual/integration.html [Dostęp 24 marca 2019]
 \bibitem{Cornerstone Core} Hafey C. Dokumentacja projektu Cornerstone Core. Oficjalna strona: https://docs.cornerstonejs.org/ [Dostęp 1~kwietnia 2019]
 \bibitem{Cornerstone Tools} Hafey C. Dokumentacja projektu Cornerstone Tools. Oficjalna strona: https://tools.cornerstonejs.org/ [Dostęp 1~kwietnia 2019]
-\bibitem{A*} Hart P. E., Nilsson N. J., Raphael B. "A~Formal Basis for the Heurestic Determination of~Minimum Cost Paths" \emph{IEEE Transactions on~Systems Science and Cybernetics 4(2)}, 1968
+\bibitem{A*} Hart P. E., Nilsson N. J., Raphael B.,,A~Formal Basis for the Heurestic Determination of~Minimum Cost Paths'' \emph{IEEE Transactions on~Systems Science and Cybernetics 4(2)}, 1968
 \bibitem{DWV} ivmartel: Projekt DICOM Web Viewer. Oficjalna strona: https://ivmartel.github.io/dwv/ [Dostęp 1~kwietnia 2019]
-\bibitem{GK1} Kotowski P. Wykłady z~przedmiotu Grafika Komputerowa~1~\emph{Politechnika Warszawska, Wydział Matematyki i~Nauk Informacyjnych} Materiały dostepne na~stronie: http://mini.pw.edu.pl/~kotowski/gk/gk.html [Dostęp 5~kwietnia 2019]
-\bibitem{Dlaczego dotnet} Kronis K., Uhanova M. "Performance Comparision of~Java EE~and ASP.NET Core Technologies for Web API Developmnet." \emph{Applied Computer Systems 23, Riga Technical University}, Ryga, 2018
+\bibitem{GK1} Kotowski P. Wykłady z~przedmiotu Grafika Komputerowa~1~\emph{Politechnika Warszawska, Wydział Matematyki i~Nauk Informacyjnych} Materiały dostepne na~stronie: http://mini.pw.edu.pl/\textasciitilde kotowski/gk/gk.html [Dostęp 5~kwietnia 2019]
+\bibitem{Dlaczego dotnet} Kronis K., Uhanova M. ,,Performance Comparision of~Java EE~and ASP.NET Core Technologies for Web API Developmnet.'' \emph{Applied Computer Systems 23, Riga Technical University}, Ryga, 2018
 \bibitem{Dotnet} Microsoft Corporation: Dokumentacja platformy .NET. Oficjalna strona: https://docs.microsoft.com/pl-pl/dotnet/ [Dostęp 1~kwietnia 2019]
 \bibitem{Dotnet struktury} Microsoft Corporation: Dokumentacja rekomendowanych struktur danych platformy .NET. Oficjalna strona: https://docs.microsoft.com/pl-pl/dotnet/standard/collections/ [Dostęp 1~kwietnia 2019]
-\bibitem{Charakterystyka dotnet} Microsoft Corporation: Informacje o~platformie .NET Core. Oficialna strona: https://docs.microsoft.com/pl-pl/dotnet/core/about [Dostęp 1~kwietnia 2019]
-\bibitem{ASPNET} Microsoft Corporation: Informacje o~platformie ASP.NET Core. Oficialna strona: https://docs.microsoft.com/pl-pl/aspnet/core/?view=aspnetcore-2.2 [Dostęp 1~kwietnia 2019]
+\bibitem{Charakterystyka dotnet} Microsoft Corporation: Informacje o~platformie .NET Core. Oficjalna strona: https://docs.microsoft.com/pl-pl/dotnet/core/about [Dostęp 1~kwietnia 2019]
+\bibitem{ASPNET} Microsoft Corporation: Informacje o~platformie ASP.NET Core. Oficjalna strona: https://docs.microsoft.com/pl-pl/aspnet/core/?view=aspnetcore-2.2 [Dostęp 1~kwietnia 2019]
 \bibitem{Canvas} Mozilla and individual contributors: Dokumentacja HTMLCanvasElement. Oficjalna strona: https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/ [Dostęp 1~kwietnia 2019]
 \bibitem{DICOM} National Electrical Manufacturers Association: Standard DICOM. Oficjalna strona: https://www.dicomstandard.org/ [Dostęp 1~kwietnia 2019]
-\bibitem{Dlaczego react} Nowacki R., Plechawska-Wójcik M. "Analiza porównawcza narzędzi do~budowania aplikacji Single Page Application --- AngularJS, ReactJS, Ember.js" \emph{Journal of~Computer Sciences Institute 2, Politechnika Lubelska, Instytut Informatyki}, Lublin, 2016
+\bibitem{Dlaczego react} Nowacki R., Plechawska-Wójcik M. ,,Analiza porównawcza narzędzi do~budowania aplikacji Single Page Application --- AngularJS, ReactJS, Ember.js'' \emph{Journal of~Computer Sciences Institute 2, Politechnika Lubelska, Instytut Informatyki}, Lublin, 2016
 \bibitem{OHIF Viewer} OHIF: Open Health Imaging Foundation. Oficjalna strona: http://ohif.org/ [Dostęp 1~kwietnia 2019]
 \bibitem{Orthanc} Osimis S.A.: Projekt Orthanc. Oficjalna strona: https://www.orthanc-server.com/ [Dostęp 1~kwietnia 2019]
 \bibitem{Orthanc API} Osimis S.A.: Instrukcja korzystania z~REST API Orthanc. Oficjalna strona: http://book.orthanc-server.com/users/rest.html [Dostęp 1~kwietnia 2019]
-\bibitem{Pixel connectivity} Rosenfeld A., Kak A. C. "Digital Picture Processing" \emph{Academic Press, Inc.}, Nowy Jork, 1982
-\bibitem{KMM} Saeed K., Rybnik M., Tabędzki M., Adamski M. "Algorytm do~Ścieniania Obrazów: Implementacja i~Zastosowania" \emph{Zeszyty Naukowe Politechniki Białostockiej 2002 Informatyka - Zeszyt 1}, Białystok, 2002
-\bibitem{K3M} Saeed K., Tabędzki M., Rybnik M., Adamski M. "K3M: A~Universal Algorithm for Image Skeletonization and a~Review of~Thinning Techniques" \emph{International Journal of~Applied Mathematics and Computer Science, 2010, 20(2)} Białystok, 2010
-\bibitem{Algorytmy Sedgewick} Sedgewick R., Wayne K. "Algorytmy Wydanie IV", \emph{Helion}, Gliwice, 2012
-\bibitem{Sobel} Sobel I., Feldman G. "An~3x3 Isotropic Image Gradient Operator for Image Processing" \emph {Presentation at~Stanford Aartificial Intelligence Project (SAIL) in~1968}, 2014
-\bibitem{Moore} Weisstein, Eric W. "Moore Neighborhood" \emph{From MathWorld--A Wolfram Web Resource.} http://mathworld.wolfram.com/MooreNeighborhood.html [Dostęp 1~kwietnia 2019]
+\bibitem{Pixel connectivity} Rosenfeld A., Kak A. C. ,,Digital Picture Processing'' \emph{Academic Press, Inc.}, Nowy Jork, 1982
+\bibitem{KMM} Saeed K., Rybnik M., Tabędzki M., Adamski M. ,,Algorytm do~Ścieniania Obrazów: Implementacja i~Zastosowania'' \emph{Zeszyty Naukowe Politechniki Białostockiej 2002 Informatyka - Zeszyt 1}, Białystok, 2002
+\bibitem{K3M} Saeed K., Tabędzki M., Rybnik M., Adamski M. ,,K3M: A~Universal Algorithm for Image Skeletonization and a~Review of~Thinning Techniques'' \emph{International Journal of~Applied Mathematics and Computer Science, 2010, 20(2)} Białystok, 2010
+\bibitem{Algorytmy Sedgewick} Sedgewick R., Wayne K. ,,Algorytmy Wydanie IV'', \emph{Helion}, Gliwice, 2012
+\bibitem{Sobel} Sobel I., Feldman G. ,,An~3x3 Isotropic Image Gradient Operator for Image Processing'' \emph {Presentation at~Stanford Aartificial Intelligence Project (SAIL) in~1968}, 2014
+\bibitem{Moore} Weisstein, Eric W. ,,Moore Neighborhood'' \emph{From MathWorld--A Wolfram Web Resource.} http://mathworld.wolfram.com/MooreNeighborhood.html [Dostęp 1~kwietnia 2019]
 
 %\bibitem[1]{Ktos} A. Author, \emph{Title of~a~book}, Publisher, year, page--page.
 %\bibitem[2]{Innyktos} J. Bobkowski, S. Dobkowski, Jak stworzyć bibliografię w~BibTeX-u, \emph{Czasopismo nr}, rok, strona--strona.
